@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scaling Up · System Design Course</title>
+<link rel="stylesheet" href="assets/lesson.css">
+<style>
+  .hero { text-align: center; padding: 1rem 0 0.5rem; }
+  .hero .eyebrow { text-align: center; }
+  .lesson-card {
+    display: block; border: 1px solid var(--rule); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1rem 0; background: #fff; text-decoration: none;
+    border-bottom: 1px solid var(--rule); transition: border-color .12s, transform .12s;
+  }
+  .lesson-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .lesson-card .num {
+    font-family: ui-sans-serif, sans-serif; font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+  }
+  .lesson-card .title { font-size: 1.2rem; font-weight: 600; color: var(--ink); margin: 0.2rem 0; }
+  .lesson-card .blurb { color: var(--muted); font-size: 0.92rem; margin: 0; }
+  .ref-row { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0; }
+  .ref-row a {
+    flex: 1; min-width: 160px; text-align: center; padding: 0.9rem; border: 1px solid var(--rule);
+    border-radius: 8px; background: #fff; font-family: ui-sans-serif, sans-serif; font-size: 0.9rem;
+  }
+  .ref-row a:hover { border-color: var(--link); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead hero">
+    <p class="eyebrow">A System Design Course · Built for one engineer</p>
+    <h1>Scaling Up</h1>
+    <p class="subtitle">Scaling systems — and scaling myself. From Django backend to the person in the design room.</p>
+  </header>
+
+  <div class="key">
+    <span class="callout-label">How to use this</span>
+    Do the lessons in order. Hit every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>, not re-reading. Each new lesson opens with a quick recall of the last one, so review happens automatically.
+  </div>
+
+  <h2>Lessons</h2>
+
+  <a class="lesson-card" href="lessons/0001-the-design-framework.html">
+    <span class="num">Lesson 01</span>
+    <div class="title">The Design Framework</div>
+    <p class="blurb">The 5-step script — Scope → Estimate → Draw → Deep-dive → Trade off — for any "Design X" question or architecture review.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0002-consistency-and-availability.html">
+    <span class="num">Lesson 02</span>
+    <div class="title">Consistency &amp; Availability Patterns</div>
+    <p class="blurb">Freshness of reads (weak / eventual / strong), failover (active-passive / active-active), and the "nines" math — with a live calculator.</p>
+  </a>
+
+  <h2>Reference</h2>
+  <p>Keep these open in a tab and skim them often.</p>
+  <div class="ref-row">
+    <a href="reference/glossary.html">📑 Glossary</a>
+    <a href="https://github.com/donnemartin/system-design-primer" target="_blank">📖 System Design Primer</a>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>This is a living course.</strong> It's built lesson-by-lesson with an AI teacher, following the System Design Primer in order. New lessons get added as I work through it — each one a single tangible win, pitched at where I am right now.
+  </div>
+
+  <footer class="lesson-foot">
+    <p>Built with the <code>/teach</code> workflow. Source on <a href="https://github.com/abdullahmujahidali/Scaling-Up" target="_blank">GitHub</a>.</p>
+  </footer>
+
+</div>
+</body>
+</html>

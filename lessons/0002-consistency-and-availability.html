@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 · Consistency &amp; Availability Patterns</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 02</p>
+    <h1>Consistency &amp; Availability patterns</h1>
+    <p class="subtitle">The dense middle of the System Design Primer — untangled, in plain English.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>Skill: pick a consistency &amp; failover model on purpose</span>
+      <span>Win: you can read the "nines" and not bluff</span>
+    </div>
+  </header>
+
+  <p>This is the section of the Primer<sup class="cite"><a href="#s1">1</a></sup> people skim and then quietly hope nobody asks about. It's actually two simple ideas wearing scary words:</p>
+  <ul>
+    <li><strong>Consistency</strong> — after I write data, when does everyone else see it?</li>
+    <li><strong>Availability</strong> — when a server dies, does the system stay up? And how do we even measure "up"?</li>
+  </ul>
+
+  <div class="key">
+    <span class="callout-label">The whole lesson in one line</span>
+    Consistency is <em>"how fresh is the read?"</em> (weak → eventual → strong). Availability is <em>"what happens when a box dies?"</em> (fail-over) plus <em>"how do we score uptime?"</em> (nines, and the sequence-vs-parallel math).
+  </div>
+
+  <h2>Part 1 — Consistency patterns</h2>
+
+  <p>You write a value. A split second later, someone reads it. Do they get the new value or the old one? The answer is a <em>choice</em> you make when designing a system — and it's a spectrum from "cheap and fast but maybe stale" to "always correct but slower."</p>
+
+  <figure>
+    <svg viewBox="0 0 700 150" role="img" aria-label="Consistency spectrum from weak to strong">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#6b6b6b"/></marker>
+      </defs>
+      <line x1="40" y1="30" x2="660" y2="30" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#ar)"/>
+      <text x="40" y="20" font-family="ui-sans-serif" font-size="11" fill="#6b6b6b">faster, more available</text>
+      <text x="660" y="20" font-family="ui-sans-serif" font-size="11" fill="#6b6b6b" text-anchor="end">stricter, more correct</text>
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <g>
+          <rect x="40" y="55" width="170" height="70" rx="8" fill="#f6e9e9" stroke="#9b1c1c"/>
+          <text x="125" y="80" font-weight="700" fill="#9b1c1c">Weak</text>
+          <text x="125" y="100" fill="#6b6b6b">read may miss it</text>
+          <text x="125" y="116" fill="#6b6b6b">e.g. video chat</text>
+        </g>
+        <g>
+          <rect x="265" y="55" width="170" height="70" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+          <text x="350" y="80" font-weight="700" fill="#2a4d8f">Eventual</text>
+          <text x="350" y="100" fill="#6b6b6b">catches up in ms</text>
+          <text x="350" y="116" fill="#6b6b6b">e.g. DNS, email</text>
+        </g>
+        <g>
+          <rect x="490" y="55" width="170" height="70" rx="8" fill="#e8f3ec" stroke="#1d6b3a"/>
+          <text x="575" y="80" font-weight="700" fill="#1d6b3a">Strong</text>
+          <text x="575" y="100" fill="#6b6b6b">read always fresh</text>
+          <text x="575" y="116" fill="#6b6b6b">e.g. your bank</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption>The consistency spectrum. Moving right buys correctness; moving left buys speed and availability.</figcaption>
+  </figure>
+
+  <h3>Weak consistency</h3>
+  <p>After a write, a read <em>might not</em> see it — best effort, no promises. That sounds broken, but it's perfect when stale-for-a-moment is harmless and speed is everything. A dropped second on a <strong>video call</strong> is gone and nobody re-fetches it. Memcached behaves this way.</p>
+
+  <h3>Eventual consistency</h3>
+  <p>After a write, reads <em>will</em> see it — just not instantly. The data spreads to other copies <strong>asynchronously</strong>, usually within milliseconds. <strong>DNS</strong> and <strong>email</strong> work like this: you change a DNS record and it propagates over time. Great when you'd rather stay available than block waiting for everyone to agree.</p>
+
+  <h3>Strong consistency</h3>
+  <p>After a write, <em>every</em> following read sees it, immediately. The copies update <strong>synchronously</strong> — the write isn't "done" until everyone agrees. This is your bank balance, file systems, and classic relational transactions.</p>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    A single Postgres behind your Django app gives you <strong>strong consistency</strong> for free — you <code>.save()</code>, the next query sees it. The moment you add a <strong>read replica</strong> to take read load off the primary, you've quietly stepped into <strong>eventual consistency</strong>: a read from the replica can lag the primary by a few milliseconds (replication lag). That's the exact tradeoff this lesson is about — you didn't change your code, you changed your consistency guarantee.
+  </div>
+
+  <div class="warn">
+    <span class="callout-label">Watch the words</span>
+    "Synchronous" = wait until copies agree (→ strong). "Asynchronous" = write now, copy later (→ eventual). Same two words show up everywhere in system design — lock them in here.
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Cover this. Name the three consistency patterns weakest→strongest, and one real example of each.</div>
+    <div class="answer">
+      <strong>Weak</strong> — read may never see the write. <em>Video/voice chat, memcached.</em><br>
+      <strong>Eventual</strong> — read sees it after a short async delay. <em>DNS, email, a read replica.</em><br>
+      <strong>Strong</strong> — read always sees it immediately (synchronous). <em>Bank balance, RDBMS transactions.</em>
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">You add a read replica so heavy reporting queries stop hammering your primary Postgres. A user updates their profile, then immediately reloads and sees the <em>old</em> name for a second. What's going on?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">The write to the primary silently failed and was lost</button>
+      <button class="opt" data-correct="true">The replica lags the primary — that's eventual consistency</button>
+      <button class="opt" data-correct="false">Postgres dropped strong consistency for the whole database</button>
+      <button class="opt" data-correct="false">The cache returned a stale value instead of the database</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <h2>Part 2 — Availability: fail-over</h2>
+
+  <p>Availability is about staying up when a machine inevitably dies. The basic trick is to keep a second server around. There are two flavors.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 220" role="img" aria-label="Active-passive vs active-active failover">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <!-- Active-Passive -->
+        <text x="175" y="20" font-weight="700" font-size="13">Active–Passive</text>
+        <rect x="40" y="40" width="90" height="45" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="85" y="60" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="85" y="76" fill="#6b6b6b">serves traffic</text>
+        <rect x="220" y="40" width="90" height="45" rx="6" fill="#f3f1ea" stroke="#6b6b6b" stroke-dasharray="4 3"/>
+        <text x="265" y="60" font-weight="700" fill="#6b6b6b">Passive</text>
+        <text x="265" y="76" fill="#6b6b6b">on standby</text>
+        <line x1="130" y1="62" x2="218" y2="62" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="174" y="55" fill="#9b1c1c" font-size="10">heartbeat</text>
+        <text x="175" y="115" fill="#6b6b6b">Standby takes over the IP when heartbeats stop.</text>
+        <text x="175" y="130" fill="#6b6b6b">Only one works at a time.</text>
+
+        <!-- Active-Active -->
+        <text x="525" y="20" font-weight="700" font-size="13">Active–Active</text>
+        <rect x="400" y="40" width="90" height="45" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="445" y="60" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="445" y="76" fill="#6b6b6b">serves traffic</text>
+        <rect x="580" y="40" width="90" height="45" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="625" y="60" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="625" y="76" fill="#6b6b6b">serves traffic</text>
+        <line x1="490" y1="62" x2="578" y2="62" stroke="#2a4d8f" stroke-width="1.3"/>
+        <text x="534" y="55" fill="#2a4d8f" font-size="10">shares load</text>
+        <text x="525" y="115" fill="#6b6b6b">Both serve traffic and split the load.</text>
+        <text x="525" y="130" fill="#6b6b6b">Lose one, the other keeps going.</text>
+      </g>
+    </svg>
+    <figcaption>Two failover styles. Passive = a spare waiting; Active = both working. (Old names: master-slave and master-master.)</figcaption>
+  </figure>
+
+  <h3>Active–Passive</h3>
+  <p>One server does all the work; a second one sits idle but listening. They exchange a <strong>heartbeat</strong> — a regular "still alive?" ping. When the heartbeat stops, the passive server grabs the active server's IP address and takes over. How fast it recovers depends on whether the spare is <em>hot</em> (already running) or <em>cold</em> (has to boot up first).</p>
+
+  <h3>Active–Active</h3>
+  <p>Both servers handle traffic at the same time and split the load. If one dies, the other just absorbs everything. The catch: <em>everyone</em> has to know about both — public-facing means DNS lists both IPs; internal means your app code has to know both exist.</p>
+
+  <div class="warn">
+    <span class="callout-label">The cost of failover (don't skip this)</span>
+    Failover isn't free: it adds <strong>hardware and operational complexity</strong>, and there's a real <strong>data-loss risk</strong> — if the active server dies <em>before</em> it copied the newest writes to the standby, those writes are gone. This is a tradeoff worth naming out loud (remember Lesson 1, step 5).
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">Your team wants a backup database server that costs as little as possible and is fine with a few seconds of downtime during a failure. Which fits best?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Active–passive with a cold standby</button>
+      <button class="opt" data-correct="false">Active–active splitting load across both</button>
+      <button class="opt" data-correct="false">Strong consistency on a single server</button>
+      <button class="opt" data-correct="false">Weak consistency with no standby at all</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <h2>Part 3 — Availability in numbers (the "nines")</h2>
+
+  <p>"Highly available" is meaningless until you put a number on it. We measure uptime in <strong>nines</strong>. More nines = less allowed downtime. The jump from three to four nines is a 10× reduction in acceptable downtime — and usually a big jump in cost.</p>
+
+  <table>
+    <tr><th>Availability</th><th>Name</th><th>Downtime / year</th><th>Downtime / day</th></tr>
+    <tr><td>99.9%</td><td>three nines</td><td>~8h 46m</td><td>~1m 26s</td></tr>
+    <tr><td>99.99%</td><td>four nines</td><td>~52m 36s</td><td>~8.6s</td></tr>
+  </table>
+
+  <h3>Why combining services changes the number</h3>
+  <p>Here's the part that catches people out. When you chain services together, the math is not what your gut says.</p>
+
+  <div class="key">
+    <span class="callout-label">The two formulas</span>
+    <strong>In sequence</strong> (request must pass through both): multiply → availability <em>drops</em>.<br>
+    A&nbsp;×&nbsp;B. Two 99.9% services in a row = 99.8%.<br><br>
+    <strong>In parallel</strong> (either one can serve it): availability <em>climbs</em>.<br>
+    1 − (1−A)(1−B). Two 99.9% services side-by-side = 99.9999%.
+  </div>
+
+  <p>Plain-English intuition: a <strong>chain</strong> is only as strong as all its links holding at once, so every extra link drags the total down. A <strong>backup</strong> only fails if <em>both</em> fail at the same time, which is rare — so redundancy multiplies your nines.</p>
+
+  <h3>Try it — availability calculator</h3>
+  <p>Two components, each with the availability you pick. See how sequence vs parallel pull in opposite directions.</p>
+
+  <div class="quiz" id="calc">
+    <div class="q">Each component's availability:
+      <select id="avail" style="font-family:inherit;font-size:0.95rem;padding:0.2rem 0.4rem;border-radius:5px;border:1px solid var(--rule);">
+        <option value="0.99">99% (two nines)</option>
+        <option value="0.999" selected>99.9% (three nines)</option>
+        <option value="0.9999">99.99% (four nines)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.8rem;">
+      <div style="flex:1;min-width:180px;background:var(--accent-soft);border-radius:6px;padding:0.9rem;">
+        <div style="font-family:ui-sans-serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);font-weight:700;">In sequence (chain)</div>
+        <div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="seqOut">—</div>
+        <div style="font-size:0.8rem;color:var(--muted);">A × B — goes down</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:var(--good-soft);border-radius:6px;padding:0.9rem;">
+        <div style="font-family:ui-sans-serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--good);font-weight:700;">In parallel (backup)</div>
+        <div style="font-size:1.5rem;font-weight:700;color:var(--good);" id="parOut">—</div>
+        <div style="font-size:0.8rem;color:var(--muted);">1−(1−A)(1−B) — goes up</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" id="q3">
+    <div class="q"><strong>Tradeoff drill.</strong> Your API calls an auth service, then a payments service, then a database — all in a strict chain, each at 99.9%. Your boss says "we're 99.9% available, right?" What's the honest answer?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">Yes — every part is 99.9%, so the whole is 99.9%</button>
+      <button class="opt" data-correct="true">No — chained, they multiply, so it's lower (~99.7%)</button>
+      <button class="opt" data-correct="false">No — chained services run in parallel, so it's higher</button>
+      <button class="opt" data-correct="false">Can't tell without knowing each service's traffic</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    You can now read the scariest part of the Primer without flinching: <strong>consistency</strong> is a freshness spectrum you choose (weak→eventual→strong), <strong>failover</strong> keeps you up with a spare or a twin, and the <strong>nines</strong> have real math — chains multiply down, backups multiply up. In an interview, saying "those services are in sequence so our effective availability is lower than each one" is a genuine senior signal.
+  </div>
+
+  <h2>Read next (primary source)</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">System Design Primer — Consistency &amp; Availability patterns</a><sup class="cite"><a href="#s1">1</a></sup>. Now that you've got the map, re-read that section — it'll feel short instead of dense. Then peek at the linked "Availability in numbers" table for the full nines chart.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — use me.</strong> Want me to walk a real example (say, designing a payments flow and computing its true availability)? Fuzzy on why a read replica is "eventual" but a single Postgres is "strong"? Or want a harder drill mixing consistency + failover together? Ask away.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 2.</strong> This pairs with <a href="0001-the-design-framework.html">Lesson 1 — The Framework</a> (these patterns are what you reach for in steps 4 &amp; 5: the deep-dive and the tradeoff).</p>
+    <p>📑 Every term from this lesson is in the <a href="../reference/glossary.html">Glossary</a> — skim it often to make it stick.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">The System Design Primer — Consistency &amp; Availability patterns</a>, Donne Martin. All definitions, examples, and formulas in this lesson are drawn from there.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    if (quiz.id === 'calc') return;
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Right. The write succeeded on the primary; the replica just hadn't caught up yet. Reads from a replica are eventually consistent."
+            : "Not quite. The write is safe on the primary — the replica simply lags by a few ms before it catches up. That lag is eventual consistency.",
+          q2: correct
+            ? "Yes. Cheapest + a little downtime acceptable = active–passive, and cold (boots on demand) is the cheapest standby."
+            : "Reconsider. Active–active costs more (both always running); a single server has no backup at all. Cheap + tolerant of seconds of downtime points to active–passive, cold standby.",
+          q3: correct
+            ? "Exactly. Sequential services multiply: 0.999 × 0.999 × 0.999 ≈ 0.997. The chain is always less available than its weakest link's number suggests."
+            : "Reconsider. They're in a strict chain (sequence), so the availabilities multiply and the total drops below 99.9% — roughly 99.7%."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+
+  // Availability calculator
+  (function(){
+    var sel = document.getElementById('avail');
+    var seqOut = document.getElementById('seqOut');
+    var parOut = document.getElementById('parOut');
+    function pct(x){ return (x*100).toFixed(4).replace(/0+$/,'').replace(/\.$/,'') + '%'; }
+    function update(){
+      var a = parseFloat(sel.value);
+      seqOut.textContent = pct(a*a);
+      parOut.textContent = pct(1-(1-a)*(1-a));
+    }
+    sel.addEventListener('change', update);
+    update();
+  })();
+</script>
+</body>
+</html>

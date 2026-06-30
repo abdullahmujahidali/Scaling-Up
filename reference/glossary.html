@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · System Design</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+  /* Glossary-specific bits, layered on the shared lesson stylesheet */
+  .search-bar {
+    position: sticky; top: 0; background: var(--paper); padding: 1rem 0 0.8rem;
+    z-index: 5; border-bottom: 1px solid var(--rule); margin-bottom: 1rem;
+  }
+  .search-bar input {
+    width: 100%; font-family: inherit; font-size: 1rem; padding: 0.7rem 1rem;
+    border: 1px solid var(--rule); border-radius: 8px; background: #fff;
+  }
+  .search-bar input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .count { font-family: ui-sans-serif, sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+  .term {
+    border-bottom: 1px solid var(--rule); padding: 1rem 0;
+  }
+  .term-name { font-weight: 600; font-size: 1.08rem; }
+  .term-name .alias-tag {
+    font-family: ui-sans-serif, sans-serif; font-size: 0.62rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted); margin-left: 0.5rem; font-weight: 600;
+  }
+  .term-def { margin: 0.35rem 0 0; }
+  .term-eg { font-size: 0.86rem; color: var(--muted); margin-top: 0.3rem; }
+  .term-avoid { font-size: 0.8rem; color: var(--accent); margin-top: 0.3rem; font-style: italic; }
+  .group-head { margin-top: 2rem; }
+  .term.hidden, .group-head.hidden { display: none; }
+  mark { background: #fff3b0; padding: 0 1px; border-radius: 2px; }
+  .no-results { color: var(--muted); font-style: italic; padding: 1.5rem 0; display: none; }
+  .no-results.show { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Reference</p>
+    <h1>Glossary</h1>
+    <p class="subtitle">The canonical vocabulary for the course. Skim it often — recognising a word is the first step to owning it.</p>
+    <div class="meta">
+      <span><a href="../README.md">← workspace</a></span>
+      <span>Bookmark this page</span>
+      <span>Updated as you learn</span>
+    </div>
+  </header>
+
+  <div class="bridge">
+    <span class="callout-label">How to use this for retention</span>
+    Don't read it like a dictionary. Pick a term, <strong>say the definition out loud before you read it</strong>, then check yourself. A 60-second pass through a few terms a few times a week beats one long read. Search to jump straight to anything.
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search terms or definitions… (e.g. eventual, failover, nines)" autocomplete="off">
+    <div class="count" id="count"></div>
+  </div>
+
+  <div id="list">
+
+    <h2 class="group-head" data-group>Consistency</h2>
+
+    <div class="term" data-name="consistency">
+      <div class="term-name">Consistency</div>
+      <div class="term-def">How fresh a read is after a write — whether a later read sees the change. A choice on a spectrum, not a yes/no.</div>
+      <div class="term-avoid">avoid: accuracy, correctness (too vague)</div>
+    </div>
+
+    <div class="term" data-name="weak consistency">
+      <div class="term-name">Weak consistency</div>
+      <div class="term-def">After a write, a read may never see it — best effort. Good when stale-for-a-moment is harmless and speed matters most.</div>
+      <div class="term-eg">e.g. video chat, memcached</div>
+    </div>
+
+    <div class="term" data-name="eventual consistency">
+      <div class="term-name">Eventual consistency</div>
+      <div class="term-def">After a write, reads will see it after a short asynchronous delay (often milliseconds). Copies sync in the background.</div>
+      <div class="term-eg">e.g. DNS, email, a database read replica</div>
+      <div class="term-avoid">avoid: delayed consistency, loose consistency</div>
+    </div>
+
+    <div class="term" data-name="strong consistency">
+      <div class="term-name">Strong consistency</div>
+      <div class="term-def">After a write, every subsequent read immediately sees it. Copies update synchronously.</div>
+      <div class="term-eg">e.g. bank balance, classic RDBMS transactions</div>
+    </div>
+
+    <div class="term" data-name="synchronous">
+      <div class="term-name">Synchronous</div>
+      <div class="term-def">The write isn't "done" until all copies agree. Drives strong consistency.</div>
+    </div>
+
+    <div class="term" data-name="asynchronous">
+      <div class="term-name">Asynchronous</div>
+      <div class="term-def">Write now, copy to others later. Drives eventual consistency.</div>
+    </div>
+
+    <h2 class="group-head" data-group>Availability</h2>
+
+    <div class="term" data-name="availability">
+      <div class="term-name">Availability</div>
+      <div class="term-def">Whether the system stays up, especially when a machine fails. Measured as uptime percentage ("nines").</div>
+    </div>
+
+    <div class="term" data-name="failover">
+      <div class="term-name">Failover</div>
+      <div class="term-def">Keeping a spare or twin server so the system survives one dying.</div>
+      <div class="term-avoid">avoid: fallback, backup (mean other things)</div>
+    </div>
+
+    <div class="term" data-name="active-passive failover active passive">
+      <div class="term-name">Active–passive failover <span class="alias-tag">old: master-slave</span></div>
+      <div class="term-def">One server serves traffic; a standby waits and exchanges a heartbeat. When the heartbeat stops, the standby takes over the IP.</div>
+    </div>
+
+    <div class="term" data-name="active-active failover active active">
+      <div class="term-name">Active–active failover <span class="alias-tag">old: master-master</span></div>
+      <div class="term-def">Both servers serve traffic and split load; if one dies the other absorbs it. Everyone (DNS or app code) must know both.</div>
+    </div>
+
+    <div class="term" data-name="heartbeat">
+      <div class="term-name">Heartbeat</div>
+      <div class="term-def">A regular "still alive?" signal between servers, used to detect failure.</div>
+    </div>
+
+    <div class="term" data-name="nines">
+      <div class="term-name">Nines</div>
+      <div class="term-def">Shorthand for availability percentage by counting leading nines. 99.9% = three nines; 99.99% = four nines. More nines = less allowed downtime.</div>
+    </div>
+
+    <div class="term" data-name="availability in sequence sequential">
+      <div class="term-name">Availability in sequence</div>
+      <div class="term-def">When a request must pass through multiple components in a chain, their availabilities multiply (A × B), so the total drops below any single one.</div>
+    </div>
+
+    <div class="term" data-name="availability in parallel">
+      <div class="term-name">Availability in parallel</div>
+      <div class="term-def">When redundant components can each serve the request, availability rises: 1 − (1−A)(1−B). A backup only fails if both fail at once.</div>
+    </div>
+
+  </div>
+
+  <div class="no-results" id="noResults">No terms match that search.</div>
+
+  <div class="ask-teacher" style="margin-top:2.5rem;">
+    <strong>This grows with you.</strong> A term only lands here once you've genuinely understood it — so the glossary doubles as a map of how far you've come. Hit a word in a lesson that isn't here yet? Ask me and I'll explain it; once it sticks, it joins this page.
+  </div>
+
+</div>
+
+<script>
+  var search = document.getElementById('search');
+  var terms = Array.prototype.slice.call(document.querySelectorAll('.term'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.group-head'));
+  var count = document.getElementById('count');
+  var noResults = document.getElementById('noResults');
+
+  function setCount(n){ count.textContent = n + (n === 1 ? ' term' : ' terms'); }
+  setCount(terms.length);
+
+  function clearMarks(el){
+    el.querySelectorAll('mark').forEach(function(m){ m.replaceWith(m.textContent); });
+    el.normalize();
+  }
+
+  search.addEventListener('input', function(){
+    var q = search.value.trim().toLowerCase();
+    var shown = 0;
+    terms.forEach(function(t){
+      clearMarks(t);
+      var hay = (t.dataset.name + ' ' + t.textContent).toLowerCase();
+      var match = q === '' || hay.indexOf(q) !== -1;
+      t.classList.toggle('hidden', !match);
+      if (match) shown++;
+    });
+    // hide a group header if every term under it is hidden
+    groups.forEach(function(g){
+      var anyVisible = false, node = g.nextElementSibling;
+      while (node && !node.matches('[data-group]')) {
+        if (node.classList.contains('term') && !node.classList.contains('hidden')) anyVisible = true;
+        node = node.nextElementSibling;
+      }
+      g.classList.toggle('hidden', !anyVisible);
+    });
+    setCount(shown);
+    noResults.classList.toggle('show', shown === 0);
+  });
+</script>
+</body>
+</html>
