@@ -28,8 +28,19 @@ The name has two meanings: scaling *systems*, and scaling *yourself*.
 
 ## Lessons so far
 
+Two tracks that **alternate**: **System Design** (how big systems are built) and **Backend Depth** (why the code & database behave as they do).
+
+**Track A — System Design**
 1. **[The Design Framework](./lessons/0001-the-design-framework.html)** — the 5-step script (Scope → Estimate → Draw → Deep-dive → Trade off) for any "Design X" question.
-2. **[Consistency & Availability Patterns](./lessons/0002-consistency-and-availability.html)** — freshness of reads (weak/eventual/strong), failover (active-passive/active-active), and the "nines" math.
+2. **Consistency & Availability**, split into three short lessons:
+   - **[2a · Consistency](./lessons/0002-consistency-and-availability.html)** — weak / eventual / strong, via a whiteboard story.
+   - **[2b · Failover](./lessons/0003-failover.html)** — active-passive vs active-active, via a shop with a spare cashier.
+   - **[2c · The "Nines"](./lessons/0004-the-nines.html)** — measuring uptime; why chains multiply down and backups multiply up.
+3. **[Load Balancers](./lessons/0005-load-balancers.html)** — the host at the door; horizontal scaling; stateless servers.
+4. **[Caching](./lessons/0006-caching.html)** — desk vs archive; cache-aside vs write-through; staleness.
+
+**Track B — Backend Depth**
+- **[B1 · The GIL](./lessons/0007-the-gil.html)** — why Python threads don't split CPU work; threads vs processes vs async.
 
 ## The learning model
 

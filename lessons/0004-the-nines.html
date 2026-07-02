@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2c · The "Nines" (measuring uptime)</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 02c</p>
+    <h1>The "nines": putting a number on uptime</h1>
+    <p class="subtitle">The last piece of availability. One idea, one story, one bit of easy math.</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: availability numbers</span>
+      <span>Win: read "four nines" and know what it costs</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall 2b)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory — the shop-with-a-cashier story: name the two failover types and the one-line difference.</div>
+    <div class="answer">
+      <strong>Active–passive</strong> — a spare waits in the break room; takes over only when the worker faints. One works at a time.<br>
+      <strong>Active–active</strong> — two tills open, splitting the line; lose one, the other carries everyone.
+    </div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>"Nines" is just how we score uptime.</strong> 99.9% = "three nines." 99.99% = "four nines." Each extra nine means <em>ten times less</em> allowed downtime — and usually a lot more money.
+  </div>
+
+  <h2>The story: a coffee shop's opening hours</h2>
+  <p>Imagine a coffee shop that promises to be open. "Available" sounds nice but means nothing until you ask: <em>open how much of the time?</em> We measure that as a percentage of the year.</p>
+  <p>The catch is that the numbers look almost identical but mean wildly different things. "99.9% open" and "99.99% open" are one tiny digit apart — but one lets the shop close for almost <strong>9 hours a year</strong> and the other only <strong>52 minutes</strong>. That's a 10× difference hiding in one decimal place.</p>
+
+  <table>
+    <tr><th>Availability</th><th>Spoken as</th><th>Closed per year</th><th>Closed per day</th></tr>
+    <tr><td>99%</td><td>two nines</td><td>~3.65 days</td><td>~14m 24s</td></tr>
+    <tr><td>99.9%</td><td>three nines</td><td>~8h 46m</td><td>~1m 26s</td></tr>
+    <tr><td>99.99%</td><td>four nines</td><td>~52m 36s</td><td>~8.6s</td></tr>
+  </table>
+
+  <p>So when someone at work says "we need four nines," they're really saying <em>"we can only be down about 9 seconds a day."</em> That's a strong promise — and each nine you add gets dramatically harder and pricier to keep.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: roughly how much downtime per year does "three nines" (99.9%) allow?</div>
+    <div class="answer">About <strong>8 hours 46 minutes</strong> a year. (Four nines drops that to ~52 minutes — 10× stricter.)</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2>The part that surprises people: combining services</h2>
+  <p>Here's where the math flips your gut. When you connect services together, the total availability is <em>not</em> the same as each piece. It depends on <strong>how</strong> they're connected — in a chain, or as backups.</p>
+
+  <h3>In a chain (sequence): availability goes DOWN</h3>
+  <p><strong>Story:</strong> to buy a coffee you must pass through three doors in a row — each door is open 99.9% of the time. You only succeed if <em>all three</em> happen to be open at once. Every extra door is one more thing that can be shut. So the total is <em>lower</em> than any single door.</p>
+  <p class="key" style="text-align:center;">Multiply them: 99.9% × 99.9% × 99.9% ≈ <strong>99.7%</strong></p>
+
+  <h3>In parallel (backups): availability goes UP</h3>
+  <p><strong>Story:</strong> now there are three <em>side-by-side</em> doors, each 99.9% open, and you only need <em>one</em> of them open to get in. For you to be locked out, <em>all three</em> must be shut at the same moment — which is very rare. So the total is <em>higher</em> than any single door.</p>
+  <p class="win" style="text-align:center;">Two 99.9% doors in parallel ≈ <strong>99.9999%</strong> (six nines!)</p>
+
+  <div class="bridge">
+    <span class="callout-label">Why this matters at work &amp; in interviews</span>
+    Your Django API probably calls an auth service, then a payments service, then a database — all <em>in a chain</em>. Even if each is "99.9%," your real availability is <em>lower</em> (~99.7%) because they multiply. Saying that out loud — <em>"these are in sequence, so our effective availability is below any single one"</em> — is a genuine senior signal. And the fix is redundancy: put backups in <em>parallel</em> to pull the number back up.
+  </div>
+
+  <h2>Play with it — availability calculator</h2>
+  <p>Pick each component's availability. Watch chain vs backup pull in opposite directions.</p>
+
+  <div class="quiz" id="calc">
+    <div class="q">Each of two components is:
+      <select id="avail" style="font-family:inherit;font-size:0.95rem;padding:0.2rem 0.4rem;border-radius:5px;border:1px solid var(--rule);">
+        <option value="0.99">99% (two nines)</option>
+        <option value="0.999" selected>99.9% (three nines)</option>
+        <option value="0.9999">99.99% (four nines)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.8rem;">
+      <div style="flex:1;min-width:180px;background:var(--accent-soft);border-radius:6px;padding:0.9rem;">
+        <div style="font-family:ui-sans-serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);font-weight:700;">In a chain</div>
+        <div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="seqOut">—</div>
+        <div style="font-size:0.8rem;color:var(--muted);">A × B — goes down</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:var(--good-soft);border-radius:6px;padding:0.9rem;">
+        <div style="font-family:ui-sans-serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--good);font-weight:700;">As backups (parallel)</div>
+        <div style="font-size:1.5rem;font-weight:700;color:var(--good);" id="parOut">—</div>
+        <div style="font-size:0.8rem;color:var(--muted);">1−(1−A)(1−B) — goes up</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">Your boss says "every service is 99.9%, so our whole system is 99.9%, right?" The services run in a strict chain. Honest answer?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">Yes — each part is 99.9%, so the total is 99.9%</button>
+      <button class="opt" data-correct="true">No — chained, they multiply, so it's lower (~99.7%)</button>
+      <button class="opt" data-correct="false">No — chaining makes it higher, like backups do</button>
+      <button class="opt" data-correct="false">Impossible to say without the traffic numbers</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today — and the whole availability trio is done</span>
+    Nines = uptime score; each nine is 10× stricter. Chains <strong>multiply down</strong> (more doors = more risk); backups <strong>multiply up</strong> (all must fail at once = rare). You've now finished all three availability pieces: <a href="0002-consistency-and-availability.html">consistency (2a)</a>, <a href="0003-failover.html">failover (2b)</a>, and the nines (2c).
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#availability-in-numbers" target="_blank">System Design Primer — Availability in numbers</a><sup class="cite"><a href="#s1">1</a></sup>. The full nines table and the two formulas.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to compute the real availability of a system you actually work on? Or unsure why parallel gives <em>six</em> nines from two threes? Ask and I'll walk the arithmetic slowly.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 2c (the nines).</strong> Completes availability. Next up: <em>Lesson 3 — Load Balancers</em>: how you spread traffic across many servers (the "front door" of big systems).</p>
+    <p>📑 New terms (nines, availability in sequence/parallel) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#availability-in-numbers" target="_blank">The System Design Primer — Availability in numbers</a>, Donne Martin.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    if (quiz.id === 'calc') return;
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Exactly. Sequential services multiply: 0.999 × 0.999 × 0.999 ≈ 0.997. A chain is always less available than its parts suggest."
+            : "Reconsider. In a strict chain the availabilities multiply, so the total drops below 99.9% — around 99.7%. (Parallel backups would raise it, but these are chained.)"
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+  (function(){
+    var sel = document.getElementById('avail');
+    if(!sel) return;
+    var seqOut = document.getElementById('seqOut'), parOut = document.getElementById('parOut');
+    function pct(x){ return (x*100).toFixed(4).replace(/0+$/,'').replace(/\.$/,'') + '%'; }
+    function update(){ var a=parseFloat(sel.value); seqOut.textContent=pct(a*a); parOut.textContent=pct(1-(1-a)*(1-a)); }
+    sel.addEventListener('change', update); update();
+  })();
+</script>
+</body>
+</html>
