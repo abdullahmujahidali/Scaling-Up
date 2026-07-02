@@ -42,11 +42,18 @@
     Do the lessons in order. Hit every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>, not re-reading. Each new lesson opens with a quick recall of the last one, so review happens automatically.
   </div>
 
-  <a class="lesson-card" href="this-week.html" style="border-left:3px solid var(--good);background:var(--good-soft);">
-    <span class="num" style="color:var(--good);">🗓️ Start here</span>
-    <div class="title">This Week — your 7-day plan</div>
-    <p class="blurb">A paced day-by-day plan alternating both tracks, with progress tracking. The best way through the course.</p>
-  </a>
+  <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
+    <a class="lesson-card" href="this-week.html" style="flex:1;min-width:230px;border-left:3px solid var(--good);background:var(--good-soft);">
+      <span class="num" style="color:var(--good);">🗓️ Start here</span>
+      <div class="title">Week 1 plan</div>
+      <p class="blurb">Framework, consistency, availability, load balancing, caching, CAP, databases, indexes, N+1, queues.</p>
+    </a>
+    <a class="lesson-card" href="this-week-2.html" style="flex:1;min-width:230px;border-left:3px solid var(--good);background:var(--good-soft);">
+      <span class="num" style="color:var(--good);">🗓️ Then</span>
+      <div class="title">Week 2 plan</div>
+      <p class="blurb">DNS/CDN, transactions &amp; locking, microservices, API design, async, and a full design capstone.</p>
+    </a>
+  </div>
 
   <p style="font-family:ui-sans-serif,sans-serif;font-size:0.9rem;color:var(--muted);">Two tracks that alternate: <strong style="color:var(--accent);">System Design</strong> (how big systems are built) and <strong style="color:var(--link);">Backend Depth</strong> (why the code &amp; database behave as they do).</p>
 
@@ -112,6 +119,30 @@
     <p class="blurb">Do slow work later — queues + background workers (Celery), plus back pressure.</p>
   </a>
 
+  <a class="lesson-card" href="lessons/0014-dns-and-cdn.html">
+    <span class="num">Lesson 09</span>
+    <div class="title">DNS &amp; CDN</div>
+    <p class="blurb">How a request finds you — the phone book (DNS) and global file warehouses (CDN).</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0016-monolith-vs-microservices.html">
+    <span class="num">Lesson 10</span>
+    <div class="title">Monolith vs Microservices</div>
+    <p class="blurb">One big app or many small — restaurant vs food court, and the honest tradeoff.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0017-api-design-rest.html">
+    <span class="num">Lesson 11</span>
+    <div class="title">API Design (REST)</div>
+    <p class="blurb">How systems talk — nouns, verbs, status codes. The why under Django REST Framework.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0019-design-walkthrough-url-shortener.html">
+    <span class="num">Lesson 12 · Capstone</span>
+    <div class="title">Design a URL Shortener</div>
+    <p class="blurb">A full "Design X" run using every tool from both weeks. What interviews feel like.</p>
+  </a>
+
   <h2>Track B · Backend Depth</h2>
 
   <a class="lesson-card" href="lessons/0007-the-gil.html" style="border-left:3px solid var(--link);">
@@ -130,6 +161,18 @@
     <span class="num" style="color:var(--link);">Lesson B3 · Django ORM</span>
     <div class="title">The N+1 Query Trap</div>
     <p class="blurb">The invisible bug killing Django apps — spot it, fix it with select_related / prefetch_related.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0015-transactions-and-locking.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B4 · Databases</span>
+    <div class="title">Transactions &amp; Locking</div>
+    <p class="blurb">Why money doesn't double-spend — atomic transactions and the race-condition fix.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0018-async-await.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B5 · Python</span>
+    <div class="title">async / await</div>
+    <p class="blurb">One cook, many pots — overlapping I/O waits, and when async beats threads.</p>
   </a>
 
   <h2>Reference</h2>
