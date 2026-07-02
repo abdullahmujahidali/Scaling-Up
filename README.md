@@ -30,6 +30,8 @@ The name has two meanings: scaling *systems*, and scaling *yourself*.
 
 Two tracks that **alternate**: **System Design** (how big systems are built) and **Backend Depth** (why the code & database behave as they do).
 
+👉 **New here? Start with the [This Week plan](./this-week.html)** — a paced 7-day path through both tracks.
+
 **Track A — System Design**
 1. **[The Design Framework](./lessons/0001-the-design-framework.html)** — the 5-step script (Scope → Estimate → Draw → Deep-dive → Trade off) for any "Design X" question.
 2. **Consistency & Availability**, split into three short lessons:
@@ -38,9 +40,15 @@ Two tracks that **alternate**: **System Design** (how big systems are built) and
    - **[2c · The "Nines"](./lessons/0004-the-nines.html)** — measuring uptime; why chains multiply down and backups multiply up.
 3. **[Load Balancers](./lessons/0005-load-balancers.html)** — the host at the door; horizontal scaling; stateless servers.
 4. **[Caching](./lessons/0006-caching.html)** — desk vs archive; cache-aside vs write-through; staleness.
+5. **[CAP Theorem](./lessons/0008-cap-theorem.html)** — pick two when the network breaks; CP vs AP.
+6. **[SQL vs NoSQL](./lessons/0010-sql-vs-nosql.html)** — filing cabinet vs labeled boxes; ACID vs BASE; when to choose which.
+7. **[Replication & Sharding](./lessons/0012-replication-and-sharding.html)** — copy for reads vs split for size; the scaling ladder.
+8. **[Message Queues & Async](./lessons/0013-message-queues.html)** — queues + background workers (Celery); back pressure.
 
 **Track B — Backend Depth**
 - **[B1 · The GIL](./lessons/0007-the-gil.html)** — why Python threads don't split CPU work; threads vs processes vs async.
+- **[B2 · Database Indexes](./lessons/0009-database-indexes.html)** — the back-of-book index; reading EXPLAIN; the read/write tradeoff.
+- **[B3 · The N+1 Query Trap](./lessons/0011-n-plus-1-queries.html)** — the invisible Django ORM bug; select_related / prefetch_related.
 
 ## The learning model
 
