@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 2 · Scaling Up</title>
+<link rel="stylesheet" href="assets/lesson.css">
+<style>
+  .day { display: flex; gap: 1rem; align-items: flex-start; border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0.9rem 0; background: #fff; transition: border-color .12s; }
+  .day.done { background: var(--good-soft); border-color: var(--good); }
+  .day-check { flex: 0 0 auto; margin-top: 0.15rem; }
+  .day-check input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--good); }
+  .day-body { flex: 1; }
+  .day-label { font-family: ui-sans-serif, sans-serif; font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; color: var(--muted); }
+  .day-title { font-size: 1.15rem; font-weight: 600; margin: 0.1rem 0 0.3rem; }
+  .day-title a { color: var(--ink); }
+  .day-track { display:inline-block; font-family: ui-sans-serif, sans-serif; font-size: 0.66rem;
+    font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 20px; margin-left: 0.5rem; vertical-align: middle; }
+  .track-a { background: var(--accent-soft); color: var(--accent); }
+  .track-b { background: #eef3f8; color: var(--link); }
+  .track-rest { background: #f3f1ea; color: var(--muted); }
+  .day-blurb { color: var(--muted); font-size: 0.9rem; margin: 0; }
+  .progress-wrap { margin: 1.5rem 0; }
+  .progress-bar { height: 12px; background: var(--rule); border-radius: 20px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--good); width: 0%; transition: width .3s; }
+  .progress-text { font-family: ui-sans-serif, sans-serif; font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Scaling Up · Week 2</p>
+    <h1>Week 2</h1>
+    <p class="subtitle">The request's journey, database internals, and how systems are structured &amp; talk. Finished Week 1? You're ready.</p>
+  </header>
+
+  <div class="key">
+    <span class="callout-label">Before you start</span>
+    Ideally finish <a href="this-week.html">Week 1</a> first — Week 2 leans on it (CAP, caching, load balancers, indexes all come back). Same rhythm: one lesson a day, alternate tracks, Day 7 is review. Tick each day to save progress.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+    <div class="progress-text" id="ptext">0 of 6 lessons done</div>
+  </div>
+
+  <div class="day" data-day="1">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 1 · Monday</div>
+      <div class="day-title"><a href="lessons/0014-dns-and-cdn.html">DNS &amp; CDN</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">How a request even finds you — the phone book (DNS) and global warehouses (CDN) before your server runs.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="2">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 2 · Tuesday</div>
+      <div class="day-title"><a href="lessons/0015-transactions-and-locking.html">Transactions &amp; Locking</a><span class="day-track track-b">Track B</span></div>
+      <p class="day-blurb">Why money doesn't double-spend — all-or-nothing transactions and the race condition every backend dev meets.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="3">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 3 · Wednesday</div>
+      <div class="day-title"><a href="lessons/0016-monolith-vs-microservices.html">Monolith vs Microservices</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">One big app or many small ones — the real tradeoff, minus the hype. Restaurant vs food court.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="4">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 4 · Thursday</div>
+      <div class="day-title"><a href="lessons/0017-api-design-rest.html">API Design (REST)</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">How systems talk — nouns, verbs, status codes. The "why" under Django REST Framework.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="5">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 5 · Friday</div>
+      <div class="day-title"><a href="lessons/0018-async-await.html">async / await</a><span class="day-track track-b">Track B</span></div>
+      <p class="day-blurb">Doing many waits at once — one cook, many pots. When async beats threads. Completes the GIL story.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="6">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 6 · Saturday</div>
+      <div class="day-title"><a href="lessons/0019-design-walkthrough-url-shortener.html">Capstone: Design a URL Shortener</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">Your first full "Design X" run — uses every tool from both weeks. This is what interviews feel like.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="7">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 7 · Sunday</div>
+      <div class="day-title">Review &amp; Dry-Run <span class="day-track track-rest">Rest / Review</span></div>
+      <p class="day-blurb">No new lesson. Skim the <a href="reference/glossary.html">Glossary</a>, then ask me to <strong>dry-run a design with you out loud</strong> (rate limiter, chat app, Twitter feed). That practice is the highest-value thing you can do.</p>
+    </div>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>Your teacher is one message away.</strong> Finished the week? Say <em>"quiz me on weeks 1 and 2"</em> for an interleaved test, or <em>"let's dry-run a design"</em> to practice out loud. That's where it all comes together.
+  </div>
+
+  <footer class="lesson-foot">
+    <p>← <a href="this-week.html">Week 1</a> · <a href="index.html">course home</a>. After this: Week 3 (rate limiting deep-dive, denormalization, event streaming/Kafka, WebSockets, and more).</p>
+  </footer>
+
+</div>
+
+<script>
+  var KEY = 'scaling-up-week2';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  var days = Array.prototype.slice.call(document.querySelectorAll('.day'));
+  var fill = document.getElementById('fill');
+  var ptext = document.getElementById('ptext');
+  function refresh(){
+    var doneCount = 0, lessonDays = 6;
+    days.forEach(function(d){
+      var n = d.dataset.day, cb = d.querySelector('input');
+      cb.checked = !!saved[n];
+      d.classList.toggle('done', cb.checked);
+      if (cb.checked && n <= lessonDays) doneCount++;
+    });
+    var pct = Math.round((doneCount / lessonDays) * 100);
+    fill.style.width = pct + '%';
+    ptext.textContent = doneCount + ' of ' + lessonDays + ' lessons done' + (doneCount === lessonDays ? ' — Week 2 complete! 🎉' : '');
+  }
+  days.forEach(function(d){
+    d.querySelector('input').addEventListener('change', function(){
+      saved[d.dataset.day] = this.checked;
+      localStorage.setItem(KEY, JSON.stringify(saved));
+      refresh();
+    });
+  });
+  refresh();
+</script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

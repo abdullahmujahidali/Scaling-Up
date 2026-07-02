@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson B5 · async / await</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B5 · Python · Week 2 · Day 5</p>
+    <h1>async / await: doing many waits at once</h1>
+    <p class="subtitle">The other way to handle I/O — one worker who never sits idle. Builds straight on the GIL lesson.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>One concept: async concurrency</span>
+      <span>Win: know when async beats threads</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall the GIL)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: the GIL means threads don't help <em>which</em> kind of work, but <em>do</em> help which other kind — and why?</div>
+    <div class="answer">Threads don't help <strong>CPU-bound</strong> work (only one holds the GIL/talking stick at a time) but <em>do</em> help <strong>I/O-bound</strong> work (a waiting thread drops the stick so others run). async is another way to win at that I/O-bound case.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>async lets a single worker start many slow I/O tasks and switch between them whenever one is "waiting," instead of sitting idle.</strong> One cook juggling many pots — not many cooks.
+  </div>
+
+  <h2>The story: one cook, many pots</h2>
+  <p>A cook has to boil pasta (10 min), roast veg (15 min), and simmer sauce (8 min). A <em>naive</em> cook does them one at a time — 33 minutes. A <strong>smart</strong> cook starts the pasta, and <em>while it boils</em>, starts the veg, and <em>while both cook</em>, starts the sauce. Total time ≈ the longest single task, ~15 min. Same one cook — they just <strong>never stand around waiting.</strong></p>
+  <p>That's <strong>async</strong>. The "waiting" (water boiling) is the I/O — network calls, database, disk. <code>await</code> is the cook saying "this is going to wait a while — let me go start something else meanwhile."</p>
+
+  <figure>
+    <svg viewBox="0 0 640 140" role="img" aria-label="Sequential vs async overlapping waits">
+      <g font-family="ui-sans-serif, sans-serif" font-size="10" text-anchor="middle">
+        <text x="150" y="16" font-weight="700" fill="#9b1c1c">Sequential: wait, then wait, then wait</text>
+        <rect x="30" y="26" width="80" height="16" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <rect x="115" y="26" width="110" height="16" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <rect x="230" y="26" width="60" height="16" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <text x="160" y="58" fill="#6b6b6b">= slow (add up all the waits)</text>
+        <text x="150" y="88" font-weight="700" fill="#1d6b3a">Async: overlap the waits</text>
+        <rect x="30" y="98" width="80" height="12" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <rect x="30" y="112" width="110" height="12" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <rect x="30" y="126" width="60" height="10" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="430" y="118" fill="#6b6b6b">= fast (waits happen together)</text>
+      </g>
+    </svg>
+    <figcaption>Async overlaps the idle "waiting" time instead of stacking it.</figcaption>
+  </figure>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;"><code>import asyncio
+
+async def fetch(url):
+    ...                        # await a slow network call
+    return await http_get(url)
+
+# start all three; they overlap their waiting
+results = await asyncio.gather(fetch(a), fetch(b), fetch(c))</code></pre>
+
+  <h2>async vs threads — both help I/O, so which?</h2>
+  <p>From the GIL lesson you know threads <em>also</em> help I/O-bound work. So what's the difference?</p>
+  <table>
+    <tr><th></th><th>Threads</th><th>async (asyncio)</th></tr>
+    <tr><td>Who switches</td><td>The OS, anytime (pre-emptive)</td><td>Your code, at each <code>await</code> (cooperative)</td></tr>
+    <tr><td>Cost each</td><td>Heavier (real OS threads)</td><td>Very light (thousands cheaply)</td></tr>
+    <tr><td>Best at</td><td>Moderate I/O, mixing with blocking libs</td><td>Huge numbers of I/O waits (thousands of connections)</td></tr>
+  </table>
+  <p><strong>Rule of thumb:</strong> a few dozen I/O tasks → threads are fine. <em>Thousands</em> of simultaneous connections (a chat server, a web scraper hitting 10,000 URLs) → async shines, because each one is cheap.</p>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    Modern Django supports <code>async def</code> views and an async ORM path. It helps most when a view does lots of <em>waiting</em> — calling several external APIs, handling many long-lived connections (websockets via Channels). But careful: mixing <code>await</code> with old <em>blocking</em> code (a sync DB driver, <code>time.sleep</code>) stalls the whole event loop — one cook who insists on standing and watching one pot blocks all the others. And remember: async does <strong>not</strong> help CPU-bound work — that's still processes/Celery (from the GIL lesson).
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: does async help CPU-bound work? And what's the one-line difference from threads?</div>
+    <div class="answer"><strong>No</strong> — async only helps I/O-bound (waiting) work, not CPU crunching (still needs processes). Difference from threads: async switches <em>cooperatively</em> at each <code>await</code> (your code decides) and is far lighter, so it scales to thousands of waits.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label">The classic async trap — name it</span>
+    One <strong>blocking</strong> call in async code (a sync library, <code>time.sleep(5)</code>, heavy math) freezes the <em>entire</em> event loop — every other task stalls, because there's only one cook and they're stuck at one pot. The whole model depends on every task politely <code>await</code>-ing during waits. This "don't block the event loop" rule is the #1 thing that bites people.
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">You need to fetch data from 5,000 URLs (mostly waiting on the network). Which approach fits best?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">async — thousands of cheap concurrent I/O waits</button>
+      <button class="opt" data-correct="false">5,000 processes, one per URL</button>
+      <button class="opt" data-correct="false">One thread doing them strictly one at a time</button>
+      <button class="opt" data-correct="false">Nothing helps — the GIL blocks it all</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">Inside an async view, someone adds a heavy <code>compute_hash()</code> (pure CPU) that runs for 3 seconds inline. What happens?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">It runs faster because it's async</button>
+      <button class="opt" data-correct="true">It blocks the event loop — all other tasks stall for 3s</button>
+      <button class="opt" data-correct="false">Async automatically moves it to another core</button>
+      <button class="opt" data-correct="false">Nothing — CPU work is fine in async</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today — and Week 2 is complete! 🎉</span>
+    async = one worker (cook) who overlaps waits instead of standing idle. It beats threads when you have <em>thousands</em> of cheap I/O waits, switches cooperatively at each <code>await</code>, and — like threads — does nothing for CPU work (use processes). The golden rule: never block the event loop. You now understand all three concurrency tools: threads, processes, and async.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://docs.python.org/3/library/asyncio.html" target="_blank">Python docs — asyncio</a><sup class="cite"><a href="#s1">1</a></sup> and Django's <a href="https://docs.djangoproject.com/en/stable/topics/async/" target="_blank">async support docs</a>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want the full "threads vs processes vs async" decision tree for a real task, or how the event loop actually works under the hood? Ask. And when you finish Week 2, say <em>"quiz me on the week."</em>
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B5 (async/await).</strong> Completes the concurrency trio started in <a href="0007-the-gil.html">the GIL (B1)</a>. <strong>End of Week 2.</strong> See the <a href="../this-week-2.html">Week 2 plan</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.python.org/3/library/asyncio.html" target="_blank">Python docs — asyncio</a>.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Thousands of network waits = async's sweet spot — each 'task' is cheap, and they overlap their waiting. Processes would be far too heavy."
+                      : "Reconsider. 5,000 mostly-waiting network calls is exactly what async is built for (thousands of cheap concurrent waits). Processes are too heavy; one-at-a-time is slow.",
+          q2: correct ? "Yes. A 3-second CPU task with no await freezes the single event loop — every other task stalls. CPU work must go to a process/executor, not inline async."
+                      : "Reconsider. async doesn't speed up CPU work or use other cores. A long inline CPU task blocks the one event loop, stalling everything until it finishes."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

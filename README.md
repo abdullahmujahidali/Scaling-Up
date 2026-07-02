@@ -44,11 +44,19 @@ Two tracks that **alternate**: **System Design** (how big systems are built) and
 6. **[SQL vs NoSQL](./lessons/0010-sql-vs-nosql.html)** — filing cabinet vs labeled boxes; ACID vs BASE; when to choose which.
 7. **[Replication & Sharding](./lessons/0012-replication-and-sharding.html)** — copy for reads vs split for size; the scaling ladder.
 8. **[Message Queues & Async](./lessons/0013-message-queues.html)** — queues + background workers (Celery); back pressure.
+9. **[DNS & CDN](./lessons/0014-dns-and-cdn.html)** — how a request finds you; the phone book and global file warehouses.
+10. **[Monolith vs Microservices](./lessons/0016-monolith-vs-microservices.html)** — one big app or many small; the honest tradeoff.
+11. **[API Design (REST)](./lessons/0017-api-design-rest.html)** — nouns, verbs, status codes; the why under DRF.
+12. **[Capstone: Design a URL Shortener](./lessons/0019-design-walkthrough-url-shortener.html)** — a full "Design X" using every tool so far.
 
 **Track B — Backend Depth**
 - **[B1 · The GIL](./lessons/0007-the-gil.html)** — why Python threads don't split CPU work; threads vs processes vs async.
 - **[B2 · Database Indexes](./lessons/0009-database-indexes.html)** — the back-of-book index; reading EXPLAIN; the read/write tradeoff.
 - **[B3 · The N+1 Query Trap](./lessons/0011-n-plus-1-queries.html)** — the invisible Django ORM bug; select_related / prefetch_related.
+- **[B4 · Transactions & Locking](./lessons/0015-transactions-and-locking.html)** — atomic transactions; race conditions; select_for_update.
+- **[B5 · async / await](./lessons/0018-async-await.html)** — overlapping I/O waits; when async beats threads; don't block the event loop.
+
+**Plans:** [Week 1](./this-week.html) · [Week 2](./this-week-2.html)
 
 ## The learning model
 

@@ -96,3 +96,43 @@ Work limited by waiting (network, disk, database). Threads (and async) help: a w
 
 **Thread vs process**:
 Threads in one process share one GIL (good for I/O-bound work). Separate processes each get their own GIL (good for CPU-bound work — real multi-core use).
+
+**async / await**:
+One worker overlapping many I/O waits by switching at each `await` (cooperative). Very lightweight; scales to thousands of waits. Helps I/O-bound work only, not CPU.
+
+**Event loop**:
+The single loop that runs async tasks, switching at each `await`. A blocking call freezes it and stalls every task.
+
+## Data Integrity
+
+**Transaction**:
+A group of database steps treated as all-or-nothing. The "A" (atomicity) in ACID. Django: `transaction.atomic()`.
+
+**Race condition**:
+Two operations running at the same time that read-then-write the same data, producing a wrong result (e.g. selling one seat twice).
+
+**Lock**:
+Reserves a row so only one transaction can touch it at a time; others wait. Prevents race conditions. Django: `select_for_update()`. Overuse risks deadlocks.
+
+## Delivery & Structure
+
+**DNS (Domain Name System)**:
+The internet's phone book: name (example.com) → IP address. Cached with a TTL. A record = name→IP; CNAME = name→another name.
+
+**CDN (Content Delivery Network)**:
+Global servers holding copies of static files near users, for speed. Push = you upload up front; Pull = fetched on first request then cached.
+
+**Monolith**:
+One application that does everything, deployed as a unit. Simple; can be coupled. Often the right default.
+
+**Microservices**:
+Splitting an app into many small, independently deployable services talking over the network. Buys independence, pays in complexity.
+
+**REST**:
+API style: resources (nouns) at URLs, acted on by a small set of HTTP verbs, with self-describing status codes. Good for public APIs.
+
+**RPC**:
+Calling a named function on a remote server (exposes actions). Fast, tightly coupled — good for internal service-to-service calls (gRPC).
+
+**Idempotent**:
+Safe to repeat with the same result (GET, PUT, DELETE are; POST usually isn't). Important for safe retries.

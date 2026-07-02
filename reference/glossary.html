@@ -216,6 +216,70 @@
       <div class="term-def">Threads in one process share one GIL (good for I/O-bound work). Separate processes each get their own GIL (good for CPU-bound work — real multi-core use).</div>
     </div>
 
+    <div class="term" data-name="async await asyncio event loop">
+      <div class="term-name">async / await</div>
+      <div class="term-def">One worker overlapping many I/O waits by switching at each <code>await</code> (cooperative). Very lightweight — scales to thousands of concurrent waits. Helps I/O-bound work only, not CPU. (Story: one cook, many pots.)</div>
+    </div>
+
+    <div class="term" data-name="event loop">
+      <div class="term-name">Event loop</div>
+      <div class="term-def">The single loop that runs async tasks, switching between them at each <code>await</code>. A blocking call (CPU work, sync I/O) freezes it and stalls every task.</div>
+    </div>
+
+    <h2 class="group-head" data-group>Data Integrity</h2>
+
+    <div class="term" data-name="transaction atomic acid atomicity">
+      <div class="term-name">Transaction</div>
+      <div class="term-def">A group of database steps treated as all-or-nothing — they all commit, or all roll back. The "A" (atomicity) in ACID. In Django: <code>transaction.atomic()</code>.</div>
+    </div>
+
+    <div class="term" data-name="race condition">
+      <div class="term-name">Race condition</div>
+      <div class="term-def">A bug where two operations run at the same time and read-then-write the same data, producing a wrong result (e.g. selling one seat twice).</div>
+    </div>
+
+    <div class="term" data-name="lock locking select for update deadlock">
+      <div class="term-name">Lock</div>
+      <div class="term-def">Reserves a row so only one transaction can touch it at a time; others wait. Prevents race conditions. In Django: <code>select_for_update()</code>. Overuse risks slowdowns or deadlocks.</div>
+    </div>
+
+    <h2 class="group-head" data-group>Delivery &amp; Structure</h2>
+
+    <div class="term" data-name="dns domain name system a record cname">
+      <div class="term-name">DNS <span class="alias-tag">Domain Name System</span></div>
+      <div class="term-def">The internet's phone book: translates a name (example.com) into an IP address. Cached with a TTL. An A record maps name→IP; a CNAME maps name→another name.</div>
+    </div>
+
+    <div class="term" data-name="cdn content delivery network push pull">
+      <div class="term-name">CDN <span class="alias-tag">Content Delivery Network</span></div>
+      <div class="term-def">A global network of servers holding copies of your static files near users, for speed. Push CDN = you upload up front; Pull CDN = it fetches on first request then caches.</div>
+    </div>
+
+    <div class="term" data-name="monolith">
+      <div class="term-name">Monolith</div>
+      <div class="term-def">One application that does everything, deployed as a unit. Simple; can be coupled and scale as a whole. Often the right default.</div>
+    </div>
+
+    <div class="term" data-name="microservices service discovery">
+      <div class="term-name">Microservices</div>
+      <div class="term-def">Splitting an app into many small, independently deployable services that talk over the network. Buys independence (deploy/scale/failure isolation); pays in complexity. Service discovery tracks which service is where.</div>
+    </div>
+
+    <div class="term" data-name="rest representational state transfer api">
+      <div class="term-name">REST</div>
+      <div class="term-def">An API style: resources (nouns) at URLs, acted on by a small set of HTTP verbs (GET/POST/PUT/PATCH/DELETE), with self-describing status codes. Exposes data; low coupling. Good for public APIs.</div>
+    </div>
+
+    <div class="term" data-name="rpc remote procedure call grpc">
+      <div class="term-name">RPC</div>
+      <div class="term-def">Calling a named function on a remote server (exposes actions, not resources). Fast, tightly coupled — good for internal service-to-service calls (e.g. gRPC).</div>
+    </div>
+
+    <div class="term" data-name="idempotent idempotency">
+      <div class="term-name">Idempotent</div>
+      <div class="term-def">Safe to do more than once with the same result (GET, PUT, DELETE are; POST usually isn't). Important for retries — a retried job shouldn't double-charge.</div>
+    </div>
+
   </div>
 
   <div class="no-results" id="noResults">No terms match that search.</div>

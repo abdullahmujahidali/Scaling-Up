@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 10 · Monolith vs Microservices</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 10 · Week 2 · Day 3</p>
+    <h1>Monolith vs microservices: one big app or many small ones</h1>
+    <p class="subtitle">The architecture debate everyone has an opinion on. Here's the actual tradeoff, minus the hype.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: this architectural split</span>
+      <span>Win: argue either side honestly</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall transactions)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: what does a transaction guarantee, and what does a lock prevent?</div>
+    <div class="answer">A <strong>transaction</strong> makes multiple steps all-or-nothing (survives crashes). A <strong>lock</strong> stops two concurrent operations from corrupting the same row (survives race conditions).</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>A monolith is one app that does everything. Microservices split it into many small apps, each owning one job, talking over the network.</strong> Microservices buy independence — and pay with complexity.
+  </div>
+
+  <h2>The story: one big restaurant vs a food court</h2>
+  <p><strong>Monolith = one big restaurant.</strong> One kitchen, one menu, one team. Simple to run: everything's in one place, easy to coordinate. But if the kitchen catches fire, the <em>whole</em> restaurant closes. And you can't let the dessert team work faster without touching the whole kitchen.</p>
+  <p><strong>Microservices = a food court.</strong> Separate independent stalls — pizza, sushi, coffee — each with its own kitchen and team. The sushi stall can be upgraded, scaled, or even burn down without closing the pizza stall. But now you need shared plumbing, a directory of who's where, and stalls have to <em>talk</em> to each other (over the network) to serve a combined meal.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 160" role="img" aria-label="Monolith one block vs microservices many blocks">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <text x="150" y="18" font-weight="700" fill="#9b1c1c">Monolith</text>
+        <rect x="60" y="30" width="180" height="100" rx="8" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <text x="150" y="75" fill="#9b1c1c" font-weight="600">one app</text>
+        <text x="150" y="93" fill="#6b6b6b" font-size="10">users · orders · billing</text>
+        <text x="490" y="18" font-weight="700" fill="#1d6b3a">Microservices</text>
+        <g fill="#e8f3ec" stroke="#1d6b3a">
+          <rect x="390" y="30" width="90" height="42" rx="6"/><rect x="500" y="30" width="90" height="42" rx="6"/>
+          <rect x="390" y="88" width="90" height="42" rx="6"/><rect x="500" y="88" width="90" height="42" rx="6"/>
+        </g>
+        <g fill="#1d6b3a" font-size="10" font-weight="600">
+          <text x="435" y="55">users</text><text x="545" y="55">orders</text>
+          <text x="435" y="113">billing</text><text x="545" y="113">search</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption>One block that does everything vs many blocks each owning one thing.</figcaption>
+  </figure>
+
+  <h2>The honest tradeoff</h2>
+  <table>
+    <tr><th></th><th>Monolith</th><th>Microservices</th></tr>
+    <tr><td>Deploy</td><td>One thing, simple</td><td>Each service independently</td></tr>
+    <tr><td>Scale</td><td>Scale the whole app</td><td>Scale just the busy service</td></tr>
+    <tr><td>A crash</td><td>Can take down everything</td><td>Isolated to one service</td></tr>
+    <tr><td>Complexity</td><td>Low — one codebase</td><td>High — network, discovery, monitoring</td></tr>
+    <tr><td>Teams</td><td>Coordinate on one repo</td><td>Own services independently</td></tr>
+  </table>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    Your Django app is almost certainly a <strong>monolith</strong> — users, orders, billing, all in one project, one deploy. And that's <em>fine</em> — often the right choice. Microservices solve <em>organizational</em> and <em>extreme-scale</em> problems (many teams stepping on each other, one feature needing to scale 100× more than the rest), not "my app feels big." Splitting a healthy monolith too early just trades simple problems for distributed-systems problems (network failures, the CAP tradeoffs from Week 1, harder debugging).
+  </div>
+
+  <div class="warn">
+    <span class="callout-label">The interview-winning nuance</span>
+    "<strong>Start with a monolith; extract microservices when a specific pain forces it.</strong>" The pains that justify it: independent team ownership, one component needing very different scaling, or independent deploy cadence. Saying "microservices aren't automatically better — they trade simplicity for independence" shows real judgment. Reaching for microservices by default is a classic over-engineering tell.
+  </div>
+
+  <p><strong>One supporting piece:</strong> when services are split up, how does one find another's address? <strong>Service discovery</strong> (tools like Consul) — a live directory of "which service is at which address," with health checks. It's the food court's "you are here" map.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: name one real benefit of microservices and one real cost.</div>
+    <div class="answer"><strong>Benefit</strong> (any): independent deploys, isolated failures, scale one service alone, teams own services. <strong>Cost</strong> (any): network complexity, harder debugging, service discovery/monitoring overhead, distributed-systems problems (CAP).</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">A 4-person team runs one Django app serving 10k users comfortably. They read that "microservices scale better" and want to split into 8 services. Best advice?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Stay a monolith — no pain here justifies the added complexity</button>
+      <button class="opt" data-correct="false">Split immediately — microservices are always more scalable</button>
+      <button class="opt" data-correct="false">Split into exactly 8, one per database table</button>
+      <button class="opt" data-correct="false">Rewrite in a different language first</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">Which is a genuine reason to extract a microservice?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">The codebase "feels big"</button>
+      <button class="opt" data-correct="true">One component must scale 100× more than the rest, independently</button>
+      <button class="opt" data-correct="false">Microservices are the modern default</button>
+      <button class="opt" data-correct="false">To avoid writing database transactions</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    Monolith = one restaurant (simple, but coupled); microservices = a food court (independent, but complex). Microservices buy independent deploys/scaling/failure-isolation and pay in network + operational complexity. The senior line: <strong>start monolith, split when a concrete pain demands it</strong> — not by default. You can now argue this honestly, which is exactly what interviews probe.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#microservices" target="_blank">System Design Primer — Microservices</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to talk through whether a real system should split, or how services actually communicate (which is the next lesson — API design)? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 10 (monolith vs microservices).</strong> Its network tradeoffs tie back to <a href="0008-cap-theorem.html">CAP (5)</a>. Next (Day 4, Track A): <em>API design — REST</em> (how services talk).</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#microservices" target="_blank">The System Design Primer — Microservices</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Small team, comfortable scale, no concrete pain = stay monolith. Splitting now trades simple problems for distributed-systems ones."
+                      : "Reconsider. 'Scales better' isn't a reason without an actual bottleneck. A small team at comfortable scale should stay a monolith until a real pain appears.",
+          q2: correct ? "Yes. A component needing very different, independent scaling is a legitimate driver for extraction. The others are hype or non-reasons."
+                      : "Reconsider. 'Feels big', 'it's modern', and 'avoid transactions' aren't real drivers. Independent extreme scaling (or independent team ownership) is."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

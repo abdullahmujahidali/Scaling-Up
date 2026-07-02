@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 9 · DNS &amp; CDN</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 09 · Week 2 · Day 1</p>
+    <h1>DNS &amp; CDN: how a request even finds you</h1>
+    <p class="subtitle">The two things that happen before your server ever sees a request. Two ideas, two stories.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>Two front-door concepts: DNS &amp; CDN</span>
+      <span>Win: explain how users reach your app fast</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall Week 1: queues)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: what does a message queue let a web request do, and why is that good?</div>
+    <div class="answer">It lets the request <strong>drop a slow job in a line and return immediately</strong>, while a background worker does the heavy part later. The user isn't stuck waiting. (That's async work — think Celery.)</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>DNS turns a name (example.com) into an address (an IP). A CDN keeps copies of your files close to users around the world so they load fast.</strong> Both happen before your app server does any work.
+  </div>
+
+  <h2>Part 1 · DNS — the internet's phone book</h2>
+  <p><strong>Story:</strong> you want to call "Ali's Pizza" but you only know the <em>name</em>, not the number. You look it up in a phone book, get the number, then dial. <strong>DNS is that phone book for the internet.</strong> You type <code>example.com</code> (a name); DNS looks up its <strong>IP address</strong> (the number); your browser then connects to that address.</p>
+  <p>A couple of things worth knowing:</p>
+  <ul>
+    <li><strong>It's cached.</strong> Your browser and OS remember the lookup for a while (a <strong>TTL</strong> — same "let it go stale after N seconds" idea from caching). So it's not looked up every single time.</li>
+    <li><strong>Record types</strong> — the phone book has different entry kinds. The main one: an <strong>A record</strong> maps a name → an IP. A <strong>CNAME</strong> maps a name → another name (an alias). You don't need the rest yet.</li>
+    <li><strong>Managed DNS</strong> (Cloudflare, Route 53) can route smartly — send users to the <em>nearest</em> or <em>least-loaded</em> server (geolocation / latency-based routing).</li>
+  </ul>
+
+  <div class="warn">
+    <span class="callout-label">The catch</span>
+    DNS adds a small delay (the lookup), and it's a juicy target — a big <strong>DDoS attack on DNS</strong> can take whole websites offline even if the sites themselves are fine, because nobody can find their address. That's why serious sites use resilient managed DNS.
+  </div>
+
+  <h2>Part 2 · CDN — copies of your files, near everyone</h2>
+  <p><strong>Story:</strong> your shop's warehouse is in Karachi. A customer in London orders a poster — shipping from Karachi is slow. So you keep copies of your popular posters in a <em>London</em> warehouse too, and one in New York, and Tokyo. Now everyone gets theirs from a nearby shelf. <strong>That's a CDN</strong> — a global network of servers holding copies of your static files (images, CSS, JS, video) close to users.</p>
+  <p>Two ways the copies get there:</p>
+  <table>
+    <tr><th>Type</th><th>How copies arrive</th><th>Best for</th></tr>
+    <tr><td><strong>Push CDN</strong></td><td>You upload files to the CDN yourself, up front</td><td>Smaller sites, content that rarely changes</td></tr>
+    <tr><td><strong>Pull CDN</strong></td><td>CDN fetches from your server the first time it's requested, then keeps it</td><td>High-traffic sites (first request is slow, rest are fast)</td></tr>
+  </table>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    You've met this: in production you run <code>collectstatic</code> and serve your CSS/JS/images from a CDN (via S3 + CloudFront, or Whitenoise + a CDN in front) — <em>not</em> from Django itself. Why? Django's job is dynamic pages; static files are better served as cached copies near the user. Same "keep a copy closer" idea as the caching lesson, but spread across the globe. Your Django server never even sees those requests — the CDN answers them.
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: one line each — what does DNS do, and what does a CDN do?</div>
+    <div class="answer"><strong>DNS</strong> turns a name (example.com) into an IP address so your browser can connect. <strong>CDN</strong> keeps copies of static files on servers near users worldwide so they load fast.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label">CDN's tradeoff — name it</span>
+    A CDN copy can be <strong>stale</strong> if you update a file before its TTL expires (that's why you'll see cache-busting like <code>style.css?v=3</code> in filenames). And CDNs cost money at high traffic. Speed vs. staleness vs. cost — the same tradeoff family you keep meeting.
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">Users worldwide complain your site's images load slowly, though your server is healthy. Images are static. Best fix?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Serve images via a CDN (copies near users)</button>
+      <button class="opt" data-correct="false">Add a database index on the image table</button>
+      <button class="opt" data-correct="false">Switch DNS to a CNAME record</button>
+      <button class="opt" data-correct="false">Move image serving into your Django views</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">You type a domain and the browser needs the server's IP address to connect. What provides that translation?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">The CDN's nearest edge server</button>
+      <button class="opt" data-correct="true">DNS — the name-to-IP lookup</button>
+      <button class="opt" data-correct="false">The load balancer's health check</button>
+      <button class="opt" data-correct="false">A read replica of the database</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    Before your app runs: <strong>DNS</strong> (the phone book) turns the name into an IP, and a <strong>CDN</strong> (global warehouses) serves static files from near the user. Both are cached, both trade a little staleness for speed. Now the full path — <em>DNS → CDN → load balancer → server → cache → database</em> — makes sense end to end.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#domain-name-system" target="_blank">System Design Primer — DNS &amp; CDN</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want the full request journey drawn out (what happens between typing a URL and seeing the page)? Or push vs pull CDN for a real project? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 9 (DNS &amp; CDN).</strong> Completes the "front door" with <a href="0005-load-balancers.html">load balancers (3)</a>. Next (Day 2, Track B): <em>Transactions &amp; Locking</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#domain-name-system" target="_blank">The System Design Primer — DNS &amp; CDN</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Slow static assets for a global audience = serve them from a CDN so copies live near each user."
+                      : "Reconsider. The server is healthy and the files are static — the issue is distance. A CDN puts copies near users. Indexes/DNS records/Django views don't address geography.",
+          q2: correct ? "Yes. Name → IP is exactly DNS's job — the internet's phone book."
+                      : "Reconsider. Translating a domain name to an IP address is DNS. CDNs serve files, load balancers spread traffic, replicas hold data."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

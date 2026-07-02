@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 12 · Design Walkthrough — a URL Shortener</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 12 · Week 2 · Day 6 · Capstone</p>
+    <h1>Putting it together: design a URL shortener</h1>
+    <p class="subtitle">Your first full run at a real "Design X" — using the framework and every tool you've learned.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>Skill: apply the whole toolkit</span>
+      <span>Win: run a design end-to-end</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label">What's different about this lesson</span>
+    No new concept today. Instead we <strong>use everything</strong> — the 5-step framework plus consistency, caching, load balancing, databases, indexes. This is how interviews actually feel. Try to answer each step <em>before</em> reading mine.
+  </div>
+
+  <h2>The prompt: "Design a URL shortener" (like bit.ly)</h2>
+  <p>Turn <code>example.com/some/very/long/link</code> into <code>short.ly/aB3x9</code>, and when someone visits the short link, redirect them to the long one. Let's run the <a href="0001-the-design-framework.html">5-step framework</a>.</p>
+
+  <h3>Step 1 · Scope — what &amp; how big</h3>
+  <p><em>Your turn first — what questions would you ask?</em></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal my scoping</div>
+    <div class="answer">
+      <strong>Features (in scope):</strong> create a short link; redirect a short link to the long URL. <strong>Out of scope:</strong> user accounts, analytics dashboards, custom aliases (cut them to stay focused).<br>
+      <strong>Scale questions:</strong> how many new links/day, how many redirects/day? Key insight: this is <strong>massively read-heavy</strong> — few creates, tons of redirects. That one fact drives the whole design.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3>Step 2 · Estimate — rough numbers</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal the napkin math</div>
+    <div class="answer">
+      Say 100M new links/day (writes) but 10B redirects/day (reads) — a <strong>100:1 read:write ratio</strong>. Reads dominate. That immediately says: <strong>we'll need heavy caching and read replicas</strong> (Week 1!). Storage: 100M/day × a few years ≈ billions of rows — big, but each row is tiny.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3>Step 3 · Draw — the high-level design</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal the boxes &amp; arrows</div>
+    <div class="answer">
+      <strong>DNS</strong> → <strong>load balancer</strong> → <strong>app servers</strong> (stateless!) → check <strong>cache</strong> (Redis) → on miss, hit the <strong>database</strong>. That's the whole happy path — and you drew every box in Weeks 1–2:
+      <br>• Load balancer + stateless servers → <a href="0005-load-balancers.html">Lesson 3</a><br>• Cache for hot links → <a href="0006-caching.html">Lesson 4</a><br>• DNS out front → <a href="0014-dns-and-cdn.html">Lesson 9</a>
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 640 90" role="img" aria-label="Request flow for the URL shortener">
+      <g font-family="ui-sans-serif, sans-serif" font-size="10" text-anchor="middle" fill="#333">
+        <rect x="10" y="30" width="70" height="34" rx="5" fill="#f3f1ea" stroke="#1a1a1a"/><text x="45" y="51">DNS</text>
+        <rect x="100" y="30" width="90" height="34" rx="5" fill="#f6e9e9" stroke="#9b1c1c"/><text x="145" y="51" fill="#9b1c1c">load balancer</text>
+        <rect x="210" y="30" width="90" height="34" rx="5" fill="#e8f3ec" stroke="#1d6b3a"/><text x="255" y="51" fill="#1d6b3a">app servers</text>
+        <rect x="320" y="30" width="80" height="34" rx="5" fill="#e8f3ec" stroke="#1d6b3a"/><text x="360" y="51" fill="#1d6b3a">cache</text>
+        <rect x="420" y="30" width="100" height="34" rx="5" fill="#eef3f8" stroke="#2a4d8f"/><text x="470" y="51" fill="#2a4d8f">database</text>
+        <line x1="80" y1="47" x2="98" y2="47" stroke="#666"/><line x1="190" y1="47" x2="208" y2="47" stroke="#666"/>
+        <line x1="300" y1="47" x2="318" y2="47" stroke="#666"/><line x1="400" y1="47" x2="418" y2="47" stroke="#666" stroke-dasharray="3 2"/>
+      </g>
+    </svg>
+    <figcaption>Every box here is a Week 1–2 lesson. That's the point.</figcaption>
+  </figure>
+
+  <h3>Step 4 · Deep-dive — the two hard parts</h3>
+  <p><strong>(a) How do we generate the short code?</strong></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal</div>
+    <div class="answer">Give each link a unique number (an ID) and encode it in <strong>base62</strong> (a–z, A–Z, 0–9) to get a short string like <code>aB3x9</code>. 62⁷ ≈ 3.5 trillion combos in 7 characters — plenty. The database's primary key gives us the unique number for free.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+  <p><strong>(b) How is the redirect so fast at 10B/day?</strong></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal</div>
+    <div class="answer">
+      The lookup is "short code → long URL." Two moves make it instant:<br>
+      1. <strong>Index</strong> the short-code column (<a href="0009-database-indexes.html">B2</a>) so the DB jumps straight to the row, no full scan.<br>
+      2. <strong>Cache</strong> hot links in Redis (<a href="0006-caching.html">Lesson 4</a>) — most redirects are for a small set of popular links, so they never even touch the database. And add <strong>read replicas</strong> (<a href="0012-replication-and-sharding.html">Lesson 7</a>) for the rest.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3>Step 5 · Trade off — what did we give up?</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Reveal the tradeoffs to name out loud</div>
+    <div class="answer">
+      • <strong>Consistency:</strong> a brand-new link might take a moment to appear on all read replicas (<strong>eventual consistency</strong>, <a href="0002-consistency-and-availability.html">2a</a>) — totally fine here; nobody notices a 1-second delay before a link works.<br>
+      • <strong>CAP:</strong> we'd lean <strong>AP</strong> (<a href="0008-cap-theorem.html">Lesson 5</a>) — always redirect, even if slightly stale, over refusing.<br>
+      • <strong>SQL vs NoSQL:</strong> simple key→value lookups at huge scale (<a href="0010-sql-vs-nosql.html">Lesson 6</a>) actually suit a key-value/NoSQL store well — a defensible choice worth stating.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    You just ran a real "Design X" end-to-end — scoped it, estimated, drew it, went deep on two parts, and named the tradeoffs. And <em>every</em> tool you reached for was something you've learned: framework, load balancer, cache, index, replicas, consistency, CAP, SQL/NoSQL. That's not memorizing — that's <strong>designing</strong>. This is exactly what the interview and the promotion conversation test.
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — let's practice for real.</strong> Pick another classic — "Design a rate limiter," "Design Twitter's feed," "Design a chat app" — and <strong>dry-run it out loud with me</strong>. I'll play interviewer and critique your <em>structure</em>, not just the answer. This is the single highest-value thing you can do now.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 12 (capstone).</strong> Uses the whole toolkit. Day 7 = review the week + quiz. Then Week 3.</p>
+  </footer>
+
+</div>
+<script src="../assets/nav.js"></script>
+</body>
+</html>
