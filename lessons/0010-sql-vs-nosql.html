@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 · SQL vs NoSQL</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 06 · Week Day 3</p>
+    <h1>SQL vs NoSQL: picking the right kind of database</h1>
+    <p class="subtitle">The most common interview deep-dive — and it's a choice, not a religion.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: choosing a database type</span>
+      <span>Win: justify SQL or NoSQL out loud</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall indexes)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: what does a database index do, and what's the tradeoff for having one?</div>
+    <div class="answer">It lets the DB <strong>jump straight to rows</strong> (like a book's index) instead of scanning the whole table — faster <em>reads</em>. Tradeoff: slower <em>writes</em> and more disk, since each index updates on every write.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>SQL = structured tables with strict rules and powerful joins. NoSQL = flexible shapes that scale huge, trading strict rules for speed and scale.</strong> Neither is "better" — you pick based on your data.
+  </div>
+
+  <h2>The story: a filing cabinet vs a pile of labeled boxes</h2>
+  <p><strong>SQL is a filing cabinet</strong> with labeled, identical folders. Every record must fit the folder's shape (the <em>schema</em>). It's strict, but that strictness lets you cross-reference reliably — "give me every order for every customer in Karachi" is easy because everything's neatly related. That cross-referencing is a <strong>join</strong>.</p>
+  <p><strong>NoSQL is a room of labeled boxes.</strong> Each box can hold whatever shape you want, and you can add a million boxes across many rooms cheaply. Fast and flexible — but there's no built-in "cross-reference everything" (joins live in your app code instead), and freshly-written info might take a moment to appear everywhere (eventual consistency, remember 2a).</p>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    Django's ORM <em>is</em> SQL thinking: models = tables, fields = columns, <code>ForeignKey</code> = the relationship you join on. You've been doing relational (SQL) design all along — that's your home turf. NoSQL (Mongo, DynamoDB, Redis, Cassandra) drops the rigid schema and the joins in exchange for flexibility and massive scale. Knowing your Django/Postgres world is SQL makes the contrast easy.
+  </div>
+
+  <h2>ACID vs BASE (the personalities)</h2>
+  <table>
+    <tr><th></th><th>SQL — "ACID"</th><th>NoSQL — "BASE"</th></tr>
+    <tr><td>Promise</td><td>Every transaction is all-or-nothing and correct</td><td>Basically available; consistent <em>eventually</em></td></tr>
+    <tr><td>Schema</td><td>Strict, defined up front</td><td>Flexible, per-record</td></tr>
+    <tr><td>Joins</td><td>Built-in, powerful</td><td>Done in app code</td></tr>
+    <tr><td>Scaling</td><td>Harder past one big machine</td><td>Built to spread across many</td></tr>
+  </table>
+  <p>You met ACID in the CAP lesson (strong consistency). BASE is the relaxed cousin: trade strict correctness for availability and scale.</p>
+
+  <h2>When to choose which</h2>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:230px;" class="key">
+      <span class="callout-label">Reach for SQL when…</span>
+      Data is structured and relational · you need transactions (money!) · complex queries and joins · the schema is stable · correctness matters more than raw scale.
+    </div>
+    <div style="flex:1;min-width:230px;" class="bridge">
+      <span class="callout-label">Reach for NoSQL when…</span>
+      Schema changes a lot or varies · huge volume (TB/PB) · very high write throughput · simple lookups by key · things like clickstreams, leaderboards, carts, caches, hot tables.
+    </div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label">The interview-winning line</span>
+    "<strong>SQL by default; NoSQL for a specific reason.</strong>" Most apps are well served by a relational database (it's flexible, well-understood, and Postgres scales further than people think). Reach for NoSQL when you have a concrete need it fits — massive scale, a flexible schema, or a specialized access pattern. Saying that shows judgment, not hype.
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: name two reasons you'd deliberately choose NoSQL over SQL.</div>
+    <div class="answer">Any two of: schema changes often / varies per record; huge data volume (TB–PB); very high write throughput; simple key lookups; specialized patterns like leaderboards, clickstream, carts, or caching.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">You're building a banking ledger: money transfers must be all-or-nothing, and you need complex reports joining accounts, transactions, and customers. Best fit?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">SQL — ACID transactions and joins</button>
+      <button class="opt" data-correct="false">NoSQL — for maximum write speed</button>
+      <button class="opt" data-correct="false">A key-value cache as the main store</button>
+      <button class="opt" data-correct="false">Whatever scales to the most machines</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">You're storing a real-time game leaderboard: billions of score updates, simple "get top N" lookups, schema barely matters. Best fit?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">SQL with lots of joins</button>
+      <button class="opt" data-correct="true">NoSQL — high write volume, simple access pattern</button>
+      <button class="opt" data-correct="false">A single Postgres with no index</button>
+      <button class="opt" data-correct="false">Strong consistency across every region</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    SQL = strict filing cabinet with powerful joins and ACID; NoSQL = flexible boxes that scale huge with BASE/eventual consistency. Pick by your data, not by fashion — and default to SQL, reaching for NoSQL for a concrete reason (scale, flexible schema, special pattern). This is the deep-dive interviewers love.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#sql-or-nosql" target="_blank">System Design Primer — SQL or NoSQL</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want the four NoSQL sub-types (key-value, document, wide-column, graph) explained with examples? Or to reason through the right DB for a project you're building? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 6 (SQL vs NoSQL).</strong> Builds on <a href="0008-cap-theorem.html">CAP (5)</a> (ACID vs BASE). Next (Day 4, Track B): <em>The N+1 query trap</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#sql-or-nosql" target="_blank">The System Design Primer — SQL or NoSQL</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. All-or-nothing money + complex joins/reports = classic SQL. ACID transactions and joins are exactly what relational databases are best at."
+                      : "Reconsider. Money that must be all-or-nothing plus join-heavy reports is the textbook case for SQL (ACID + joins), not NoSQL or a cache.",
+          q2: correct ? "Yes. Billions of simple writes + trivial access pattern + schema-agnostic = NoSQL's sweet spot (leaderboards are the canonical example)."
+                      : "Reconsider. Huge write volume with a simple 'top N' pattern and no real schema needs points to NoSQL, not join-heavy SQL."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

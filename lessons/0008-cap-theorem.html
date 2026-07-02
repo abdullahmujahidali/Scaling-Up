@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 · CAP Theorem</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 05 · Week Day 1</p>
+    <h1>CAP theorem: pick two when the network breaks</h1>
+    <p class="subtitle">The famous tradeoff — and it ties together consistency and availability you already know.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: CAP</span>
+      <span>Win: explain why you can't have it all</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall consistency &amp; availability)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: <strong>strong</strong> vs <strong>eventual</strong> consistency — one line each.</div>
+    <div class="answer"><strong>Strong</strong> — every read immediately sees the latest write (copies update synchronously). <strong>Eventual</strong> — reads see it after a short delay (copies update asynchronously). We're about to see <em>why you sometimes can't choose strong.</em></div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>When the network between your servers breaks (a "partition"), you must choose: stay Consistent OR stay Available — you can't have both in that moment.</strong> That's the entire CAP theorem.
+  </div>
+
+  <h2>The three letters</h2>
+  <ul>
+    <li><strong>C — Consistency:</strong> every read gets the <em>latest</em> write (or an error). No stale data.</li>
+    <li><strong>A — Availability:</strong> every request gets <em>a</em> response (even if it's slightly old). Never "down."</li>
+    <li><strong>P — Partition tolerance:</strong> the system keeps working even when the network between servers is <em>cut</em>.</li>
+  </ul>
+  <p>CAP says: in a distributed system you can only fully guarantee <strong>two of these three</strong> at once.</p>
+
+  <h2>The story: two shop branches, phone line cut</h2>
+  <p>You run a shop with <strong>two branches</strong> that normally sync inventory over a phone line. One day <strong>the phone line goes dead</strong> (that's a <em>partition</em> — the network split). A customer walks into Branch B and asks: "Do you have item X?" Branch B is now stuck with a choice:</p>
+  <ul>
+    <li><strong>Stay consistent (refuse):</strong> "I can't confirm without calling Branch A, and the line's dead — so I <em>won't</em> answer." Correct, but unhelpful. You gave up <strong>Availability</strong>.</li>
+    <li><strong>Stay available (guess):</strong> "Sure, we have it!" — based on possibly-stale info. Helpful, but might be wrong. You gave up <strong>Consistency</strong>.</li>
+  </ul>
+  <p>There's no third option that's both correct <em>and</em> answers, while the line is down. That's CAP in one scene.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 170" role="img" aria-label="Network partition forces choice between C and A">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="40" y="55" width="140" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="110" y="80" font-weight="700" fill="#2a4d8f">Branch A</text>
+        <text x="110" y="98" fill="#6b6b6b" font-size="11">has latest data</text>
+        <rect x="460" y="55" width="140" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="530" y="80" font-weight="700" fill="#2a4d8f">Branch B</text>
+        <text x="530" y="98" fill="#6b6b6b" font-size="11">customer waiting</text>
+        <line x1="180" y1="82" x2="460" y2="82" stroke="#9b1c1c" stroke-width="2" stroke-dasharray="8 5"/>
+        <text x="320" y="72" fill="#9b1c1c" font-weight="700">✂ phone line cut (partition)</text>
+        <text x="320" y="135" fill="#6b6b6b">B must choose: refuse (consistent) or guess (available)</text>
+      </g>
+    </svg>
+    <figcaption>When the link is cut, one branch can't be both correct and responsive.</figcaption>
+  </figure>
+
+  <div class="warn">
+    <span class="callout-label">The real-world twist: P isn't optional</span>
+    Networks <em>will</em> fail — cables cut, packets drop. So <strong>partition tolerance (P) is mandatory</strong> in any real distributed system. That means the actual choice is always just <strong>C vs A</strong> when a partition hits. "Pick 2 of 3" is really "P is forced, now pick C or A."
+  </div>
+
+  <h2>So systems are labeled CP or AP</h2>
+  <table>
+    <tr><th>Type</th><th>Chooses</th><th>Behaves like</th><th>Example use</th></tr>
+    <tr><td><strong>CP</strong></td><td>Consistency</td><td>Refuses/errors rather than serve stale data</td><td>Bank transactions, inventory counts</td></tr>
+    <tr><td><strong>AP</strong></td><td>Availability</td><td>Always answers, may be slightly stale</td><td>Social feeds, product catalogs, DNS</td></tr>
+  </table>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge</span>
+    A single Postgres isn't distributed, so CAP doesn't bite — you get strong consistency, no partitions to worry about. But the moment you scale out (read replicas, a distributed cache, a multi-region database), you're choosing. Postgres with sync replication leans <strong>CP</strong> (it'll block/refuse rather than serve stale). A system like Cassandra or DynamoDB leans <strong>AP</strong> (always answers, eventual consistency). Now you know <em>why</em> those databases behave so differently — it's a CAP choice baked in.
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: why is "partition tolerance" not really optional in a real system?</div>
+    <div class="answer">Because networks genuinely fail (cables, dropped packets) — you can't prevent partitions. So a real distributed system must tolerate them, which forces the true choice down to <strong>C vs A</strong> during a partition.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">A banking system must never show a wrong balance, even if that means occasionally rejecting a request during a network split. It's choosing…</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">CP — consistency over availability</button>
+      <button class="opt" data-correct="false">AP — availability over consistency</button>
+      <button class="opt" data-correct="false">CA — consistency and availability, no partitions</button>
+      <button class="opt" data-correct="false">None — CAP doesn't apply to banks</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">A social media feed should always load, even if it occasionally shows a slightly old post. It's choosing…</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">CP — consistency over availability</button>
+      <button class="opt" data-correct="true">AP — availability over consistency</button>
+      <button class="opt" data-correct="false">Strong consistency with synchronous writes</button>
+      <button class="opt" data-correct="false">A single-server database</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    CAP: when the network splits, you pick <strong>Consistency</strong> (refuse rather than be wrong → CP) or <strong>Availability</strong> (answer, maybe stale → AP). Partition tolerance is forced, so it's really C-vs-A. This is <em>the</em> tradeoff behind "why is this database like that" — and naming CP vs AP in an interview is a strong senior signal.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">System Design Primer — CAP theorem</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to classify databases you use (Postgres, Redis, Mongo, DynamoDB) as CP or AP? Or unsure why "CA" isn't a real option? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 5 (CAP).</strong> Ties together <a href="0002-consistency-and-availability.html">consistency (2a)</a> and availability. Next (Day 2, Track B): <em>Database Indexes</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">The System Design Primer — CAP theorem</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Never-wrong-even-if-sometimes-unavailable = CP. It picks consistency and will refuse rather than serve stale data during a partition."
+                      : "Reconsider. 'Never wrong, may reject requests' is choosing consistency over availability — that's CP.",
+          q2: correct ? "Yes. Always-loads-even-if-slightly-stale = AP. It picks availability and accepts eventual consistency."
+                      : "Reconsider. 'Always available, tolerates slightly old data' is choosing availability over consistency — that's AP."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

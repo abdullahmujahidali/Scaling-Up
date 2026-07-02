@@ -7,6 +7,7 @@
   // Use null `file` for the home link (handled specially).
   var COURSE = [
     { kind: 'home' },
+    { kind: 'week' },
     { track: 'A', label: 'System Design', header: true },
     { file: '0001-the-design-framework.html', num: '1',  title: 'The Design Framework' },
     { file: '0002-consistency-and-availability.html', num: '2a', title: 'Consistency' },
@@ -14,8 +15,14 @@
     { file: '0004-the-nines.html', num: '2c', title: 'The "Nines"' },
     { file: '0005-load-balancers.html', num: '3',  title: 'Load Balancers' },
     { file: '0006-caching.html', num: '4',  title: 'Caching' },
+    { file: '0008-cap-theorem.html', num: '5',  title: 'CAP Theorem' },
+    { file: '0010-sql-vs-nosql.html', num: '6',  title: 'SQL vs NoSQL' },
+    { file: '0012-replication-and-sharding.html', num: '7',  title: 'Replication & Sharding' },
+    { file: '0013-message-queues.html', num: '8',  title: 'Message Queues' },
     { track: 'B', label: 'Backend Depth', header: true },
     { file: '0007-the-gil.html', num: 'B1', title: 'The GIL' },
+    { file: '0009-database-indexes.html', num: 'B2', title: 'Database Indexes' },
+    { file: '0011-n-plus-1-queries.html', num: 'B3', title: 'N+1 Queries' },
     { kind: 'glossary' }
   ];
 
@@ -33,6 +40,10 @@
   var items = COURSE.map(function (it) {
     if (it.kind === 'home') {
       return '<a class="cnav-home" href="' + toRoot + 'index.html">🏠 Scaling Up — Home</a>';
+    }
+    if (it.kind === 'week') {
+      var wcur = (here === 'this-week.html') ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + wcur + '" href="' + toRoot + 'this-week.html" style="margin-top:0;border-top:none;padding-top:0.42rem;">🗓️ This Week</a>';
     }
     if (it.kind === 'glossary') {
       var gcur = inReference ? ' cnav-current' : '';

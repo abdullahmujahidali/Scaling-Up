@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 8 · Message Queues &amp; Async</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 08 · Week Day 6</p>
+    <h1>Message queues: do the slow work later</h1>
+    <p class="subtitle">How to keep requests fast by handing heavy jobs to background workers. Straight into your Celery world.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: async work via queues</span>
+      <span>Win: know what to move off the request</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall replication &amp; sharding)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">From memory: replication vs sharding — which is "copy" and which is "split," and which problem does each solve?</div>
+    <div class="answer"><strong>Replication = copy</strong> the whole DB → solves too many <em>reads</em>. <strong>Sharding = split</strong> the data across machines → solves data that's too <em>big</em> for one machine.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>A message queue lets a request drop a job in a line and return immediately, while a background worker does the slow part.</strong> The user isn't stuck waiting. This is "asynchronous" work.
+  </div>
+
+  <h2>The story: ordering food at a busy counter</h2>
+  <p>At a good coffee counter, the cashier doesn't make your latte while you (and 20 people behind you) wait. They take your order, <strong>write it on a ticket, put it in the queue</strong>, hand you a buzzer, and serve the next customer. A <strong>barista</strong> works through the tickets and buzzes you when it's ready.</p>
+  <ul>
+    <li>The <strong>cashier</strong> = your web request (stays fast, serves the next person).</li>
+    <li>The <strong>ticket rail</strong> = the <strong>message queue</strong>.</li>
+    <li>The <strong>barista</strong> = a <strong>background worker</strong>.</li>
+    <li>The <strong>buzzer</strong> = notifying the user when the job's done.</li>
+  </ul>
+  <p>Without this, one slow order (a big report, sending 10,000 emails, encoding a video) would block everyone. The queue <em>decouples</em> the fast part from the slow part.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 130" role="img" aria-label="Request drops a job in a queue, worker processes it">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <rect x="20" y="45" width="100" height="40" rx="6" fill="#f3f1ea" stroke="#1a1a1a"/>
+        <text x="70" y="69" font-weight="600">request</text>
+        <rect x="220" y="40" width="140" height="50" rx="6" fill="#fbf3e2" stroke="#b8860b"/>
+        <text x="290" y="62" font-weight="700" fill="#8a6400">Queue</text>
+        <text x="290" y="80" fill="#6b6b6b" font-size="10">jobs waiting</text>
+        <rect x="460" y="45" width="120" height="40" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="520" y="69" font-weight="600" fill="#1d6b3a">worker</text>
+        <line x1="120" y1="65" x2="218" y2="65" stroke="#6b6b6b" stroke-width="1.5"/>
+        <text x="169" y="56" fill="#6b6b6b" font-size="10">drop job, return</text>
+        <line x1="360" y1="65" x2="458" y2="65" stroke="#1d6b3a" stroke-width="1.5"/>
+        <text x="409" y="56" fill="#1d6b3a" font-size="10">pull &amp; process</text>
+      </g>
+    </svg>
+    <figcaption>The request drops the job and returns instantly; the worker chews through the queue in the background.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge — this is literally Celery</span>
+    You've likely used this: <code>send_email.delay(user.id)</code> in a Django view drops a task on a queue (Redis or RabbitMQ) and returns <em>right away</em>, so the user's request is fast. A <strong>Celery worker</strong> process picks it up and sends the email. Remember the GIL lesson (B1)? This is also the clean way to run <strong>CPU-heavy</strong> work — hand it to a separate worker process (its own GIL) instead of blocking your web server. Queues + workers = the standard Django answer to "this is too slow to do in the request."
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: name two kinds of work you should move OFF the web request onto a background queue.</div>
+    <div class="answer">Any two: sending emails/notifications, generating reports or PDFs, image/video processing, calling slow third-party APIs, bulk data imports — anything slow or CPU-heavy that the user doesn't need to wait on.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2>One more idea: back pressure</h2>
+  <p><strong>Story:</strong> if orders pour in faster than the barista can make them, the ticket rail overflows and the whole shop gums up. So a smart shop, when swamped, says "we're at capacity, try again shortly" rather than accepting infinite orders it can't fulfill.</p>
+  <p>That's <strong>back pressure</strong>: when a queue grows dangerously long, the system pushes back — often returning an <strong>HTTP 503 (service busy)</strong> so clients <strong>retry later</strong> (ideally with growing waits, "exponential backoff"). It protects the system from drowning in its own backlog.</p>
+
+  <div class="warn">
+    <span class="callout-label">The tradeoff — name it</span>
+    Async isn't free. The job is now <em>eventually</em> done, not instantly — so the UI must handle "in progress" states, and you need to think about jobs that <strong>fail</strong> or <strong>run twice</strong> (make them <em>idempotent</em> — safe to repeat). You're trading instant simplicity for speed and resilience. Saying that tradeoff out loud is the senior move.
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">A user clicks "Export" and your Django view generates a 2-minute PDF report inline. The request times out and ties up a worker. Best fix?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Queue the report as a background task, notify when ready</button>
+      <button class="opt" data-correct="false">Add a database index to the report query</button>
+      <button class="opt" data-correct="false">Switch the database to NoSQL</button>
+      <button class="opt" data-correct="false">Add more read replicas</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">Jobs are arriving far faster than workers can process them and the queue is exploding in size. What's the protective pattern?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">Accept everything; add unlimited queue memory</button>
+      <button class="opt" data-correct="true">Back pressure — reject with 503, clients retry with backoff</button>
+      <button class="opt" data-correct="false">Make the queue strongly consistent</button>
+      <button class="opt" data-correct="false">Shard the web servers</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today — and Week 1 is complete! 🎉</span>
+    A message queue lets requests stay fast by handing slow/CPU-heavy work to background workers (exactly Django + Celery). <strong>Back pressure</strong> protects the system when the queue overflows (503 + retry). The cost: eventual completion, and you must handle retries/idempotency. You've now got the core toolkit — framework, consistency, availability, load balancing, caching, CAP, databases, indexes, N+1, replication/sharding, queues, and the GIL.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#asynchronism" target="_blank">System Design Primer — Asynchronism</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want the difference between a <em>message queue</em> and an <em>event stream</em> (Kafka)? Or how to make a Celery task idempotent so a retry doesn't double-charge someone? Ask — and when you finish the week, ask me to <strong>quiz you across all of it</strong>.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 8 (message queues).</strong> Ties to the GIL (<a href="0007-the-gil.html">B1</a>) — background processes for CPU work. <strong>End of Week 1.</strong> See the <a href="../this-week.html">week plan</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#asynchronism" target="_blank">The System Design Primer — Asynchronism</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. A 2-minute job doesn't belong in a request. Queue it (Celery), return immediately, and notify/poll when it's ready."
+                      : "Reconsider. The problem is a slow job blocking the request — indexes, NoSQL, and replicas don't address that. Move it to a background queue.",
+          q2: correct ? "Yes. When intake outpaces processing, back pressure (reject with 503, retry with backoff) keeps the system from drowning in backlog."
+                      : "Reconsider. Unlimited queue growth crashes you; consistency and sharding miss the point. The pattern is back pressure — push back and have clients retry."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

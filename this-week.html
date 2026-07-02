@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This Week · Scaling Up</title>
+<link rel="stylesheet" href="assets/lesson.css">
+<style>
+  .day {
+    display: flex; gap: 1rem; align-items: flex-start;
+    border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0.9rem 0;
+    background: #fff; transition: border-color .12s;
+  }
+  .day.done { background: var(--good-soft); border-color: var(--good); }
+  .day-check { flex: 0 0 auto; margin-top: 0.15rem; }
+  .day-check input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--good); }
+  .day-body { flex: 1; }
+  .day-label {
+    font-family: ui-sans-serif, sans-serif; font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; color: var(--muted);
+  }
+  .day-title { font-size: 1.15rem; font-weight: 600; margin: 0.1rem 0 0.3rem; }
+  .day-title a { color: var(--ink); }
+  .day-track { display:inline-block; font-family: ui-sans-serif, sans-serif; font-size: 0.66rem;
+    font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 20px; margin-left: 0.5rem; vertical-align: middle; }
+  .track-a { background: var(--accent-soft); color: var(--accent); }
+  .track-b { background: #eef3f8; color: var(--link); }
+  .track-rest { background: #f3f1ea; color: var(--muted); }
+  .day-blurb { color: var(--muted); font-size: 0.9rem; margin: 0; }
+  .progress-wrap { margin: 1.5rem 0; }
+  .progress-bar { height: 12px; background: var(--rule); border-radius: 20px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--good); width: 0%; transition: width .3s; }
+  .progress-text { font-family: ui-sans-serif, sans-serif; font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Scaling Up · Your 7-day plan</p>
+    <h1>This Week</h1>
+    <p class="subtitle">One focused block a day, alternating tracks. Tick each day as you finish — your progress saves automatically.</p>
+  </header>
+
+  <div class="key">
+    <span class="callout-label">How this week works</span>
+    Each day is <strong>one lesson</strong> (~20–45 min): read it, do the recall warm-up, hit the quizzes. The two tracks <strong>alternate</strong> so ideas interleave — that's a proven retention booster. Day 7 is review, not new material. Don't rush ahead; one solid idea a day beats five skimmed.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+    <div class="progress-text" id="ptext">0 of 6 lessons done</div>
+  </div>
+
+  <div class="day" data-day="1">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 1 · Monday</div>
+      <div class="day-title"><a href="lessons/0008-cap-theorem.html">CAP Theorem</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">The famous "pick two" tradeoff — and it ties together the consistency &amp; availability you already learned.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="2">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 2 · Tuesday</div>
+      <div class="day-title"><a href="lessons/0009-database-indexes.html">Database Indexes</a><span class="day-track track-b">Track B</span></div>
+      <p class="day-blurb">Why one query is instant and another crawls. Reading EXPLAIN. The single highest-leverage DB skill.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="3">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 3 · Wednesday</div>
+      <div class="day-title"><a href="lessons/0010-sql-vs-nosql.html">SQL vs NoSQL</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">Picking the right kind of database — a choice, not a religion. The most common interview deep-dive.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="4">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 4 · Thursday</div>
+      <div class="day-title"><a href="lessons/0011-n-plus-1-queries.html">The N+1 Query Trap</a><span class="day-track track-b">Track B</span></div>
+      <p class="day-blurb">The invisible bug quietly killing Django apps — how to spot it and fix it with select_related.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="5">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 5 · Friday</div>
+      <div class="day-title"><a href="lessons/0012-replication-and-sharding.html">Replication &amp; Sharding</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">How databases actually scale — copy the data (reads) vs split the data (size). Which fixes which.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="6">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 6 · Saturday</div>
+      <div class="day-title"><a href="lessons/0013-message-queues.html">Message Queues &amp; Async</a><span class="day-track track-a">Track A</span></div>
+      <p class="day-blurb">Do the slow work later — queues + background workers (your Celery world), plus back pressure.</p>
+    </div>
+  </div>
+
+  <div class="day" data-day="7">
+    <label class="day-check"><input type="checkbox"></label>
+    <div class="day-body">
+      <div class="day-label">Day 7 · Sunday</div>
+      <div class="day-title">Review &amp; Recall <span class="day-track track-rest">Rest / Review</span></div>
+      <p class="day-blurb">No new lesson. Skim the <a href="reference/glossary.html">Glossary</a>, re-flip the recall cards, and ask me to <strong>quiz you cold across the whole week</strong>. This is the day the week actually sticks.</p>
+    </div>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>Your teacher is one message away.</strong> Stuck on a day? Ask me to re-explain it another way. Finished the week? Say <em>"quiz me on the week"</em> and I'll test you interleaved (mixing topics), which is how you find out what really stuck vs. what only felt familiar.
+  </div>
+
+  <footer class="lesson-foot">
+    <p>← Back to <a href="index.html">course home</a>. After this week: Week 2 (transactions &amp; locking, async/await, message streaming, more).</p>
+  </footer>
+
+</div>
+
+<script>
+  // Persist day completion in the browser (localStorage).
+  var KEY = 'scaling-up-week1';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  var days = Array.prototype.slice.call(document.querySelectorAll('.day'));
+  var fill = document.getElementById('fill');
+  var ptext = document.getElementById('ptext');
+
+  function refresh(){
+    var doneCount = 0, lessonDays = 6;
+    days.forEach(function(d){
+      var n = d.dataset.day;
+      var cb = d.querySelector('input');
+      cb.checked = !!saved[n];
+      d.classList.toggle('done', cb.checked);
+      if (cb.checked && n <= lessonDays) doneCount++;
+    });
+    var pct = Math.round((doneCount / lessonDays) * 100);
+    fill.style.width = pct + '%';
+    ptext.textContent = doneCount + ' of ' + lessonDays + ' lessons done' + (doneCount === lessonDays ? ' — week complete! 🎉 Ask me to quiz you.' : '');
+  }
+
+  days.forEach(function(d){
+    d.querySelector('input').addEventListener('change', function(){
+      saved[d.dataset.day] = this.checked;
+      localStorage.setItem(KEY, JSON.stringify(saved));
+      refresh();
+    });
+  });
+  refresh();
+</script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

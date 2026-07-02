@@ -42,6 +42,12 @@
     Do the lessons in order. Hit every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>, not re-reading. Each new lesson opens with a quick recall of the last one, so review happens automatically.
   </div>
 
+  <a class="lesson-card" href="this-week.html" style="border-left:3px solid var(--good);background:var(--good-soft);">
+    <span class="num" style="color:var(--good);">🗓️ Start here</span>
+    <div class="title">This Week — your 7-day plan</div>
+    <p class="blurb">A paced day-by-day plan alternating both tracks, with progress tracking. The best way through the course.</p>
+  </a>
+
   <p style="font-family:ui-sans-serif,sans-serif;font-size:0.9rem;color:var(--muted);">Two tracks that alternate: <strong style="color:var(--accent);">System Design</strong> (how big systems are built) and <strong style="color:var(--link);">Backend Depth</strong> (why the code &amp; database behave as they do).</p>
 
   <h2>Track A · System Design</h2>
@@ -82,12 +88,48 @@
     <p class="blurb">Keep the hot data close — desk vs archive, cache-aside vs write-through, and the eternal staleness tradeoff.</p>
   </a>
 
+  <a class="lesson-card" href="lessons/0008-cap-theorem.html">
+    <span class="num">Lesson 05</span>
+    <div class="title">CAP Theorem</div>
+    <p class="blurb">Pick two when the network breaks — CP vs AP. Ties consistency and availability together.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0010-sql-vs-nosql.html">
+    <span class="num">Lesson 06</span>
+    <div class="title">SQL vs NoSQL</div>
+    <p class="blurb">Picking the right database type — filing cabinet vs labeled boxes, ACID vs BASE, and when to choose which.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0012-replication-and-sharding.html">
+    <span class="num">Lesson 07</span>
+    <div class="title">Replication &amp; Sharding</div>
+    <p class="blurb">How databases scale — copy the data for reads vs split the data for size. The scaling ladder.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0013-message-queues.html">
+    <span class="num">Lesson 08</span>
+    <div class="title">Message Queues &amp; Async</div>
+    <p class="blurb">Do slow work later — queues + background workers (Celery), plus back pressure.</p>
+  </a>
+
   <h2>Track B · Backend Depth</h2>
 
   <a class="lesson-card" href="lessons/0007-the-gil.html" style="border-left:3px solid var(--link);">
     <span class="num" style="color:var(--link);">Lesson B1 · Python internals</span>
     <div class="title">The GIL</div>
     <p class="blurb">Why Python threads don't split CPU work — one talking stick — and when threads vs processes vs async actually help.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0009-database-indexes.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B2 · Databases</span>
+    <div class="title">Database Indexes</div>
+    <p class="blurb">Why one query is instant and another crawls — the back-of-book index, and reading EXPLAIN.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0011-n-plus-1-queries.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B3 · Django ORM</span>
+    <div class="title">The N+1 Query Trap</div>
+    <p class="blurb">The invisible bug killing Django apps — spot it, fix it with select_related / prefetch_related.</p>
   </a>
 
   <h2>Reference</h2>
