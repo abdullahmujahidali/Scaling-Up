@@ -141,6 +141,81 @@
       <div class="term-def">When redundant components can each serve the request, availability rises: 1 − (1−A)(1−B). A backup only fails if both fail at once.</div>
     </div>
 
+    <h2 class="group-head" data-group>Scaling &amp; Caching</h2>
+
+    <div class="term" data-name="load balancer">
+      <div class="term-name">Load balancer</div>
+      <div class="term-def">One front door that spreads incoming requests across many servers, skips unhealthy ones, and removes a single choke point. (Story: the host seating diners across waiters.)</div>
+    </div>
+
+    <div class="term" data-name="horizontal scaling scale out">
+      <div class="term-name">Horizontal scaling</div>
+      <div class="term-def">Handling more load by adding more (cheap) servers behind a load balancer. Contrast with vertical scaling.</div>
+      <div class="term-avoid">avoid: scaling out (as jargon)</div>
+    </div>
+
+    <div class="term" data-name="vertical scaling scale up">
+      <div class="term-name">Vertical scaling</div>
+      <div class="term-def">Handling more load by making one server bigger/faster. Simple, but hits a ceiling.</div>
+    </div>
+
+    <div class="term" data-name="stateless">
+      <div class="term-name">Stateless (server)</div>
+      <div class="term-def">A server that keeps no private per-user memory, so any server can handle any request. Shared state (like sessions) lives in a database or shared cache. Required for horizontal scaling behind a load balancer.</div>
+    </div>
+
+    <div class="term" data-name="layer 4 layer 7 l4 l7 load balancing">
+      <div class="term-name">Layer 4 vs Layer 7 <span class="alias-tag">load balancing</span></div>
+      <div class="term-def">Layer 4 routes by the "envelope" (IP addresses and ports) — fast, doesn't read content. Layer 7 reads the request itself (URL, cookies) and routes smartly — more flexible, more work.</div>
+    </div>
+
+    <div class="term" data-name="cache">
+      <div class="term-name">Cache</div>
+      <div class="term-def">A small, fast store of copies of frequently used data, kept close to avoid re-doing expensive work. Faster, but copies can go stale. (Story: notes on your desk vs the archive room.)</div>
+    </div>
+
+    <div class="term" data-name="cache hit miss">
+      <div class="term-name">Cache hit / miss</div>
+      <div class="term-def">A hit = the data was in the cache (instant). A miss = it wasn't, so you fetch from the source (slow) and usually store a copy for next time.</div>
+    </div>
+
+    <div class="term" data-name="cache-aside lazy loading">
+      <div class="term-name">Cache-aside <span class="alias-tag">lazy loading</span></div>
+      <div class="term-def">The default strategy: app checks the cache, and on a miss reads the database then fills the cache. Simple; first read is slow and data can go stale. (Django's cache framework works this way.)</div>
+    </div>
+
+    <div class="term" data-name="write-through">
+      <div class="term-name">Write-through</div>
+      <div class="term-def">Write to the cache and the database together, so the cache is never stale — at the cost of slightly slower writes.</div>
+    </div>
+
+    <div class="term" data-name="cache invalidation staleness ttl">
+      <div class="term-name">Cache invalidation</div>
+      <div class="term-def">Knowing when a cached copy is out of date and refreshing/removing it. Famously hard. A TTL (timeout) is the simplest form: let a copy go stale after N seconds, then refetch.</div>
+    </div>
+
+    <h2 class="group-head" data-group>Python Internals</h2>
+
+    <div class="term" data-name="gil global interpreter lock">
+      <div class="term-name">GIL <span class="alias-tag">Global Interpreter Lock</span></div>
+      <div class="term-def">A single lock that lets only one thread run Python code at a time (in the default build). (Story: one talking stick in a meeting.) Being made optional from Python 3.13–3.14 onward.</div>
+    </div>
+
+    <div class="term" data-name="cpu-bound">
+      <div class="term-name">CPU-bound</div>
+      <div class="term-def">Work limited by processing power (math, parsing, image resize). Threads don't speed it up because of the GIL — use multiple processes for true parallelism.</div>
+    </div>
+
+    <div class="term" data-name="io-bound i/o-bound">
+      <div class="term-name">I/O-bound</div>
+      <div class="term-def">Work limited by waiting (network, disk, database). Threads (and async) help a lot: a waiting thread drops the GIL so others run.</div>
+    </div>
+
+    <div class="term" data-name="thread vs process">
+      <div class="term-name">Thread vs process</div>
+      <div class="term-def">Threads in one process share one GIL (good for I/O-bound work). Separate processes each get their own GIL (good for CPU-bound work — real multi-core use).</div>
+    </div>
+
   </div>
 
   <div class="no-results" id="noResults">No terms match that search.</div>

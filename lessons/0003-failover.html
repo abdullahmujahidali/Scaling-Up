@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2b · Failover (staying up when a server dies)</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 02b</p>
+    <h1>Failover: staying up when a server dies</h1>
+    <p class="subtitle">One idea, one story. (Part 2 of the old Lesson 2, on its own.)</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: failover</span>
+      <span>Win: explain active-passive vs active-active simply</span>
+    </div>
+  </header>
+
+  <h2>30-second warm-up (recall 2a)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Before new stuff — from memory: the whiteboard story had three levels of consistency. Name them by <em>when the side-room copies catch up</em>.</div>
+    <div class="answer">
+      <strong>Weak</strong> — copies might never catch up.<br>
+      <strong>Eventual</strong> — copies catch up in a moment (a Django read replica).<br>
+      <strong>Strong</strong> — every board changes at the same instant.
+    </div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>Failover = keeping a spare server ready, so when one machine dies, another takes over and users barely notice.</strong> The two flavors differ on whether the spare is <em>sitting idle</em> or <em>already working too</em>.
+  </div>
+
+  <h2>Start with a story (no tech yet)</h2>
+  <p>You run a small shop with <strong>one cashier</strong> at the till. If that cashier faints, the line stops — nobody can pay. Bad. So you hire a second person. Now you have a choice about <em>what the second person does</em>:</p>
+
+  <ul>
+    <li><strong>Plan A:</strong> the second person sits in the break room, ready. If the cashier faints, they rush out and take over the same till. (Only one works at a time.)</li>
+    <li><strong>Plan B:</strong> you open a <em>second till</em> and both serve customers at once. If one faints, the other just keeps going — the line's a bit slower, but it never stops.</li>
+  </ul>
+
+  <p>That's the entire idea. Plan A is <strong>active–passive</strong>. Plan B is <strong>active–active</strong>. Let's name the moving parts.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 200" role="img" aria-label="Active-passive vs active-active failover">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <text x="175" y="20" font-weight="700" font-size="13">Active–Passive (Plan A)</text>
+        <rect x="40" y="40" width="95" height="48" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="87" y="62" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="87" y="78" fill="#6b6b6b">serving</text>
+        <rect x="215" y="40" width="95" height="48" rx="6" fill="#f3f1ea" stroke="#6b6b6b" stroke-dasharray="4 3"/>
+        <text x="262" y="62" font-weight="700" fill="#6b6b6b">Passive</text>
+        <text x="262" y="78" fill="#6b6b6b">waiting</text>
+        <line x1="135" y1="64" x2="213" y2="64" stroke="#9b1c1c" stroke-width="1.3"/>
+        <text x="174" y="56" fill="#9b1c1c" font-size="10">heartbeat</text>
+        <text x="175" y="115" fill="#6b6b6b">One works. Spare waits and listens for</text>
+        <text x="175" y="130" fill="#6b6b6b">the heartbeat. Silence = take over.</text>
+
+        <text x="525" y="20" font-weight="700" font-size="13">Active–Active (Plan B)</text>
+        <rect x="400" y="40" width="95" height="48" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="447" y="62" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="447" y="78" fill="#6b6b6b">serving</text>
+        <rect x="575" y="40" width="95" height="48" rx="6" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="622" y="62" font-weight="700" fill="#1d6b3a">Active</text>
+        <text x="622" y="78" fill="#6b6b6b">serving</text>
+        <line x1="495" y1="64" x2="573" y2="64" stroke="#2a4d8f" stroke-width="1.3"/>
+        <text x="534" y="56" fill="#2a4d8f" font-size="10">shares load</text>
+        <text x="525" y="115" fill="#6b6b6b">Both work and split the line. Lose one,</text>
+        <text x="525" y="130" fill="#6b6b6b">the other absorbs everything.</text>
+      </g>
+    </svg>
+    <figcaption>Plan A = a spare in the break room. Plan B = two open tills. (Old names you'll still hear: master-slave and master-master.)</figcaption>
+  </figure>
+
+  <h2>1 · Active–passive — "a spare waiting in the break room"</h2>
+  <p>One server does all the work. The spare sits idle but <em>listening</em>. The two send each other a <strong>heartbeat</strong> — a little "still alive?" ping every second or so. The instant the spare stops hearing it, it assumes the worker died and <strong>takes over its address</strong>, so traffic now flows to the spare.</p>
+  <p>How fast does that switchover happen? Depends on the spare:</p>
+  <ul>
+    <li><strong>Hot</strong> spare — already booted and warm → takes over in seconds.</li>
+    <li><strong>Cold</strong> spare — has to start up first → slower, but cheaper to keep around.</li>
+  </ul>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: in active–passive, what is the <em>heartbeat</em> for?</div>
+    <div class="answer">It's the "still alive?" signal between the two servers. When the spare stops hearing the heartbeat, it knows the active one died and takes over.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2>2 · Active–active — "two open tills"</h2>
+  <p>Both servers serve real traffic at the same time and split the load between them. If one dies, the other simply takes on all the work. The trade: <em>everyone has to know both exist.</em> If it's public-facing, the address system (DNS) must list both; if it's internal, your app code has to know about both.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: what's the main difference between active–passive and active–active?</div>
+    <div class="answer">In <strong>active–passive</strong>, the spare sits idle until needed (only one works at a time). In <strong>active–active</strong>, both work at once and share the load.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2>The catch nobody mentions</h2>
+  <div class="warn">
+    <span class="callout-label">Failover isn't free</span>
+    Two real costs: (1) <strong>more complexity</strong> — extra machines, extra setup, more that can go wrong. (2) <strong>possible data loss</strong> — if the active server dies <em>before</em> it copied its newest changes to the spare, those changes are gone. (Notice that's the <em>same</em> idea as the catch-up gap from consistency in 2a — the copy was behind.)
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label">Django / real-work bridge</span>
+    A managed database like AWS RDS offers "Multi-AZ" — that's <strong>active–passive</strong> failover: a standby copy in another data center, and if your main database dies, RDS flips to the standby automatically. You've probably ticked that checkbox without knowing its name. Now you know what it's doing and what it costs.
+  </div>
+
+  <h2>Pull it together + one quiz</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Cover the answer. Explain both failover types using the shop story.</div>
+    <div class="answer">
+      <strong>Active–passive</strong> — a second cashier waits in the break room; rushes out (takes over) only when the first faints. One works at a time.<br>
+      <strong>Active–active</strong> — two tills open at once, splitting the line; if one cashier faints the other carries everyone.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">You want a backup database that's as <em>cheap</em> as possible, and you're OK with a short pause (a few seconds) while it switches over during a failure. Which fits best?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Active–passive with a cold spare</button>
+      <button class="opt" data-correct="false">Active–active splitting load across both</button>
+      <button class="opt" data-correct="false">No backup — just one server</button>
+      <button class="opt" data-correct="false">Active–passive with a hot spare, always running</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    Failover is just "keep a spare so you don't go down." <strong>Active–passive</strong> = a spare waiting in the break room (cheaper, slower switch). <strong>Active–active</strong> = two open tills (pricier, no pause). And it's not free — more complexity, and you can lose the newest data if the spare was behind. One clean idea, yours.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over" target="_blank">System Design Primer — Fail-over</a><sup class="cite"><a href="#s1">1</a></sup>. Read just the short "Fail-over" block. The shop story maps straight onto it.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Fuzzy on "hot vs cold spare," or why active–active needs DNS to know both? Tell me which line lost you and I'll redo it. Confusion is just information for me.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 2b (failover).</strong> Follows <a href="0002-consistency-and-availability.html">2a — Consistency</a>. Next: <em>Lesson 2c — the "nines"</em>: how we put a number on availability, and why chaining services lowers it.</p>
+    <p>📑 New terms (failover, heartbeat, active-passive, active-active) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over" target="_blank">The System Design Primer — Fail-over</a>, Donne Martin.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Right. Cheap + a short pause is acceptable = active–passive, and a cold spare (boots on demand) is the cheapest option."
+            : "Reconsider. Active–active costs more (both always running); no backup risks full downtime; a hot spare costs more than a cold one. Cheapest + tolerant of a few seconds = active–passive, cold spare."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+</script>
+</body>
+</html>

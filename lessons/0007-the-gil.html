@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson B1 · The GIL</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B1 · Python internals</p>
+    <h1>The GIL: why Python threads don't split the work</h1>
+    <p class="subtitle">The first "why does Python behave like that?" — and the one interviewers love to poke.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: the GIL</span>
+      <span>Win: know when threads help and when they don't</span>
+    </div>
+  </header>
+
+  <div class="bridge" style="background:#f6e9e9;border-left-color:#9b1c1c;">
+    <span class="callout-label" style="color:#9b1c1c;">New track</span>
+    This is the first <strong>Backend Depth</strong> lesson (Track B). We'll now alternate: one system-design lesson, then one of these. This track answers <em>"why does my code / database actually behave like that?"</em> — the depth that AI can't carry into the room for you.
+  </div>
+
+  <div class="key">
+    <span class="callout-label">If you remember one thing</span>
+    <strong>The GIL is a single lock that lets only ONE thread run Python code at a time.</strong> So spinning up 8 threads to crunch numbers 8× faster… doesn't work in normal Python. But for waiting-heavy work (network, disk), threads help a lot.
+  </div>
+
+  <h2>The story: one talking stick in a meeting</h2>
+  <p>Picture a meeting room with a rule: <strong>you may only speak if you're holding the talking stick.</strong> There's exactly one stick. Ten people can be <em>in</em> the room, but only the one holding the stick actually talks; everyone else waits their turn.</p>
+  <p>In Python:</p>
+  <ul>
+    <li>The <strong>talking stick</strong> = the <strong>GIL</strong> (Global Interpreter Lock).</li>
+    <li>The <strong>people</strong> = your <strong>threads</strong>.</li>
+    <li><strong>Talking</strong> = running Python code.</li>
+  </ul>
+  <p>So even on an 8-core machine, your 8 Python threads pass one stick around — only one runs Python at any instant. That's the whole idea, and it explains a surprising amount.</p>
+
+  <figure>
+    <svg viewBox="0 0 620 150" role="img" aria-label="Multiple threads, one GIL">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <rect x="250" y="15" width="120" height="34" rx="17" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <text x="310" y="37" font-weight="700" fill="#9b1c1c">GIL (1 stick)</text>
+        <g fill="#e8f3ec" stroke="#1d6b3a">
+          <rect x="30" y="90" width="100" height="40" rx="6"/>
+          <rect x="150" y="90" width="100" height="40" rx="6"/>
+          <rect x="270" y="90" width="100" height="40" rx="6"/>
+          <rect x="390" y="90" width="100" height="40" rx="6"/>
+          <rect x="510" y="90" width="80" height="40" rx="6"/>
+        </g>
+        <g fill="#1d6b3a" font-weight="600">
+          <text x="80" y="114">thread 1</text>
+          <text x="200" y="114">thread 2</text>
+          <text x="320" y="114">thread 3</text>
+          <text x="440" y="114">thread 4</text>
+          <text x="550" y="114">…</text>
+        </g>
+        <line x1="310" y1="49" x2="320" y2="88" stroke="#9b1c1c" stroke-width="2"/>
+        <text x="310" y="145" fill="#6b6b6b">only thread 3 holds the stick → only it runs Python right now</text>
+      </g>
+    </svg>
+    <figcaption>Many threads, one GIL. They take turns holding it.</figcaption>
+  </figure>
+
+  <h2>The key split: CPU-bound vs I/O-bound work</h2>
+  <p>Whether threads help depends entirely on what your code is <em>doing</em>. Two kinds of work:</p>
+
+  <table>
+    <tr><th>Kind of work</th><th>Example</th><th>Do threads help?</th></tr>
+    <tr><td><strong>CPU-bound</strong> (talking non-stop)</td><td>crunching numbers, image resize, parsing huge data</td><td><strong>No.</strong> All need the stick — they queue.</td></tr>
+    <tr><td><strong>I/O-bound</strong> (waiting a lot)</td><td>calling an API, querying the DB, reading a file</td><td><strong>Yes.</strong> While one waits, it drops the stick.</td></tr>
+  </table>
+
+  <p><strong>Why I/O-bound is different:</strong> when a thread is just <em>waiting</em> for a network reply or the database, it isn't talking — so it <strong>puts the stick down</strong>. Another thread grabs it and does useful work during that wait. The GIL barely gets in the way. This is the crucial insight.</p>
+
+  <div class="bridge">
+    <span class="callout-label">Django bridge — this matters daily</span>
+    A typical Django request spends most of its time <em>waiting</em> — on the database, on cache, on an external API. That's <strong>I/O-bound</strong>. So the thread-based workers in Gunicorn/uWSGI genuinely help: while request A waits on Postgres, its thread drops the stick and request B runs. But the moment you do heavy <em>CPU</em> work in a request (generating a big PDF, resizing images, crunching a report), the GIL bites — those can't run in parallel across threads, and they'll block your workers. That's your cue to move CPU work to a <strong>separate process</strong> (Celery worker) instead of a thread.
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt">Quick check: you have a function doing heavy math. Will running it in 4 threads make it ~4× faster in normal Python? Why / why not?</div>
+    <div class="answer"><strong>No.</strong> Heavy math is CPU-bound — every thread needs the GIL (the stick) to run Python, so they take turns, not run together. You'd get roughly the same speed (or slightly worse from switching overhead). To actually use 4 cores, use 4 <em>processes</em>.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2>So how do you actually use all your cores?</h2>
+  <p>If threads can't, what can? <strong>Multiple processes.</strong> Each process gets its <em>own</em> Python and its <em>own</em> stick — so 4 processes really do run on 4 cores at once.</p>
+  <ul>
+    <li><strong>Threads</strong> — great for I/O-bound work (lots of waiting). One stick, shared.</li>
+    <li><strong>Processes</strong> (e.g. <code>multiprocessing</code>, Celery workers, Gunicorn workers) — great for CPU-bound work. Each has its own stick → true parallelism.</li>
+  </ul>
+
+  <div class="warn">
+    <span class="callout-label">2026 update — the GIL is becoming optional (know this for interviews)</span>
+    Since <strong>Python 3.13</strong> there's an experimental <em>free-threaded</em> build with the GIL removed, and in <strong>Python 3.14</strong> (Oct 2025) it became officially supported (still not the default).<sup class="cite"><a href="#s2">2</a></sup> The plan is a multi-year transition toward GIL-free by default (~2028–2030).<sup class="cite"><a href="#s3">3</a></sup> So "Python can't do CPU parallelism with threads" is becoming "…in the default build, for now." Saying <em>that</em> in an interview shows you're current.
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q">Your Django view calls three slow external APIs one after another, making the request take 3 seconds. You want them to run at the same time. Best fit?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">Threads (or async) — it's I/O-bound, waiting on the network</button>
+      <button class="opt" data-correct="false">Nothing helps — the GIL blocks all parallelism</button>
+      <button class="opt" data-correct="false">Buy a server with more CPU cores</button>
+      <button class="opt" data-correct="false">Rewrite the APIs to be faster</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">A background job resizes 10,000 images (heavy CPU). You want to use all 8 cores. Best fit?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false">8 threads in one process</button>
+      <button class="opt" data-correct="true">8 processes (e.g. multiprocessing / Celery workers)</button>
+      <button class="opt" data-correct="false">1 thread — the GIL makes extras pointless anyway</button>
+      <button class="opt" data-correct="false">Async/await with a single thread</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label">Your win today</span>
+    The GIL = one talking stick; only one thread runs Python at a time. So threads <em>don't</em> speed up <strong>CPU-bound</strong> work (use processes for that) but <em>do</em> help <strong>I/O-bound</strong> work (the waiting thread drops the stick). This one idea explains Gunicorn workers, when to reach for Celery, and why "just add threads" sometimes does nothing. And you know the 2026 twist: free-threaded Python is arriving.
+  </div>
+
+  <h2>Read next (primary source) — optional</h2>
+  <p>📖 <a href="https://docs.python.org/3/howto/free-threading-python.html" target="_blank">Python docs — Free threading how-to</a><sup class="cite"><a href="#s1">1</a></sup> for the current state, and 🎥 the many "Python GIL explained" talks (David Beazley's is the classic).</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want the difference between <em>async</em> and <em>threads</em> for I/O (both help, differently)? Or a concrete "this task → threads / processes / async" decision tree for your own code? Ask — this is exactly the judgment worth owning.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B1 (the GIL).</strong> First Backend Depth lesson. Next lesson returns to <strong>Track A — System Design</strong> (databases: SQL vs NoSQL). Then back to depth.</p>
+    <p>📑 New terms (GIL, CPU-bound, I/O-bound, thread vs process) will be added to the <a href="../reference/glossary.html">Glossary</a> once they feel solid.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.python.org/3/howto/free-threading-python.html" target="_blank">Python support for free threading — Python docs</a>.</li>
+      <li id="s2"><a href="https://peps.python.org/pep-0779/" target="_blank">PEP 779 — Criteria for supported status for free-threaded Python</a> (free-threaded officially supported in 3.14).</li>
+      <li id="s3"><a href="https://peps.python.org/pep-0703/" target="_blank">PEP 703 — Making the Global Interpreter Lock Optional in CPython</a> (the multi-year transition plan).</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Right. Waiting on the network is I/O-bound — each thread drops the stick while it waits, so they overlap. (async does the same thing even more efficiently.)"
+            : "Reconsider. This is I/O-bound (waiting on APIs), which is exactly where threads/async DO help — the waiting thread releases the GIL so others run. More cores or faster APIs miss the point.",
+          q2: correct
+            ? "Yes. Heavy CPU work needs true parallelism — processes each get their own GIL, so 8 processes use 8 cores. Threads would just pass one stick around."
+            : "Reconsider. This is CPU-bound, so threads (one shared GIL) and single-threaded async won't use multiple cores. Processes each get their own GIL → real parallelism."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+</script>
+</body>
+</html>

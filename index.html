@@ -42,7 +42,9 @@
     Do the lessons in order. Hit every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>, not re-reading. Each new lesson opens with a quick recall of the last one, so review happens automatically.
   </div>
 
-  <h2>Lessons</h2>
+  <p style="font-family:ui-sans-serif,sans-serif;font-size:0.9rem;color:var(--muted);">Two tracks that alternate: <strong style="color:var(--accent);">System Design</strong> (how big systems are built) and <strong style="color:var(--link);">Backend Depth</strong> (why the code &amp; database behave as they do).</p>
+
+  <h2>Track A · System Design</h2>
 
   <a class="lesson-card" href="lessons/0001-the-design-framework.html">
     <span class="num">Lesson 01</span>
@@ -51,9 +53,41 @@
   </a>
 
   <a class="lesson-card" href="lessons/0002-consistency-and-availability.html">
-    <span class="num">Lesson 02</span>
-    <div class="title">Consistency &amp; Availability Patterns</div>
-    <p class="blurb">Freshness of reads (weak / eventual / strong), failover (active-passive / active-active), and the "nines" math — with a live calculator.</p>
+    <span class="num">Lesson 02a</span>
+    <div class="title">Consistency</div>
+    <p class="blurb">The freshness of reads — weak / eventual / strong — told with a whiteboard story. A Django read replica is "eventual."</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0003-failover.html">
+    <span class="num">Lesson 02b</span>
+    <div class="title">Failover</div>
+    <p class="blurb">Staying up when a server dies — active-passive vs active-active, told as a shop with a spare cashier.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0004-the-nines.html">
+    <span class="num">Lesson 02c</span>
+    <div class="title">The "Nines"</div>
+    <p class="blurb">Measuring uptime, and why chaining services multiplies availability down but backups multiply it up — with a live calculator.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0005-load-balancers.html">
+    <span class="num">Lesson 03</span>
+    <div class="title">Load Balancers</div>
+    <p class="blurb">The host at the door — spreading traffic across many servers, horizontal scaling, and the stateless-servers gotcha.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0006-caching.html">
+    <span class="num">Lesson 04</span>
+    <div class="title">Caching</div>
+    <p class="blurb">Keep the hot data close — desk vs archive, cache-aside vs write-through, and the eternal staleness tradeoff.</p>
+  </a>
+
+  <h2>Track B · Backend Depth</h2>
+
+  <a class="lesson-card" href="lessons/0007-the-gil.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B1 · Python internals</span>
+    <div class="title">The GIL</div>
+    <p class="blurb">Why Python threads don't split CPU work — one talking stick — and when threads vs processes vs async actually help.</p>
   </a>
 
   <h2>Reference</h2>
