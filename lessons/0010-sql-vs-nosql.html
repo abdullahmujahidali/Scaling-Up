@@ -37,11 +37,11 @@
   <p data-ur="<strong>NoSQL labeled boxes ka ek kamra hai.</strong> Har box jo shape tum chaho rakh sakta hai, aur tum kai kamron mein saste mein million boxes add kar sakte ho. Fast aur flexible — par koi built-in &quot;sab kuch cross-reference karo&quot; nahi (joins iske bajaye tumhare app code mein rehte hain), aur taza likhi hui info ko har jagah aane mein ek lamha lag sakta hai (eventual consistency, 2a yaad hai)."><strong>NoSQL is a room of labeled boxes.</strong> Each box can hold whatever shape you want, and you can add a million boxes across many rooms cheaply. Fast and flexible — but there's no built-in "cross-reference everything" (joins live in your app code instead), and freshly-written info might take a moment to appear everywhere (eventual consistency, remember 2a).</p>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    Django's ORM <em>is</em> SQL thinking: models = tables, fields = columns, <code>ForeignKey</code> = the relationship you join on. You've been doing relational (SQL) design all along — that's your home turf. NoSQL (Mongo, DynamoDB, Redis, Cassandra) drops the rigid schema and the joins in exchange for flexibility and massive scale. Knowing your Django/Postgres world is SQL makes the contrast easy.
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django ka ORM SQL soch hi <em>hai</em>: models = tables, fields = columns, <code>ForeignKey</code> = woh relationship jis par tum join karte ho. Tum shuru se relational (SQL) design kar rahe ho — yeh tumhara home turf hai. NoSQL (Mongo, DynamoDB, Redis, Cassandra) rigid schema aur joins ko flexibility aur massive scale ke badle chhod deta hai. Yeh jaanna ke tumhari Django/Postgres duniya SQL hai, contrast ko aasan bana deta hai.">Django's ORM <em>is</em> SQL thinking: models = tables, fields = columns, <code>ForeignKey</code> = the relationship you join on. You've been doing relational (SQL) design all along — that's your home turf. NoSQL (Mongo, DynamoDB, Redis, Cassandra) drops the rigid schema and the joins in exchange for flexibility and massive scale. Knowing your Django/Postgres world is SQL makes the contrast easy.</span>
   </div>
 
-  <h2>ACID vs BASE (the personalities)</h2>
+  <h2 data-ur="ACID vs BASE (personalities)">ACID vs BASE (the personalities)</h2>
   <table>
     <tr><th></th><th>SQL — "ACID"</th><th>NoSQL — "BASE"</th></tr>
     <tr><td>Promise</td><td>Every transaction is all-or-nothing and correct</td><td>Basically available; consistent <em>eventually</em></td></tr>
@@ -49,56 +49,56 @@
     <tr><td>Joins</td><td>Built-in, powerful</td><td>Done in app code</td></tr>
     <tr><td>Scaling</td><td>Harder past one big machine</td><td>Built to spread across many</td></tr>
   </table>
-  <p>You met ACID in the CAP lesson (strong consistency). BASE is the relaxed cousin: trade strict correctness for availability and scale.</p>
+  <p data-ur="Tum ACID ko CAP lesson mein mil chuke ho (strong consistency). BASE relaxed cousin hai: strict correctness ko availability aur scale ke badle do.">You met ACID in the CAP lesson (strong consistency). BASE is the relaxed cousin: trade strict correctness for availability and scale.</p>
 
-  <h2>When to choose which</h2>
+  <h2 data-ur="Kaunsa kab chuno">When to choose which</h2>
   <div style="display:flex;gap:1rem;flex-wrap:wrap;">
     <div style="flex:1;min-width:230px;" class="key">
-      <span class="callout-label">Reach for SQL when…</span>
-      Data is structured and relational · you need transactions (money!) · complex queries and joins · the schema is stable · correctness matters more than raw scale.
+      <span class="callout-label" data-ur="SQL tab uthao jab…">Reach for SQL when…</span>
+      <span data-ur="Data structured aur relational hai · tumhein transactions chahiyein (paisa!) · complex queries aur joins · schema stable hai · correctness raw scale se zyada matter karti hai.">Data is structured and relational · you need transactions (money!) · complex queries and joins · the schema is stable · correctness matters more than raw scale.</span>
     </div>
     <div style="flex:1;min-width:230px;" class="bridge">
-      <span class="callout-label">Reach for NoSQL when…</span>
-      Schema changes a lot or varies · huge volume (TB/PB) · very high write throughput · simple lookups by key · things like clickstreams, leaderboards, carts, caches, hot tables.
+      <span class="callout-label" data-ur="NoSQL tab uthao jab…">Reach for NoSQL when…</span>
+      <span data-ur="Schema bohot badalta hai ya alag alag hota hai · huge volume (TB/PB) · bohot high write throughput · key se simple lookups · cheezein jaise clickstreams, leaderboards, carts, caches, hot tables.">Schema changes a lot or varies · huge volume (TB/PB) · very high write throughput · simple lookups by key · things like clickstreams, leaderboards, carts, caches, hot tables.</span>
     </div>
   </div>
 
   <div class="warn">
-    <span class="callout-label">The interview-winning line</span>
-    "<strong>SQL by default; NoSQL for a specific reason.</strong>" Most apps are well served by a relational database (it's flexible, well-understood, and Postgres scales further than people think). Reach for NoSQL when you have a concrete need it fits — massive scale, a flexible schema, or a specialized access pattern. Saying that shows judgment, not hype.
+    <span class="callout-label" data-ur="Interview jeetne wali line">The interview-winning line</span>
+    <span data-ur="&quot;<strong>Default mein SQL; NoSQL kisi specific reason ke liye.</strong>&quot; Zyada tar apps ek relational database se achi tarah chal jaati hain (yeh flexible hai, achi tarah samjha hua hai, aur Postgres logon ke soche se zyada scale karta hai). NoSQL tab uthao jab tumhare paas koi concrete need ho jise woh fit karta hai — massive scale, ek flexible schema, ya ek specialized access pattern. Yeh kehna judgment dikhata hai, hype nahi.">"<strong>SQL by default; NoSQL for a specific reason.</strong>" Most apps are well served by a relational database (it's flexible, well-understood, and Postgres scales further than people think). Reach for NoSQL when you have a concrete need it fits — massive scale, a flexible schema, or a specialized access pattern. Saying that shows judgment, not hype.</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: name two reasons you'd deliberately choose NoSQL over SQL.</div>
-    <div class="answer">Any two of: schema changes often / varies per record; huge data volume (TB–PB); very high write throughput; simple key lookups; specialized patterns like leaderboards, clickstream, carts, or caching.</div>
+    <div class="prompt" data-ur="Quick check: do wajahein batao jin ki bina par tum jaan boojh kar SQL par NoSQL chunoge.">Quick check: name two reasons you'd deliberately choose NoSQL over SQL.</div>
+    <div class="answer" data-ur="In mein se koi do: schema aksar badalta hai / har record par alag; huge data volume (TB–PB); bohot high write throughput; simple key lookups; specialized patterns jaise leaderboards, clickstream, carts, ya caching.">Any two of: schema changes often / varies per record; huge data volume (TB–PB); very high write throughput; simple key lookups; specialized patterns like leaderboards, clickstream, carts, or caching.</div>
     <div class="hint">click to reveal</div>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">You're building a banking ledger: money transfers must be all-or-nothing, and you need complex reports joining accounts, transactions, and customers. Best fit?</div>
+    <div class="q" data-ur="Tum ek banking ledger bana rahe ho: money transfers ka all-or-nothing hona zaroori hai, aur tumhein accounts, transactions, aur customers ko join karne wali complex reports chahiyein. Best fit?">You're building a banking ledger: money transfers must be all-or-nothing, and you need complex reports joining accounts, transactions, and customers. Best fit?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">SQL — ACID transactions and joins</button>
-      <button class="opt" data-correct="false">NoSQL — for maximum write speed</button>
-      <button class="opt" data-correct="false">A key-value cache as the main store</button>
-      <button class="opt" data-correct="false">Whatever scales to the most machines</button>
+      <button class="opt" data-correct="true" data-ur="SQL — ACID transactions aur joins">SQL — ACID transactions and joins</button>
+      <button class="opt" data-correct="false" data-ur="NoSQL — maximum write speed ke liye">NoSQL — for maximum write speed</button>
+      <button class="opt" data-correct="false" data-ur="Main store ke tor par ek key-value cache">A key-value cache as the main store</button>
+      <button class="opt" data-correct="false" data-ur="Jo bhi sab se zyada machines tak scale karay">Whatever scales to the most machines</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">You're storing a real-time game leaderboard: billions of score updates, simple "get top N" lookups, schema barely matters. Best fit?</div>
+    <div class="q" data-ur="Tum ek real-time game leaderboard store kar rahe ho: billions score updates, simple &quot;get top N&quot; lookups, schema mushkil se matter karta hai. Best fit?">You're storing a real-time game leaderboard: billions of score updates, simple "get top N" lookups, schema barely matters. Best fit?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">SQL with lots of joins</button>
-      <button class="opt" data-correct="true">NoSQL — high write volume, simple access pattern</button>
-      <button class="opt" data-correct="false">A single Postgres with no index</button>
-      <button class="opt" data-correct="false">Strong consistency across every region</button>
+      <button class="opt" data-correct="false" data-ur="Bohot saare joins ke saath SQL">SQL with lots of joins</button>
+      <button class="opt" data-correct="true" data-ur="NoSQL — high write volume, simple access pattern">NoSQL — high write volume, simple access pattern</button>
+      <button class="opt" data-correct="false" data-ur="Bina index ke ek single Postgres">A single Postgres with no index</button>
+      <button class="opt" data-correct="false" data-ur="Har region mein strong consistency">Strong consistency across every region</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    SQL = strict filing cabinet with powerful joins and ACID; NoSQL = flexible boxes that scale huge with BASE/eventual consistency. Pick by your data, not by fashion — and default to SQL, reaching for NoSQL for a concrete reason (scale, flexible schema, special pattern). This is the deep-dive interviewers love.
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="SQL = powerful joins aur ACID wala strict filing cabinet; NoSQL = flexible boxes jo BASE/eventual consistency ke saath bohot huge scale karti hain. Apne data ki bina par chuno, fashion ki bina par nahi — aur default mein SQL, NoSQL kisi concrete reason ke liye uthao (scale, flexible schema, special pattern). Yeh woh deep-dive hai jo interviewers ko pasand hai.">SQL = strict filing cabinet with powerful joins and ACID; NoSQL = flexible boxes that scale huge with BASE/eventual consistency. Pick by your data, not by fashion — and default to SQL, reaching for NoSQL for a concrete reason (scale, flexible schema, special pattern). This is the deep-dive interviewers love.</span>
   </div>
 
   <h2>Read next (primary source) — optional</h2>

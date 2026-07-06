@@ -97,34 +97,34 @@ with transaction.atomic():          # all-or-nothing
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">Your "redeem coupon" endpoint occasionally lets the same one-time coupon be used twice when clicked rapidly. Root cause and fix?</div>
+    <div class="q" data-ur="Tumhara &quot;redeem coupon&quot; endpoint kabhi kabhi ek hi one-time coupon ko do baar use hone deta hai jab tezi se click karo. Root cause aur fix?">Your "redeem coupon" endpoint occasionally lets the same one-time coupon be used twice when clicked rapidly. Root cause and fix?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">Race condition; lock the row with select_for_update in atomic()</button>
-      <button class="opt" data-correct="false">Missing index; add db_index=True on the coupon</button>
-      <button class="opt" data-correct="false">Stale cache; lower the cache TTL</button>
-      <button class="opt" data-correct="false">Wrong database type; switch to NoSQL</button>
+      <button class="opt" data-correct="true" data-ur="Race condition; row ko atomic() ke andar select_for_update se lock karo">Race condition; lock the row with select_for_update in atomic()</button>
+      <button class="opt" data-correct="false" data-ur="Missing index; coupon pe db_index=True add karo">Missing index; add db_index=True on the coupon</button>
+      <button class="opt" data-correct="false" data-ur="Stale cache; cache TTL kam karo">Stale cache; lower the cache TTL</button>
+      <button class="opt" data-correct="false" data-ur="Ghalat database type; NoSQL pe switch karo">Wrong database type; switch to NoSQL</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">A money-transfer function subtracts from one account and adds to another. A crash between the two steps must not lose money. What do you wrap it in?</div>
+    <div class="q" data-ur="Ek money-transfer function ek account se minus karta hai aur doosre mein add karta hai. Do steps ke darmiyan ek crash se paisa nahi khona chahiye. Tum ise kis mein wrap karte ho?">A money-transfer function subtracts from one account and adds to another. A crash between the two steps must not lose money. What do you wrap it in?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">A cache with a short timeout</button>
-      <button class="opt" data-correct="true">A transaction (transaction.atomic) — all-or-nothing</button>
-      <button class="opt" data-correct="false">A background Celery task</button>
-      <button class="opt" data-correct="false">A read replica</button>
+      <button class="opt" data-correct="false" data-ur="Ek cache short timeout ke saath">A cache with a short timeout</button>
+      <button class="opt" data-correct="true" data-ur="Ek transaction (transaction.atomic) — all-or-nothing">A transaction (transaction.atomic) — all-or-nothing</button>
+      <button class="opt" data-correct="false" data-ur="Ek background Celery task">A background Celery task</button>
+      <button class="opt" data-correct="false" data-ur="Ek read replica">A read replica</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    A <strong>transaction</strong> makes several steps all-or-nothing (Django's <code>atomic()</code>) — survives crashes. A <strong>lock</strong> stops two concurrent operations from corrupting the same row (<code>select_for_update()</code>) — survives race conditions. Together they're how you build anything with money, inventory, or seats without disaster. This is deep, real, interview-and-job depth.
+    <span class="callout-label" data-ur="Aaj ki teri jeet">Your win today</span>
+    <span data-ur="Ek <strong>transaction</strong> kai steps ko all-or-nothing bana deti hai (Django ka <code>atomic()</code>) — crashes se bach jaati hai. Ek <strong>lock</strong> do concurrent operations ko same row corrupt karne se rokta hai (<code>select_for_update()</code>) — race conditions se bach jaata hai. Milkar yeh woh tareeqa hain jisse tum paise, inventory, ya seats wali koi bhi cheez bina disaster ke banate ho. Yeh deep, asal, interview-and-job depth hai.">A <strong>transaction</strong> makes several steps all-or-nothing (Django's <code>atomic()</code>) — survives crashes. A <strong>lock</strong> stops two concurrent operations from corrupting the same row (<code>select_for_update()</code>) — survives race conditions. Together they're how you build anything with money, inventory, or seats without disaster. This is deep, real, interview-and-job depth.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://docs.djangoproject.com/en/stable/topics/db/transactions/" target="_blank">Django docs — Database transactions</a><sup class="cite"><a href="#s1">1</a></sup> and <a href="https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-for-update" target="_blank">select_for_update</a>.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.djangoproject.com/en/stable/topics/db/transactions/&quot; target=&quot;_blank&quot;>Django docs — Database transactions</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> aur <a href=&quot;https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-for-update&quot; target=&quot;_blank&quot;>select_for_update</a>.">📖 <a href="https://docs.djangoproject.com/en/stable/topics/db/transactions/" target="_blank">Django docs — Database transactions</a><sup class="cite"><a href="#s1">1</a></sup> and <a href="https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-for-update" target="_blank">select_for_update</a>.</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Want to see how a deadlock actually forms, or the difference between pessimistic locking (locks) and optimistic locking (version checks)? Bring a concurrency bug and we'll dissect it.
