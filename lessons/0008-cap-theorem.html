@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 5 · CAP Theorem</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 05 · Week Day 1</p>
-    <h1>CAP theorem: pick two when the network breaks</h1>
-    <p class="subtitle">The famous tradeoff — and it ties together consistency and availability you already know.</p>
+    <h1 data-ur="CAP theorem: network toot-te hi do choose karo">CAP theorem: pick two when the network breaks</h1>
+    <p class="subtitle" data-ur="Mashhoor tradeoff — aur yeh consistency aur availability ko aapas mein baandhta hai jo tum pehle se jaante ho.">The famous tradeoff — and it ties together consistency and availability you already know.</p>
     <div class="meta">
       <span>~8 min</span>
       <span>One concept: CAP</span>
@@ -20,33 +20,33 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall consistency &amp; availability)</h2>
+  <h2 data-ur="30-second warm-up (consistency &amp; availability yaad karo)">30-second warm-up (recall consistency &amp; availability)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: <strong>strong</strong> vs <strong>eventual</strong> consistency — one line each.</div>
-    <div class="answer"><strong>Strong</strong> — every read immediately sees the latest write (copies update synchronously). <strong>Eventual</strong> — reads see it after a short delay (copies update asynchronously). We're about to see <em>why you sometimes can't choose strong.</em></div>
+    <div class="prompt" data-ur="Yaad se: <strong>strong</strong> vs <strong>eventual</strong> consistency — har ek ka ek line.">From memory: <strong>strong</strong> vs <strong>eventual</strong> consistency — one line each.</div>
+    <div class="answer" data-ur="<strong>Strong</strong> — har read foran latest write dekhta hai (copies synchronously update hoti hain). <strong>Eventual</strong> — reads use thori der baad dekhte hain (copies asynchronously update hoti hain). Hum abhi dekhne wale hain <em>ke tum kabhi kabhi strong kyun choose nahi kar sakte.</em>"><strong>Strong</strong> — every read immediately sees the latest write (copies update synchronously). <strong>Eventual</strong> — reads see it after a short delay (copies update asynchronously). We're about to see <em>why you sometimes can't choose strong.</em></div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>When the network between your servers breaks (a "partition"), you must choose: stay Consistent OR stay Available — you can't have both in that moment.</strong> That's the entire CAP theorem.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Jab tumhare servers ke darmiyan network toot-ta hai (ek &quot;partition&quot;), tumhein choose karna parta hai: Consistent raho YA Available raho — us lamhe tum dono nahi rakh sakte.</strong> Yehi poora CAP theorem hai."><strong>When the network between your servers breaks (a "partition"), you must choose: stay Consistent OR stay Available — you can't have both in that moment.</strong> That's the entire CAP theorem.</span>
   </div>
 
-  <h2>The three letters</h2>
+  <h2 data-ur="Teen letters">The three letters</h2>
   <ul>
-    <li><strong>C — Consistency:</strong> every read gets the <em>latest</em> write (or an error). No stale data.</li>
-    <li><strong>A — Availability:</strong> every request gets <em>a</em> response (even if it's slightly old). Never "down."</li>
-    <li><strong>P — Partition tolerance:</strong> the system keeps working even when the network between servers is <em>cut</em>.</li>
+    <li data-ur="<strong>C — Consistency:</strong> har read <em>latest</em> write leta hai (ya ek error). Koi stale data nahi."><strong>C — Consistency:</strong> every read gets the <em>latest</em> write (or an error). No stale data.</li>
+    <li data-ur="<strong>A — Availability:</strong> har request ko <em>koi</em> response milta hai (chahe thora purana ho). Kabhi &quot;down&quot; nahi."><strong>A — Availability:</strong> every request gets <em>a</em> response (even if it's slightly old). Never "down."</li>
+    <li data-ur="<strong>P — Partition tolerance:</strong> system tab bhi chalta rehta hai jab servers ke darmiyan network <em>kaat</em> diya jaaye."><strong>P — Partition tolerance:</strong> the system keeps working even when the network between servers is <em>cut</em>.</li>
   </ul>
-  <p>CAP says: in a distributed system you can only fully guarantee <strong>two of these three</strong> at once.</p>
+  <p data-ur="CAP kehta hai: ek distributed system mein tum ek waqt mein in teenon mein se sirf <strong>do</strong> ki poori guarantee de sakte ho.">CAP says: in a distributed system you can only fully guarantee <strong>two of these three</strong> at once.</p>
 
-  <h2>The story: two shop branches, phone line cut</h2>
-  <p>You run a shop with <strong>two branches</strong> that normally sync inventory over a phone line. One day <strong>the phone line goes dead</strong> (that's a <em>partition</em> — the network split). A customer walks into Branch B and asks: "Do you have item X?" Branch B is now stuck with a choice:</p>
+  <h2 data-ur="Kahani: do shop branches, phone line kati">The story: two shop branches, phone line cut</h2>
+  <p data-ur="Tum ek shop chalate ho jiski <strong>do branches</strong> hain jo aam tor par phone line par inventory sync karti hain. Ek din <strong>phone line dead ho jaati hai</strong> (yeh ek <em>partition</em> hai — network split). Ek customer Branch B mein aata hai aur poochta hai: &quot;Kya tumhare paas item X hai?&quot; Branch B ab ek choice mein phansi hai:">You run a shop with <strong>two branches</strong> that normally sync inventory over a phone line. One day <strong>the phone line goes dead</strong> (that's a <em>partition</em> — the network split). A customer walks into Branch B and asks: "Do you have item X?" Branch B is now stuck with a choice:</p>
   <ul>
-    <li><strong>Stay consistent (refuse):</strong> "I can't confirm without calling Branch A, and the line's dead — so I <em>won't</em> answer." Correct, but unhelpful. You gave up <strong>Availability</strong>.</li>
-    <li><strong>Stay available (guess):</strong> "Sure, we have it!" — based on possibly-stale info. Helpful, but might be wrong. You gave up <strong>Consistency</strong>.</li>
+    <li data-ur="<strong>Consistent raho (inkaar):</strong> &quot;Main Branch A ko call kiye baghair confirm nahi kar sakta, aur line dead hai — toh main jawab <em>nahi</em> doonga.&quot; Sahi, par bekaar. Tumne <strong>Availability</strong> chhod di."><strong>Stay consistent (refuse):</strong> "I can't confirm without calling Branch A, and the line's dead — so I <em>won't</em> answer." Correct, but unhelpful. You gave up <strong>Availability</strong>.</li>
+    <li data-ur="<strong>Available raho (andaza):</strong> &quot;Haan, hamare paas hai!&quot; — mumkina tor par stale info ki bina par. Madadgar, par ghalat ho sakta hai. Tumne <strong>Consistency</strong> chhod di."><strong>Stay available (guess):</strong> "Sure, we have it!" — based on possibly-stale info. Helpful, but might be wrong. You gave up <strong>Consistency</strong>.</li>
   </ul>
-  <p>There's no third option that's both correct <em>and</em> answers, while the line is down. That's CAP in one scene.</p>
+  <p data-ur="Jab tak line down hai, koi teesra option nahi jo sahi bhi ho <em>aur</em> jawab bhi de. Yeh ek scene mein CAP hai.">There's no third option that's both correct <em>and</em> answers, while the line is down. That's CAP in one scene.</p>
 
   <figure>
     <svg viewBox="0 0 640 170" role="img" aria-label="Network partition forces choice between C and A">
@@ -62,15 +62,15 @@
         <text x="320" y="135" fill="#6b6b6b">B must choose: refuse (consistent) or guess (available)</text>
       </g>
     </svg>
-    <figcaption>When the link is cut, one branch can't be both correct and responsive.</figcaption>
+    <figcaption data-ur="Jab link kati ho, ek branch ek saath sahi aur responsive dono nahi ho sakti.">When the link is cut, one branch can't be both correct and responsive.</figcaption>
   </figure>
 
   <div class="warn">
-    <span class="callout-label">The real-world twist: P isn't optional</span>
-    Networks <em>will</em> fail — cables cut, packets drop. So <strong>partition tolerance (P) is mandatory</strong> in any real distributed system. That means the actual choice is always just <strong>C vs A</strong> when a partition hits. "Pick 2 of 3" is really "P is forced, now pick C or A."
+    <span class="callout-label" data-ur="Real-world twist: P optional nahi">The real-world twist: P isn't optional</span>
+    <span data-ur="Networks <em>zaroor</em> fail honge — cables katti hain, packets girte hain. Toh kisi bhi asli distributed system mein <strong>partition tolerance (P) mandatory hai</strong>. Iska matlab jab partition aati hai toh asli choice hamesha bas <strong>C vs A</strong> hi hoti hai. &quot;3 mein se 2 chuno&quot; asal mein &quot;P forced hai, ab C ya A chuno&quot; hai.">Networks <em>will</em> fail — cables cut, packets drop. So <strong>partition tolerance (P) is mandatory</strong> in any real distributed system. That means the actual choice is always just <strong>C vs A</strong> when a partition hits. "Pick 2 of 3" is really "P is forced, now pick C or A."</span>
   </div>
 
-  <h2>So systems are labeled CP or AP</h2>
+  <h2 data-ur="Toh systems ko CP ya AP label kiya jaata hai">So systems are labeled CP or AP</h2>
   <table>
     <tr><th>Type</th><th>Chooses</th><th>Behaves like</th><th>Example use</th></tr>
     <tr><td><strong>CP</strong></td><td>Consistency</td><td>Refuses/errors rather than serve stale data</td><td>Bank transactions, inventory counts</td></tr>
@@ -78,45 +78,45 @@
   </table>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    A single Postgres isn't distributed, so CAP doesn't bite — you get strong consistency, no partitions to worry about. But the moment you scale out (read replicas, a distributed cache, a multi-region database), you're choosing. Postgres with sync replication leans <strong>CP</strong> (it'll block/refuse rather than serve stale). A system like Cassandra or DynamoDB leans <strong>AP</strong> (always answers, eventual consistency). Now you know <em>why</em> those databases behave so differently — it's a CAP choice baked in.
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Ek single Postgres distributed nahi hai, toh CAP nahi kaat-ta — tumhein strong consistency milti hai, koi partitions ki fikar nahi. Lekin jis lamhe tum scale out karte ho (read replicas, ek distributed cache, ek multi-region database), tum choose kar rahe ho. Sync replication ke saath Postgres <strong>CP</strong> ki taraf jhukta hai (woh stale serve karne ke bajaye block/inkaar karega). Cassandra ya DynamoDB jaisa system <strong>AP</strong> ki taraf jhukta hai (hamesha jawab deta hai, eventual consistency). Ab tum jaante ho <em>ke</em> woh databases itni alag kyun behave karte hain — yeh ek CAP choice hai jo un mein baked hai.">A single Postgres isn't distributed, so CAP doesn't bite — you get strong consistency, no partitions to worry about. But the moment you scale out (read replicas, a distributed cache, a multi-region database), you're choosing. Postgres with sync replication leans <strong>CP</strong> (it'll block/refuse rather than serve stale). A system like Cassandra or DynamoDB leans <strong>AP</strong> (always answers, eventual consistency). Now you know <em>why</em> those databases behave so differently — it's a CAP choice baked in.</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: why is "partition tolerance" not really optional in a real system?</div>
-    <div class="answer">Because networks genuinely fail (cables, dropped packets) — you can't prevent partitions. So a real distributed system must tolerate them, which forces the true choice down to <strong>C vs A</strong> during a partition.</div>
+    <div class="prompt" data-ur="Quick check: ek asli system mein &quot;partition tolerance&quot; waqai optional kyun nahi hai?">Quick check: why is "partition tolerance" not really optional in a real system?</div>
+    <div class="answer" data-ur="Kyunke networks waqai fail hote hain (cables, dropped packets) — tum partitions rok nahi sakte. Toh ek asli distributed system ko unhein tolerate karna hi parta hai, jo partition ke doran asli choice ko <strong>C vs A</strong> tak le aata hai.">Because networks genuinely fail (cables, dropped packets) — you can't prevent partitions. So a real distributed system must tolerate them, which forces the true choice down to <strong>C vs A</strong> during a partition.</div>
     <div class="hint">click to reveal</div>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">A banking system must never show a wrong balance, even if that means occasionally rejecting a request during a network split. It's choosing…</div>
+    <div class="q" data-ur="Ek banking system ko kabhi ghalat balance nahi dikhana chahiye, chahe iska matlab network split ke doran kabhi kabhi koi request reject karna ho. Yeh choose kar raha hai…">A banking system must never show a wrong balance, even if that means occasionally rejecting a request during a network split. It's choosing…</div>
     <div class="opts">
-      <button class="opt" data-correct="true">CP — consistency over availability</button>
-      <button class="opt" data-correct="false">AP — availability over consistency</button>
-      <button class="opt" data-correct="false">CA — consistency and availability, no partitions</button>
-      <button class="opt" data-correct="false">None — CAP doesn't apply to banks</button>
+      <button class="opt" data-correct="true" data-ur="CP — availability par consistency">CP — consistency over availability</button>
+      <button class="opt" data-correct="false" data-ur="AP — consistency par availability">AP — availability over consistency</button>
+      <button class="opt" data-correct="false" data-ur="CA — consistency aur availability, koi partitions nahi">CA — consistency and availability, no partitions</button>
+      <button class="opt" data-correct="false" data-ur="Koi nahi — CAP banks par apply nahi hota">None — CAP doesn't apply to banks</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">A social media feed should always load, even if it occasionally shows a slightly old post. It's choosing…</div>
+    <div class="q" data-ur="Ek social media feed ko hamesha load hona chahiye, chahe woh kabhi kabhi thora purana post dikhaye. Yeh choose kar raha hai…">A social media feed should always load, even if it occasionally shows a slightly old post. It's choosing…</div>
     <div class="opts">
-      <button class="opt" data-correct="false">CP — consistency over availability</button>
-      <button class="opt" data-correct="true">AP — availability over consistency</button>
-      <button class="opt" data-correct="false">Strong consistency with synchronous writes</button>
-      <button class="opt" data-correct="false">A single-server database</button>
+      <button class="opt" data-correct="false" data-ur="CP — availability par consistency">CP — consistency over availability</button>
+      <button class="opt" data-correct="true" data-ur="AP — consistency par availability">AP — availability over consistency</button>
+      <button class="opt" data-correct="false" data-ur="Synchronous writes ke saath strong consistency">Strong consistency with synchronous writes</button>
+      <button class="opt" data-correct="false" data-ur="Ek single-server database">A single-server database</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    CAP: when the network splits, you pick <strong>Consistency</strong> (refuse rather than be wrong → CP) or <strong>Availability</strong> (answer, maybe stale → AP). Partition tolerance is forced, so it's really C-vs-A. This is <em>the</em> tradeoff behind "why is this database like that" — and naming CP vs AP in an interview is a strong senior signal.
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="CAP: jab network split hota hai, tum <strong>Consistency</strong> chunte ho (ghalat hone ke bajaye inkaar → CP) ya <strong>Availability</strong> (jawab do, shayad stale → AP). Partition tolerance forced hai, toh yeh asal mein C-vs-A hai. Yeh <em>woh</em> tradeoff hai jo &quot;yeh database aisa kyun hai&quot; ke peeche hai — aur interview mein CP vs AP ka naam lena ek strong senior signal hai.">CAP: when the network splits, you pick <strong>Consistency</strong> (refuse rather than be wrong → CP) or <strong>Availability</strong> (answer, maybe stale → AP). Partition tolerance is forced, so it's really C-vs-A. This is <em>the</em> tradeoff behind "why is this database like that" — and naming CP vs AP in an interview is a strong senior signal.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">System Design Primer — CAP theorem</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns&quot; target=&quot;_blank&quot;>System Design Primer — CAP theorem</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">System Design Primer — CAP theorem</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Want to classify databases you use (Postgres, Redis, Mongo, DynamoDB) as CP or AP? Or unsure why "CA" isn't a real option? Ask.
@@ -149,7 +149,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

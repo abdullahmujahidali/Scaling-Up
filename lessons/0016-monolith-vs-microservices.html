@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 10 · Monolith vs Microservices</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 10 · Week 2 · Day 3</p>
-    <h1>Monolith vs microservices: one big app or many small ones</h1>
-    <p class="subtitle">The architecture debate everyone has an opinion on. Here's the actual tradeoff, minus the hype.</p>
+    <h1 data-ur="Monolith vs microservices: ek bara app ya bohot saare chhote">Monolith vs microservices: one big app or many small ones</h1>
+    <p class="subtitle" data-ur="Woh architecture debate jispe har kisi ki apni raye hai. Yahan asli tradeoff hai, hype ke bina.">The architecture debate everyone has an opinion on. Here's the actual tradeoff, minus the hype.</p>
     <div class="meta">
       <span>~9 min</span>
       <span>One concept: this architectural split</span>
@@ -20,21 +20,21 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall transactions)</h2>
+  <h2 data-ur="30-second warm-up (transactions yaad karo)">30-second warm-up (recall transactions)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: what does a transaction guarantee, and what does a lock prevent?</div>
-    <div class="answer">A <strong>transaction</strong> makes multiple steps all-or-nothing (survives crashes). A <strong>lock</strong> stops two concurrent operations from corrupting the same row (survives race conditions).</div>
+    <div class="prompt" data-ur="Yaad se: transaction kya guarantee karta hai, aur lock kya rokta hai?">From memory: what does a transaction guarantee, and what does a lock prevent?</div>
+    <div class="answer" data-ur="Ek <strong>transaction</strong> multiple steps ko all-or-nothing bana deta hai (crashes mein bhi bacha rehta hai). Ek <strong>lock</strong> do concurrent operations ko same row corrupt karne se rokta hai (race conditions mein bacha rehta hai).">A <strong>transaction</strong> makes multiple steps all-or-nothing (survives crashes). A <strong>lock</strong> stops two concurrent operations from corrupting the same row (survives race conditions).</div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>A monolith is one app that does everything. Microservices split it into many small apps, each owning one job, talking over the network.</strong> Microservices buy independence — and pay with complexity.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek monolith ek hi app hai jo sab kuch karta hai. Microservices usse bohot chhote apps mein tor dete hain, har ek apna ek kaam sambhalta hai, network ke zariye baat karta hai.</strong> Microservices independence khareedte hain — aur complexity ki qeemat dete hain."><strong>A monolith is one app that does everything. Microservices split it into many small apps, each owning one job, talking over the network.</strong> Microservices buy independence — and pay with complexity.</span>
   </div>
 
-  <h2>The story: one big restaurant vs a food court</h2>
-  <p><strong>Monolith = one big restaurant.</strong> One kitchen, one menu, one team. Simple to run: everything's in one place, easy to coordinate. But if the kitchen catches fire, the <em>whole</em> restaurant closes. And you can't let the dessert team work faster without touching the whole kitchen.</p>
-  <p><strong>Microservices = a food court.</strong> Separate independent stalls — pizza, sushi, coffee — each with its own kitchen and team. The sushi stall can be upgraded, scaled, or even burn down without closing the pizza stall. But now you need shared plumbing, a directory of who's where, and stalls have to <em>talk</em> to each other (over the network) to serve a combined meal.</p>
+  <h2 data-ur="Kahani: ek bara restaurant vs ek food court">The story: one big restaurant vs a food court</h2>
+  <p data-ur="<strong>Monolith = ek bara restaurant.</strong> Ek kitchen, ek menu, ek team. Chalana simple: sab kuch ek jagah, coordinate karna aasan. Lekin agar kitchen mein aag lag jaye, toh <em>poora</em> restaurant band ho jata hai. Aur tum dessert team ko poori kitchen ko chhede baghair tez kaam nahi karwa sakte."><strong>Monolith = one big restaurant.</strong> One kitchen, one menu, one team. Simple to run: everything's in one place, easy to coordinate. But if the kitchen catches fire, the <em>whole</em> restaurant closes. And you can't let the dessert team work faster without touching the whole kitchen.</p>
+  <p data-ur="<strong>Microservices = ek food court.</strong> Alag alag independent stalls — pizza, sushi, coffee — har ek ka apna kitchen aur team. Sushi stall ko upgrade, scale, ya even burn down kiya ja sakta hai pizza stall ko band kiye baghair. Lekin ab tumhein shared plumbing chahiye, ek directory ke kaun kahan hai, aur stalls ko ek doosre se <em>baat</em> karni parti hai (network ke zariye) taake combined meal serve ho sake."><strong>Microservices = a food court.</strong> Separate independent stalls — pizza, sushi, coffee — each with its own kitchen and team. The sushi stall can be upgraded, scaled, or even burn down without closing the pizza stall. But now you need shared plumbing, a directory of who's where, and stalls have to <em>talk</em> to each other (over the network) to serve a combined meal.</p>
 
   <figure>
     <svg viewBox="0 0 640 160" role="img" aria-label="Monolith one block vs microservices many blocks">
@@ -54,10 +54,10 @@
         </g>
       </g>
     </svg>
-    <figcaption>One block that does everything vs many blocks each owning one thing.</figcaption>
+    <figcaption data-ur="Ek block jo sab kuch karta hai vs bohot saare blocks jo har ek apna ek kaam sambhalte hain.">One block that does everything vs many blocks each owning one thing.</figcaption>
   </figure>
 
-  <h2>The honest tradeoff</h2>
+  <h2 data-ur="Imaandaar tradeoff">The honest tradeoff</h2>
   <table>
     <tr><th></th><th>Monolith</th><th>Microservices</th></tr>
     <tr><td>Deploy</td><td>One thing, simple</td><td>Each service independently</td></tr>
@@ -68,55 +68,55 @@
   </table>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    Your Django app is almost certainly a <strong>monolith</strong> — users, orders, billing, all in one project, one deploy. And that's <em>fine</em> — often the right choice. Microservices solve <em>organizational</em> and <em>extreme-scale</em> problems (many teams stepping on each other, one feature needing to scale 100× more than the rest), not "my app feels big." Splitting a healthy monolith too early just trades simple problems for distributed-systems problems (network failures, the CAP tradeoffs from Week 1, harder debugging).
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tumhari Django app almost certainly ek <strong>monolith</strong> hai — users, orders, billing, sab ek hi project mein, ek deploy. Aur yeh <em>theek</em> hai — aksar sahi choice hai. Microservices <em>organizational</em> aur <em>extreme-scale</em> problems solve karti hain (bohot saari teams ek doosre pe step kar rahi hain, ek feature ko baaqi se 100× zyada scale karna par raha ho), na ke &quot;meri app bari lag rahi hai.&quot; Ek healthy monolith ko bohot jaldi tor dena bas simple problems ko distributed-systems problems se badal deta hai (network failures, Week 1 wale CAP tradeoffs, mushkil debugging).">Your Django app is almost certainly a <strong>monolith</strong> — users, orders, billing, all in one project, one deploy. And that's <em>fine</em> — often the right choice. Microservices solve <em>organizational</em> and <em>extreme-scale</em> problems (many teams stepping on each other, one feature needing to scale 100× more than the rest), not "my app feels big." Splitting a healthy monolith too early just trades simple problems for distributed-systems problems (network failures, the CAP tradeoffs from Week 1, harder debugging).</span>
   </div>
 
   <div class="warn">
-    <span class="callout-label">The interview-winning nuance</span>
-    "<strong>Start with a monolith; extract microservices when a specific pain forces it.</strong>" The pains that justify it: independent team ownership, one component needing very different scaling, or independent deploy cadence. Saying "microservices aren't automatically better — they trade simplicity for independence" shows real judgment. Reaching for microservices by default is a classic over-engineering tell.
+    <span class="callout-label" data-ur="Interview jeetne wali nuance">The interview-winning nuance</span>
+    <span data-ur="&quot;<strong>Monolith se shuru karo; microservices tab nikaalo jab koi specific pain majboor kar de.</strong>&quot; Woh pains jo isse justify karti hain: independent team ownership, ek component ko bohot alag scaling chahiye ho, ya independent deploy cadence. Yeh kehna ke &quot;microservices automatically behtar nahi hoti — woh simplicity ko independence se trade karti hain&quot; asli judgment dikhata hai. By default microservices ki taraf jhukna ek classic over-engineering ki nishani hai.">"<strong>Start with a monolith; extract microservices when a specific pain forces it.</strong>" The pains that justify it: independent team ownership, one component needing very different scaling, or independent deploy cadence. Saying "microservices aren't automatically better — they trade simplicity for independence" shows real judgment. Reaching for microservices by default is a classic over-engineering tell.</span>
   </div>
 
-  <p><strong>One supporting piece:</strong> when services are split up, how does one find another's address? <strong>Service discovery</strong> (tools like Consul) — a live directory of "which service is at which address," with health checks. It's the food court's "you are here" map.</p>
+  <p data-ur="<strong>Ek supporting cheez:</strong> jab services tor di jaati hain, toh ek doosre ka address kaise dhoondti hai? <strong>Service discovery</strong> (Consul jaise tools) — ek live directory ke &quot;kaunsi service kaunse address pe hai,&quot; health checks ke saath. Yeh food court ka &quot;you are here&quot; map hai."><strong>One supporting piece:</strong> when services are split up, how does one find another's address? <strong>Service discovery</strong> (tools like Consul) — a live directory of "which service is at which address," with health checks. It's the food court's "you are here" map.</p>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: name one real benefit of microservices and one real cost.</div>
-    <div class="answer"><strong>Benefit</strong> (any): independent deploys, isolated failures, scale one service alone, teams own services. <strong>Cost</strong> (any): network complexity, harder debugging, service discovery/monitoring overhead, distributed-systems problems (CAP).</div>
+    <div class="prompt" data-ur="Quick check: microservices ka ek asli benefit aur ek asli cost batao.">Quick check: name one real benefit of microservices and one real cost.</div>
+    <div class="answer" data-ur="<strong>Benefit</strong> (koi bhi): independent deploys, isolated failures, ek service akeli scale karna, teams apni services own karti hain. <strong>Cost</strong> (koi bhi): network complexity, mushkil debugging, service discovery/monitoring ka overhead, distributed-systems problems (CAP)."><strong>Benefit</strong> (any): independent deploys, isolated failures, scale one service alone, teams own services. <strong>Cost</strong> (any): network complexity, harder debugging, service discovery/monitoring overhead, distributed-systems problems (CAP).</div>
     <div class="hint">click to reveal</div>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">A 4-person team runs one Django app serving 10k users comfortably. They read that "microservices scale better" and want to split into 8 services. Best advice?</div>
+    <div class="q" data-ur="Ek 4-log ki team ek Django app chalati hai jo 10k users ko aaraam se serve karti hai. Woh parhte hain ke &quot;microservices behtar scale karti hain&quot; aur 8 services mein split karna chahti hain. Best advice?">A 4-person team runs one Django app serving 10k users comfortably. They read that "microservices scale better" and want to split into 8 services. Best advice?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">Stay a monolith — no pain here justifies the added complexity</button>
-      <button class="opt" data-correct="false">Split immediately — microservices are always more scalable</button>
-      <button class="opt" data-correct="false">Split into exactly 8, one per database table</button>
-      <button class="opt" data-correct="false">Rewrite in a different language first</button>
+      <button class="opt" data-correct="true" data-ur="Monolith hi raho — yahan koi pain nahi jo added complexity ko justify kare">Stay a monolith — no pain here justifies the added complexity</button>
+      <button class="opt" data-correct="false" data-ur="Foran split karo — microservices hamesha zyada scalable hoti hain">Split immediately — microservices are always more scalable</button>
+      <button class="opt" data-correct="false" data-ur="Exactly 8 mein split karo, har database table ke liye ek">Split into exactly 8, one per database table</button>
+      <button class="opt" data-correct="false" data-ur="Pehle kisi doosri language mein rewrite karo">Rewrite in a different language first</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">Which is a genuine reason to extract a microservice?</div>
+    <div class="q" data-ur="Microservice nikaalne ki ek genuine wajah kaunsi hai?">Which is a genuine reason to extract a microservice?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">The codebase "feels big"</button>
-      <button class="opt" data-correct="true">One component must scale 100× more than the rest, independently</button>
-      <button class="opt" data-correct="false">Microservices are the modern default</button>
-      <button class="opt" data-correct="false">To avoid writing database transactions</button>
+      <button class="opt" data-correct="false" data-ur="Codebase &quot;bari lagti hai&quot;">The codebase "feels big"</button>
+      <button class="opt" data-correct="true" data-ur="Ek component ko baaqi se 100× zyada, independently scale karna par raha ho">One component must scale 100× more than the rest, independently</button>
+      <button class="opt" data-correct="false" data-ur="Microservices modern default hain">Microservices are the modern default</button>
+      <button class="opt" data-correct="false" data-ur="Database transactions likhne se bachne ke liye">To avoid writing database transactions</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    Monolith = one restaurant (simple, but coupled); microservices = a food court (independent, but complex). Microservices buy independent deploys/scaling/failure-isolation and pay in network + operational complexity. The senior line: <strong>start monolith, split when a concrete pain demands it</strong> — not by default. You can now argue this honestly, which is exactly what interviews probe.
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Monolith = ek restaurant (simple, lekin coupled); microservices = ek food court (independent, lekin complex). Microservices independent deploys/scaling/failure-isolation khareedti hain aur network + operational complexity ki qeemat deti hain. Senior line: <strong>monolith se shuru karo, tab split karo jab koi concrete pain demand kare</strong> — by default nahi. Ab tum yeh imaandaari se argue kar sakte ho, jo bilkul wohi hai jo interviews probe karti hain.">Monolith = one restaurant (simple, but coupled); microservices = a food court (independent, but complex). Microservices buy independent deploys/scaling/failure-isolation and pay in network + operational complexity. The senior line: <strong>start monolith, split when a concrete pain demands it</strong> — not by default. You can now argue this honestly, which is exactly what interviews probe.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#microservices" target="_blank">System Design Primer — Microservices</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#microservices&quot; target=&quot;_blank&quot;>System Design Primer — Microservices</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#microservices" target="_blank">System Design Primer — Microservices</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
 
   <div class="ask-teacher">
-    <strong>I'm your teacher — lean on me.</strong> Want to talk through whether a real system should split, or how services actually communicate (which is the next lesson — API design)? Ask.
+    <strong data-ur="Main tumhara teacher hoon — mujhpe bharosa karo.">I'm your teacher — lean on me.</strong> <span data-ur="Kisi real system ke baare mein baat karni hai ke usse split karna chahiye ya nahi, ya services actually kaise communicate karti hain (jo agli lesson hai — API design)? Poocho.">Want to talk through whether a real system should split, or how services actually communicate (which is the next lesson — API design)? Ask.</span>
   </div>
 
   <footer class="lesson-foot">
@@ -146,7 +146,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

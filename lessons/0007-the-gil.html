@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson B1 · The GIL</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">Backend Depth · Lesson B1 · Python internals</p>
-    <h1>The GIL: why Python threads don't split the work</h1>
-    <p class="subtitle">The first "why does Python behave like that?" — and the one interviewers love to poke.</p>
+    <h1 data-ur="GIL: Python threads kaam ko kyun nahi baantte">The GIL: why Python threads don't split the work</h1>
+    <p class="subtitle" data-ur="Pehla &quot;Python aisa kyun behave karta hai?&quot; — aur wohi jise interviewers kuredna pasand karte hain.">The first "why does Python behave like that?" — and the one interviewers love to poke.</p>
     <div class="meta">
       <span>~9 min</span>
       <span>One concept: the GIL</span>
@@ -21,24 +21,24 @@
   </header>
 
   <div class="bridge" style="background:#f6e9e9;border-left-color:#9b1c1c;">
-    <span class="callout-label" style="color:#9b1c1c;">New track</span>
-    This is the first <strong>Backend Depth</strong> lesson (Track B). We'll now alternate: one system-design lesson, then one of these. This track answers <em>"why does my code / database actually behave like that?"</em> — the depth that AI can't carry into the room for you.
+    <span class="callout-label" style="color:#9b1c1c;" data-ur="Naya track">New track</span>
+    <span data-ur="Yeh pehla <strong>Backend Depth</strong> lesson hai (Track B). Ab hum alternate karenge: ek system-design lesson, phir in mein se ek. Yeh track jawab deta hai <em>&quot;mera code / database asal mein aisa kyun behave karta hai?&quot;</em> — woh depth jo AI tumhare liye room mein nahi le ja sakti.">This is the first <strong>Backend Depth</strong> lesson (Track B). We'll now alternate: one system-design lesson, then one of these. This track answers <em>"why does my code / database actually behave like that?"</em> — the depth that AI can't carry into the room for you.</span>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>The GIL is a single lock that lets only ONE thread run Python code at a time.</strong> So spinning up 8 threads to crunch numbers 8× faster… doesn't work in normal Python. But for waiting-heavy work (network, disk), threads help a lot.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>GIL ek single lock hai jo ek waqt mein sirf EK thread ko Python code chalane deta hai.</strong> Toh 8 threads chala kar numbers ko 8× fast crunch karna… normal Python mein kaam nahi karta. Lekin waiting-heavy kaam (network, disk) ke liye threads bohot madad karti hain."><strong>The GIL is a single lock that lets only ONE thread run Python code at a time.</strong> So spinning up 8 threads to crunch numbers 8× faster… doesn't work in normal Python. But for waiting-heavy work (network, disk), threads help a lot.</span>
   </div>
 
-  <h2>The story: one talking stick in a meeting</h2>
-  <p>Picture a meeting room with a rule: <strong>you may only speak if you're holding the talking stick.</strong> There's exactly one stick. Ten people can be <em>in</em> the room, but only the one holding the stick actually talks; everyone else waits their turn.</p>
-  <p>In Python:</p>
+  <h2 data-ur="Kahani: meeting mein ek talking stick">The story: one talking stick in a meeting</h2>
+  <p data-ur="Ek meeting room ka tasawwur karo jis mein rule hai: <strong>tum sirf tab bol sakte ho jab talking stick tumhare haath mein ho.</strong> Bilkul ek hi stick hai. Das log room ke <em>andar</em> ho saktay hain, par sirf wohi actually baat karta hai jo stick pakde hai; baaki sab apni baari ka intezaar karte hain.">Picture a meeting room with a rule: <strong>you may only speak if you're holding the talking stick.</strong> There's exactly one stick. Ten people can be <em>in</em> the room, but only the one holding the stick actually talks; everyone else waits their turn.</p>
+  <p data-ur="Python mein:">In Python:</p>
   <ul>
-    <li>The <strong>talking stick</strong> = the <strong>GIL</strong> (Global Interpreter Lock).</li>
-    <li>The <strong>people</strong> = your <strong>threads</strong>.</li>
-    <li><strong>Talking</strong> = running Python code.</li>
+    <li data-ur="<strong>Talking stick</strong> = <strong>GIL</strong> (Global Interpreter Lock).">The <strong>talking stick</strong> = the <strong>GIL</strong> (Global Interpreter Lock).</li>
+    <li data-ur="<strong>Log</strong> = tumhare <strong>threads</strong>.">The <strong>people</strong> = your <strong>threads</strong>.</li>
+    <li data-ur="<strong>Baat karna</strong> = Python code chalana."><strong>Talking</strong> = running Python code.</li>
   </ul>
-  <p>So even on an 8-core machine, your 8 Python threads pass one stick around — only one runs Python at any instant. That's the whole idea, and it explains a surprising amount.</p>
+  <p data-ur="Toh 8-core machine par bhi, tumhare 8 Python threads ek hi stick ko aapas mein ghumate hain — kisi bhi lamhe sirf ek Python chalata hai. Yehi poora idea hai, aur yeh heran karne wali kaafi cheezein samjha deta hai.">So even on an 8-core machine, your 8 Python threads pass one stick around — only one runs Python at any instant. That's the whole idea, and it explains a surprising amount.</p>
 
   <figure>
     <svg viewBox="0 0 620 150" role="img" aria-label="Multiple threads, one GIL">
@@ -63,11 +63,11 @@
         <text x="310" y="145" fill="#6b6b6b">only thread 3 holds the stick → only it runs Python right now</text>
       </g>
     </svg>
-    <figcaption>Many threads, one GIL. They take turns holding it.</figcaption>
+    <figcaption data-ur="Kai threads, ek GIL. Woh baari baari ise pakadte hain.">Many threads, one GIL. They take turns holding it.</figcaption>
   </figure>
 
-  <h2>The key split: CPU-bound vs I/O-bound work</h2>
-  <p>Whether threads help depends entirely on what your code is <em>doing</em>. Two kinds of work:</p>
+  <h2 data-ur="Asli farq: CPU-bound vs I/O-bound kaam">The key split: CPU-bound vs I/O-bound work</h2>
+  <p data-ur="Threads madad karti hain ya nahi, yeh poori tarah is par hai ke tumhara code kya <em>kar raha</em> hai. Do tarah ka kaam:">Whether threads help depends entirely on what your code is <em>doing</em>. Two kinds of work:</p>
 
   <table>
     <tr><th>Kind of work</th><th>Example</th><th>Do threads help?</th></tr>
@@ -75,60 +75,60 @@
     <tr><td><strong>I/O-bound</strong> (waiting a lot)</td><td>calling an API, querying the DB, reading a file</td><td><strong>Yes.</strong> While one waits, it drops the stick.</td></tr>
   </table>
 
-  <p><strong>Why I/O-bound is different:</strong> when a thread is just <em>waiting</em> for a network reply or the database, it isn't talking — so it <strong>puts the stick down</strong>. Another thread grabs it and does useful work during that wait. The GIL barely gets in the way. This is the crucial insight.</p>
+  <p data-ur="<strong>I/O-bound alag kyun hai:</strong> jab ek thread bas network reply ya database ka <em>intezaar</em> kar rahi hoti hai, toh woh baat nahi kar rahi — toh woh <strong>stick neeche rakh deti hai</strong>. Doosri thread use uthati hai aur us wait ke doran kaam ka kaam karti hai. GIL mushkil se hi raste mein aati hai. Yeh ahem insight hai."><strong>Why I/O-bound is different:</strong> when a thread is just <em>waiting</em> for a network reply or the database, it isn't talking — so it <strong>puts the stick down</strong>. Another thread grabs it and does useful work during that wait. The GIL barely gets in the way. This is the crucial insight.</p>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge — this matters daily</span>
-    A typical Django request spends most of its time <em>waiting</em> — on the database, on cache, on an external API. That's <strong>I/O-bound</strong>. So the thread-based workers in Gunicorn/uWSGI genuinely help: while request A waits on Postgres, its thread drops the stick and request B runs. But the moment you do heavy <em>CPU</em> work in a request (generating a big PDF, resizing images, crunching a report), the GIL bites — those can't run in parallel across threads, and they'll block your workers. That's your cue to move CPU work to a <strong>separate process</strong> (Celery worker) instead of a thread.
+    <span class="callout-label" data-ur="Django bridge — yeh rozana matter karta hai">Django bridge — this matters daily</span>
+    <span data-ur="Ek typical Django request apna zyada waqt <em>intezaar</em> mein guzarti hai — database par, cache par, kisi external API par. Yeh <strong>I/O-bound</strong> hai. Toh Gunicorn/uWSGI ke thread-based workers waqai madad karte hain: jab request A Postgres ka intezaar karti hai, uski thread stick chhod deti hai aur request B chalti hai. Lekin jis lamhe tum kisi request mein heavy <em>CPU</em> kaam karte ho (bara PDF banana, images resize karna, koi report crunch karna), GIL kaat leti hai — woh threads mein parallel nahi chal saktay, aur tumhare workers ko block kar denge. Yeh tumhara ishara hai ke CPU kaam ko thread ke bajaye ek <strong>alag process</strong> (Celery worker) par le jao.">A typical Django request spends most of its time <em>waiting</em> — on the database, on cache, on an external API. That's <strong>I/O-bound</strong>. So the thread-based workers in Gunicorn/uWSGI genuinely help: while request A waits on Postgres, its thread drops the stick and request B runs. But the moment you do heavy <em>CPU</em> work in a request (generating a big PDF, resizing images, crunching a report), the GIL bites — those can't run in parallel across threads, and they'll block your workers. That's your cue to move CPU work to a <strong>separate process</strong> (Celery worker) instead of a thread.</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: you have a function doing heavy math. Will running it in 4 threads make it ~4× faster in normal Python? Why / why not?</div>
-    <div class="answer"><strong>No.</strong> Heavy math is CPU-bound — every thread needs the GIL (the stick) to run Python, so they take turns, not run together. You'd get roughly the same speed (or slightly worse from switching overhead). To actually use 4 cores, use 4 <em>processes</em>.</div>
+    <div class="prompt" data-ur="Quick check: tumhare paas ek function hai jo heavy math kar raha hai. Kya use 4 threads mein chalane se normal Python mein ~4× fast ho jaayega? Kyun / kyun nahi?">Quick check: you have a function doing heavy math. Will running it in 4 threads make it ~4× faster in normal Python? Why / why not?</div>
+    <div class="answer" data-ur="<strong>Nahi.</strong> Heavy math CPU-bound hai — har thread ko Python chalane ke liye GIL (stick) chahiye, toh woh baari baari chalti hain, saath nahi. Tumhein takreeban wohi speed milegi (ya switching overhead se thori kharab). 4 cores waqai use karne ke liye, 4 <em>processes</em> use karo."><strong>No.</strong> Heavy math is CPU-bound — every thread needs the GIL (the stick) to run Python, so they take turns, not run together. You'd get roughly the same speed (or slightly worse from switching overhead). To actually use 4 cores, use 4 <em>processes</em>.</div>
     <div class="hint">click to reveal</div>
   </div>
 
-  <h2>So how do you actually use all your cores?</h2>
-  <p>If threads can't, what can? <strong>Multiple processes.</strong> Each process gets its <em>own</em> Python and its <em>own</em> stick — so 4 processes really do run on 4 cores at once.</p>
+  <h2 data-ur="Toh apne saare cores waqai kaise use karte ho?">So how do you actually use all your cores?</h2>
+  <p data-ur="Agar threads nahi kar saktein, toh kya kar sakta hai? <strong>Multiple processes.</strong> Har process ko apni <em>khud ki</em> Python aur apni <em>khud ki</em> stick milti hai — toh 4 processes waqai 4 cores par ek saath chalte hain.">If threads can't, what can? <strong>Multiple processes.</strong> Each process gets its <em>own</em> Python and its <em>own</em> stick — so 4 processes really do run on 4 cores at once.</p>
   <ul>
-    <li><strong>Threads</strong> — great for I/O-bound work (lots of waiting). One stick, shared.</li>
-    <li><strong>Processes</strong> (e.g. <code>multiprocessing</code>, Celery workers, Gunicorn workers) — great for CPU-bound work. Each has its own stick → true parallelism.</li>
+    <li data-ur="<strong>Threads</strong> — I/O-bound kaam (bohot intezaar) ke liye zabardast. Ek stick, shared."><strong>Threads</strong> — great for I/O-bound work (lots of waiting). One stick, shared.</li>
+    <li data-ur="<strong>Processes</strong> (jaise <code>multiprocessing</code>, Celery workers, Gunicorn workers) — CPU-bound kaam ke liye zabardast. Har ek ki apni stick hai → asli parallelism."><strong>Processes</strong> (e.g. <code>multiprocessing</code>, Celery workers, Gunicorn workers) — great for CPU-bound work. Each has its own stick → true parallelism.</li>
   </ul>
 
   <div class="warn">
-    <span class="callout-label">2026 update — the GIL is becoming optional (know this for interviews)</span>
-    Since <strong>Python 3.13</strong> there's an experimental <em>free-threaded</em> build with the GIL removed, and in <strong>Python 3.14</strong> (Oct 2025) it became officially supported (still not the default).<sup class="cite"><a href="#s2">2</a></sup> The plan is a multi-year transition toward GIL-free by default (~2028–2030).<sup class="cite"><a href="#s3">3</a></sup> So "Python can't do CPU parallelism with threads" is becoming "…in the default build, for now." Saying <em>that</em> in an interview shows you're current.
+    <span class="callout-label" data-ur="2026 update — GIL optional ho raha hai (interviews ke liye yeh jaan lo)">2026 update — the GIL is becoming optional (know this for interviews)</span>
+    <span data-ur="<strong>Python 3.13</strong> se ek experimental <em>free-threaded</em> build hai jis mein GIL nikaal diya gaya, aur <strong>Python 3.14</strong> (Oct 2025) mein yeh officially supported ho gaya (phir bhi default nahi).<sup class=&quot;cite&quot;><a href=&quot;#s2&quot;>2</a></sup> Plan yeh hai ke chand saalon mein default se GIL-free ki taraf transition ho (~2028–2030).<sup class=&quot;cite&quot;><a href=&quot;#s3&quot;>3</a></sup> Toh &quot;Python threads ke saath CPU parallelism nahi kar sakta&quot; ab &quot;…default build mein, filhaal&quot; ban raha hai. Interview mein <em>yeh</em> kehna dikhata hai ke tum current ho.">Since <strong>Python 3.13</strong> there's an experimental <em>free-threaded</em> build with the GIL removed, and in <strong>Python 3.14</strong> (Oct 2025) it became officially supported (still not the default).<sup class="cite"><a href="#s2">2</a></sup> The plan is a multi-year transition toward GIL-free by default (~2028–2030).<sup class="cite"><a href="#s3">3</a></sup> So "Python can't do CPU parallelism with threads" is becoming "…in the default build, for now." Saying <em>that</em> in an interview shows you're current.</span>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">Your Django view calls three slow external APIs one after another, making the request take 3 seconds. You want them to run at the same time. Best fit?</div>
+    <div class="q" data-ur="Tumhari Django view teen slow external APIs ko ek ke baad ek call karti hai, jis se request 3 seconds leti hai. Tum chahte ho ke woh ek saath chalein. Best fit?">Your Django view calls three slow external APIs one after another, making the request take 3 seconds. You want them to run at the same time. Best fit?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">Threads (or async) — it's I/O-bound, waiting on the network</button>
-      <button class="opt" data-correct="false">Nothing helps — the GIL blocks all parallelism</button>
-      <button class="opt" data-correct="false">Buy a server with more CPU cores</button>
-      <button class="opt" data-correct="false">Rewrite the APIs to be faster</button>
+      <button class="opt" data-correct="true" data-ur="Threads (ya async) — yeh I/O-bound hai, network ka intezaar">Threads (or async) — it's I/O-bound, waiting on the network</button>
+      <button class="opt" data-correct="false" data-ur="Kuch madad nahi karta — GIL har parallelism ko block karta hai">Nothing helps — the GIL blocks all parallelism</button>
+      <button class="opt" data-correct="false" data-ur="Zyada CPU cores wala server khareedo">Buy a server with more CPU cores</button>
+      <button class="opt" data-correct="false" data-ur="APIs ko fast hone ke liye dobara likho">Rewrite the APIs to be faster</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">A background job resizes 10,000 images (heavy CPU). You want to use all 8 cores. Best fit?</div>
+    <div class="q" data-ur="Ek background job 10,000 images resize karti hai (heavy CPU). Tum saare 8 cores use karna chahte ho. Best fit?">A background job resizes 10,000 images (heavy CPU). You want to use all 8 cores. Best fit?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">8 threads in one process</button>
-      <button class="opt" data-correct="true">8 processes (e.g. multiprocessing / Celery workers)</button>
-      <button class="opt" data-correct="false">1 thread — the GIL makes extras pointless anyway</button>
-      <button class="opt" data-correct="false">Async/await with a single thread</button>
+      <button class="opt" data-correct="false" data-ur="Ek process mein 8 threads">8 threads in one process</button>
+      <button class="opt" data-correct="true" data-ur="8 processes (jaise multiprocessing / Celery workers)">8 processes (e.g. multiprocessing / Celery workers)</button>
+      <button class="opt" data-correct="false" data-ur="1 thread — GIL waise bhi extras ko bekaar bana deta hai">1 thread — the GIL makes extras pointless anyway</button>
+      <button class="opt" data-correct="false" data-ur="Single thread ke saath async/await">Async/await with a single thread</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    The GIL = one talking stick; only one thread runs Python at a time. So threads <em>don't</em> speed up <strong>CPU-bound</strong> work (use processes for that) but <em>do</em> help <strong>I/O-bound</strong> work (the waiting thread drops the stick). This one idea explains Gunicorn workers, when to reach for Celery, and why "just add threads" sometimes does nothing. And you know the 2026 twist: free-threaded Python is arriving.
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="GIL = ek talking stick; ek waqt mein sirf ek thread Python chalati hai. Toh threads <strong>CPU-bound</strong> kaam ko fast <em>nahi</em> karti (uske liye processes use karo) par <strong>I/O-bound</strong> kaam mein madad <em>karti</em> hain (intezaar karti thread stick chhod deti hai). Yeh ek idea Gunicorn workers, Celery kab uthana hai, aur &quot;bas threads add kar do&quot; kabhi kabhi kuch kyun nahi karta — sab samjha deta hai. Aur tum 2026 twist jaante ho: free-threaded Python aa raha hai.">The GIL = one talking stick; only one thread runs Python at a time. So threads <em>don't</em> speed up <strong>CPU-bound</strong> work (use processes for that) but <em>do</em> help <strong>I/O-bound</strong> work (the waiting thread drops the stick). This one idea explains Gunicorn workers, when to reach for Celery, and why "just add threads" sometimes does nothing. And you know the 2026 twist: free-threaded Python is arriving.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://docs.python.org/3/howto/free-threading-python.html" target="_blank">Python docs — Free threading how-to</a><sup class="cite"><a href="#s1">1</a></sup> for the current state, and 🎥 the many "Python GIL explained" talks (David Beazley's is the classic).</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.python.org/3/howto/free-threading-python.html&quot; target=&quot;_blank&quot;>Python docs — Free threading how-to</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> maujooda haalat ke liye, aur 🎥 bohot saari &quot;Python GIL explained&quot; talks (David Beazley ki classic hai).">📖 <a href="https://docs.python.org/3/howto/free-threading-python.html" target="_blank">Python docs — Free threading how-to</a><sup class="cite"><a href="#s1">1</a></sup> for the current state, and 🎥 the many "Python GIL explained" talks (David Beazley's is the classic).</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Want the difference between <em>async</em> and <em>threads</em> for I/O (both help, differently)? Or a concrete "this task → threads / processes / async" decision tree for your own code? Ask — this is exactly the judgment worth owning.
@@ -172,7 +172,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 6 · SQL vs NoSQL</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 06 · Week Day 3</p>
-    <h1>SQL vs NoSQL: picking the right kind of database</h1>
-    <p class="subtitle">The most common interview deep-dive — and it's a choice, not a religion.</p>
+    <h1 data-ur="SQL vs NoSQL: sahi tarah ka database chunna">SQL vs NoSQL: picking the right kind of database</h1>
+    <p class="subtitle" data-ur="Sab se aam interview deep-dive — aur yeh ek choice hai, koi mazhab nahi.">The most common interview deep-dive — and it's a choice, not a religion.</p>
     <div class="meta">
       <span>~9 min</span>
       <span>One concept: choosing a database type</span>
@@ -20,21 +20,21 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall indexes)</h2>
+  <h2 data-ur="30-second warm-up (indexes yaad karo)">30-second warm-up (recall indexes)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: what does a database index do, and what's the tradeoff for having one?</div>
-    <div class="answer">It lets the DB <strong>jump straight to rows</strong> (like a book's index) instead of scanning the whole table — faster <em>reads</em>. Tradeoff: slower <em>writes</em> and more disk, since each index updates on every write.</div>
+    <div class="prompt" data-ur="Yaad se: ek database index kya karta hai, aur ise rakhne ka tradeoff kya hai?">From memory: what does a database index do, and what's the tradeoff for having one?</div>
+    <div class="answer" data-ur="Yeh DB ko poora table scan karne ke bajaye <strong>seedha rows tak jump</strong> karne deta hai (kitab ke index ki tarah) — faster <em>reads</em>. Tradeoff: slower <em>writes</em> aur zyada disk, kyunke har index har write par update hota hai.">It lets the DB <strong>jump straight to rows</strong> (like a book's index) instead of scanning the whole table — faster <em>reads</em>. Tradeoff: slower <em>writes</em> and more disk, since each index updates on every write.</div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>SQL = structured tables with strict rules and powerful joins. NoSQL = flexible shapes that scale huge, trading strict rules for speed and scale.</strong> Neither is "better" — you pick based on your data.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>SQL = strict rules aur powerful joins wali structured tables. NoSQL = flexible shapes jo bohot huge scale karti hain, strict rules ko speed aur scale ke badle deti hain.</strong> Koi bhi &quot;behtar&quot; nahi — tum apne data ki bina par chunte ho."><strong>SQL = structured tables with strict rules and powerful joins. NoSQL = flexible shapes that scale huge, trading strict rules for speed and scale.</strong> Neither is "better" — you pick based on your data.</span>
   </div>
 
-  <h2>The story: a filing cabinet vs a pile of labeled boxes</h2>
-  <p><strong>SQL is a filing cabinet</strong> with labeled, identical folders. Every record must fit the folder's shape (the <em>schema</em>). It's strict, but that strictness lets you cross-reference reliably — "give me every order for every customer in Karachi" is easy because everything's neatly related. That cross-referencing is a <strong>join</strong>.</p>
-  <p><strong>NoSQL is a room of labeled boxes.</strong> Each box can hold whatever shape you want, and you can add a million boxes across many rooms cheaply. Fast and flexible — but there's no built-in "cross-reference everything" (joins live in your app code instead), and freshly-written info might take a moment to appear everywhere (eventual consistency, remember 2a).</p>
+  <h2 data-ur="Kahani: ek filing cabinet vs labeled boxes ka dher">The story: a filing cabinet vs a pile of labeled boxes</h2>
+  <p data-ur="<strong>SQL ek filing cabinet hai</strong> jis mein labeled, ek jaisi folders hain. Har record ko folder ki shape (<em>schema</em>) mein fit hona parta hai. Yeh strict hai, par wohi strictness tumhein bharosay se cross-reference karne deti hai — &quot;Karachi ke har customer ke har order do&quot; aasan hai kyunke sab kuch saliqe se related hai. Yeh cross-referencing ek <strong>join</strong> hai."><strong>SQL is a filing cabinet</strong> with labeled, identical folders. Every record must fit the folder's shape (the <em>schema</em>). It's strict, but that strictness lets you cross-reference reliably — "give me every order for every customer in Karachi" is easy because everything's neatly related. That cross-referencing is a <strong>join</strong>.</p>
+  <p data-ur="<strong>NoSQL labeled boxes ka ek kamra hai.</strong> Har box jo shape tum chaho rakh sakta hai, aur tum kai kamron mein saste mein million boxes add kar sakte ho. Fast aur flexible — par koi built-in &quot;sab kuch cross-reference karo&quot; nahi (joins iske bajaye tumhare app code mein rehte hain), aur taza likhi hui info ko har jagah aane mein ek lamha lag sakta hai (eventual consistency, 2a yaad hai)."><strong>NoSQL is a room of labeled boxes.</strong> Each box can hold whatever shape you want, and you can add a million boxes across many rooms cheaply. Fast and flexible — but there's no built-in "cross-reference everything" (joins live in your app code instead), and freshly-written info might take a moment to appear everywhere (eventual consistency, remember 2a).</p>
 
   <div class="bridge">
     <span class="callout-label">Django bridge</span>
@@ -135,7 +135,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

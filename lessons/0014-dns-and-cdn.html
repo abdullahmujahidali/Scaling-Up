@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 9 · DNS &amp; CDN</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 09 · Week 2 · Day 1</p>
-    <h1>DNS &amp; CDN: how a request even finds you</h1>
-    <p class="subtitle">The two things that happen before your server ever sees a request. Two ideas, two stories.</p>
+    <h1 data-ur="DNS &amp; CDN: ek request tumhein dhoondh kaise leti hai">DNS &amp; CDN: how a request even finds you</h1>
+    <p class="subtitle" data-ur="Woh do cheezein jo tumhare server ke request dekhne se pehle hoti hain. Do ideas, do kahaniyan.">The two things that happen before your server ever sees a request. Two ideas, two stories.</p>
     <div class="meta">
       <span>~9 min</span>
       <span>Two front-door concepts: DNS &amp; CDN</span>
@@ -20,35 +20,35 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall Week 1: queues)</h2>
+  <h2 data-ur="30-second warm-up (Week 1 yaad karo: queues)">30-second warm-up (recall Week 1: queues)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: what does a message queue let a web request do, and why is that good?</div>
-    <div class="answer">It lets the request <strong>drop a slow job in a line and return immediately</strong>, while a background worker does the heavy part later. The user isn't stuck waiting. (That's async work — think Celery.)</div>
+    <div class="prompt" data-ur="Yaad se: message queue ek web request ko kya karne deta hai, aur woh accha kyun hai?">From memory: what does a message queue let a web request do, and why is that good?</div>
+    <div class="answer" data-ur="Yeh request ko <strong>ek slow job line mein daal ke foran wapas aane</strong> deta hai, jabke ek background worker bhaari hissa baad mein karta hai. User intezar mein phansa nahi rehta. (Yeh async kaam hai — Celery socho.)">It lets the request <strong>drop a slow job in a line and return immediately</strong>, while a background worker does the heavy part later. The user isn't stuck waiting. (That's async work — think Celery.)</div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>DNS turns a name (example.com) into an address (an IP). A CDN keeps copies of your files close to users around the world so they load fast.</strong> Both happen before your app server does any work.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>DNS ek naam (example.com) ko ek address (ek IP) mein badalta hai. Ek CDN tumhari files ki copies duniya bhar ke users ke qareeb rakhta hai taake woh fast load hon.</strong> Dono tumhare app server ke koi kaam karne se pehle hote hain."><strong>DNS turns a name (example.com) into an address (an IP). A CDN keeps copies of your files close to users around the world so they load fast.</strong> Both happen before your app server does any work.</span>
   </div>
 
-  <h2>Part 1 · DNS — the internet's phone book</h2>
-  <p><strong>Story:</strong> you want to call "Ali's Pizza" but you only know the <em>name</em>, not the number. You look it up in a phone book, get the number, then dial. <strong>DNS is that phone book for the internet.</strong> You type <code>example.com</code> (a name); DNS looks up its <strong>IP address</strong> (the number); your browser then connects to that address.</p>
-  <p>A couple of things worth knowing:</p>
+  <h2 data-ur="Part 1 · DNS — internet ki phone book">Part 1 · DNS — the internet's phone book</h2>
+  <p data-ur="<strong>Kahani:</strong> tum &quot;Ali's Pizza&quot; ko call karna chahte ho lekin tumhein sirf <em>naam</em> pata hai, number nahi. Tum ise phone book mein dekhte ho, number lete ho, phir dial karte ho. <strong>DNS internet ke liye wohi phone book hai.</strong> Tum <code>example.com</code> type karte ho (ek naam); DNS uska <strong>IP address</strong> dhoondta hai (number); phir tumhara browser us address se connect hota hai."><strong>Story:</strong> you want to call "Ali's Pizza" but you only know the <em>name</em>, not the number. You look it up in a phone book, get the number, then dial. <strong>DNS is that phone book for the internet.</strong> You type <code>example.com</code> (a name); DNS looks up its <strong>IP address</strong> (the number); your browser then connects to that address.</p>
+  <p data-ur="Kuch cheezein jaanne layeq hain:">A couple of things worth knowing:</p>
   <ul>
-    <li><strong>It's cached.</strong> Your browser and OS remember the lookup for a while (a <strong>TTL</strong> — same "let it go stale after N seconds" idea from caching). So it's not looked up every single time.</li>
-    <li><strong>Record types</strong> — the phone book has different entry kinds. The main one: an <strong>A record</strong> maps a name → an IP. A <strong>CNAME</strong> maps a name → another name (an alias). You don't need the rest yet.</li>
-    <li><strong>Managed DNS</strong> (Cloudflare, Route 53) can route smartly — send users to the <em>nearest</em> or <em>least-loaded</em> server (geolocation / latency-based routing).</li>
+    <li data-ur="<strong>Yeh cached hoti hai.</strong> Tumhara browser aur OS lookup ko kuch der ke liye yaad rakhte hain (ek <strong>TTL</strong> — wohi &quot;N seconds baad stale ho jane do&quot; wala idea caching se). Is liye har baar lookup nahi hoti."><strong>It's cached.</strong> Your browser and OS remember the lookup for a while (a <strong>TTL</strong> — same "let it go stale after N seconds" idea from caching). So it's not looked up every single time.</li>
+    <li data-ur="<strong>Record types</strong> — phone book mein alag alag entry kism hoti hain. Sab se ahem: ek <strong>A record</strong> ek naam → ek IP map karta hai. Ek <strong>CNAME</strong> ek naam → doosra naam map karta hai (ek alias). Baqi ki abhi zaroorat nahi."><strong>Record types</strong> — the phone book has different entry kinds. The main one: an <strong>A record</strong> maps a name → an IP. A <strong>CNAME</strong> maps a name → another name (an alias). You don't need the rest yet.</li>
+    <li data-ur="<strong>Managed DNS</strong> (Cloudflare, Route 53) smartly route kar sakta hai — users ko <em>qareeb tareen</em> ya <em>sab se kam-loaded</em> server ko bhejta hai (geolocation / latency-based routing)."><strong>Managed DNS</strong> (Cloudflare, Route 53) can route smartly — send users to the <em>nearest</em> or <em>least-loaded</em> server (geolocation / latency-based routing).</li>
   </ul>
 
   <div class="warn">
-    <span class="callout-label">The catch</span>
-    DNS adds a small delay (the lookup), and it's a juicy target — a big <strong>DDoS attack on DNS</strong> can take whole websites offline even if the sites themselves are fine, because nobody can find their address. That's why serious sites use resilient managed DNS.
+    <span class="callout-label" data-ur="Pech yeh hai">The catch</span>
+    <span data-ur="DNS ek chhoti si delay add karta hai (lookup), aur yeh ek juicy target hai — ek bara <strong>DNS pe DDoS attack</strong> poori websites ko offline kar sakta hai chahe sites khud theek hi kyun na hon, kyunke koi unka address dhoondh hi nahi sakta. Isi liye serious sites resilient managed DNS use karti hain.">DNS adds a small delay (the lookup), and it's a juicy target — a big <strong>DDoS attack on DNS</strong> can take whole websites offline even if the sites themselves are fine, because nobody can find their address. That's why serious sites use resilient managed DNS.</span>
   </div>
 
-  <h2>Part 2 · CDN — copies of your files, near everyone</h2>
-  <p><strong>Story:</strong> your shop's warehouse is in Karachi. A customer in London orders a poster — shipping from Karachi is slow. So you keep copies of your popular posters in a <em>London</em> warehouse too, and one in New York, and Tokyo. Now everyone gets theirs from a nearby shelf. <strong>That's a CDN</strong> — a global network of servers holding copies of your static files (images, CSS, JS, video) close to users.</p>
-  <p>Two ways the copies get there:</p>
+  <h2 data-ur="Part 2 · CDN — tumhari files ki copies, sab ke qareeb">Part 2 · CDN — copies of your files, near everyone</h2>
+  <p data-ur="<strong>Kahani:</strong> tumhari shop ka warehouse Karachi mein hai. London ka ek customer ek poster order karta hai — Karachi se shipping slow hai. Is liye tum apne popular posters ki copies ek <em>London</em> warehouse mein bhi rakhte ho, aur ek New York mein, aur Tokyo mein. Ab sab ko apni cheez qareeb wale shelf se milti hai. <strong>Yeh hai CDN</strong> — servers ka ek global network jo tumhari static files (images, CSS, JS, video) ki copies users ke qareeb rakhta hai."><strong>Story:</strong> your shop's warehouse is in Karachi. A customer in London orders a poster — shipping from Karachi is slow. So you keep copies of your popular posters in a <em>London</em> warehouse too, and one in New York, and Tokyo. Now everyone gets theirs from a nearby shelf. <strong>That's a CDN</strong> — a global network of servers holding copies of your static files (images, CSS, JS, video) close to users.</p>
+  <p data-ur="Copies wahan pohanchne ke do tareeqe:">Two ways the copies get there:</p>
   <table>
     <tr><th>Type</th><th>How copies arrive</th><th>Best for</th></tr>
     <tr><td><strong>Push CDN</strong></td><td>You upload files to the CDN yourself, up front</td><td>Smaller sites, content that rarely changes</td></tr>
@@ -56,50 +56,50 @@
   </table>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    You've met this: in production you run <code>collectstatic</code> and serve your CSS/JS/images from a CDN (via S3 + CloudFront, or Whitenoise + a CDN in front) — <em>not</em> from Django itself. Why? Django's job is dynamic pages; static files are better served as cached copies near the user. Same "keep a copy closer" idea as the caching lesson, but spread across the globe. Your Django server never even sees those requests — the CDN answers them.
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tum isse mil chuke ho: production mein tum <code>collectstatic</code> chalate ho aur apni CSS/JS/images ek CDN se serve karte ho (S3 + CloudFront ke zariye, ya Whitenoise + aage ek CDN) — Django se <em>khud</em> nahi. Kyun? Django ka kaam dynamic pages hai; static files behtar tor pe user ke qareeb cached copies ki tarah serve hoti hain. Wohi &quot;copy qareeb rakho&quot; wala idea caching lesson jaisa, magar poori duniya mein phaila hua. Tumhara Django server un requests ko dekhta tak nahi — CDN unka jawab deta hai.">You've met this: in production you run <code>collectstatic</code> and serve your CSS/JS/images from a CDN (via S3 + CloudFront, or Whitenoise + a CDN in front) — <em>not</em> from Django itself. Why? Django's job is dynamic pages; static files are better served as cached copies near the user. Same "keep a copy closer" idea as the caching lesson, but spread across the globe. Your Django server never even sees those requests — the CDN answers them.</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: one line each — what does DNS do, and what does a CDN do?</div>
-    <div class="answer"><strong>DNS</strong> turns a name (example.com) into an IP address so your browser can connect. <strong>CDN</strong> keeps copies of static files on servers near users worldwide so they load fast.</div>
+    <div class="prompt" data-ur="Quick check: ek ek line — DNS kya karta hai, aur CDN kya karta hai?">Quick check: one line each — what does DNS do, and what does a CDN do?</div>
+    <div class="answer" data-ur="<strong>DNS</strong> ek naam (example.com) ko ek IP address mein badalta hai taake tumhara browser connect kar sake. <strong>CDN</strong> static files ki copies duniya bhar mein users ke qareeb servers pe rakhta hai taake woh fast load hon."><strong>DNS</strong> turns a name (example.com) into an IP address so your browser can connect. <strong>CDN</strong> keeps copies of static files on servers near users worldwide so they load fast.</div>
     <div class="hint">click to reveal</div>
   </div>
 
   <div class="warn">
-    <span class="callout-label">CDN's tradeoff — name it</span>
-    A CDN copy can be <strong>stale</strong> if you update a file before its TTL expires (that's why you'll see cache-busting like <code>style.css?v=3</code> in filenames). And CDNs cost money at high traffic. Speed vs. staleness vs. cost — the same tradeoff family you keep meeting.
+    <span class="callout-label" data-ur="CDN ka tradeoff — ise naam do">CDN's tradeoff — name it</span>
+    <span data-ur="Ek CDN copy <strong>stale</strong> ho sakti hai agar tum ek file ko uske TTL expire hone se pehle update kardo (isi liye tum filenames mein cache-busting dekhoge jaise <code>style.css?v=3</code>). Aur high traffic pe CDNs paisa lete hain. Speed vs. staleness vs. cost — wohi tradeoff family jisse tum baar baar milte ho.">A CDN copy can be <strong>stale</strong> if you update a file before its TTL expires (that's why you'll see cache-busting like <code>style.css?v=3</code> in filenames). And CDNs cost money at high traffic. Speed vs. staleness vs. cost — the same tradeoff family you keep meeting.</span>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">Users worldwide complain your site's images load slowly, though your server is healthy. Images are static. Best fix?</div>
+    <div class="q" data-ur="Duniya bhar ke users shikayat karte hain ke tumhari site ki images slow load hoti hain, halanke tumhara server healthy hai. Images static hain. Best fix?">Users worldwide complain your site's images load slowly, though your server is healthy. Images are static. Best fix?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">Serve images via a CDN (copies near users)</button>
-      <button class="opt" data-correct="false">Add a database index on the image table</button>
-      <button class="opt" data-correct="false">Switch DNS to a CNAME record</button>
-      <button class="opt" data-correct="false">Move image serving into your Django views</button>
+      <button class="opt" data-correct="true" data-ur="Images ek CDN se serve karo (users ke qareeb copies)">Serve images via a CDN (copies near users)</button>
+      <button class="opt" data-correct="false" data-ur="Image table pe ek database index add karo">Add a database index on the image table</button>
+      <button class="opt" data-correct="false" data-ur="DNS ko CNAME record pe switch karo">Switch DNS to a CNAME record</button>
+      <button class="opt" data-correct="false" data-ur="Image serving ko apni Django views mein le jao">Move image serving into your Django views</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">You type a domain and the browser needs the server's IP address to connect. What provides that translation?</div>
+    <div class="q" data-ur="Tum ek domain type karte ho aur browser ko connect karne ke liye server ka IP address chahiye. Woh translation kaun provide karta hai?">You type a domain and the browser needs the server's IP address to connect. What provides that translation?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">The CDN's nearest edge server</button>
-      <button class="opt" data-correct="true">DNS — the name-to-IP lookup</button>
-      <button class="opt" data-correct="false">The load balancer's health check</button>
-      <button class="opt" data-correct="false">A read replica of the database</button>
+      <button class="opt" data-correct="false" data-ur="CDN ka qareeb tareen edge server">The CDN's nearest edge server</button>
+      <button class="opt" data-correct="true" data-ur="DNS — name-to-IP lookup">DNS — the name-to-IP lookup</button>
+      <button class="opt" data-correct="false" data-ur="Load balancer ka health check">The load balancer's health check</button>
+      <button class="opt" data-correct="false" data-ur="Database ki ek read replica">A read replica of the database</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    Before your app runs: <strong>DNS</strong> (the phone book) turns the name into an IP, and a <strong>CDN</strong> (global warehouses) serves static files from near the user. Both are cached, both trade a little staleness for speed. Now the full path — <em>DNS → CDN → load balancer → server → cache → database</em> — makes sense end to end.
+    <span class="callout-label" data-ur="Aaj ki teri jeet">Your win today</span>
+    <span data-ur="Tumhari app chalne se pehle: <strong>DNS</strong> (phone book) naam ko IP mein badalta hai, aur ek <strong>CDN</strong> (global warehouses) static files user ke qareeb se serve karta hai. Dono cached hain, dono thori si staleness ko speed ke badle dete hain. Ab poora path — <em>DNS → CDN → load balancer → server → cache → database</em> — shuru se aakhir tak samajh aa jata hai.">Before your app runs: <strong>DNS</strong> (the phone book) turns the name into an IP, and a <strong>CDN</strong> (global warehouses) serves static files from near the user. Both are cached, both trade a little staleness for speed. Now the full path — <em>DNS → CDN → load balancer → server → cache → database</em> — makes sense end to end.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#domain-name-system" target="_blank">System Design Primer — DNS &amp; CDN</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#domain-name-system&quot; target=&quot;_blank&quot;>System Design Primer — DNS &amp; CDN</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#domain-name-system" target="_blank">System Design Primer — DNS &amp; CDN</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Want the full request journey drawn out (what happens between typing a URL and seeing the page)? Or push vs pull CDN for a real project? Ask.
@@ -132,7 +132,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>
