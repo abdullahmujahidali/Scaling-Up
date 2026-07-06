@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 2b · Failover (staying up when a server dies)</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 02b</p>
-    <h1>Failover: staying up when a server dies</h1>
-    <p class="subtitle">One idea, one story. (Part 2 of the old Lesson 2, on its own.)</p>
+    <h1 data-ur="Failover: server marne pe up rehna">Failover: staying up when a server dies</h1>
+    <p class="subtitle" data-ur="Aik idea, aik kahani. (Purane Lesson 2 ka Part 2, apne aap mein.)">One idea, one story. (Part 2 of the old Lesson 2, on its own.)</p>
     <div class="meta">
       <span>~7 min</span>
       <span>One concept: failover</span>
@@ -20,10 +20,12 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall 2a)</h2>
+  <h2 data-ur="30-second warm-up (recall 2a)">30-second warm-up (recall 2a)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Before new stuff — from memory: the whiteboard story had three levels of consistency. Name them by <em>when the side-room copies catch up</em>.</div>
-    <div class="answer">
+    <div class="prompt" data-ur="Nayi cheez se pehle — memory se: whiteboard kahani mein consistency ke teen levels the. Inhe is hisaab se batao ke <em>side-room copies kab catch up karti hain</em>.">Before new stuff — from memory: the whiteboard story had three levels of consistency. Name them by <em>when the side-room copies catch up</em>.</div>
+    <div class="answer" data-ur="<strong>Weak</strong> — copies shayad kabhi catch up na karein.<br>
+      <strong>Eventual</strong> — copies aik lamhe mein catch up kar leti hain (aik Django read replica).<br>
+      <strong>Strong</strong> — har board aik hi lamhe mein change hota hai.">
       <strong>Weak</strong> — copies might never catch up.<br>
       <strong>Eventual</strong> — copies catch up in a moment (a Django read replica).<br>
       <strong>Strong</strong> — every board changes at the same instant.
@@ -32,19 +34,19 @@
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>Failover = keeping a spare server ready, so when one machine dies, another takes over and users barely notice.</strong> The two flavors differ on whether the spare is <em>sitting idle</em> or <em>already working too</em>.
+    <span class="callout-label" data-ur="Agar aik cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Failover = aik spare server tayyar rakhna, taake jab aik machine mare, to doosri sambhal le aur users ko mushkil se pata chale.</strong> Do flavors ka farq yeh hai ke spare <em>khaali baitha</em> hai ya <em>pehle se kaam bhi kar raha</em> hai."><strong>Failover = keeping a spare server ready, so when one machine dies, another takes over and users barely notice.</strong> The two flavors differ on whether the spare is <em>sitting idle</em> or <em>already working too</em>.</span>
   </div>
 
-  <h2>Start with a story (no tech yet)</h2>
-  <p>You run a small shop with <strong>one cashier</strong> at the till. If that cashier faints, the line stops — nobody can pay. Bad. So you hire a second person. Now you have a choice about <em>what the second person does</em>:</p>
+  <h2 data-ur="Aik kahani se shuru karo (abhi tech nahi)">Start with a story (no tech yet)</h2>
+  <p data-ur="Aap aik chhoti dukaan chalate ho jahan till pe <strong>aik cashier</strong> hai. Agar woh cashier behosh ho jaye, to line ruk jaati hai — koi pay nahi kar sakta. Bura. To aap doosra banda rakh lete ho. Ab aapke paas choice hai ke <em>doosra banda kya kare</em>:">You run a small shop with <strong>one cashier</strong> at the till. If that cashier faints, the line stops — nobody can pay. Bad. So you hire a second person. Now you have a choice about <em>what the second person does</em>:</p>
 
   <ul>
-    <li><strong>Plan A:</strong> the second person sits in the break room, ready. If the cashier faints, they rush out and take over the same till. (Only one works at a time.)</li>
-    <li><strong>Plan B:</strong> you open a <em>second till</em> and both serve customers at once. If one faints, the other just keeps going — the line's a bit slower, but it never stops.</li>
+    <li data-ur="<strong>Plan A:</strong> doosra banda break room mein baitha rehta hai, tayyar. Agar cashier behosh ho jaye, to woh bhaag kar aata hai aur wohi till sambhal leta hai. (Aik waqt mein sirf aik kaam karta hai.)"><strong>Plan A:</strong> the second person sits in the break room, ready. If the cashier faints, they rush out and take over the same till. (Only one works at a time.)</li>
+    <li data-ur="<strong>Plan B:</strong> aap aik <em>doosra till</em> khol dete ho aur dono aik saath customers ko serve karte hain. Agar aik behosh ho jaye, to doosra bas chalta rehta hai — line thori slow ho jaati hai, lekin kabhi rukti nahi."><strong>Plan B:</strong> you open a <em>second till</em> and both serve customers at once. If one faints, the other just keeps going — the line's a bit slower, but it never stops.</li>
   </ul>
 
-  <p>That's the entire idea. Plan A is <strong>active–passive</strong>. Plan B is <strong>active–active</strong>. Let's name the moving parts.</p>
+  <p data-ur="Bas yehi poora idea hai. Plan A <strong>active–passive</strong> hai. Plan B <strong>active–active</strong> hai. Chalo moving parts ke naam rakhte hain.">That's the entire idea. Plan A is <strong>active–passive</strong>. Plan B is <strong>active–active</strong>. Let's name the moving parts.</p>
 
   <figure>
     <svg viewBox="0 0 700 200" role="img" aria-label="Active-passive vs active-active failover">
@@ -74,47 +76,48 @@
         <text x="525" y="130" fill="#6b6b6b">the other absorbs everything.</text>
       </g>
     </svg>
-    <figcaption>Plan A = a spare in the break room. Plan B = two open tills. (Old names you'll still hear: master-slave and master-master.)</figcaption>
+    <figcaption data-ur="Plan A = break room mein aik spare. Plan B = do khule tills. (Purane naam jo aap ab bhi sunoge: master-slave aur master-master.)">Plan A = a spare in the break room. Plan B = two open tills. (Old names you'll still hear: master-slave and master-master.)</figcaption>
   </figure>
 
-  <h2>1 · Active–passive — "a spare waiting in the break room"</h2>
-  <p>One server does all the work. The spare sits idle but <em>listening</em>. The two send each other a <strong>heartbeat</strong> — a little "still alive?" ping every second or so. The instant the spare stops hearing it, it assumes the worker died and <strong>takes over its address</strong>, so traffic now flows to the spare.</p>
-  <p>How fast does that switchover happen? Depends on the spare:</p>
+  <h2 data-ur="1 · Active–passive — &quot;break room mein wait karta aik spare&quot;">1 · Active–passive — "a spare waiting in the break room"</h2>
+  <p data-ur="Aik server saara kaam karta hai. Spare khaali baitha rehta hai lekin <em>sun</em> raha hota hai. Dono aik doosre ko <strong>heartbeat</strong> bhejte hain — aik chhota &quot;still alive?&quot; ping har second ya aise. Jis lamhe spare ise sunna band karta hai, woh maan leta hai ke worker mar gaya aur <strong>uska address sambhal leta hai</strong>, to traffic ab spare ki taraf jaata hai.">One server does all the work. The spare sits idle but <em>listening</em>. The two send each other a <strong>heartbeat</strong> — a little "still alive?" ping every second or so. The instant the spare stops hearing it, it assumes the worker died and <strong>takes over its address</strong>, so traffic now flows to the spare.</p>
+  <p data-ur="Woh switchover kitni jaldi hota hai? Spare pe depend karta hai:">How fast does that switchover happen? Depends on the spare:</p>
   <ul>
-    <li><strong>Hot</strong> spare — already booted and warm → takes over in seconds.</li>
-    <li><strong>Cold</strong> spare — has to start up first → slower, but cheaper to keep around.</li>
+    <li data-ur="<strong>Hot</strong> spare — pehle se booted aur warm → seconds mein sambhal leta hai."><strong>Hot</strong> spare — already booted and warm → takes over in seconds.</li>
+    <li data-ur="<strong>Cold</strong> spare — pehle start hona parta hai → slower, lekin rakhne mein sasta."><strong>Cold</strong> spare — has to start up first → slower, but cheaper to keep around.</li>
   </ul>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: in active–passive, what is the <em>heartbeat</em> for?</div>
-    <div class="answer">It's the "still alive?" signal between the two servers. When the spare stops hearing the heartbeat, it knows the active one died and takes over.</div>
+    <div class="prompt" data-ur="Quick check: active–passive mein, <em>heartbeat</em> kis liye hai?">Quick check: in active–passive, what is the <em>heartbeat</em> for?</div>
+    <div class="answer" data-ur="Yeh do servers ke darmiyan &quot;still alive?&quot; signal hai. Jab spare heartbeat sunna band karta hai, to use pata chal jaata hai ke active wala mar gaya aur woh sambhal leta hai.">It's the "still alive?" signal between the two servers. When the spare stops hearing the heartbeat, it knows the active one died and takes over.</div>
     <div class="hint">click to reveal</div>
   </div>
 
-  <h2>2 · Active–active — "two open tills"</h2>
-  <p>Both servers serve real traffic at the same time and split the load between them. If one dies, the other simply takes on all the work. The trade: <em>everyone has to know both exist.</em> If it's public-facing, the address system (DNS) must list both; if it's internal, your app code has to know about both.</p>
+  <h2 data-ur="2 · Active–active — &quot;do khule tills&quot;">2 · Active–active — "two open tills"</h2>
+  <p data-ur="Dono servers aik hi waqt mein real traffic serve karte hain aur load aapas mein baant lete hain. Agar aik mare, to doosra bas saara kaam le leta hai. Trade: <em>sab ko pata hona chahiye ke dono mojood hain.</em> Agar yeh public-facing hai, to address system (DNS) mein dono list hone chahiyein; agar internal hai, to aapke app code ko dono ke baare mein pata hona chahiye.">Both servers serve real traffic at the same time and split the load between them. If one dies, the other simply takes on all the work. The trade: <em>everyone has to know both exist.</em> If it's public-facing, the address system (DNS) must list both; if it's internal, your app code has to know about both.</p>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: what's the main difference between active–passive and active–active?</div>
-    <div class="answer">In <strong>active–passive</strong>, the spare sits idle until needed (only one works at a time). In <strong>active–active</strong>, both work at once and share the load.</div>
+    <div class="prompt" data-ur="Quick check: active–passive aur active–active mein main farq kya hai?">Quick check: what's the main difference between active–passive and active–active?</div>
+    <div class="answer" data-ur="<strong>Active–passive</strong> mein, spare zaroorat parne tak khaali baitha rehta hai (aik waqt mein sirf aik kaam karta hai). <strong>Active–active</strong> mein, dono aik saath kaam karte hain aur load share karte hain.">In <strong>active–passive</strong>, the spare sits idle until needed (only one works at a time). In <strong>active–active</strong>, both work at once and share the load.</div>
     <div class="hint">click to reveal</div>
   </div>
 
-  <h2>The catch nobody mentions</h2>
+  <h2 data-ur="Woh catch jo koi nahi batata">The catch nobody mentions</h2>
   <div class="warn">
-    <span class="callout-label">Failover isn't free</span>
-    Two real costs: (1) <strong>more complexity</strong> — extra machines, extra setup, more that can go wrong. (2) <strong>possible data loss</strong> — if the active server dies <em>before</em> it copied its newest changes to the spare, those changes are gone. (Notice that's the <em>same</em> idea as the catch-up gap from consistency in 2a — the copy was behind.)
+    <span class="callout-label" data-ur="Failover free nahi hai">Failover isn't free</span>
+    <span data-ur="Do asal costs: (1) <strong>zyada complexity</strong> — extra machines, extra setup, zyada cheezein jo galat ho sakti hain. (2) <strong>possible data loss</strong> — agar active server apne naye changes spare pe copy karne se <em>pehle</em> mar jaye, to woh changes chale gaye. (Ghor karo ke yeh <em>wohi</em> idea hai jo 2a mein consistency wala catch-up gap tha — copy peeche thi.)">Two real costs: (1) <strong>more complexity</strong> — extra machines, extra setup, more that can go wrong. (2) <strong>possible data loss</strong> — if the active server dies <em>before</em> it copied its newest changes to the spare, those changes are gone. (Notice that's the <em>same</em> idea as the catch-up gap from consistency in 2a — the copy was behind.)</span>
   </div>
 
   <div class="bridge">
-    <span class="callout-label">Django / real-work bridge</span>
-    A managed database like AWS RDS offers "Multi-AZ" — that's <strong>active–passive</strong> failover: a standby copy in another data center, and if your main database dies, RDS flips to the standby automatically. You've probably ticked that checkbox without knowing its name. Now you know what it's doing and what it costs.
+    <span class="callout-label" data-ur="Django / real-work bridge">Django / real-work bridge</span>
+    <span data-ur="AWS RDS jaisa managed database &quot;Multi-AZ&quot; offer karta hai — yeh <strong>active–passive</strong> failover hai: aik standby copy doosre data center mein, aur agar aapka main database mare, to RDS khud-ba-khud standby pe flip kar deta hai. Aap ne shayad woh checkbox ka naam jaane bagair tick kar diya hoga. Ab aapko pata hai woh kya kar raha hai aur uski keemat kya hai.">A managed database like AWS RDS offers "Multi-AZ" — that's <strong>active–passive</strong> failover: a standby copy in another data center, and if your main database dies, RDS flips to the standby automatically. You've probably ticked that checkbox without knowing its name. Now you know what it's doing and what it costs.</span>
   </div>
 
-  <h2>Pull it together + one quiz</h2>
+  <h2 data-ur="Isko ikattha karo + aik quiz">Pull it together + one quiz</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Cover the answer. Explain both failover types using the shop story.</div>
-    <div class="answer">
+    <div class="prompt" data-ur="Answer chhupao. Dukaan ki kahani use kar ke dono failover types samjhao.">Cover the answer. Explain both failover types using the shop story.</div>
+    <div class="answer" data-ur="<strong>Active–passive</strong> — doosra cashier break room mein wait karta hai; sirf tab bhaag kar aata hai (sambhalta hai) jab pehla behosh ho. Aik waqt mein aik kaam karta hai.<br>
+      <strong>Active–active</strong> — do tills aik saath khule, line ko baant kar; agar aik cashier behosh ho jaye to doosra sab ko sambhal leta hai.">
       <strong>Active–passive</strong> — a second cashier waits in the break room; rushes out (takes over) only when the first faints. One works at a time.<br>
       <strong>Active–active</strong> — two tills open at once, splitting the line; if one cashier faints the other carries everyone.
     </div>
@@ -122,31 +125,31 @@
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">You want a backup database that's as <em>cheap</em> as possible, and you're OK with a short pause (a few seconds) while it switches over during a failure. Which fits best?</div>
+    <div class="q" data-ur="Aap aik backup database chahte ho jo jitna <em>sasta</em> ho sake, aur aap aik chhote pause (kuch seconds) ke liye theek ho jab yeh failure ke dauran switch over karta hai. Kaunsa sab se fit hai?">You want a backup database that's as <em>cheap</em> as possible, and you're OK with a short pause (a few seconds) while it switches over during a failure. Which fits best?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">Active–passive with a cold spare</button>
-      <button class="opt" data-correct="false">Active–active splitting load across both</button>
-      <button class="opt" data-correct="false">No backup — just one server</button>
-      <button class="opt" data-correct="false">Active–passive with a hot spare, always running</button>
+      <button class="opt" data-correct="true" data-ur="Cold spare ke saath active–passive">Active–passive with a cold spare</button>
+      <button class="opt" data-correct="false" data-ur="Dono par load baant kar active–active">Active–active splitting load across both</button>
+      <button class="opt" data-correct="false" data-ur="Koi backup nahi — bas aik server">No backup — just one server</button>
+      <button class="opt" data-correct="false" data-ur="Hot spare ke saath active–passive, hamesha chalta hua">Active–passive with a hot spare, always running</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    Failover is just "keep a spare so you don't go down." <strong>Active–passive</strong> = a spare waiting in the break room (cheaper, slower switch). <strong>Active–active</strong> = two open tills (pricier, no pause). And it's not free — more complexity, and you can lose the newest data if the spare was behind. One clean idea, yours.
+    <span class="callout-label" data-ur="Aaj ki aapki jeet">Your win today</span>
+    <span data-ur="Failover bas &quot;aik spare rakho taake aap down na ho.&quot; <strong>Active–passive</strong> = break room mein wait karta aik spare (sasta, slow switch). <strong>Active–active</strong> = do khule tills (mehnga, koi pause nahi). Aur yeh free nahi — zyada complexity, aur agar spare peeche thi to aap naya data kho sakte ho. Aik saaf idea, aapka.">Failover is just "keep a spare so you don't go down." <strong>Active–passive</strong> = a spare waiting in the break room (cheaper, slower switch). <strong>Active–active</strong> = two open tills (pricier, no pause). And it's not free — more complexity, and you can lose the newest data if the spare was behind. One clean idea, yours.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over" target="_blank">System Design Primer — Fail-over</a><sup class="cite"><a href="#s1">1</a></sup>. Read just the short "Fail-over" block. The shop story maps straight onto it.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over&quot; target=&quot;_blank&quot;>System Design Primer — Fail-over</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. Bas chhota &quot;Fail-over&quot; block parho. Dukaan ki kahani seedha ispe fit ho jaati hai.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over" target="_blank">System Design Primer — Fail-over</a><sup class="cite"><a href="#s1">1</a></sup>. Read just the short "Fail-over" block. The shop story maps straight onto it.</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Fuzzy on "hot vs cold spare," or why active–active needs DNS to know both? Tell me which line lost you and I'll redo it. Confusion is just information for me.
   </div>
 
   <footer class="lesson-foot">
-    <p><strong>Lesson 2b (failover).</strong> Follows <a href="0002-consistency-and-availability.html">2a — Consistency</a>. Next: <em>Lesson 2c — the "nines"</em>: how we put a number on availability, and why chaining services lowers it.</p>
-    <p>📑 New terms (failover, heartbeat, active-passive, active-active) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
+    <p data-ur="<strong>Lesson 2b (failover).</strong> <a href=&quot;0002-consistency-and-availability.html&quot;>2a — Consistency</a> ke baad. Aage: <em>Lesson 2c — the &quot;nines&quot;</em>: hum availability ko number kaise dete hain, aur services ko chain karna ise kyun kam karta hai."><strong>Lesson 2b (failover).</strong> Follows <a href="0002-consistency-and-availability.html">2a — Consistency</a>. Next: <em>Lesson 2c — the "nines"</em>: how we put a number on availability, and why chaining services lowers it.</p>
+    <p data-ur="📑 Naye terms (failover, heartbeat, active-passive, active-active) <a href=&quot;../reference/glossary.html&quot;>Glossary</a> mein hain.">📑 New terms (failover, heartbeat, active-passive, active-active) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
     <p class="sources"><strong>Sources</strong></p>
     <ol class="sources">
       <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#fail-over" target="_blank">The System Design Primer — Fail-over</a>, Donne Martin.</li>
@@ -177,7 +180,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

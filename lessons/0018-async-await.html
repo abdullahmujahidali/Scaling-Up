@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson B5 · async / await</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">Backend Depth · Lesson B5 · Python · Week 2 · Day 5</p>
-    <h1>async / await: doing many waits at once</h1>
-    <p class="subtitle">The other way to handle I/O — one worker who never sits idle. Builds straight on the GIL lesson.</p>
+    <h1 data-ur="async / await: bohot saare waits ek saath karna">async / await: doing many waits at once</h1>
+    <p class="subtitle" data-ur="I/O handle karne ka doosra tareeqa — ek worker jo kabhi idle nahi baithta. Seedha GIL lesson pe banta hai.">The other way to handle I/O — one worker who never sits idle. Builds straight on the GIL lesson.</p>
     <div class="meta">
       <span>~10 min</span>
       <span>One concept: async concurrency</span>
@@ -20,21 +20,21 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall the GIL)</h2>
+  <h2 data-ur="30-second warm-up (GIL yaad karo)">30-second warm-up (recall the GIL)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: the GIL means threads don't help <em>which</em> kind of work, but <em>do</em> help which other kind — and why?</div>
-    <div class="answer">Threads don't help <strong>CPU-bound</strong> work (only one holds the GIL/talking stick at a time) but <em>do</em> help <strong>I/O-bound</strong> work (a waiting thread drops the stick so others run). async is another way to win at that I/O-bound case.</div>
+    <div class="prompt" data-ur="Yaad se: GIL ka matlab hai ke threads <em>kis</em> tarah ke kaam mein madad nahi karte, lekin <em>kis</em> doosri tarah mein karte hain — aur kyun?">From memory: the GIL means threads don't help <em>which</em> kind of work, but <em>do</em> help which other kind — and why?</div>
+    <div class="answer" data-ur="Threads <strong>CPU-bound</strong> kaam mein madad nahi karte (ek waqt mein sirf ek hi GIL/talking stick pakadta hai) lekin <strong>I/O-bound</strong> kaam mein <em>karte</em> hain (ek waiting thread stick chhor deta hai taake doosre chalein). async us I/O-bound case mein jeetne ka doosra tareeqa hai.">Threads don't help <strong>CPU-bound</strong> work (only one holds the GIL/talking stick at a time) but <em>do</em> help <strong>I/O-bound</strong> work (a waiting thread drops the stick so others run). async is another way to win at that I/O-bound case.</div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>async lets a single worker start many slow I/O tasks and switch between them whenever one is "waiting," instead of sitting idle.</strong> One cook juggling many pots — not many cooks.
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>async ek hi worker ko bohot saare slow I/O tasks shuru karne deta hai aur jab bhi koi &quot;wait&quot; kar raha ho un ke darmiyan switch karne deta hai, idle baithne ke bajaye.</strong> Ek cook bohot saare pots juggle kar raha — bohot saare cooks nahi."><strong>async lets a single worker start many slow I/O tasks and switch between them whenever one is "waiting," instead of sitting idle.</strong> One cook juggling many pots — not many cooks.</span>
   </div>
 
-  <h2>The story: one cook, many pots</h2>
-  <p>A cook has to boil pasta (10 min), roast veg (15 min), and simmer sauce (8 min). A <em>naive</em> cook does them one at a time — 33 minutes. A <strong>smart</strong> cook starts the pasta, and <em>while it boils</em>, starts the veg, and <em>while both cook</em>, starts the sauce. Total time ≈ the longest single task, ~15 min. Same one cook — they just <strong>never stand around waiting.</strong></p>
-  <p>That's <strong>async</strong>. The "waiting" (water boiling) is the I/O — network calls, database, disk. <code>await</code> is the cook saying "this is going to wait a while — let me go start something else meanwhile."</p>
+  <h2 data-ur="Kahani: ek cook, bohot saare pots">The story: one cook, many pots</h2>
+  <p data-ur="Ek cook ko pasta boil karni hai (10 min), veg roast karni hai (15 min), aur sauce simmer karni hai (8 min). Ek <em>naive</em> cook inhein ek ek karke karta hai — 33 minutes. Ek <strong>smart</strong> cook pasta shuru karta hai, aur <em>jab woh boil ho rahi hoti hai</em>, veg shuru karta hai, aur <em>jab dono cook ho rahi hoti hain</em>, sauce shuru karta hai. Total time ≈ sab se lamba single task, ~15 min. Wohi ek cook — bas woh <strong>kabhi khare ho kar wait nahi karta.</strong>">A cook has to boil pasta (10 min), roast veg (15 min), and simmer sauce (8 min). A <em>naive</em> cook does them one at a time — 33 minutes. A <strong>smart</strong> cook starts the pasta, and <em>while it boils</em>, starts the veg, and <em>while both cook</em>, starts the sauce. Total time ≈ the longest single task, ~15 min. Same one cook — they just <strong>never stand around waiting.</strong></p>
+  <p data-ur="Yehi <strong>async</strong> hai. Woh &quot;waiting&quot; (paani ka ubalna) I/O hai — network calls, database, disk. <code>await</code> woh hai jab cook kehta hai &quot;yeh thori der wait karega — main is dauran kuch aur shuru kar leta hoon.&quot;">That's <strong>async</strong>. The "waiting" (water boiling) is the I/O — network calls, database, disk. <code>await</code> is the cook saying "this is going to wait a while — let me go start something else meanwhile."</p>
 
   <figure>
     <svg viewBox="0 0 640 140" role="img" aria-label="Sequential vs async overlapping waits">
@@ -51,7 +51,7 @@
         <text x="430" y="118" fill="#6b6b6b">= fast (waits happen together)</text>
       </g>
     </svg>
-    <figcaption>Async overlaps the idle "waiting" time instead of stacking it.</figcaption>
+    <figcaption data-ur="Async idle &quot;waiting&quot; time ko stack karne ke bajaye overlap kar deta hai.">Async overlaps the idle "waiting" time instead of stacking it.</figcaption>
   </figure>
 
   <pre style="background:var(--code-bg);padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;"><code>import asyncio
@@ -63,64 +63,64 @@ async def fetch(url):
 # start all three; they overlap their waiting
 results = await asyncio.gather(fetch(a), fetch(b), fetch(c))</code></pre>
 
-  <h2>async vs threads — both help I/O, so which?</h2>
-  <p>From the GIL lesson you know threads <em>also</em> help I/O-bound work. So what's the difference?</p>
+  <h2 data-ur="async vs threads — dono I/O mein madad karte hain, toh kaunsa?">async vs threads — both help I/O, so which?</h2>
+  <p data-ur="GIL lesson se tum jaante ho ke threads <em>bhi</em> I/O-bound kaam mein madad karte hain. Toh farq kya hai?">From the GIL lesson you know threads <em>also</em> help I/O-bound work. So what's the difference?</p>
   <table>
     <tr><th></th><th>Threads</th><th>async (asyncio)</th></tr>
     <tr><td>Who switches</td><td>The OS, anytime (pre-emptive)</td><td>Your code, at each <code>await</code> (cooperative)</td></tr>
     <tr><td>Cost each</td><td>Heavier (real OS threads)</td><td>Very light (thousands cheaply)</td></tr>
     <tr><td>Best at</td><td>Moderate I/O, mixing with blocking libs</td><td>Huge numbers of I/O waits (thousands of connections)</td></tr>
   </table>
-  <p><strong>Rule of thumb:</strong> a few dozen I/O tasks → threads are fine. <em>Thousands</em> of simultaneous connections (a chat server, a web scraper hitting 10,000 URLs) → async shines, because each one is cheap.</p>
+  <p data-ur="<strong>Rule of thumb:</strong> chand darjan I/O tasks → threads theek hain. <em>Hazaron</em> simultaneous connections (ek chat server, ek web scraper jo 10,000 URLs hit kar raha ho) → async chamakta hai, kyunke har ek sasta hai."><strong>Rule of thumb:</strong> a few dozen I/O tasks → threads are fine. <em>Thousands</em> of simultaneous connections (a chat server, a web scraper hitting 10,000 URLs) → async shines, because each one is cheap.</p>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    Modern Django supports <code>async def</code> views and an async ORM path. It helps most when a view does lots of <em>waiting</em> — calling several external APIs, handling many long-lived connections (websockets via Channels). But careful: mixing <code>await</code> with old <em>blocking</em> code (a sync DB driver, <code>time.sleep</code>) stalls the whole event loop — one cook who insists on standing and watching one pot blocks all the others. And remember: async does <strong>not</strong> help CPU-bound work — that's still processes/Celery (from the GIL lesson).
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Modern Django <code>async def</code> views aur ek async ORM path support karta hai. Yeh sab se zyada tab madad karta hai jab ek view bohot saara <em>waiting</em> karti hai — kai external APIs call karna, bohot saare long-lived connections handle karna (Channels ke zariye websockets). Lekin dhyaan: <code>await</code> ko purane <em>blocking</em> code (ek sync DB driver, <code>time.sleep</code>) ke saath mix karna poore event loop ko rok deta hai — ek cook jo zid karta hai ke khare ho kar ek pot dekhta rahe woh baaqi sab ko block kar deta hai. Aur yaad rakho: async CPU-bound kaam mein <strong>nahi</strong> madad karta — woh ab bhi processes/Celery hai (GIL lesson se).">Modern Django supports <code>async def</code> views and an async ORM path. It helps most when a view does lots of <em>waiting</em> — calling several external APIs, handling many long-lived connections (websockets via Channels). But careful: mixing <code>await</code> with old <em>blocking</em> code (a sync DB driver, <code>time.sleep</code>) stalls the whole event loop — one cook who insists on standing and watching one pot blocks all the others. And remember: async does <strong>not</strong> help CPU-bound work — that's still processes/Celery (from the GIL lesson).</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: does async help CPU-bound work? And what's the one-line difference from threads?</div>
-    <div class="answer"><strong>No</strong> — async only helps I/O-bound (waiting) work, not CPU crunching (still needs processes). Difference from threads: async switches <em>cooperatively</em> at each <code>await</code> (your code decides) and is far lighter, so it scales to thousands of waits.</div>
+    <div class="prompt" data-ur="Quick check: kya async CPU-bound kaam mein madad karta hai? Aur threads se one-line farq kya hai?">Quick check: does async help CPU-bound work? And what's the one-line difference from threads?</div>
+    <div class="answer" data-ur="<strong>Nahi</strong> — async sirf I/O-bound (waiting) kaam mein madad karta hai, CPU crunching mein nahi (ab bhi processes chahiye). Threads se farq: async <em>cooperatively</em> har <code>await</code> pe switch karta hai (tumhara code decide karta hai) aur bohot halka hai, isliye hazaron waits tak scale karta hai."><strong>No</strong> — async only helps I/O-bound (waiting) work, not CPU crunching (still needs processes). Difference from threads: async switches <em>cooperatively</em> at each <code>await</code> (your code decides) and is far lighter, so it scales to thousands of waits.</div>
     <div class="hint">click to reveal</div>
   </div>
 
   <div class="warn">
-    <span class="callout-label">The classic async trap — name it</span>
-    One <strong>blocking</strong> call in async code (a sync library, <code>time.sleep(5)</code>, heavy math) freezes the <em>entire</em> event loop — every other task stalls, because there's only one cook and they're stuck at one pot. The whole model depends on every task politely <code>await</code>-ing during waits. This "don't block the event loop" rule is the #1 thing that bites people.
+    <span class="callout-label" data-ur="Classic async trap — isse naam do">The classic async trap — name it</span>
+    <span data-ur="async code mein ek <strong>blocking</strong> call (ek sync library, <code>time.sleep(5)</code>, bhaari math) <em>poore</em> event loop ko freeze kar deti hai — har doosra task ruk jata hai, kyunke sirf ek cook hai aur woh ek pot pe atka hua hai. Poora model isi pe depend karta hai ke har task waits ke dauran shaista tareeqe se <code>await</code> kare. Yeh &quot;event loop ko block mat karo&quot; wala rule woh #1 cheez hai jo logon ko phansati hai.">One <strong>blocking</strong> call in async code (a sync library, <code>time.sleep(5)</code>, heavy math) freezes the <em>entire</em> event loop — every other task stalls, because there's only one cook and they're stuck at one pot. The whole model depends on every task politely <code>await</code>-ing during waits. This "don't block the event loop" rule is the #1 thing that bites people.</span>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">You need to fetch data from 5,000 URLs (mostly waiting on the network). Which approach fits best?</div>
+    <div class="q" data-ur="Tumhein 5,000 URLs se data fetch karna hai (zyada tar network pe waiting). Kaunsa approach best fit hai?">You need to fetch data from 5,000 URLs (mostly waiting on the network). Which approach fits best?</div>
     <div class="opts">
-      <button class="opt" data-correct="true">async — thousands of cheap concurrent I/O waits</button>
-      <button class="opt" data-correct="false">5,000 processes, one per URL</button>
-      <button class="opt" data-correct="false">One thread doing them strictly one at a time</button>
-      <button class="opt" data-correct="false">Nothing helps — the GIL blocks it all</button>
+      <button class="opt" data-correct="true" data-ur="async — hazaron saste concurrent I/O waits">async — thousands of cheap concurrent I/O waits</button>
+      <button class="opt" data-correct="false" data-ur="5,000 processes, har URL ke liye ek">5,000 processes, one per URL</button>
+      <button class="opt" data-correct="false" data-ur="Ek thread jo inhein strictly ek ek karke karta hai">One thread doing them strictly one at a time</button>
+      <button class="opt" data-correct="false" data-ur="Kuch madad nahi karta — GIL sab block kar deta hai">Nothing helps — the GIL blocks it all</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">Inside an async view, someone adds a heavy <code>compute_hash()</code> (pure CPU) that runs for 3 seconds inline. What happens?</div>
+    <div class="q" data-ur="Ek async view ke andar, koi ek bhaari <code>compute_hash()</code> (pure CPU) add kar deta hai jo 3 seconds tak inline chalta hai. Kya hota hai?">Inside an async view, someone adds a heavy <code>compute_hash()</code> (pure CPU) that runs for 3 seconds inline. What happens?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">It runs faster because it's async</button>
-      <button class="opt" data-correct="true">It blocks the event loop — all other tasks stall for 3s</button>
-      <button class="opt" data-correct="false">Async automatically moves it to another core</button>
-      <button class="opt" data-correct="false">Nothing — CPU work is fine in async</button>
+      <button class="opt" data-correct="false" data-ur="Yeh tez chalta hai kyunke yeh async hai">It runs faster because it's async</button>
+      <button class="opt" data-correct="true" data-ur="Yeh event loop ko block kar deta hai — baaqi sab tasks 3s ke liye ruk jate hain">It blocks the event loop — all other tasks stall for 3s</button>
+      <button class="opt" data-correct="false" data-ur="Async isse automatically kisi doosre core pe move kar deta hai">Async automatically moves it to another core</button>
+      <button class="opt" data-correct="false" data-ur="Kuch nahi — CPU kaam async mein theek hai">Nothing — CPU work is fine in async</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today — and Week 2 is complete! 🎉</span>
-    async = one worker (cook) who overlaps waits instead of standing idle. It beats threads when you have <em>thousands</em> of cheap I/O waits, switches cooperatively at each <code>await</code>, and — like threads — does nothing for CPU work (use processes). The golden rule: never block the event loop. You now understand all three concurrency tools: threads, processes, and async.
+    <span class="callout-label" data-ur="Aaj ki tumhari win — aur Week 2 mukammal ho gaya! 🎉">Your win today — and Week 2 is complete! 🎉</span>
+    <span data-ur="async = ek worker (cook) jo idle khare rehne ke bajaye waits ko overlap karta hai. Yeh threads se behtar hai jab tumhare paas <em>hazaron</em> saste I/O waits hon, har <code>await</code> pe cooperatively switch karta hai, aur — threads ki tarah — CPU kaam ke liye kuch nahi karta (processes use karo). Golden rule: event loop ko kabhi block mat karo. Ab tum teeno concurrency tools samajhte ho: threads, processes, aur async.">async = one worker (cook) who overlaps waits instead of standing idle. It beats threads when you have <em>thousands</em> of cheap I/O waits, switches cooperatively at each <code>await</code>, and — like threads — does nothing for CPU work (use processes). The golden rule: never block the event loop. You now understand all three concurrency tools: threads, processes, and async.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://docs.python.org/3/library/asyncio.html" target="_blank">Python docs — asyncio</a><sup class="cite"><a href="#s1">1</a></sup> and Django's <a href="https://docs.djangoproject.com/en/stable/topics/async/" target="_blank">async support docs</a>.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.python.org/3/library/asyncio.html&quot; target=&quot;_blank&quot;>Python docs — asyncio</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> aur Django ki <a href=&quot;https://docs.djangoproject.com/en/stable/topics/async/&quot; target=&quot;_blank&quot;>async support docs</a>.">📖 <a href="https://docs.python.org/3/library/asyncio.html" target="_blank">Python docs — asyncio</a><sup class="cite"><a href="#s1">1</a></sup> and Django's <a href="https://docs.djangoproject.com/en/stable/topics/async/" target="_blank">async support docs</a>.</p>
 
   <div class="ask-teacher">
-    <strong>I'm your teacher — lean on me.</strong> Want the full "threads vs processes vs async" decision tree for a real task, or how the event loop actually works under the hood? Ask. And when you finish Week 2, say <em>"quiz me on the week."</em>
+    <strong data-ur="Main tumhara teacher hoon — mujhpe bharosa karo.">I'm your teacher — lean on me.</strong> <span data-ur="Kisi real task ke liye poora &quot;threads vs processes vs async&quot; decision tree chahiye, ya event loop asal mein hood ke neeche kaise kaam karta hai? Poocho. Aur jab tum Week 2 khatam karlo, kaho <em>&quot;quiz me on the week.&quot;</em>">Want the full "threads vs processes vs async" decision tree for a real task, or how the event loop actually works under the hood? Ask. And when you finish Week 2, say <em>"quiz me on the week."</em></span>
   </div>
 
   <footer class="lesson-foot">
@@ -150,7 +150,7 @@ results = await asyncio.gather(fetch(a), fetch(b), fetch(c))</code></pre>
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>

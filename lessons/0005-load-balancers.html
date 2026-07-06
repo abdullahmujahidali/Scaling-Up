@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lesson 3 · Load Balancers</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=2">
+<link rel="stylesheet" href="../assets/lesson.css?v=3">
 </head>
 <body>
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">System Design · Lesson 03</p>
-    <h1>Load balancers: the host at the door</h1>
-    <p class="subtitle">How one entry point spreads traffic across many servers. The move behind "just add more servers."</p>
+    <h1 data-ur="Load balancers: darwaze pe khara host">Load balancers: the host at the door</h1>
+    <p class="subtitle" data-ur="Aik entry point traffic ko bahut saare servers pe kaise phailata hai. &quot;Bas aur servers add karo&quot; ke peeche wala move.">How one entry point spreads traffic across many servers. The move behind "just add more servers."</p>
     <div class="meta">
       <span>~8 min</span>
       <span>One concept: load balancing</span>
@@ -20,25 +20,25 @@
     </div>
   </header>
 
-  <h2>30-second warm-up (recall 2c)</h2>
+  <h2 data-ur="30-second warm-up (recall 2c)">30-second warm-up (recall 2c)</h2>
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">From memory: three services in a <em>chain</em>, each 99.9% available — is the total higher or lower than 99.9%, and why?</div>
-    <div class="answer"><strong>Lower</strong> (~99.7%). In a chain the availabilities <em>multiply</em> — every extra link is one more thing that can be down, so the total drops below any single one.</div>
+    <div class="prompt" data-ur="Memory se: aik <em>chain</em> mein teen services, har aik 99.9% available — kya total 99.9% se zyada hai ya kam, aur kyun?">From memory: three services in a <em>chain</em>, each 99.9% available — is the total higher or lower than 99.9%, and why?</div>
+    <div class="answer" data-ur="<strong>Kam</strong> (~99.7%). Aik chain mein availabilities <em>multiply</em> hoti hain — har extra link aik aur cheez hai jo down ho sakti hai, to total kisi bhi aik se neeche gir jaata hai."><strong>Lower</strong> (~99.7%). In a chain the availabilities <em>multiply</em> — every extra link is one more thing that can be down, so the total drops below any single one.</div>
     <div class="hint">click to reveal — say it first</div>
   </div>
 
   <div class="key">
-    <span class="callout-label">If you remember one thing</span>
-    <strong>A load balancer is one front door that spreads incoming requests across many servers</strong> — so no single server gets crushed, and if one dies, traffic just goes to the others.
+    <span class="callout-label" data-ur="Agar aik cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Load balancer aik front door hai jo aane wali requests ko bahut saare servers pe phailata hai</strong> — taake koi aik server crush na ho, aur agar aik mare, to traffic bas baaqiyon ki taraf chala jaata hai."><strong>A load balancer is one front door that spreads incoming requests across many servers</strong> — so no single server gets crushed, and if one dies, traffic just goes to the others.</span>
   </div>
 
-  <h2>The story: a busy restaurant</h2>
-  <p>A packed restaurant has <strong>one host at the door</strong> and <strong>many waiters</strong> inside. Diners don't wander in and pick a waiter — they'd all crowd the same one. Instead, the host stands at the entrance and sends each new group to whichever waiter has room.</p>
-  <p>That host is a <strong>load balancer</strong>. The waiters are your <strong>servers</strong>. Three things the host does, without you thinking about it:</p>
+  <h2 data-ur="Kahani: aik busy restaurant">The story: a busy restaurant</h2>
+  <p data-ur="Aik bhare hue restaurant mein <strong>darwaze pe aik host</strong> aur andar <strong>bahut saare waiters</strong> hote hain. Diners andar aa kar khud waiter nahi chunte — warna sab aik hi pe bheer laga dete. Iski bajaye, host entrance pe khara hota hai aur har naye group ko us waiter ke paas bhejta hai jiske paas jagah ho.">A packed restaurant has <strong>one host at the door</strong> and <strong>many waiters</strong> inside. Diners don't wander in and pick a waiter — they'd all crowd the same one. Instead, the host stands at the entrance and sends each new group to whichever waiter has room.</p>
+  <p data-ur="Woh host aik <strong>load balancer</strong> hai. Waiters aapke <strong>servers</strong> hain. Teen cheezein jo host karta hai, bina aap ke soche:">That host is a <strong>load balancer</strong>. The waiters are your <strong>servers</strong>. Three things the host does, without you thinking about it:</p>
   <ul>
-    <li><strong>Spreads the crowd</strong> — no single waiter (server) gets overwhelmed while others sit idle.</li>
-    <li><strong>Skips the sick waiter</strong> — if a waiter goes home ill, the host just stops seating people there. (No more requests to a dead server.)</li>
-    <li><strong>Removes the single choke point</strong> — you're no longer betting the whole night on one waiter.</li>
+    <li data-ur="<strong>Bheer phailata hai</strong> — koi aik waiter (server) overwhelmed nahi hota jabke doosre khaali baithe hon."><strong>Spreads the crowd</strong> — no single waiter (server) gets overwhelmed while others sit idle.</li>
+    <li data-ur="<strong>Beemar waiter ko skip karta hai</strong> — agar koi waiter beemar ho kar ghar chala jaye, to host bas wahan logon ko bithana band kar deta hai. (Dead server ko aur requests nahi.)"><strong>Skips the sick waiter</strong> — if a waiter goes home ill, the host just stops seating people there. (No more requests to a dead server.)</li>
+    <li data-ur="<strong>Single choke point hata deta hai</strong> — ab aap poori raat aik waiter pe daao nahi laga rahe."><strong>Removes the single choke point</strong> — you're no longer betting the whole night on one waiter.</li>
   </ul>
 
   <figure>
@@ -62,83 +62,83 @@
         <line x1="360" y1="120" x2="498" y2="190" stroke="#ccc" stroke-width="1.3" stroke-dasharray="4 3"/>
       </g>
     </svg>
-    <figcaption>One front door, many servers. The dead server (3) just stops receiving traffic.</figcaption>
+    <figcaption data-ur="Aik front door, bahut saare servers. Dead server (3) bas traffic lena band kar deta hai.">One front door, many servers. The dead server (3) just stops receiving traffic.</figcaption>
   </figure>
 
-  <h2>The big idea it unlocks: horizontal scaling</h2>
-  <p>There are two ways to handle more traffic:</p>
+  <h2 data-ur="Woh barra idea jo yeh unlock karta hai: horizontal scaling">The big idea it unlocks: horizontal scaling</h2>
+  <p data-ur="Zyada traffic sambhalne ke do tareeqe hain:">There are two ways to handle more traffic:</p>
   <ul>
-    <li><strong>Vertical scaling</strong> — buy your one waiter a bigger brain and faster legs (a bigger, pricier server). Works for a while, then you hit a ceiling.</li>
-    <li><strong>Horizontal scaling</strong> — just hire <em>more waiters</em> (add more cheap servers behind the load balancer). This is what lets systems grow almost without limit.</li>
+    <li data-ur="<strong>Vertical scaling</strong> — apne aik waiter ko barra dimagh aur tez taangein kharid do (aik barra, mehnga server). Kuch der chalta hai, phir aap ceiling se takra jaate ho."><strong>Vertical scaling</strong> — buy your one waiter a bigger brain and faster legs (a bigger, pricier server). Works for a while, then you hit a ceiling.</li>
+    <li data-ur="<strong>Horizontal scaling</strong> — bas <em>aur waiters</em> rakh lo (load balancer ke peeche aur saste servers add karo). Yehi cheez systems ko takreeban bina limit ke barhne deti hai."><strong>Horizontal scaling</strong> — just hire <em>more waiters</em> (add more cheap servers behind the load balancer). This is what lets systems grow almost without limit.</li>
   </ul>
-  <p>Load balancers are what make horizontal scaling possible — the host is what lets you add a tenth waiter without chaos.</p>
+  <p data-ur="Load balancers hi horizontal scaling ko mumkin banate hain — host hi woh cheez hai jo aapko chaos ke bagair dasvaan waiter add karne deta hai.">Load balancers are what make horizontal scaling possible — the host is what lets you add a tenth waiter without chaos.</p>
 
   <div class="warn">
-    <span class="callout-label">The one rule that makes it work: stateless servers</span>
-    Here's the catch. If waiter #2 is the <em>only</em> one who remembers your order, and the host sends your next request to waiter #5, you're stuck. So servers must be <strong>stateless</strong> — they keep no personal memory of you. Anything that must be remembered (like your login session) goes into a <em>shared</em> place all servers can read, like a database or a shared cache. <em>(This is a very common interview "gotcha" — sessions must live outside the app servers.)</em>
+    <span class="callout-label" data-ur="Woh aik rule jo isko kaam karata hai: stateless servers">The one rule that makes it work: stateless servers</span>
+    <span data-ur="Catch yeh hai. Agar waiter #2 <em>akela</em> hai jo aapka order yaad rakhta hai, aur host aapki agli request waiter #5 ko bhejta hai, to aap phans gaye. To servers ko <strong>stateless</strong> hona chahiye — woh aapki koi zaati memory nahi rakhte. Jo bhi yaad rakhna zaroori ho (jaise aapka login session) woh aik <em>shared</em> jagah pe jaata hai jise saare servers parh sakein, jaise aik database ya aik shared cache. <em>(Yeh aik bahut aam interview &quot;gotcha&quot; hai — sessions ko app servers ke bahar rehna chahiye.)</em>">Here's the catch. If waiter #2 is the <em>only</em> one who remembers your order, and the host sends your next request to waiter #5, you're stuck. So servers must be <strong>stateless</strong> — they keep no personal memory of you. Anything that must be remembered (like your login session) goes into a <em>shared</em> place all servers can read, like a database or a shared cache. <em>(This is a very common interview "gotcha" — sessions must live outside the app servers.)</em></span>
   </div>
 
   <div class="bridge">
-    <span class="callout-label">Django bridge</span>
-    Run Django on 3 servers behind a load balancer and you hit exactly this. If you use Django's default <em>local-memory</em> session storage, a user logged in on server 1 looks logged-out when the balancer routes them to server 2. The fix is what stateless means in practice: move sessions to a shared store — the database or Redis (<code>SESSION_ENGINE</code>). Same idea as the story: shared memory, not per-waiter memory.
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django ko load balancer ke peeche 3 servers pe chalao aur aap bilkul isi se takraoge. Agar aap Django ki default <em>local-memory</em> session storage use karte ho, to server 1 pe logged-in user server 2 pe route hone pe logged-out lagta hai. Fix wohi hai jo stateless ka amali matlab hai: sessions ko aik shared store pe le jao — database ya Redis (<code>SESSION_ENGINE</code>). Kahani jaisa hi idea: shared memory, per-waiter memory nahi.">Run Django on 3 servers behind a load balancer and you hit exactly this. If you use Django's default <em>local-memory</em> session storage, a user logged in on server 1 looks logged-out when the balancer routes them to server 2. The fix is what stateless means in practice: move sessions to a shared store — the database or Redis (<code>SESSION_ENGINE</code>). Same idea as the story: shared memory, not per-waiter memory.</span>
   </div>
 
   <div class="recall" onclick="this.classList.toggle('revealed')">
-    <div class="prompt">Quick check: why must servers behind a load balancer be "stateless"?</div>
-    <div class="answer">Because the balancer may send your next request to a <em>different</em> server. If one server privately remembers your session, another won't know it. So shared state (sessions, etc.) must live in a place all servers can reach — a database or shared cache.</div>
+    <div class="prompt" data-ur="Quick check: load balancer ke peeche servers ko &quot;stateless&quot; kyun hona chahiye?">Quick check: why must servers behind a load balancer be "stateless"?</div>
+    <div class="answer" data-ur="Kyunke balancer aapki agli request kisi <em>doosre</em> server ko bhej sakta hai. Agar aik server nijji tor pe aapka session yaad rakhta hai, to doosra use nahi jaanega. To shared state (sessions, waghera) ko aisi jagah rehna chahiye jahan saare servers pohanch sakein — aik database ya shared cache.">Because the balancer may send your next request to a <em>different</em> server. If one server privately remembers your session, another won't know it. So shared state (sessions, etc.) must live in a place all servers can reach — a database or shared cache.</div>
     <div class="hint">click to reveal</div>
   </div>
 
-  <h2>One nuance: Layer 4 vs Layer 7 (light touch)</h2>
-  <p>You'll hear these two terms. Keep it simple:</p>
+  <h2 data-ur="Aik nuance: Layer 4 vs Layer 7 (halki si baat)">One nuance: Layer 4 vs Layer 7 (light touch)</h2>
+  <p data-ur="Aap yeh do terms sunoge. Ise simple rakho:">You'll hear these two terms. Keep it simple:</p>
   <ul>
-    <li><strong>Layer 4</strong> — the host seats you by only glancing at the envelope: where you came from and which door (IP addresses and ports). Fast, doesn't read the message inside.</li>
-    <li><strong>Layer 7</strong> — the host actually <em>reads your request</em> ("table for the dessert menu?") and routes based on the content (the URL, cookies). More flexible, but more work.</li>
+    <li data-ur="<strong>Layer 4</strong> — host aapko sirf envelope pe nazar daal kar bithata hai: aap kahan se aaye aur kaunsa darwaza (IP addresses aur ports). Fast, andar ka message nahi parhta."><strong>Layer 4</strong> — the host seats you by only glancing at the envelope: where you came from and which door (IP addresses and ports). Fast, doesn't read the message inside.</li>
+    <li data-ur="<strong>Layer 7</strong> — host asal mein <em>aapki request parhta hai</em> (&quot;dessert menu ke liye table?&quot;) aur content ke hisaab se route karta hai (URL, cookies). Zyada flexible, lekin zyada kaam."><strong>Layer 7</strong> — the host actually <em>reads your request</em> ("table for the dessert menu?") and routes based on the content (the URL, cookies). More flexible, but more work.</li>
   </ul>
-  <p>For now, just remember: <strong>Layer 4 = route by the envelope (fast). Layer 7 = read the letter and route smartly (flexible).</strong></p>
+  <p data-ur="Abhi ke liye, bas yaad rakho: <strong>Layer 4 = envelope se route karo (fast). Layer 7 = letter parho aur samajhdaari se route karo (flexible).</strong>">For now, just remember: <strong>Layer 4 = route by the envelope (fast). Layer 7 = read the letter and route smartly (flexible).</strong></p>
 
   <div class="warn">
-    <span class="callout-label">The catch (name it in interviews)</span>
-    The load balancer is now itself a <strong>single point of failure</strong> — if the host collapses, nobody gets seated. Real systems fix this by running a <em>second</em> load balancer as backup (remember failover from 2b — active-passive!). It can also become a bottleneck if under-resourced. Naming this tradeoff is the senior move.
+    <span class="callout-label" data-ur="Catch (interviews mein iska naam lo)">The catch (name it in interviews)</span>
+    <span data-ur="Load balancer ab khud aik <strong>single point of failure</strong> hai — agar host gir jaye, to kisi ko bithaya nahi jaata. Real systems ise aise fix karte hain ke aik <em>doosra</em> load balancer backup ki tarah chalate hain (2b se failover yaad hai — active-passive!). Agar iske paas kam resources hon to yeh bottleneck bhi ban sakta hai. Is tradeoff ka naam lena senior move hai.">The load balancer is now itself a <strong>single point of failure</strong> — if the host collapses, nobody gets seated. Real systems fix this by running a <em>second</em> load balancer as backup (remember failover from 2b — active-passive!). It can also become a bottleneck if under-resourced. Naming this tradeoff is the senior move.</span>
   </div>
 
   <div class="quiz" id="q1">
-    <div class="q">Your app runs on 3 servers behind a load balancer. Users randomly appear logged out. Most likely cause?</div>
+    <div class="q" data-ur="Aapki app load balancer ke peeche 3 servers pe chalti hai. Users randomly logged out nazar aate hain. Sab se mumkin wajah?">Your app runs on 3 servers behind a load balancer. Users randomly appear logged out. Most likely cause?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">The load balancer is a single point of failure</button>
-      <button class="opt" data-correct="true">Sessions are stored on each server, not in a shared store</button>
-      <button class="opt" data-correct="false">The servers are scaling vertically instead of horizontally</button>
-      <button class="opt" data-correct="false">Layer 4 routing can't read cookies for login</button>
+      <button class="opt" data-correct="false" data-ur="Load balancer aik single point of failure hai">The load balancer is a single point of failure</button>
+      <button class="opt" data-correct="true" data-ur="Sessions har server pe store hote hain, shared store mein nahi">Sessions are stored on each server, not in a shared store</button>
+      <button class="opt" data-correct="false" data-ur="Servers horizontally ki bajaye vertically scale ho rahe hain">The servers are scaling vertically instead of horizontally</button>
+      <button class="opt" data-correct="false" data-ur="Layer 4 routing login ke liye cookies nahi parh sakti">Layer 4 routing can't read cookies for login</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="quiz" id="q2">
-    <div class="q">Traffic is 10×-ing next month. Which move is "horizontal scaling"?</div>
+    <div class="q" data-ur="Traffic agle maheene 10× ho raha hai. Kaunsa move &quot;horizontal scaling&quot; hai?">Traffic is 10×-ing next month. Which move is "horizontal scaling"?</div>
     <div class="opts">
-      <button class="opt" data-correct="false">Upgrade your one server to a much bigger machine</button>
-      <button class="opt" data-correct="true">Add more servers behind the load balancer</button>
-      <button class="opt" data-correct="false">Switch the database from strong to eventual consistency</button>
-      <button class="opt" data-correct="false">Add a hot standby for failover</button>
+      <button class="opt" data-correct="false" data-ur="Apne aik server ko bahut barri machine pe upgrade karo">Upgrade your one server to a much bigger machine</button>
+      <button class="opt" data-correct="true" data-ur="Load balancer ke peeche aur servers add karo">Add more servers behind the load balancer</button>
+      <button class="opt" data-correct="false" data-ur="Database ko strong se eventual consistency pe switch karo">Switch the database from strong to eventual consistency</button>
+      <button class="opt" data-correct="false" data-ur="Failover ke liye aik hot standby add karo">Add a hot standby for failover</button>
     </div>
     <div class="feedback"></div>
   </div>
 
   <div class="win">
-    <span class="callout-label">Your win today</span>
-    A load balancer is the host at the door: it spreads traffic, skips dead servers, and unlocks <strong>horizontal scaling</strong> (more cheap servers, not one huge one). The price of admission: servers must be <strong>stateless</strong>, with shared state in a database or cache. This is the backbone of nearly every "Design X" answer.
+    <span class="callout-label" data-ur="Aaj ki aapki jeet">Your win today</span>
+    <span data-ur="Load balancer darwaze pe khara host hai: yeh traffic phailata hai, dead servers ko skip karta hai, aur <strong>horizontal scaling</strong> unlock karta hai (aur saste servers, aik barra nahi). Dakhle ki keemat: servers ko <strong>stateless</strong> hona chahiye, shared state database ya cache mein. Yeh takreeban har &quot;Design X&quot; answer ki reedh ki haddi hai.">A load balancer is the host at the door: it spreads traffic, skips dead servers, and unlocks <strong>horizontal scaling</strong> (more cheap servers, not one huge one). The price of admission: servers must be <strong>stateless</strong>, with shared state in a database or cache. This is the backbone of nearly every "Design X" answer.</span>
   </div>
 
-  <h2>Read next (primary source) — optional</h2>
-  <p>📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#load-balancer" target="_blank">System Design Primer — Load balancer</a><sup class="cite"><a href="#s1">1</a></sup>. The restaurant maps straight onto it; L4/L7 is there too.</p>
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#load-balancer&quot; target=&quot;_blank&quot;>System Design Primer — Load balancer</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. Restaurant seedha ispe fit ho jaata hai; L4/L7 bhi wahan hai.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#load-balancer" target="_blank">System Design Primer — Load balancer</a><sup class="cite"><a href="#s1">1</a></sup>. The restaurant maps straight onto it; L4/L7 is there too.</p>
 
   <div class="ask-teacher">
     <strong>I'm your teacher — lean on me.</strong> Want the real request flow drawn out (client → LB → server → DB)? Curious how the balancer <em>picks</em> a server (round-robin, least-connections)? Ask and I'll go deeper at your pace.
   </div>
 
   <footer class="lesson-foot">
-    <p><strong>Lesson 3 (load balancers).</strong> Uses failover from <a href="0003-failover.html">2b</a> (backup load balancer) and statelessness. Next: <em>Lesson 4 — Caching</em>: storing hot data close by for speed.</p>
-    <p>📑 New terms (load balancer, horizontal/vertical scaling, stateless, Layer 4/7) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
+    <p data-ur="<strong>Lesson 3 (load balancers).</strong> <a href=&quot;0003-failover.html&quot;>2b</a> se failover (backup load balancer) aur statelessness use karta hai. Aage: <em>Lesson 4 — Caching</em>: speed ke liye hot data paas rakhna."><strong>Lesson 3 (load balancers).</strong> Uses failover from <a href="0003-failover.html">2b</a> (backup load balancer) and statelessness. Next: <em>Lesson 4 — Caching</em>: storing hot data close by for speed.</p>
+    <p data-ur="📑 Naye terms (load balancer, horizontal/vertical scaling, stateless, Layer 4/7) <a href=&quot;../reference/glossary.html&quot;>Glossary</a> mein hain.">📑 New terms (load balancer, horizontal/vertical scaling, stateless, Layer 4/7) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
     <p class="sources"><strong>Sources</strong></p>
     <ol class="sources">
       <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#load-balancer" target="_blank">The System Design Primer — Load balancer</a>, Donne Martin.</li>
@@ -172,7 +172,7 @@
     });
   });
 </script>
-<script src="../assets/i18n.js?v=2"></script>
-<script src="../assets/nav.js?v=2"></script>
+<script src="../assets/i18n.js?v=3"></script>
+<script src="../assets/nav.js?v=3"></script>
 </body>
 </html>
