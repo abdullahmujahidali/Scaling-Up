@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson F6 · Stacks &amp; Queues</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=5">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Fundamentals · Lesson F6 · Offline Pack</p>
+    <h1 data-ur="Stacks aur Queues: kaunse end se items daalo aur nikalo">Stacks &amp; queues: which end you add and remove from</h1>
+    <p class="subtitle" data-ur="Do simple tareeqe items add/remove karne ke — LIFO vs FIFO. Ek plate ka dher, ek shop ki line. Bas.">Two simple ways to add and remove items — LIFO vs FIFO. A pile of plates, a line at a shop. That's it.</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: LIFO vs FIFO</span>
+      <span>Win: pick the right one for your access pattern</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (arrays vs linked lists yaad karo)">30-second warm-up (recall arrays vs linked lists)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek Python <code>list</code> ke <em>end</em> par add karna sasta kyun hai, par <em>front</em> par add/remove karna mehnga?">From memory: why is adding at the <em>end</em> of a Python <code>list</code> cheap, but adding/removing at the <em>front</em> expensive?</div>
+    <div class="answer" data-ur="Ek <code>list</code> ek contiguous array hai. End par append ≈ <strong>O(1)</strong>. Lekin front par insert/remove karne ke liye baaki <em>saare</em> elements ko ek jaga shift karna parta hai — <strong>O(n)</strong>. Yaad rakho: yehi wajah aaj ki queue ki choice mein wapas aayegi.">A <code>list</code> is a contiguous array. Appending at the end is ≈ <strong>O(1)</strong>. But inserting/removing at the front means shifting <em>all</em> the other elements over by one — <strong>O(n)</strong>. Hold that thought: it comes back in today's queue choice.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Stack = LIFO (Last In, First Out) — same end se daalo aur nikalo, jaise plates ka dher. Queue = FIFO (First In, First Out) — peeche daalo, aage se nikalo, jaise shop ki line.</strong> Access pattern se decide karo kaunsa."><strong>Stack = LIFO (Last In, First Out) — add and remove from the same end, like a pile of plates. Queue = FIFO (First In, First Out) — add at the back, remove from the front, like a line at a shop.</strong> Your access pattern decides which one.</span>
+  </div>
+
+  <h2 data-ur="Kahani: plates ka dher aur shop ki line">The story: a pile of plates and a shop line</h2>
+  <p data-ur="Do rozmarra tasveerein zehan mein rakho. Pehli: <strong>plates ka dher</strong>. Tum saaf plates ek ke oopar ek rakhte ho. Jab ek plate chahiye, tum <em>oopar</em> wali uthaate ho — yaani jo <strong>aakhir mein rakhi</strong> thi. Aakhri andar, pehli bahar. Yeh ek <strong>stack</strong> hai (LIFO). Dusri: <strong>shop par logon ki line</strong>. Jo pehle aaya woh aage khara hai aur pehle serve hota hai; naye log <em>peeche</em> lagte hain. Pehla andar, pehla bahar. Yeh ek <strong>queue</strong> hai (FIFO).">Keep two everyday pictures in mind. First: a <strong>pile of plates</strong>. You stack clean plates one on top of another. When you need a plate, you take the one on <em>top</em> — the one you put down <strong>last</strong>. Last in, first out. That's a <strong>stack</strong> (LIFO). Second: a <strong>line of people at a shop</strong>. Whoever came first stands at the front and is served first; new people join at the <em>back</em>. First in, first out. That's a <strong>queue</strong> (FIFO).</p>
+  <p data-ur="Dono mein sirf ek farq hai: <strong>tum kis end se item nikalte ho.</strong> Stack usi end se nikalta hai jahan daalta hai. Queue ulte end se nikalta hai. Poora concept isi ek line par tik-a hai.">There's only one difference between them: <strong>which end you remove an item from.</strong> A stack removes from the same end it adds to. A queue removes from the opposite end. The whole concept rests on that one line.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 220" role="img" aria-label="Stack removes from the same end (LIFO); queue removes from the opposite end (FIFO)">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="160" y="24" font-weight="700" fill="#2a4d8f">STACK — LIFO</text>
+        <rect x="110" y="120" width="100" height="26" rx="4" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="160" y="138" fill="#2a4d8f">plate 1</text>
+        <rect x="110" y="92" width="100" height="26" rx="4" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="160" y="110" fill="#2a4d8f">plate 2</text>
+        <rect x="110" y="64" width="100" height="26" rx="4" fill="#dfeaf7" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="160" y="82" font-weight="700" fill="#2a4d8f">plate 3</text>
+        <text x="290" y="70" fill="#1a7a4a" font-weight="700" text-anchor="start">↑ push / pop</text>
+        <text x="290" y="86" fill="#6b6b6b" font-size="11" text-anchor="start">top only</text>
+
+        <text x="480" y="24" font-weight="700" fill="#8a5a00">QUEUE — FIFO</text>
+        <rect x="380" y="90" width="60" height="40" rx="4" fill="#dfeaf7" stroke="#8a5a00" stroke-width="2"/>
+        <text x="410" y="114" font-weight="700" fill="#8a5a00">1st</text>
+        <rect x="446" y="90" width="60" height="40" rx="4" fill="#f7efe0" stroke="#8a5a00"/>
+        <text x="476" y="114" fill="#8a5a00">2nd</text>
+        <rect x="512" y="90" width="60" height="40" rx="4" fill="#f7efe0" stroke="#8a5a00"/>
+        <text x="542" y="114" fill="#8a5a00">3rd</text>
+        <text x="410" y="158" fill="#1a7a4a" font-size="11">↑ remove (front)</text>
+        <text x="542" y="158" fill="#8a5a00" font-size="11">↑ add (back)</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Stack: top se push aur pop (LIFO). Queue: back se add, front se remove (FIFO).">Stack: push and pop from the top (LIFO). Queue: add at the back, remove from the front (FIFO).</figcaption>
+  </figure>
+
+  <h2 data-ur="Yeh tumhe kahan asli mein milte hain">Where you actually meet them</h2>
+  <ul>
+    <li data-ur="<strong>Stack:</strong> function calls ka <em>call stack</em> (recursion — aakhri call jo lagi woh pehle return hoti hai), text editor ka <strong>undo/redo</strong> (aakhri action pehle undo), aur browser ka <strong>Back button</strong> (aakhri page jahan gaye woh pehle wapas aata hai)."><strong>Stack:</strong> the <em>call stack</em> of function calls (recursion — the last call made returns first), <strong>undo/redo</strong> in a text editor (last action undone first), and the browser's <strong>Back button</strong> (the last page you visited comes back first).</li>
+    <li data-ur="<strong>Queue:</strong> ek <strong>task/message queue</strong> jo jobs ko order mein process karta hai (jo pehle enqueue hua woh pehle chalta hai), aur ek <strong>printer queue</strong> (documents print order mein nikalte hain)."><strong>Queue:</strong> a <strong>task/message queue</strong> processing jobs in order (whatever was enqueued first runs first), and a <strong>printer queue</strong> (documents print in the order sent).</li>
+  </ul>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: undo/redo stack kyun hai, queue kyun nahi?">Quick check: why is undo/redo a stack, not a queue?</div>
+    <div class="answer" data-ur="Kyunke tum hamesha <strong>aakhri</strong> action pehle undo karna chahte ho — bilkul plates ke dher ki tarah. Agar undo <em>pehla</em> action wapas leta (FIFO), toh galat kaam undo hota. Undo ko LIFO chahiye, isliye stack.">Because you always want to undo the <strong>most recent</strong> action first — exactly like a pile of plates. If undo reverted your <em>first</em> action (FIFO), it would undo the wrong thing. Undo needs LIFO, so it's a stack.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Python bridge">Python bridge</span>
+    <span data-ur="Tum inhein Python mein already build kar sakte ho. <strong>Stack:</strong> ek plain <code>list</code> — <code>append()</code> push karne ke liye, <code>pop()</code> nikalne ke liye. Dono end par kaam karte hain, dono ≈ O(1). <strong>Queue:</strong> yahan galti aasan hai. Log <code>list</code> use karke <code>list.pop(0)</code> se front nikalte hain — par wahi warm-up wali problem: front pop O(n) hai (sab shift hote hain). Iske bajaye <code>collections.deque</code> use karo: <code>append()</code> back par, <code>popleft()</code> front se — dono O(1). Yeh wahi arrays-vs-linked-lists tradeoff hai jo access pattern se guide hota hai.">You can already build both in Python. <strong>Stack:</strong> a plain <code>list</code> — <code>append()</code> to push, <code>pop()</code> to remove. Both work at the end, both ≈ O(1). <strong>Queue:</strong> here's the easy trap. People use a <code>list</code> and pop the front with <code>list.pop(0)</code> — but that's the warm-up problem: front pop is O(n) (everything shifts). Use <code>collections.deque</code> instead: <code>append()</code> at the back, <code>popleft()</code> from the front — both O(1). It's the same arrays-vs-linked-lists tradeoff, guided by your access pattern.</span>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Structure ko <strong>apne access pattern se match karo</strong>. Galat structure choose karna ek classic performance bug hai: ek loop mein <code>list.pop(0)</code> har call par O(n) hai, toh poora loop <strong>O(n²)</strong> ho jata hai — chhoti list par theek chalta hai, production data par phatta hai. Queue chahiye toh <code>deque</code>, stack chahiye toh <code>list</code>. Yeh choose karna ek senior signal hai.">Match the structure to your <strong>access pattern</strong>. Choosing the wrong one is a classic performance bug: <code>list.pop(0)</code> inside a loop is O(n) per call, so the whole loop becomes <strong>O(n²)</strong> — fine on a small list, it blows up on production data. Want a queue, reach for <code>deque</code>; want a stack, a <code>list</code> is fine. Choosing deliberately is a senior signal.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tumhein pending background jobs process karne hain usi order mein jismein woh aaye — jo pehle aaya woh pehle chale. Tum chahte ho…">You need to process pending background jobs in the order they arrived — first to arrive runs first. You want a…</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Stack (LIFO) — <code>list.append()</code> aur <code>list.pop()</code>">Stack (LIFO) — <code>list.append()</code> and <code>list.pop()</code></button>
+      <button class="opt" data-correct="true" data-ur="Queue (FIFO) — ek <code>deque</code> jismein <code>append()</code> aur <code>popleft()</code>">Queue (FIFO) — a <code>deque</code> with <code>append()</code> and <code>popleft()</code></button>
+      <button class="opt" data-correct="false" data-ur="Queue, par <code>list</code> ke saath <code>list.pop(0)</code>">Queue, but with a <code>list</code> using <code>list.pop(0)</code></button>
+      <button class="opt" data-correct="false" data-ur="Farq nahi parta — dono same behave karte hain">Doesn't matter — both behave the same</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Browser ka Back button tumhe hamesha wo page dikhata hai jahan tum <em>abhi abhi</em> the — sabse recent pehle. Yeh kaunsa structure hai?">A browser's Back button always takes you to the page you were <em>just</em> on — most recent first. Which structure is that?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Ek stack (LIFO) — aakhri page jahan gaye woh pehle wapas">A stack (LIFO) — last page visited comes back first</button>
+      <button class="opt" data-correct="false" data-ur="Ek queue (FIFO) — pehla page jahan gaye woh pehle wapas">A queue (FIFO) — first page visited comes back first</button>
+      <button class="opt" data-correct="false" data-ur="Ek queue, kyunke history order mein rehti hai">A queue, because history stays in order</button>
+      <button class="opt" data-correct="false" data-ur="Koi nahi — Back button koi data structure use nahi karta">Neither — Back uses no data structure</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Stacks aur queues: <strong>LIFO</strong> (dher — same end se daalo/nikalo, jaise undo aur call stack) vs <strong>FIFO</strong> (line — peeche daalo, aage se nikalo, jaise message aur printer queues). Python mein stack ke liye <code>list</code>, queue ke liye <code>collections.deque</code> (front pop O(1), <code>list.pop(0)</code> ka O(n) trap nahi). Structure ko access pattern se match karna — bas yahi win hai.">Stacks and queues: <strong>LIFO</strong> (a pile — add/remove at the same end, like undo and the call stack) vs <strong>FIFO</strong> (a line — add at the back, remove from the front, like message and printer queues). In Python: a <code>list</code> for a stack, <code>collections.deque</code> for a queue (O(1) front pop, no <code>list.pop(0)</code> O(n) trap). Matching the structure to the access pattern — that's the win.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.python.org/3/library/collections.html#collections.deque&quot; target=&quot;_blank&quot;>Python docs — <code>collections.deque</code></a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — dono end se O(1) add/remove.">📖 <a href="https://docs.python.org/3/library/collections.html#collections.deque" target="_blank">Python docs — <code>collections.deque</code></a><sup class="cite"><a href="#s1">1</a></sup> — O(1) add/remove from either end.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to code a stack and a queue in Python side by side? Or unsure why <code>deque</code> beats a <code>list</code> for a queue but not for a stack? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson F6 (Stacks &amp; Queues).</strong> Builds on <a href="0040-arrays-vs-linked-lists.html">arrays vs linked lists (F3)</a> and ties to <a href="0013-message-queues.html">message queues (13)</a>. The call stack shows up again in recursion.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.python.org/3/library/collections.html#collections.deque" target="_blank">Python Standard Library — <code>collections.deque</code></a>, Python documentation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Process-in-arrival-order = FIFO = a queue. Use a deque so popleft() is O(1); list.pop(0) would be O(n) and make the loop O(n²)."
+                      : "Reconsider. 'First to arrive runs first' is FIFO — that's a queue, and deque gives O(1) popleft(). A stack or list.pop(0) is the wrong pick.",
+          q2: correct ? "Yes. Most-recent-page-first = LIFO = a stack. The last page you pushed is the first you pop when you hit Back."
+                      : "Reconsider. Back returns the page you were just on — most recent first — which is LIFO, a stack, not a queue."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=5"></script>
+<script src="../assets/nav.js?v=5"></script>
+</body>
+</html>
