@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 13 · Rate Limiting</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=4">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 13 · Offline Pack</p>
+    <h1 data-ur="Rate limiting: har client ko kitni requests di jaayein">Rate limiting: capping how much each client can ask for</h1>
+    <p class="subtitle" data-ur="Ek simple guard jo abuse aur overload rokta hai — aur seedha DRF throttling se connect hota hai jo tum pehle se use karte ho.">A simple guard that stops abuse and overload — and it connects straight to the DRF throttling you already use.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: rate limiting</span>
+      <span>Win: explain token bucket &amp; 429</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (caching &amp; Redis yaad karo)">30-second warm-up (recall caching &amp; Redis)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: hum Redis ko cache ke liye kyun use karte hain, aur woh itna fast kyun hai?">From memory: why do we reach for Redis as a cache, and why is it fast?</div>
+    <div class="answer" data-ur="Redis data ko <strong>memory</strong> mein rakhta hai (disk par nahi), toh reads/writes microseconds mein hote hain. Yeh counters aur short-lived keys ke liye perfect hai. Aaj wohi <em>speed</em> kaam aayegi — hum Redis mein per-client request <strong>counts</strong> rakhenge taake rate limiting fast rahe.">Redis keeps data in <strong>memory</strong> (not on disk), so reads/writes take microseconds. It's perfect for counters and short-lived keys. That same <em>speed</em> matters today — we'll keep per-client request <strong>counts</strong> in Redis so rate limiting stays fast.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Rate limiting ka matlab: ek client ek time window mein sirf itni requests bhej sakta hai. Limit cross hui toh server request reject kar deta hai — HTTP <code>429 Too Many Requests</code> ke saath.</strong> Yeh tumhare API ko abuse aur overload se bachata hai."><strong>Rate limiting means: a client may only make so many requests per time window. Cross the limit and the server rejects the request — with HTTP <code>429 Too Many Requests</code>.</strong> It protects your API from abuse and overload.</span>
+  </div>
+
+  <h2 data-ur="Rate limit kyun chahiye">Why you need a rate limit</h2>
+  <ul>
+    <li data-ur="<strong>Abuse rokna:</strong> ek scraper ya bot ek second mein hazaar requests maar kar tumhara API ghera na le."><strong>Stop abuse:</strong> keep one scraper or bot from hammering your API with thousands of requests a second.</li>
+    <li data-ur="<strong>Overload se bachao:</strong> traffic ka spike tumhare database aur workers ko na dubaaye — limit valve ki tarah kaam karti hai."><strong>Protect against overload:</strong> a traffic spike shouldn't drown your database and workers — the limit acts like a valve.</li>
+    <li data-ur="<strong>Fair usage:</strong> ek loud user saare resources kha kar baaki sab ke liye API slow na kar de."><strong>Fair usage:</strong> one loud user shouldn't eat all the resources and slow the API for everyone else.</li>
+  </ul>
+
+  <h2 data-ur="Kahani: chai ki tapri par tokens">The story: tokens at the chai stall</h2>
+  <p data-ur="Socho ek popular chai tapri hai. Rush ke waqt bheed na ho, is liye maalik ek <strong>bucket</strong> rakhta hai jismein <strong>tokens</strong> daale jaate hain — har minute woh bucket mein kuch naye tokens daal deta hai, magar bucket ki ek <em>max</em> capacity hai (mahol se zyada nahi bharta). Har customer chai maangne se pehle bucket se <strong>ek token</strong> uthata hai. Token mila? Chai mil gayi. Bucket <strong>khaali</strong> hai? &quot;Bhai thori der baad aana&quot; — request reject.">Picture a popular chai stall. To avoid chaos at rush hour, the owner keeps a <strong>bucket</strong> that gets filled with <strong>tokens</strong> — every minute he drops a few fresh tokens in, but the bucket has a <em>max</em> capacity (it never overflows). Each customer takes <strong>one token</strong> before ordering chai. Got a token? You get served. Bucket <strong>empty</strong>? "Come back in a bit" — request refused.</p>
+  <p data-ur="Yehi <strong>token bucket</strong> algorithm hai. Bucket time ke saath refill hota hai (fixed rate), har request ek token <em>kharch</em> karti hai, aur khaali bucket ka matlab <strong>429</strong>. Agar koi thori der ruka rahe toh bucket dobara bhar jaata hai — chhoti bursts allowed, lekin lagataar flood nahi.">That's the <strong>token bucket</strong> algorithm. The bucket refills over time (a fixed rate), each request <em>spends</em> one token, and an empty bucket means <strong>429</strong>. If someone pauses a moment the bucket refills — short bursts are allowed, but a sustained flood is not.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 190" role="img" aria-label="Token bucket refills over time; each request spends a token, empty bucket returns 429">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="120" y="30" fill="#6b6b6b" font-size="11">refills at a fixed rate</text>
+        <line x1="120" y1="38" x2="120" y2="70" stroke="#2a4d8f" stroke-width="2"/>
+        <polygon points="120,74 115,64 125,64" fill="#2a4d8f"/>
+        <rect x="70" y="72" width="100" height="70" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="120" y="95" font-weight="700" fill="#2a4d8f">bucket</text>
+        <circle cx="98" cy="118" r="7" fill="#2a4d8f"/>
+        <circle cx="120" cy="118" r="7" fill="#2a4d8f"/>
+        <circle cx="142" cy="118" r="7" fill="#2a4d8f"/>
+        <text x="120" y="160" fill="#6b6b6b" font-size="11">tokens (capacity)</text>
+        <line x1="170" y1="107" x2="300" y2="107" stroke="#2a4d8f" stroke-width="2"/>
+        <polygon points="304,107 294,102 294,112" fill="#2a4d8f"/>
+        <text x="235" y="98" fill="#6b6b6b" font-size="11">spend 1 / request</text>
+        <rect x="310" y="82" width="130" height="50" rx="8" fill="#e9f5ee" stroke="#1c7a4a"/>
+        <text x="375" y="105" font-weight="700" fill="#1c7a4a">token left?</text>
+        <text x="375" y="122" fill="#6b6b6b" font-size="11">serve request</text>
+        <rect x="470" y="42" width="130" height="42" rx="8" fill="#e9f5ee" stroke="#1c7a4a"/>
+        <text x="535" y="68" font-weight="700" fill="#1c7a4a">200 OK</text>
+        <rect x="470" y="128" width="130" height="42" rx="8" fill="#fdecec" stroke="#9b1c1c"/>
+        <text x="535" y="148" font-weight="700" fill="#9b1c1c">429 Too Many</text>
+        <text x="535" y="163" fill="#9b1c1c" font-size="11">bucket empty</text>
+        <line x1="440" y1="98" x2="470" y2="70" stroke="#1c7a4a" stroke-width="2"/>
+        <line x1="440" y1="116" x2="470" y2="145" stroke="#9b1c1c" stroke-width="2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="Token bucket: time ke saath refill, har request ek token kharch, khaali bucket = 429.">Token bucket: refills over time, each request spends a token, an empty bucket = 429.</figcaption>
+  </figure>
+
+  <h2 data-ur="Fixed window vs sliding window (chhota sa farq)">Fixed window vs sliding window (a small difference)</h2>
+  <ul>
+    <li data-ur="<strong>Fixed window:</strong> &quot;har minute mein 100 requests&quot; — counter har round minute par zero ho jaata hai. Simple, lekin edge par abuse ho sakta hai (minute ke aakhir mein 100 + agle ke shuru mein 100 = 200 back-to-back)."><strong>Fixed window:</strong> "100 requests per minute" — the counter resets to zero at each round minute. Simple, but abusable at the edge (100 at the end of one minute + 100 at the start of the next = 200 back-to-back).</li>
+    <li data-ur="<strong>Sliding window:</strong> aakhri 60 seconds ko chalti hui window mein ginta hai, toh woh edge burst issue smooth ho jaata hai. Thora zyada kaam, lekin zyada fair."><strong>Sliding window:</strong> counts the last 60 seconds as a moving window, so that edge-burst problem is smoothed out. A little more work, but fairer.</li>
+  </ul>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tum yeh DRF mein pehle se use kar chuke ho — <strong>throttling</strong>. <code>AnonRateThrottle</code> anonymous users ko IP se limit karta hai, <code>UserRateThrottle</code> logged-in users ko unke user id se. Tum <code>settings.py</code> mein <code>DEFAULT_THROTTLE_RATES</code> set karte ho — jaise <code>'user': '1000/day'</code>. Chahiye <em>non</em>-DRF views ke liye? <code>django-ratelimit</code> ek decorator deta hai. Aur production mein counts kahan store hote hain? <strong>Redis</strong> mein — kyunke sab web workers ko ek hi shared counter dekhna hota hai (per-process memory kaam nahi karti). Limit cross hui toh DRF khud <code>429</code> bhej deta hai, aksar ek <code>Retry-After</code> header ke saath.">You already use this in DRF — <strong>throttling</strong>. <code>AnonRateThrottle</code> limits anonymous users by IP, <code>UserRateThrottle</code> limits logged-in users by their user id. You set <code>DEFAULT_THROTTLE_RATES</code> in <code>settings.py</code> — like <code>'user': '1000/day'</code>. Need it for <em>non</em>-DRF views? <code>django-ratelimit</code> gives you a decorator. And where do the counts live in production? In <strong>Redis</strong> — because every web worker must see the same shared counter (per-process memory won't do). When the limit is crossed, DRF sends <code>429</code> itself, often with a <code>Retry-After</code> header.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: khaali token bucket par server kaunsa HTTP status bhejta hai, aur uska matlab kya hai?">Quick check: what HTTP status does the server send on an empty token bucket, and what does it mean?</div>
+    <div class="answer" data-ur="<strong>429 Too Many Requests.</strong> Iska matlab: &quot;tum ne apni allowed rate cross kar li, thori der baad try karo.&quot; Aksar ek <code>Retry-After</code> header batata hai kab dobara try karna hai."><strong>429 Too Many Requests.</strong> It means: "you crossed your allowed rate, try again shortly." Often a <code>Retry-After</code> header tells the client when to retry.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff: interview mein iska naam lo">The tradeoff: name it in interviews</span>
+    <span data-ur="Limit <strong>bohot strict</strong> rakhi toh asli users block ho jaate hain — mobile app jo pichli screen se 10 chhote calls karti hai, woh 429 kha kar toot jaati hai. Limit <strong>bohot loose</strong> rakhi toh abuse aur overload andar aa jaata hai — protection ka faida hi khatam. Behtareen limit <em>normal</em> traffic ko aaraam se guzarne deti hai aur sirf abusive spikes ko rokti hai. Isi liye per-endpoint aur per-user-tier limits set karte hain, ek hi global number nahi.">Set the limit <strong>too strict</strong> and you block real users — a mobile app that fires 10 small calls from the previous screen hits 429 and breaks. Set it <strong>too loose</strong> and abuse and overload slip through — you lose the protection. The best limit lets <em>normal</em> traffic pass comfortably and only stops abusive spikes. That's why you set per-endpoint and per-user-tier limits, not one global number.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek client ne is minute apni allowed requests kharch kar li hain. Woh ek aur request bhejta hai. Server ko kya lautana chahiye?">A client has spent all its allowed requests this minute. It sends one more request. What should the server return?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="500 Internal Server Error">500 Internal Server Error</button>
+      <button class="opt" data-correct="true" data-ur="429 Too Many Requests">429 Too Many Requests</button>
+      <button class="opt" data-correct="false" data-ur="404 Not Found">404 Not Found</button>
+      <button class="opt" data-correct="false" data-ur="200 OK, lekin response slow kar do">200 OK, but slow the response</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Token bucket model mein, &quot;bucket ka time ke saath refill hona&quot; kis cheez ko allow karta hai?">In the token bucket model, what does "the bucket refilling over time" allow?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Unlimited requests, kabhi koi limit nahi">Unlimited requests, never any limit</button>
+      <button class="opt" data-correct="true" data-ur="Chhoti bursts, lekin lagataar flood nahi">Short bursts, but not a sustained flood</button>
+      <button class="opt" data-correct="false" data-ur="Sirf ek request poore din mein">Exactly one request per whole day</button>
+      <button class="opt" data-correct="false" data-ur="Requests ko permanently block karna">Blocking requests permanently</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Rate limiting: ek client ko per time window itni hi requests do; limit cross = <strong>429</strong>. Mental model <strong>token bucket</strong> hai — bucket time ke saath refill hota hai, har request ek token kharch karti hai, khaali bucket reject karta hai (chhoti bursts theek, flood nahi). Fixed vs sliding window bas ginne ka tareeqa hai. Django mein yeh <strong>DRF throttling</strong> hai, counts <strong>Redis</strong> mein. Aur woh tradeoff — bohot strict asli users ko blockta hai, bohot loose abuse ghusata hai — interview mein zaroor naam lena.">Rate limiting: give a client only so many requests per time window; cross the limit = <strong>429</strong>. The mental model is the <strong>token bucket</strong> — it refills over time, each request spends a token, an empty bucket rejects (short bursts fine, floods not). Fixed vs sliding window is just how you count. In Django it's <strong>DRF throttling</strong>, with counts in <strong>Redis</strong>. And that tradeoff — too strict blocks real users, too loose lets abuse in — is worth naming in an interview.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://www.django-rest-framework.org/api-guide/throttling/&quot; target=&quot;_blank&quot;>Django REST Framework — Throttling</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://www.django-rest-framework.org/api-guide/throttling/" target="_blank">Django REST Framework — Throttling</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to set sensible throttle rates for a real endpoint, or wire counts into Redis instead of the local cache? Or unsure when to pick sliding over fixed window? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 13 (Rate Limiting).</strong> Builds on <a href="0006-caching.html">caching &amp; Redis (6)</a> and <a href="0017-api-design-rest.html">API design (11)</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://www.django-rest-framework.org/api-guide/throttling/" target="_blank">Throttling — Django REST Framework documentation</a>.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Over the limit = 429 Too Many Requests, ideally with a Retry-After header telling the client when to come back."
+                      : "Reconsider. Nothing crashed and the URL exists — the client simply exceeded its rate. That's 429 Too Many Requests.",
+          q2: correct ? "Yes. Because tokens replenish, a client that pauses can burst again — you allow short bursts while blocking a sustained flood."
+                      : "Reconsider. Refilling doesn't remove the cap; it just tops the bucket back up, so short bursts are allowed but a continuous flood still runs dry and gets 429."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=4"></script>
+<script src="../assets/nav.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson B7 · Connection Pooling</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=4">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B7 · Offline Pack</p>
+    <h1 data-ur="Connection pooling: connections udhaar lo, banao mat">Connection pooling: borrow connections, don't build them</h1>
+    <p class="subtitle" data-ur="Har request par ek nayi database connection kholna mehnga hai — ek pool taiyaar connections rakhta hai jo tum udhaar lete aur wapas karte ho.">Opening a fresh database connection on every request is expensive — a pool keeps ready connections you borrow and return.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: pooling</span>
+      <span>Win: fix "too many connections"</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (N+1 queries yaad karo)">30-second warm-up (recall N+1 queries)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: <strong>N+1 query</strong> problem kya hai, ek line mein?">From memory: what's the <strong>N+1 query</strong> problem, in one line?</div>
+    <div class="answer" data-ur="Ek query list laati hai, phir har row ke liye ek aur query chalti hai — 1 + N round-trips database tak. Wahan seekh yeh thi ke <em>database ke saath baat karna</em> mehnga hota hai. Aaj hum us baat ki shuruaat dekhte hain: <em>connection kholna hi</em> mehnga hai.">One query fetches a list, then a query runs for each row — 1 + N round-trips to the database. The lesson there was that <em>talking to the database</em> is costly. Today we look at the very start of that: <em>opening the connection itself</em> is costly.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek nayi database connection kholna mehnga hai (handshake + auth), aur database ki ek hard max-connections limit hoti hai. Ek connection pool thodi si taiyaar connections ka set rakhta hai — requests unhein udhaar leti hain aur wapas karti hain, har baar nayi banane ke bajaye.</strong> Yehi poora idea hai."><strong>Opening a new database connection is expensive (handshake + auth), and the database has a hard max-connections limit. A connection pool keeps a small set of ready connections — requests borrow and return them instead of building a new one each time.</strong> That's the whole idea.</span>
+  </div>
+
+  <h2 data-ur="Ek connection kholna itna mehnga kyun hai">Why opening a connection costs so much</h2>
+  <ul>
+    <li data-ur="<strong>TCP handshake:</strong> app aur database ke darmiyan ek network round-trip taaki socket khule."><strong>TCP handshake:</strong> a network round-trip between app and database just to open the socket.</li>
+    <li data-ur="<strong>Auth:</strong> username/password check, TLS setup, permissions load — sab connect par ek baar."><strong>Auth:</strong> username/password check, TLS setup, permissions load — all once per connect.</li>
+    <li data-ur="<strong>Server-side memory:</strong> Postgres har connection ke liye ek naya backend process banata hai. Yeh saste nahi hote."><strong>Server-side memory:</strong> Postgres spins up a whole new backend process per connection. These aren't cheap.</li>
+  </ul>
+  <p data-ur="Yeh sab kaam <em>us ek query se pehle</em> hota hai jo tum waqai chalana chahte the. Ise har request par karo aur tumne apni query ke aage saaf setup cost thop di.">All of that happens <em>before</em> the one query you actually wanted to run. Do it on every request and you've bolted pure setup cost onto every query.</p>
+
+  <h2 data-ur="Kahani: reading-room mein reserved desks">The story: reserved desks in a reading room</h2>
+  <p data-ur="Ek library sochо jiske reading room mein <strong>ginti ke desks</strong> hain. Purane, bewaqoof tareeqe mein: har baar jab koi padhne aata, ek carpenter aata, <strong>ek naya desk banata</strong>, aur baad mein use tod deta. Har visitor ko banane ke liye 20 minute intezaar karna parta — desk khud waqt se mehnga.">Picture a library whose reading room has a <strong>fixed number of desks</strong>. In the old, silly way: every time someone comes to read, a carpenter shows up, <strong>builds a brand-new desk</strong>, and tears it down afterward. Each visitor waits 20 minutes for the build — the desk itself costs more than the reading.</p>
+  <p data-ur="Smart tareeqa: library <strong>desks pehle se taiyaar</strong> rakhti hai. Tum aate ho, ek <strong>khaali desk udhaar lete ho</strong>, kaam karte ho, aur nikalte waqt use <strong>wapas kar dete ho</strong> taaki agla shakhs le sake. Koi banane ka waqt nahi. Aur ek hard rule: sirf itne hi desks hain — agar sab busy hain, tum <strong>line mein intezaar</strong> karte ho jab tak koi khaali ho.">The smart way: the library keeps <strong>desks ready in advance</strong>. You walk in, <strong>borrow a free desk</strong>, do your work, and <strong>return it</strong> on your way out so the next person can use it. No build time. And a hard rule: there are only so many desks — if they're all busy, you <strong>wait in line</strong> until one frees up.</p>
+  <p data-ur="Reading-room desks = database connections. Pehle-se-taiyaar desks ka set = <strong>connection pool</strong>. Ek desk udhaar lena = ek connection <em>acquire</em> karna; nikalte waqt wapas karna = use pool ko <em>release</em> karna.">Reading-room desks = database connections. The set of ready desks = the <strong>connection pool</strong>. Borrowing a desk = <em>acquiring</em> a connection; returning it on your way out = <em>releasing</em> it back to the pool.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="App servers borrow connections from a pool that sits in front of the database">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="20" y="30" width="120" height="40" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="80" y="55" font-weight="700" fill="#2a4d8f">App request</text>
+        <rect x="20" y="90" width="120" height="40" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="80" y="115" font-weight="700" fill="#2a4d8f">App request</text>
+        <rect x="20" y="150" width="120" height="40" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="80" y="175" font-weight="700" fill="#2a4d8f">App request</text>
+
+        <rect x="240" y="55" width="160" height="110" rx="10" fill="#f4f0e6" stroke="#8a6d1f"/>
+        <text x="320" y="78" font-weight="700" fill="#8a6d1f">Connection pool</text>
+        <rect x="258" y="90" width="30" height="24" rx="4" fill="#dfeee0" stroke="#2f7d43"/>
+        <rect x="298" y="90" width="30" height="24" rx="4" fill="#dfeee0" stroke="#2f7d43"/>
+        <rect x="338" y="90" width="30" height="24" rx="4" fill="#dfeee0" stroke="#2f7d43"/>
+        <rect x="258" y="122" width="30" height="24" rx="4" fill="#f6dede" stroke="#9b1c1c"/>
+        <rect x="298" y="122" width="30" height="24" rx="4" fill="#f6dede" stroke="#9b1c1c"/>
+        <text x="320" y="160" fill="#6b6b6b" font-size="10">green = free · red = in use</text>
+
+        <rect x="500" y="80" width="120" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="560" y="105" font-weight="700" fill="#2a4d8f">Database</text>
+        <text x="560" y="123" fill="#6b6b6b" font-size="10">hard max = N</text>
+
+        <line x1="140" y1="50" x2="240" y2="95" stroke="#2a4d8f" stroke-width="1.5"/>
+        <line x1="140" y1="110" x2="240" y2="110" stroke="#2a4d8f" stroke-width="1.5"/>
+        <line x1="140" y1="170" x2="240" y2="125" stroke="#2a4d8f" stroke-width="1.5"/>
+        <line x1="400" y1="110" x2="500" y2="110" stroke="#8a6d1f" stroke-width="2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="Many requests share a few reused connections; the pool never opens more than the database's max.">Many requests share a few reused connections; the pool never opens more than the database's max.</figcaption>
+  </figure>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Scale par: &quot;too many connections&quot;">At scale: "too many connections"</span>
+    <span data-ur="Databases ki ek <strong>hard max-connections limit</strong> hoti hai (Postgres default aksar ~100). Ab tum 10 app servers chalao, har ek apna pool udhaar khole 30 connections ka — yeh 300 hua, limit se kaafi upar. Database bas nayi connections <strong>reject</strong> karna shuru kar deta hai, aur tumhein woh mashhoor production error milta hai: <code>FATAL: sorry, too many clients already</code>. Yeh &quot;pool per server&quot; kaa jama ho kar limit toड़ना interviews mein naam lene wali baat hai.">Databases have a <strong>hard max-connections limit</strong> (Postgres default is often ~100). Now run 10 app servers, each opening its own pool of, say, 30 connections — that's 300, well past the limit. The database simply starts <strong>rejecting</strong> new connections, and you hit the famous production error: <code>FATAL: sorry, too many clients already</code>. Pools-per-server summing past the limit is the thing to name in interviews.</span>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Default mein Django har request ke shuru mein ek nayi DB connection kholta hai aur end par band kar deta hai — request-per-connection, jo mehnga hai. <code>CONN_MAX_AGE</code> set karo (jaise <code>60</code> seconds) taaki Django <strong>persistent connections</strong> reuse kare requests ke beech, band karne ke bajaye — yeh ek chhota per-worker pool hai. Lekin Django khud connections ko app servers ke beech share nahi karta, toh bade scale par log <strong>PgBouncer</strong> chalate hain — ek alag pooler jo Postgres ke saamne baithता hai. Sab app servers PgBouncer se baat karte hain, aur PgBouncer Postgres ke liye ek chhota, control-shuda set connections rakhta hai. Yeh &quot;too many clients&quot; error ka classic fix hai.">By default Django opens a new DB connection at the start of each request and closes it at the end — connection-per-request, which is expensive. Set <code>CONN_MAX_AGE</code> (e.g. <code>60</code> seconds) so Django reuses <strong>persistent connections</strong> across requests instead of closing them — a small per-worker pool. But Django doesn't share connections across app servers, so at real scale people run <strong>PgBouncer</strong> — a separate pooler that sits in front of Postgres. All app servers talk to PgBouncer, and PgBouncer keeps a small, controlled set of connections to Postgres. This is the classic fix for the "too many clients" error.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: ek pool har request par kya bachata hai jo pehle waste hota tha?">Quick check: what does a pool save on every request that was wasted before?</div>
+    <div class="answer" data-ur="Ek nayi connection ka setup cost: TCP handshake, auth/TLS, aur database par ek naya backend process banana. Pool ek pehle-se-khuli connection udhaar deta hai, toh yeh saara kaam skip ho jata hai aur seedhe query par chala jata hai.">The setup cost of a new connection: TCP handshake, auth/TLS, and spinning up a new backend process on the database. The pool hands over an already-open connection, so all that work is skipped and you go straight to the query.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff: pool size (interviews mein naam lo)">The tradeoff: pool size (name it in interviews)</span>
+    <span data-ur="Pool ka size ek Goldilocks number hai. <strong>Bahut chhota</strong> → sab connections busy, requests khaali desk ka <em>intezaar</em> karti hain, latency spike karti hai (aur timeout ho sakti hai). <strong>Bahut bada</strong> → tum database ki max-connection limit <em>toड़</em> dete ho ya use overload karte ho, aur woh reject karne lagta hai. Sahi size total app workers, DB ki max_connections, aur PgBouncer jaisi koi cheez saamne hai ke nahi — in par depend karta hai.">Pool size is a Goldilocks number. <strong>Too small</strong> → all connections stay busy, requests <em>wait</em> for a free desk, latency spikes (and can time out). <strong>Too big</strong> → you <em>blow past</em> the database's max-connection limit or overwhelm it, and it starts refusing. The right size depends on total app workers, the DB's max_connections, and whether something like PgBouncer sits in front.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tumhari production Django app ruk-ruk kar crash hoti hai aur tum logs mein &quot;FATAL: sorry, too many clients already&quot; dekhte ho jab traffic barhta hai. Sab se pehla sahi shak kya hai?">Your production Django app intermittently crashes and you see "FATAL: sorry, too many clients already" in the logs when traffic rises. What's the most likely cause?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Sab app servers ka jama connections Postgres ki max-connections limit se upar chala gaya — pooling/PgBouncer chahiye">The app servers' combined connections exceeded Postgres's max-connections limit — needs pooling/PgBouncer</button>
+      <button class="opt" data-correct="false" data-ur="Database mein ek index missing hai">The database is missing an index</button>
+      <button class="opt" data-correct="false" data-ur="Queries mein ek N+1 problem hai">There's an N+1 problem in the queries</button>
+      <button class="opt" data-correct="false" data-ur="Cache TTL bahut lamba set hai">The cache TTL is set too long</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tum apna connection pool bahut chhota set kar dete ho. Traffic ke waqt kya hoga?">You set your connection pool too small. What happens under traffic?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Database max-connections limit se upar chala jata hai aur reject karta hai">The database exceeds its max-connections limit and refuses connections</button>
+      <button class="opt" data-correct="true" data-ur="Requests ek free connection ke intezaar mein rukti hain, latency spike karti hai (timeouts mumkin)">Requests wait for a free connection, latency spikes (timeouts possible)</button>
+      <button class="opt" data-correct="false" data-ur="Har query kisi handshake ke bina turant chalti hai">Every query runs instantly with no handshake</button>
+      <button class="opt" data-correct="false" data-ur="Database automatically apni max_connections barha deta hai">The database automatically raises its max_connections</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Connection pooling: ek nayi DB connection kholna mehnga hai (handshake + auth) aur databases ki ek <strong>hard max-connections limit</strong> hoti hai. Ek pool taiyaar connections rakhta hai jo requests udhaar leti aur wapas karti hain — jaise reading-room ke desks. Django mein: reuse ke liye <code>CONN_MAX_AGE</code>, aur bade scale par saamne <strong>PgBouncer</strong>. Aur ab tum <code>too many clients already</code> error ko dekhte hi diagnose kar sakte ho — plus pool-size tradeoff ka naam le sakte ho: bahut chhota = intezaar, bahut bada = DB overwhelm.">Connection pooling: opening a new DB connection is expensive (handshake + auth) and databases have a <strong>hard max-connections limit</strong>. A pool keeps ready connections that requests borrow and return — like reading-room desks. In Django: <code>CONN_MAX_AGE</code> for reuse, and <strong>PgBouncer</strong> in front at real scale. And you can now diagnose the <code>too many clients already</code> error on sight — plus name the pool-size tradeoff: too small = waiting, too big = overwhelm the DB.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.djangoproject.com/en/stable/ref/databases/&quot; target=&quot;_blank&quot;>Django docs — Databases (persistent connections &amp; CONN_MAX_AGE)</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://docs.djangoproject.com/en/stable/ref/databases/" target="_blank">Django docs — Databases (persistent connections &amp; CONN_MAX_AGE)</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want help sizing a pool for your worker count, or deciding between <code>CONN_MAX_AGE</code> and PgBouncer for your setup? Or curious about PgBouncer's transaction vs session pooling modes? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B7 (Connection Pooling).</strong> Builds on <a href="0011-n-plus-1-queries.html">N+1 queries (11)</a> — the cost of talking to the database. Pairs well with <a href="0012-replication-and-sharding.html">replication &amp; sharding (12)</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.djangoproject.com/en/stable/ref/databases/" target="_blank">Databases — persistent connections and CONN_MAX_AGE</a>, Django documentation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Each app server opening its own connections adds up past Postgres's max — the fix is pooling (CONN_MAX_AGE) and/or an external pooler like PgBouncer in front."
+                      : "Reconsider. 'too many clients already' is specifically Postgres hitting its max-connections limit — the combined connections from your servers exceeded it. Pooling/PgBouncer is the fix.",
+          q2: correct ? "Yes. Too-small pool means requests queue for a free connection, so latency climbs and requests can time out."
+                      : "Reconsider. A too-small pool doesn't exceed the DB limit — the opposite. Requests wait for a free connection, so latency spikes."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=4"></script>
+<script src="../assets/nav.js?v=4"></script>
+</body>
+</html>

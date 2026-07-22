@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scaling Up · System Design Course</title>
-<link rel="stylesheet" href="assets/lesson.css?v=3">
+<link rel="stylesheet" href="assets/lesson.css?v=4">
 <style>
   .hero { text-align: center; padding: 1rem 0 0.5rem; }
   .hero .eyebrow { text-align: center; }
@@ -34,12 +34,18 @@
   <header class="masthead hero">
     <p class="eyebrow">A System Design Course · Built for one engineer</p>
     <h1>Scaling Up</h1>
-    <p class="subtitle">Scaling systems — and scaling myself. From Django backend to the person in the design room.</p>
+    <p class="subtitle" data-ur="Systems ko scale karna — aur khud ko bhi. Django backend se le kar design room wale banda tak.">Scaling systems — and scaling myself. From Django backend to the person in the design room.</p>
   </header>
 
+  <a href="lessons/0001-the-design-framework.html" style="display:block;text-align:center;background:var(--accent);color:#fff;border-radius:12px;padding:1.4rem;margin:1rem 0 0.5rem;text-decoration:none;box-shadow:0 4px 14px rgba(155,28,28,0.3);">
+    <div style="font-family:ui-sans-serif,sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.85;" data-ur="Yahan se shuru karo">Start here</div>
+    <div style="font-size:1.5rem;font-weight:700;margin-top:0.2rem;color:#fff;">▶ Lesson 1 — The Design Framework</div>
+    <div style="font-size:0.9rem;opacity:0.9;margin-top:0.3rem;" data-ur="Pehle lesson se shuru karo, phir neeche di gayi tarteeb mein aage barho.">Begin with the first lesson, then follow the order below.</div>
+  </a>
+
   <div class="key">
-    <span class="callout-label">How to use this</span>
-    Do the lessons in order. Hit every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>, not re-reading. Each new lesson opens with a quick recall of the last one, so review happens automatically.
+    <span class="callout-label" data-ur="Isay kaise use karein — 3 baatein">How to use this — 3 things</span>
+    <span data-ur="<strong>1.</strong> Neeche ki list ya bayein taraf ke sidebar se koi bhi lesson khol lo. <strong>2.</strong> Har lesson ke neeche <strong>← Prev / Next →</strong> buttons se aage barho. <strong>3.</strong> Roman Urdu ke liye neeche daayein kone mein <strong>🌐 اردو</strong> button dabao (dobara dabao to English wapas). Har lesson ke quiz aur recall cards zaroor karo — <strong>memory se jawab nikalna hi cheezon ko yaad rakhta hai</strong>."><strong>1.</strong> Open any lesson from the list below or the left sidebar. <strong>2.</strong> Move forward with the <strong>← Prev / Next →</strong> buttons at the bottom of each lesson. <strong>3.</strong> For Roman Urdu, press the <strong>🌐 اردو</strong> button in the bottom-right corner (press again for English). Do every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>.</span>
   </div>
 
   <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
@@ -143,6 +149,30 @@
     <p class="blurb">A full "Design X" run using every tool from both weeks. What interviews feel like.</p>
   </a>
 
+  <a class="lesson-card" href="lessons/0020-rate-limiting.html">
+    <span class="num">Lesson 13 · Offline Pack</span>
+    <div class="title">Rate Limiting</div>
+    <p class="blurb">Capping requests per client — the token bucket, and HTTP 429.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0021-websockets.html">
+    <span class="num">Lesson 14 · Offline Pack</span>
+    <div class="title">WebSockets</div>
+    <p class="blurb">Real-time two-way connections — a phone call vs mailing letters.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0025-event-streaming-kafka.html">
+    <span class="num">Lesson 15 · Offline Pack</span>
+    <div class="title">Event Streaming (Kafka)</div>
+    <p class="blurb">An append-only log many consumers read — vs a one-worker queue.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0027-circuit-breaker.html">
+    <span class="num">Lesson 16 · Offline Pack</span>
+    <div class="title">Circuit Breakers</div>
+    <p class="blurb">Fail fast when a dependency is down — the electrical fuse for your app.</p>
+  </a>
+
   <h2>Track B · Backend Depth</h2>
 
   <a class="lesson-card" href="lessons/0007-the-gil.html" style="border-left:3px solid var(--link);">
@@ -175,6 +205,30 @@
     <p class="blurb">One cook, many pots — overlapping I/O waits, and when async beats threads.</p>
   </a>
 
+  <a class="lesson-card" href="lessons/0022-idempotency.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B6 · Offline Pack</span>
+    <div class="title">Idempotency</div>
+    <p class="blurb">Doing it twice = doing it once — the elevator button, and idempotency keys.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0023-connection-pooling.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B7 · Offline Pack</span>
+    <div class="title">Connection Pooling</div>
+    <p class="blurb">Reuse database connections — borrow a desk, don't build a new one each time.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0024-denormalization.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B8 · Offline Pack</span>
+    <div class="title">Denormalization</div>
+    <p class="blurb">Duplicate data for fast reads — the tradeoff against keeping copies in sync.</p>
+  </a>
+
+  <a class="lesson-card" href="lessons/0026-search-inverted-index.html" style="border-left:3px solid var(--link);">
+    <span class="num" style="color:var(--link);">Lesson B9 · Offline Pack</span>
+    <div class="title">Search &amp; the Inverted Index</div>
+    <p class="blurb">How real search works — word → documents, like a book's back index.</p>
+  </a>
+
   <h2>Reference</h2>
   <p>Keep these open in a tab and skim them often.</p>
   <div class="ref-row">
@@ -191,6 +245,6 @@
   </footer>
 
 </div>
-<script src="assets/i18n.js?v=3"></script>
+<script src="assets/i18n.js?v=4"></script>
 </body>
 </html>

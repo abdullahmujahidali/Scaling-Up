@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson B9 · How Search Works (Inverted Index)</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=4">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B9 · Offline Pack</p>
+    <h1 data-ur="Search kaise chalti hai: inverted index">How search works: the inverted index</h1>
+    <p class="subtitle" data-ur="Kyun asli search LIKE '%word%' nahi hai — aur woh chhota trick jo ek word ko foran lookup bana deta hai.">Why real search isn't LIKE '%word%' — and the little trick that makes a word an instant lookup.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: inverted index</span>
+      <span>Win: explain why search isn't a SQL scan</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (database index yaad karo)">30-second warm-up (recall the database index)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek database <strong>index</strong> ek query ko kaise fast karta hai, aur woh kis cheez ke saath analogy tha?">From memory: how does a database <strong>index</strong> make a query fast, and what was the analogy?</div>
+    <div class="answer" data-ur="Ek index poora table scan karne ke bajaye ek sorted lookup rakhta hai (jaise <strong>kitab ke peeche ka index</strong>), toh &quot;ye value kahan hai&quot; ek jump ban jaata hai, na ke har row parhna. Aaj hum wohi idea search ke liye stretch karenge — lekin word → documents.">Instead of scanning the whole table, an index keeps a sorted lookup (like the <strong>index at the back of a book</strong>), so &quot;where is this value&quot; becomes a jump, not a read of every row. Today we stretch that same idea to search — but word → documents.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Real search ek <em>inverted index</em> use karti hai: apni soch ko &quot;document → uske words&quot; se palat kar &quot;word → un documents ki list jin mein woh hai&quot; kar do.</strong> Ab ek word dhoondhna ek foran lookup hai, na ke har document parhna."><strong>Real search uses an <em>inverted index</em>: flip your thinking from &quot;document → its words&quot; to &quot;word → the list of documents that contain it&quot;.</strong> Now finding a word is an instant lookup, not a read of every document.</span>
+  </div>
+
+  <h2 data-ur="Pehle: LIKE '%word%' kyun kaafi nahi">First: why LIKE '%word%' isn't enough</h2>
+  <p data-ur="Aasan lagta hai — search box mein user &quot;mango&quot; likhta hai, tum <code>WHERE body LIKE '%mango%'</code> chala dete ho. Chhote data par theek chalta hai. Lekin isme teen problems hain:">It looks easy — the user types &quot;mango&quot; in the search box, you run <code>WHERE body LIKE '%mango%'</code>. It works on small data. But it has three problems:</p>
+  <ul>
+    <li data-ur="<strong>Slow:</strong> leading <code>%</code> ki wajah se database <em>har</em> row ka poora text scan karta hai — koi index use nahi hota. 10 lakh rows = 10 lakh reads."><strong>Slow:</strong> the leading <code>%</code> forces the database to scan the full text of <em>every</em> row — no index is used. A million rows = a million reads.</li>
+    <li data-ur="<strong>Ganda matching:</strong> &quot;running&quot; search karo aur &quot;run&quot; match nahi hota; &quot;colour&quot; aur &quot;color&quot; alag hain; ek substring &quot;man&quot; galti se &quot;human&quot; ke andar match kar jaata hai."><strong>Dumb matching:</strong> search &quot;running&quot; and it won't match &quot;run&quot;; &quot;colour&quot; and &quot;color&quot; differ; a substring &quot;man&quot; accidentally matches inside &quot;human&quot;.</li>
+    <li data-ur="<strong>Koi ranking nahi:</strong> tumhein bas rows milti hain — koi idea nahi ke kaunsa result <em>zyada</em> relevant hai. Search ka asli maza to sab se acche result ko upar laana hai."><strong>No ranking:</strong> you just get rows back — no sense of which result is <em>more</em> relevant. The whole point of search is putting the best result on top.</li>
+  </ul>
+
+  <h2 data-ur="Kahani: kitab ka index vs poori kitab parhna">The story: a book's index vs reading the whole book</h2>
+  <p data-ur="Socho tumhare paas ek 900-page textbook hai aur tumhein &quot;photosynthesis&quot; dhoondhna hai. Do tareeqe hain:">Imagine you have a 900-page textbook and you need to find &quot;photosynthesis&quot;. Two ways:</p>
+  <ul>
+    <li data-ur="<strong>LIKE ka tareeqa:</strong> page 1 se shuru karo aur har page parhte jao jab tak woh word na mil jaaye. Har baar. Yeh poora scan hai."><strong>The LIKE way:</strong> start at page 1 and read every page until you spot the word. Every single time. That's a full scan.</li>
+    <li data-ur="<strong>Index ka tareeqa:</strong> kitab ke <strong>peeche ke index</strong> ko kholo. Wahan likha hai <code>photosynthesis → 88, 214, 560</code>. Tum seedha un pages par jaate ho. Ek foran lookup."><strong>The index way:</strong> flip to the <strong>index at the back</strong> of the book. It says <code>photosynthesis → 88, 214, 560</code>. You jump straight to those pages. An instant lookup.</li>
+  </ul>
+  <p data-ur="Kisi ne pehle se mehnat ki: poori kitab parh kar har ahem word ke saamne uske page numbers likh diye. Yeh &quot;word → page numbers&quot; mapping hi ek <strong>inverted index</strong> hai. Search engine bhi bilkul yehi banata hai — sirf &quot;page numbers&quot; ki jagah &quot;document IDs&quot; hote hain.">Someone did the work ahead of time: they read the whole book and wrote each important word next to its page numbers. That &quot;word → page numbers&quot; mapping <em>is</em> an <strong>inverted index</strong>. A search engine builds exactly this — just &quot;document IDs&quot; instead of &quot;page numbers&quot;.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 220" role="img" aria-label="Flipping document-to-words into word-to-documents">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="150" y="24" font-weight="700" fill="#2a4d8f">Forward (document → words)</text>
+        <rect x="40" y="40" width="220" height="26" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="150" y="57" fill="#333" font-size="11">doc 1: &quot;ripe mango juice&quot;</text>
+        <rect x="40" y="74" width="220" height="26" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="150" y="91" fill="#333" font-size="11">doc 2: &quot;mango tree&quot;</text>
+        <rect x="40" y="108" width="220" height="26" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="150" y="125" fill="#333" font-size="11">doc 3: &quot;apple juice&quot;</text>
+
+        <text x="320" y="95" font-size="22" fill="#9b1c1c">→</text>
+        <text x="320" y="112" font-size="10" fill="#6b6b6b">invert</text>
+
+        <text x="500" y="24" font-weight="700" fill="#1a7f4b">Inverted (word → docs)</text>
+        <rect x="380" y="40" width="230" height="26" rx="6" fill="#e9f7ef" stroke="#1a7f4b"/>
+        <text x="495" y="57" fill="#333" font-size="11">mango → [1, 2]</text>
+        <rect x="380" y="74" width="230" height="26" rx="6" fill="#e9f7ef" stroke="#1a7f4b"/>
+        <text x="495" y="91" fill="#333" font-size="11">juice → [1, 3]</text>
+        <rect x="380" y="108" width="230" height="26" rx="6" fill="#e9f7ef" stroke="#1a7f4b"/>
+        <text x="495" y="125" fill="#333" font-size="11">tree → [2]</text>
+        <rect x="380" y="142" width="230" height="26" rx="6" fill="#e9f7ef" stroke="#1a7f4b"/>
+        <text x="495" y="159" fill="#333" font-size="11">apple → [3]</text>
+
+        <text x="320" y="200" fill="#6b6b6b">Search &quot;mango&quot; = one lookup → docs [1, 2], no scan</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Palat do: &quot;har document ke andar kya hai&quot; se &quot;har word kin documents mein hai&quot;. Ab search ek lookup hai.">Flip it: from &quot;what's inside each document&quot; to &quot;which documents each word is in&quot;. Now search is a lookup.</figcaption>
+  </figure>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: kis cheez ko &quot;inverted&quot; kiya jaata hai? Original mapping kya thi, aur naya kya hai?">Quick check: what exactly gets &quot;inverted&quot;? What was the original mapping, and what's the new one?</div>
+    <div class="answer" data-ur="Original: <strong>document → us mein maujood words</strong>. Inverted: <strong>word → un documents ki list jin mein woh word hai</strong>. Isi liye ek word search karna list ka ek seedha lookup hai, na ke har document ka scan.">Original: <strong>document → the words inside it</strong>. Inverted: <strong>word → the list of documents that contain that word</strong>. That's why searching a word is a direct list lookup, not a scan of every document.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Aur best result upar kaise aata hai (ranking)">And how the best result reaches the top (ranking)</h2>
+  <p data-ur="Ek word ke matching documents mil jaana aadha kaam hai. Doosra aadha: <strong>ranking</strong> — kaunsa result sab se relevant hai. Ek search engine cheezein dekhta hai jaise word document mein kitni baar aaya, woh document mein kitna common/rare hai, aur title mein hai ya body mein — phir results ko score kar ke best ko upar laata hai. Tum ise ab abstractly samajh lo; asli formula (TF-IDF, BM25) alag lesson hain.">Getting the matching documents for a word is half the job. The other half: <strong>ranking</strong> — which result is most relevant. A search engine looks at things like how often the word appears in a document, how rare that word is overall, and whether it's in the title or the body — then scores results so the best one floats to the top. Grasp it abstractly for now; the actual formulas (TF-IDF, BM25) are their own lesson.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django tumhein Postgres ke andar full-text search deta hai — koi alag server nahi. <code>SearchVector</code> tumhare text ko search-able tokens mein todta hai (yehi tumhara inverted index feed karta hai), <code>SearchQuery</code> user ki query ko parse karta hai, aur <code>SearchRank</code> ranking deta hai: <code>Article.objects.annotate(rank=SearchRank(SearchVector('title','body'), SearchQuery('mango'))).order_by('-rank')</code>. Speed ke liye tum ek <code>SearchVectorField</code> + GIN index add karte ho taake har baar dobara compute na karna pare. <strong>Yeh moderate scale ke liye best hai.</strong> Jab data bohot bara ho jaaye ya tumhein fancy relevance, fuzzy match, autocomplete, aur facets chahiye ho — tab log ek dedicated engine (<strong>Elasticsearch / OpenSearch</strong>) par jaate hain, jo yehi inverted-index idea industrial scale par karta hai.">Django gives you full-text search <em>inside</em> Postgres — no separate server. <code>SearchVector</code> breaks your text into searchable tokens (this feeds the inverted index), <code>SearchQuery</code> parses the user's query, and <code>SearchRank</code> gives you ranking: <code>Article.objects.annotate(rank=SearchRank(SearchVector('title','body'), SearchQuery('mango'))).order_by('-rank')</code>. For speed you add a <code>SearchVectorField</code> + a GIN index so it isn't recomputed each time. <strong>This is great for moderate scale.</strong> When data gets huge or you need fancy relevance, fuzzy matching, autocomplete, and facets — people reach for a dedicated engine (<strong>Elasticsearch / OpenSearch</strong>), which does this same inverted-index idea at industrial scale.</span>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Ek search index ko <strong>tumhare data ke saath in-sync rakhna parta hai</strong>: har write (add / edit / delete) par index update hona chahiye, warna search stale ho jaati hai. Postgres ke andar tum yeh ek trigger ya ek stored <code>SearchVectorField</code> se karte ho. Ek alag engine (Elasticsearch) mein tumhein khud writes ko wahan tak pohanchana parta hai (aksar ek queue / background job se) — jo ek poora doosra system ban jaata hai jise chalana, monitor karna, aur back up karna parta hai. <strong>Yeh operational complexity hi asli laagat hai — pehle Postgres FTS use karo jab tak tumhein waqai zyada na chahiye ho.</strong>">A search index must be <strong>kept in sync with your data</strong>: every write (add / edit / delete) must update the index, or search goes stale. Inside Postgres you do this with a trigger or a stored <code>SearchVectorField</code>. With a separate engine (Elasticsearch) you have to ship writes over to it (often via a queue / background job) — which becomes a whole second system to run, monitor, and back up. <strong>That operational complexity is the real cost — reach for Postgres FTS first, until you genuinely need more.</strong></span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek inverted index &quot;mango&quot; search ko foran kyun bana deta hai, jabke <code>LIKE '%mango%'</code> har row scan karta hai?">Why does an inverted index make searching &quot;mango&quot; instant, while <code>LIKE '%mango%'</code> scans every row?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Kyunke woh pehle se &quot;mango → [woh documents]&quot; store karta hai, toh search ek seedha lookup hai, scan nahi.">Because it pre-stores &quot;mango → [those documents]&quot;, so search is a direct lookup, not a scan.</button>
+      <button class="opt" data-correct="false" data-ur="Kyunke woh table ko RAM mein rakhta hai toh disk reads tez ho jaate hain.">Because it keeps the table in RAM so disk reads get faster.</button>
+      <button class="opt" data-correct="false" data-ur="Kyunke woh har document ko chhota compress kar deta hai.">Because it compresses every document to be smaller.</button>
+      <button class="opt" data-correct="false" data-ur="Kyunke woh SQL query ko parallel mein chala deta hai.">Because it runs the SQL query in parallel.</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Ek medium Django app ko theek text search chahiye, bina naya infrastructure chalaye. Sab se aasan sahi choice?">A medium Django app needs decent text search without running new infrastructure. The simplest sensible choice?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Pehle din se ek Elasticsearch cluster khara karo.">Stand up an Elasticsearch cluster on day one.</button>
+      <button class="opt" data-correct="true" data-ur="Postgres full-text search (SearchVector / SearchQuery) ek GIN index ke saath use karo.">Use Postgres full-text search (SearchVector / SearchQuery) with a GIN index.</button>
+      <button class="opt" data-correct="false" data-ur="Har jagah <code>LIKE '%term%'</code> chala kar chhod do.">Just run <code>LIKE '%term%'</code> everywhere and move on.</button>
+      <button class="opt" data-correct="false" data-ur="Sab rows Python mein le aao aur memory mein filter karo.">Pull all rows into Python and filter in memory.</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Real search <code>LIKE '%word%'</code> nahi hai (slow, ganda, koi ranking nahi). Woh ek <strong>inverted index</strong> hai — soch ko &quot;document → words&quot; se palat kar &quot;word → documents&quot; kar do, bilkul kitab ke peeche ke index ki tarah, toh ek word ek foran lookup ban jaata hai. Ranking best result upar laata hai. Django mein: moderate ke liye Postgres FTS, bare scale ke liye Elasticsearch — aur yaad rakho index ko writes par in-sync rakhna parta hai. Interview mein &quot;inverted index + keep it in sync&quot; ka naam lena ek senior signal hai.">Real search isn't <code>LIKE '%word%'</code> (slow, dumb, no ranking). It's an <strong>inverted index</strong> — flip your thinking from &quot;document → words&quot; to &quot;word → documents&quot;, just like a book's back-of-index, so a word becomes an instant lookup. Ranking floats the best result up. In Django: Postgres FTS for moderate needs, Elasticsearch for big scale — and remember the index must be kept in sync on writes. Naming &quot;inverted index + keep it in sync&quot; in an interview is a senior signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.djangoproject.com/en/stable/ref/contrib/postgres/search/&quot; target=&quot;_blank&quot;>Django docs — Full text search</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://docs.djangoproject.com/en/stable/ref/contrib/postgres/search/" target="_blank">Django docs — Full text search</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to add search to a real Django model with <code>SearchVector</code> and a GIN index? Or unsure when to graduate from Postgres FTS to Elasticsearch? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B9 (Search &amp; the inverted index).</strong> Builds on <a href="0009-database-indexes.html">database indexes (B2)</a> — same &quot;lookup, not scan&quot; idea, now word → documents.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.djangoproject.com/en/stable/ref/contrib/postgres/search/" target="_blank">Full text search</a>, Django documentation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. The inverted index pre-computes word → documents, so a search is a single lookup that returns the matching docs — no per-row scan."
+                      : "Reconsider. The speed comes from pre-storing word → documents so search is a direct lookup, not from RAM, compression, or parallelism.",
+          q2: correct ? "Yes. Postgres full-text search (SearchVector/SearchQuery + a GIN index) gives real ranked search with zero new infrastructure — perfect for moderate scale."
+                      : "Reconsider. LIKE has no ranking and scans everything; a full Elasticsearch cluster is overkill early. Postgres FTS is the simplest real answer."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=4"></script>
+<script src="../assets/nav.js?v=4"></script>
+</body>
+</html>
