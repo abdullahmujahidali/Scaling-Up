@@ -50,7 +50,34 @@
     lang = (lang === 'ur') ? 'en' : 'ur';
     try { localStorage.setItem(KEY, lang); } catch (e) {}
     apply(lang);
-    toast(lang === 'ur' ? 'Roman Urdu — ON  (press u u u to switch back)' : 'English — ON');
+    updateBtn();
+    toast(lang === 'ur' ? 'اردو — ON' : 'English — ON');
+  }
+
+  // --- Visible floating toggle button (always on screen) ---
+  var btn;
+  function updateBtn() {
+    if (!btn) return;
+    // Show what you'll switch TO, so it reads like an action.
+    btn.innerHTML = (lang === 'ur')
+      ? '🌐 English'
+      : '🌐 اردو';
+    btn.setAttribute('title', lang === 'ur' ? 'Switch to English' : 'Roman Urdu mein parho');
+  }
+  function makeButton() {
+    btn = document.createElement('button');
+    btn.id = 'lang-toggle';
+    btn.style.cssText =
+      'position:fixed;bottom:18px;right:18px;z-index:9998;' +
+      'background:#9b1c1c;color:#fff;border:none;border-radius:24px;' +
+      'padding:0.7rem 1.2rem;font-family:ui-sans-serif,-apple-system,sans-serif;' +
+      'font-size:0.95rem;font-weight:600;cursor:pointer;' +
+      'box-shadow:0 4px 14px rgba(0,0,0,0.35);transition:transform .1s;';
+    btn.addEventListener('mouseenter', function(){ btn.style.transform = 'scale(1.05)'; });
+    btn.addEventListener('mouseleave', function(){ btn.style.transform = 'scale(1)'; });
+    btn.addEventListener('click', toggle);
+    document.body.appendChild(btn);
+    updateBtn();
   }
 
   // --- Hidden trigger 1: "u" pressed 3× quickly ---
@@ -75,11 +102,12 @@
     }
   });
 
-  // Apply saved preference on load.
+  // Apply saved preference on load + inject the visible button.
+  function init() { apply(lang); makeButton(); }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { apply(lang); });
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    apply(lang);
+    init();
   }
 
   // Re-apply after nav.js injects the sidebar (it runs at end of body too).

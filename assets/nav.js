@@ -23,12 +23,20 @@
     { file: '0016-monolith-vs-microservices.html', num: '10', title: 'Monolith vs Microservices' },
     { file: '0017-api-design-rest.html', num: '11', title: 'API Design (REST)' },
     { file: '0019-design-walkthrough-url-shortener.html', num: '12', title: 'Capstone: URL Shortener' },
+    { file: '0020-rate-limiting.html', num: '13', title: 'Rate Limiting' },
+    { file: '0021-websockets.html', num: '14', title: 'WebSockets' },
+    { file: '0025-event-streaming-kafka.html', num: '15', title: 'Event Streaming (Kafka)' },
+    { file: '0027-circuit-breaker.html', num: '16', title: 'Circuit Breakers' },
     { track: 'B', label: 'Backend Depth', header: true },
     { file: '0007-the-gil.html', num: 'B1', title: 'The GIL' },
     { file: '0009-database-indexes.html', num: 'B2', title: 'Database Indexes' },
     { file: '0011-n-plus-1-queries.html', num: 'B3', title: 'N+1 Queries' },
     { file: '0015-transactions-and-locking.html', num: 'B4', title: 'Transactions & Locking' },
     { file: '0018-async-await.html', num: 'B5', title: 'async / await' },
+    { file: '0022-idempotency.html', num: 'B6', title: 'Idempotency' },
+    { file: '0023-connection-pooling.html', num: 'B7', title: 'Connection Pooling' },
+    { file: '0024-denormalization.html', num: 'B8', title: 'Denormalization' },
+    { file: '0026-search-inverted-index.html', num: 'B9', title: 'Search & Inverted Index' },
     { kind: 'glossary' }
   ];
 

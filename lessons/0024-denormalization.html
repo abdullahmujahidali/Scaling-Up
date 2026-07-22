@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson B8 · Normalization vs Denormalization</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=4">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B8 · Offline Pack</p>
+    <h1 data-ur="Normalization vs denormalization: fact ek jagah rakho, ya reads ke liye copy kar lo">Normalization vs denormalization: store a fact once, or copy it for fast reads</h1>
+    <p class="subtitle" data-ur="Clean data aur tez reads ke darmiyan ka tradeoff — aur yeh caching wali staleness se seedha juda hai jo tum pehle se jaante ho.">The tradeoff between clean data and fast reads — and it ties straight into the caching staleness you already know.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: denormalization</span>
+      <span>Win: know when to duplicate data on purpose</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (caching ki staleness yaad karo)">30-second warm-up (recall caching staleness)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: cache reads tez kyun banata hai, aur uska bara khatra kya hai?">From memory: why does a cache make reads fast, and what's its big risk?</div>
+    <div class="answer" data-ur="Cache pehle se compute kiya hua ya copy kiya hua data paas rakhta hai taake har baar mehnga kaam dobara na karna pare — toh reads tez ho jaati hain. Khatra: <strong>staleness</strong> — jab asli data badalta hai, cached copy purani ho jaati hai jab tak tum use update ya invalidate na karo. Denormalization bhi bilkul yehi tradeoff hai, magar database ke andar."><strong>A cache</strong> keeps pre-computed or copied data nearby so you don't redo expensive work every time — so reads get fast. The risk: <strong>staleness</strong> — when the real data changes, the cached copy is out of date until you update or invalidate it. Denormalization is that exact same tradeoff, but inside the database.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Normalization har fact ko sirf ek jagah rakhta hai (clean, no duplication, joins se jodo). Denormalization jaan boojh kar data ki copy bana leta hai ya pehle se compute kar leta hai taake read par mehnga join na karna pare — reads tez, magar writes par har copy ko sync mein rakhna parta hai.</strong>"><strong>Normalization stores each fact in exactly one place (clean, no duplication, use joins to combine). Denormalization deliberately duplicates or pre-computes data so reads avoid an expensive join — faster reads, but every write must keep the copies in sync.</strong></span>
+  </div>
+
+  <h2 data-ur="Do lafz saaf karo">Getting the two words straight</h2>
+  <ul>
+    <li data-ur="<strong>Normalized:</strong> har fact ek hi jagah zinda hai. Author ka naam sirf <code>authors</code> table mein hai; posts uski <code>id</code> se point karte hain. Naam badalna? Ek row update karo, kaam khatam."><strong>Normalized:</strong> every fact lives in exactly one place. The author's name is only in the <code>authors</code> table; posts point to it by <code>id</code>. Change the name? Update one row, done.</li>
+    <li data-ur="<strong>Denormalized:</strong> tum jaan boojh kar ek copy rakhte ho jahan reads use dhoondte hain — jaise har post ke saath author ka naam bhi store karna — taake read ke waqt join na karna pare."><strong>Denormalized:</strong> you deliberately keep a copy where reads look for it — like storing the author's name alongside every post — so the read doesn't have to join at all.</li>
+  </ul>
+  <p data-ur="Normalized reads ke liye aksar ek <strong>join</strong> chahiye taake tukron ko jod sako. Chhote scale par joins sasta hain. Bare, read-heavy scale par woh hi join dheema pehlu ban sakta hai.">Normalized reads often need a <strong>join</strong> to stitch the pieces back together. At small scale joins are cheap. At large, read-heavy scale that same join can become the slow part.</p>
+
+  <h2 data-ur="Kahani: master catalog vs shelf ke labels">The story: the master catalog vs the shelf labels</h2>
+  <p data-ur="Ek library ke paas ek <strong>master catalog</strong> hai — har kitaab ka title, author, shelf number, sab ek jagah. Yeh <em>normalized</em> hai: har fact ek baar likha hua. Agar kisi kitaab ka author badal jaaye, tum sirf catalog mein ek entry theek karte ho.">A library keeps one <strong>master catalog</strong> — every book's title, author, shelf number, all in one place. That's <em>normalized</em>: each fact is written once. If a book's author gets corrected, you fix one entry in the catalog.</p>
+  <p data-ur="Magar patrons har waqt master catalog kholna pasand nahi karte. Toh library popular kitabon ke liye info seedhi <strong>shelf label</strong> par chhaap deti hai — title, author, sab wahin, shelf par. Ab reader ko bina catalog gaye foran jawab mil jaata hai. Yeh <em>denormalization</em> hai: reads ke liye ek copy.">But patrons don't love opening the master catalog every time. So for popular books the library prints the info directly onto the <strong>shelf label</strong> — title, author, all right there on the shelf. Now a reader gets the answer instantly without going to the catalog. That's <em>denormalization</em>: a copy placed where reads happen.</p>
+  <p data-ur="Faida saaf hai — shelf label parhna tez hai. Magar ab pakra: agar koi kitaab move ho ya author theek ho, tumhein <strong>har us label ko update karna parega</strong> jahan woh copy chhapi thi, warna label master catalog se jhoot bolne lagega. Yehi denormalization ka poora sauda hai: tez reads badle mein extra write-time kaam aur out-of-sync hone ka khatra.">The upside is obvious — reading a shelf label is fast. But here's the catch: if a book moves or an author is corrected, you must <strong>update every label</strong> that copy was printed on, or the label starts lying compared to the master catalog. That's the whole bargain of denormalization: fast reads in exchange for extra work at write time and the risk of copies drifting out of sync.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="Normalized single source with a join versus denormalized copy on each row">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="160" y="20" font-weight="700" fill="#2a4d8f">Normalized (join on read)</text>
+        <rect x="60" y="35" width="90" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="105" y="55" font-weight="700" fill="#2a4d8f">posts</text>
+        <text x="105" y="71" fill="#6b6b6b" font-size="11">author_id</text>
+        <rect x="200" y="35" width="90" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="245" y="55" font-weight="700" fill="#2a4d8f">authors</text>
+        <text x="245" y="71" fill="#6b6b6b" font-size="11">name</text>
+        <line x1="150" y1="57" x2="200" y2="57" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="175" y="98" fill="#6b6b6b" font-size="11">JOIN</text>
+        <text x="160" y="125" fill="#6b6b6b">1 copy of the name · read does a join</text>
+
+        <text x="480" y="20" font-weight="700" fill="#1f7a4d">Denormalized (name copied)</text>
+        <rect x="380" y="35" width="200" height="45" rx="8" fill="#eaf6ef" stroke="#1f7a4d"/>
+        <text x="480" y="55" font-weight="700" fill="#1f7a4d">posts</text>
+        <text x="480" y="71" fill="#6b6b6b" font-size="11">author_id + author_name</text>
+        <text x="480" y="125" fill="#6b6b6b">name copied onto each post · no join</text>
+        <text x="480" y="150" fill="#9b1c1c" font-size="11">rename author → update every copy</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Normalized: naam ek jagah, read join karta hai. Denormalized: naam har post par copy, read bina join ke tez — magar rename par har copy update karni parti hai.">Normalized: the name lives once, the read joins. Denormalized: the name is copied onto each post, the read is fast without a join — but a rename must update every copy.</figcaption>
+  </figure>
+
+  <h2 data-ur="Denormalize kab karein">When to denormalize</h2>
+  <ul>
+    <li data-ur="<strong>Read-heavy system jahan join bahut mehnga ho.</strong> Classic misaal: ek feed jo har post ke saath author ka naam dikhata hai. Har post ke liye <code>authors</code> se join karne ke bajaye, author ka naam post ke saath store karo — feed bina join ke render hota hai."><strong>Read-heavy systems where the join is too expensive.</strong> Classic example: a feed that shows the author's name with every post. Instead of joining to <code>authors</code> for every post, store the author name alongside the post — the feed renders with no join.</li>
+    <li data-ur="<strong>Jab wohi mehnga calculation baar baar chalta ho.</strong> Har baar count karne ke bajaye ek pehle se nikala hua number rakh lo (yeh hum aage counter misaal mein dekhenge)."><strong>When the same expensive calculation runs over and over.</strong> Keep a pre-computed number instead of recalculating each time (we'll see this next with a counter).</li>
+  </ul>
+  <p data-ur="Note: ise <em>default</em> mat banao. Pehle normalized rakho (clean, ek source of truth). Sirf tab denormalize karo jab tumne <strong>naap</strong> liya ho ke ek khaas read raasta bahut dheema hai — warna tum bekaar mein khud ke liye sync ka dard khareed rahe ho.">Note: don't make this the <em>default</em>. Start normalized (clean, one source of truth). Only denormalize once you've <strong>measured</strong> that a specific read path is too slow — otherwise you're buying yourself sync pain for nothing.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Socho ek <code>Post</code> jiske bahut saare comments hain. Har baar comments ki tadaad dikhane ke liye tum <code>post.comments.count()</code> chala sakte ho — yeh ek <code>COUNT()</code> query hai, aur agar tum bohot posts ki list dikhate ho toh yeh mehnga par jaata hai. Denormalized tareeka: <code>Post</code> par ek <code>comment_count</code> field rakho, aur jab bhi comment banta ya delete hota hai (comment ke <code>save()</code>/<code>delete()</code> par, ya ek signal se) use update kar do. Ab list dikhana bas ek field parhna hai — koi <code>COUNT()</code> nahi. Yeh ek denormalized counter hai: reads tez, writes thora zyada kaam karte hain. <strong>Asli khatra:</strong> agar koi likhne wala raasta counter update karna bhool jaaye — ek bulk delete, ek manual SQL, ek crash beech mein — toh <code>comment_count</code> asli tadaad se <em>drift</em> kar jaata hai. Isi liye log akser periodic recount rakhte hain ya <code>F()</code> expressions se atomically update karte hain. Ye theek wohi cache-staleness ka masla hai jo tum jaante ho.">Picture a <code>Post</code> that has many comments. To show the comment count you could run <code>post.comments.count()</code> every time — that's a <code>COUNT()</code> query, and it gets expensive if you're listing lots of posts. The denormalized way: keep a <code>comment_count</code> field on <code>Post</code> and update it whenever a comment is created or deleted (on the comment's <code>save()</code>/<code>delete()</code>, or via a signal). Now showing the list is just reading one field — no <code>COUNT()</code>. That's a denormalized counter: faster reads, writes do a bit more work. <strong>The real risk:</strong> if any write path forgets to update the counter — a bulk delete, a manual SQL fix, a crash mid-way — then <code>comment_count</code> <em>drifts</em> away from the real number. That's why people keep a periodic recount, or update atomically with <code>F()</code> expressions. It's the exact cache-staleness problem you already know.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: denormalized <code>comment_count</code> reads ke liye faida deta hai — writes ke liye asli cost kya hai?">Quick check: a denormalized <code>comment_count</code> helps reads — what's the real cost on writes?</div>
+    <div class="answer" data-ur="Har write jo comments ko badalta hai (add/delete/bulk) ko counter ko bhi update karna parta hai, warna woh asli tadaad se <strong>drift</strong> (out of sync) ho jaata hai. Toh writes zyada kaam karti hain aur inconsistency ka khatra rehta hai — bilkul cache ke staleness jaisa.">Every write that changes comments (add/delete/bulk) must also update the counter, or it <strong>drifts</strong> (goes out of sync) from the true number. So writes do more work and there's a risk of inconsistency — just like a cache going stale.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Denormalization <strong>tez reads</strong> deti hai badle mein <strong>dheemi, khatarnaak writes</strong> aur ek asli mauqa ke <strong>data inconsistent</strong> ho jaaye (copies drift kar jaayein). Tum read speed khareedte ho write-time complexity aur staleness ke risk ki qeemat par. Interview mein aise kaho: &quot;Main ye feed read-heavy hone ki wajah se denormalize karunga, magar mujhe author_name ko har author update par sync karna parega — warna copies drift ho jaayengi.&quot; Woh ek line dono sides dikhati hai.">Denormalization gives you <strong>fast reads</strong> in exchange for <strong>slower, riskier writes</strong> and a real chance the <strong>data goes inconsistent</strong> (copies drift). You're buying read speed at the price of write-time complexity and staleness risk. In an interview, say it like this: &quot;I'd denormalize this feed because it's read-heavy, but I'd have to sync author_name on every author update — otherwise the copies drift.&quot; That one line shows both sides.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek feed har post ke saath author ka naam dikhata hai aur bohot heavily parha jaata hai. Team har post par <code>author_name</code> copy kar deti hai taake read-time join na karna pare. Yeh hai…">A feed shows the author's name with every post and is read very heavily. The team copies <code>author_name</code> onto each post so reads avoid the join. This is…</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Denormalization — reads tez karne ke liye jaan boojh kar duplication">Denormalization — deliberate duplication to make reads fast</button>
+      <button class="opt" data-correct="false" data-ur="Normalization — har fact bilkul ek jagah rakhna">Normalization — keeping each fact in exactly one place</button>
+      <button class="opt" data-correct="false" data-ur="Sharding — data ko kai machines par baant-na">Sharding — splitting data across many machines</button>
+      <button class="opt" data-correct="false" data-ur="Indexing — lookup tez karne ke liye ek B-tree banana">Indexing — building a B-tree to speed lookups</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumne <code>Post</code> par ek denormalized <code>comment_count</code> field rakha hai. Iska sabse bara khatra kya hai?">You keep a denormalized <code>comment_count</code> field on <code>Post</code>. What's its biggest risk?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Reads bahut dheema ho jaayenge">Reads will become much slower</button>
+      <button class="opt" data-correct="true" data-ur="Agar koi write path use update karna bhool jaaye toh counter asli tadaad se drift kar jaata hai">The counter drifts from the true number if a write path forgets to update it</button>
+      <button class="opt" data-correct="false" data-ur="Postgres counter fields ko allow nahi karta">Postgres doesn't allow counter fields</button>
+      <button class="opt" data-correct="false" data-ur="Yeh normalization ko force karta hai">It forces normalization</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Normalization = har fact ek jagah, joins se jodo (clean, magar bare scale par joins dheeme ho sakte hain). Denormalization = reads ke liye jaan boojh kar copy/pre-compute karo taake join na karna pare (tez reads, magar writes par har copy sync karo). Tum jaante ho <strong>kab</strong> (read-heavy, join too slow — jaise feed mein author_name), Django mein <strong>kaise</strong> (<code>comment_count</code> vs har baar <code>COUNT()</code>), aur <strong>tradeoff</strong> (tez reads, dheeme/khatarnaak writes, drift ka risk — bilkul caching wali staleness). Yeh interview mein naam lena ek senior signal hai.">Normalization = each fact in one place, combine with joins (clean, but joins can be slow at scale). Denormalization = deliberately copy/pre-compute for reads so you avoid the join (fast reads, but keep every copy in sync on writes). You know <strong>when</strong> (read-heavy, join too slow — like author_name in a feed), <strong>how</strong> in Django (<code>comment_count</code> vs a <code>COUNT()</code> each time), and the <strong>tradeoff</strong> (fast reads, slow/risky writes, drift risk — the same staleness as caching). Naming this in an interview is a senior signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer#denormalization&quot; target=&quot;_blank&quot;>System Design Primer — Denormalization</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer#denormalization" target="_blank">System Design Primer — Denormalization</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to work out whether a real table in your app should be denormalized, or how to keep a <code>comment_count</code> from drifting (signals, <code>F()</code> updates, periodic recount)? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B8 (Denormalization).</strong> Builds on <a href="0006-caching.html">caching (6)</a> — same staleness tradeoff, inside the database — and <a href="0011-n-plus-1-queries.html">N+1 queries (B5)</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer#denormalization" target="_blank">The System Design Primer — Denormalization</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Copying author_name onto each post to skip the join is denormalization — deliberate duplication for read speed."
+                      : "Reconsider. Deliberately duplicating a fact (author_name) to avoid a read-time join is denormalization.",
+          q2: correct ? "Yes. A denormalized counter drifts out of sync if any write path (bulk delete, manual SQL, a crash) forgets to update it — the same staleness risk as a cache."
+                      : "Reconsider. Reads get faster with a counter field; the danger is that it drifts from the true count when a write forgets to update it."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=4"></script>
+<script src="../assets/nav.js?v=4"></script>
+</body>
+</html>
