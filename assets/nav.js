@@ -53,7 +53,8 @@
   // Build the sidebar markup.
   var items = COURSE.map(function (it) {
     if (it.kind === 'home') {
-      return '<a class="cnav-home" href="' + toRoot + 'index.html">🏠 Scaling Up — Home</a>';
+      return '<a class="cnav-home" href="' + toRoot + 'index.html">🏠 Scaling Up — Home</a>' +
+             '<a class="cnav-ref" href="' + toRoot + 'how-to-use.html" style="margin-top:0.4rem;border-top:none;padding-top:0.42rem;">📖 How to use</a>';
     }
     if (it.kind === 'week') {
       var w1cur = (here === 'this-week.html') ? ' cnav-current' : '';
