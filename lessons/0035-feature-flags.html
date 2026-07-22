@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 21 · Feature Flags</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=5">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 21 · Offline Pack</p>
+    <h1 data-ur="Feature flags: naya code deploy kiye baghair ON/OFF karo">Feature flags: turn features on and off without deploying</h1>
+    <p class="subtitle" data-ur="Code ke andar ek switch — deploy ki zaroorat nahi. Feature ko chupe-chupe ship karo, 5% users par kholo, ya toota hua feature ek second mein band karo.">A switch inside your code — no deploy needed. Ship a feature hidden, open it to 5% of users, or kill a broken feature in one second.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: feature flags</span>
+      <span>Win: ship safely, kill instantly</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (deployment safety yaad karo)">30-second warm-up (recall deployment safety)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: jab ek naye deploy mein bug nikal aaye, tum usay wapis kaise le jaate ho — aur woh kitni jaldi hota hai?">From memory: when a new deploy has a bug, how do you take it back — and how fast is that?</div>
+    <div class="answer" data-ur="Tum ek <strong>rollback</strong> karte ho — purana version dobara deploy karte ho. Lekin rollback <em>slow</em> hai: build, deploy, servers restart — minutes lag sakte hain, aur us doran users bug dekhte rehte hain. Ab hum ek aur tarika dekhne wale hain jo <em>foran</em> hai.">You do a <strong>rollback</strong> — redeploy the old version. But a rollback is <em>slow</em>: build, deploy, restart servers — it can take minutes, and users keep hitting the bug the whole time. We're about to see a way that's <em>instant.</em></div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek feature flag ek switch hai jo code ke andar ek feature ko ON ya OFF karta hai — config ya database se, naya code deploy kiye baghair.</strong> Iska matlab tum feature ko chhupa kar ship kar sakte ho, aahista aahista roll out kar sakte ho, aur ek toote feature ko foran band kar sakte ho — bina rollback deploy ke."><strong>A feature flag is a switch that turns a feature ON or OFF inside your code — driven by config or a database, without deploying new code.</strong> That means you can ship a feature hidden, roll it out gradually, and instantly turn off a broken one — with no rollback deploy.</span>
+  </div>
+
+  <h2 data-ur="Teen cheezein jo flags deti hain">Three things flags give you</h2>
+  <ul>
+    <li data-ur="<strong>Dark launch:</strong> code deployed hai lekin OFF — production mein maujood, users ko nazar nahi aata. Deploy aur &quot;release&quot; alag ho jaate hain."><strong>Dark launch:</strong> the code is deployed but OFF — it's in production, invisible to users. Deploy and "release" become separate events.</li>
+    <li data-ur="<strong>Gradual rollout:</strong> feature ko 5% users par kholo, phir 25%, phir 100% — problem barhne se pehle pakri jaati hai."><strong>Gradual rollout:</strong> open the feature to 5% of users, then 25%, then 100% — problems are caught before they spread.</li>
+    <li data-ur="<strong>Kill switch:</strong> agar naya feature toot jaaye, flag ko OFF kar do — ek second mein, bina rollback ke. Incident khatam."><strong>Kill switch:</strong> if the new feature breaks, flip the flag OFF — in one second, no rollback. Incident over.</li>
+  </ul>
+  <p data-ur="A/B testing bhi isi se aata hai: 50% users ko naya checkout do, 50% ko purana, aur compare karo kaun sa behtar convert karta hai.">A/B testing comes from the same idea: give 50% of users the new checkout, 50% the old one, and compare which converts better.</p>
+
+  <h2 data-ur="Kahani: ghar mein dimmer switch aur ek valve">The story: a dimmer switch and a valve at home</h2>
+  <p data-ur="Socho tum ghar mein ek naya, powerful light lagaate ho. Agar woh seedha wall se hardwired ho, toh usay <strong>chalu ya band</strong> karne ke liye tumhein deewar khol kar dobara wiring karni paregi — ganda, slow, aur galti ka dar. Ab socho tum usay ek <strong>dimmer switch</strong> se jodte ho.">Imagine you install a new, powerful light at home. If it were hardwired straight into the wall, then to <strong>turn it on or off</strong> you'd have to open the wall and rewire it — messy, slow, and risky. Now imagine you wire it to a <strong>dimmer switch</strong> instead.</p>
+  <ul>
+    <li data-ur="<strong>Aahista kholo:</strong> dimmer ko thora ghumao — light 5% par aati hai. Aankhein adjust ho jaati hain, koi jhatka nahi. (= 5% users par rollout.)"><strong>Turn it on slowly:</strong> nudge the dimmer — the light comes on at 5%. Eyes adjust, no shock. (= rollout to 5% of users.)</li>
+    <li data-ur="<strong>Foran band karo:</strong> agar bulb chinghari maare, dimmer ko switch off karo — <em>foran</em>. Tumhein deewar todne ki zaroorat nahi. (= kill switch.)"><strong>Shut it instantly:</strong> if the bulb sparks, flip the dimmer off — <em>instantly.</em> You don't break open the wall. (= kill switch.)</li>
+  </ul>
+  <p data-ur="Deewar dobara wire karna = naya code deploy karna (slow, khatarnak). Dimmer ghumana = ek flag flip karna (foran, mehfooz). Yehi feature flag hai: ek switch jo tumhein house (deploy) dobara wire kiye baghair control deta hai.">Rewiring the wall = deploying new code (slow, risky). Turning the dimmer = flipping a flag (instant, safe). That's a feature flag: a switch that gives you control without rewiring the house (redeploying).</p>
+
+  <figure>
+    <svg viewBox="0 0 640 190" role="img" aria-label="A feature flag switch between deployed code and users">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="60" width="150" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="105" y="85" font-weight="700" fill="#2a4d8f">Deployed code</text>
+        <text x="105" y="103" fill="#6b6b6b" font-size="11">new feature present</text>
+
+        <rect x="260" y="55" width="120" height="70" rx="8" fill="#fff5e6" stroke="#b7791f"/>
+        <text x="320" y="80" font-weight="700" fill="#b7791f">flag switch</text>
+        <text x="320" y="98" fill="#6b6b6b" font-size="11">ON / OFF / 5%</text>
+
+        <rect x="460" y="60" width="150" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="535" y="85" font-weight="700" fill="#2a4d8f">Users</text>
+        <text x="535" y="103" fill="#6b6b6b" font-size="11">see it or don't</text>
+
+        <line x1="180" y1="90" x2="260" y2="90" stroke="#2a4d8f" stroke-width="2"/>
+        <line x1="380" y1="90" x2="460" y2="90" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="320" y="160" fill="#6b6b6b">flip the flag, not the deploy</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Code hamesha maujood hai. Flag faisla karta hai users usay dekhte hain ya nahi — bina naye deploy ke.">The code is always present. The flag decides whether users see it — with no new deploy.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Sabse saada flag ek boolean hai <code>settings.py</code> ya database mein: <code>NEW_CHECKOUT_ENABLED = False</code>. View mein tum check karte ho <code>if settings.NEW_CHECKOUT_ENABLED:</code>. Jab tumhein per-user rollout chahiye, <strong>django-waffle</strong> jaisi library use karo aur likho <code>if flag_is_active(request, 'new_checkout'):</code> — waffle ek flag ko kisi user ke liye, kisi group ke liye, ya users ke <em>percentage</em> ke liye ON kar sakti hai (5% rollout ek admin setting ban jaati hai, code change nahi). Incident ke doran tum bas admin/DB mein value ko OFF kar dete ho — kill switch, bina redeploy ke. Yeh seedha deployment safety se juda hai: tum &quot;deploy&quot; ko &quot;release&quot; se alag kar dete ho.">The simplest flag is a boolean in <code>settings.py</code> or the database: <code>NEW_CHECKOUT_ENABLED = False</code>. In a view you check <code>if settings.NEW_CHECKOUT_ENABLED:</code>. When you need per-user rollout, use a library like <strong>django-waffle</strong> and write <code>if flag_is_active(request, 'new_checkout'):</code> — waffle can turn a flag on for a user, a group, or a <em>percentage</em> of users (the 5% rollout becomes an admin setting, not a code change). During an incident you just flip the value OFF in the admin/DB — a kill switch, no redeploy. This ties straight to deployment safety: you separate "deploy" from "release."</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: ek toota hua feature band karne mein flag flip karna kaise rollback deploy se behtar hai?">Quick check: how is flipping a flag to disable a broken feature better than a rollback deploy?</div>
+    <div class="answer" data-ur="Flag flip <strong>foran</strong> hai — ek config/DB value badalti hai, koi build ya deploy nahi, koi restart nahi. Rollback ke liye purana version dobara deploy karna parta hai jo minutes le sakta hai, aur us doran users bug dekhte rehte hain. Flag ke saath incident seconds mein khatam.">A flag flip is <strong>instant</strong> — you change one config/DB value, no build or deploy, no restart. A rollback means redeploying the old version, which can take minutes, and users keep hitting the bug meanwhile. With a flag, the incident ends in seconds.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Flags <strong>tech debt</strong> ban jaate hain. Har flag code mein ek <code>if</code> branch add karta hai. Rollout ke baad agar tum purane flags saaf nahi karte, toh woh <em>stale</em> flags code ko clutter karte hain, aur behtar hue bina bohot saare flags system ke behavior ko samajhna mushkil kar dete hain (2^N combinations). Rule: <strong>rollout ke baad flag ko clean up karo</strong> — jeetne wala rasta code mein permanent bana do aur flag hata do.">Flags become <strong>tech debt</strong>. Every flag adds an <code>if</code> branch in the code. After rollout, if you don't clean up old flags, those <em>stale</em> flags clutter the code, and too many flags make the system's behavior hard to reason about (2^N combinations). Rule: <strong>clean up the flag after rollout</strong> — make the winning path permanent in code and delete the flag.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tum ek naya feature production par push karte ho lekin usay OFF rakhte ho, taake code deployed to ho magar users ko na dikhe. Yeh kya kehlata hai?">You push a new feature to production but keep it OFF, so the code is deployed but invisible to users. What is this called?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Dark launch — deploy aur release alag">A dark launch — deploy separated from release</button>
+      <button class="opt" data-correct="false" data-ur="Ek rollback">A rollback</button>
+      <button class="opt" data-correct="false" data-ur="Ek database migration">A database migration</button>
+      <button class="opt" data-correct="false" data-ur="Ek load balancer health check">A load balancer health check</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Naya checkout live hai aur payments toor raha hai. Sabse tez mehfooz reaction kya hai?">The new checkout is live and breaking payments. What's the fastest safe reaction?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Purana version dobara deploy karo (rollback) aur intezaar karo">Redeploy the old version (rollback) and wait</button>
+      <button class="opt" data-correct="true" data-ur="Feature flag ko OFF flip karo — foran kill switch">Flip the feature flag OFF — instant kill switch</button>
+      <button class="opt" data-correct="false" data-ur="Database ko rollout ke pichle state par restore karo">Restore the database to before the rollout</button>
+      <button class="opt" data-correct="false" data-ur="Baaqi users tak barhne ka intezaar karo phir dekho">Wait for it to reach the rest of the users, then look</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Feature flag: config/DB se chalne wala ek switch jo ek feature ko ON/OFF karta hai bina deploy ke. Iske saath tum <strong>dark launch</strong> kar sakte ho, <strong>gradually roll out</strong> (5% users) kar sakte ho, A/B test kar sakte ho, aur ek toota feature <strong>foran kill</strong> kar sakte ho. Django mein: ek boolean setting, ya <strong>django-waffle</strong> ke saath <code>flag_is_active(request, 'new_checkout')</code>. Bas yaad rakho — stale flags tech debt hain, rollout ke baad unhein saaf karo. Interview mein &quot;deploy alag from release&quot; aur &quot;kill switch&quot; ke words strong signal hain.">Feature flag: a config/DB-driven switch that turns a feature ON/OFF with no deploy. With it you can <strong>dark launch</strong>, <strong>gradually roll out</strong> (5% of users), A/B test, and <strong>instantly kill</strong> a broken feature. In Django: a boolean setting, or <code>flag_is_active(request, 'new_checkout')</code> with <strong>django-waffle</strong>. Just remember — stale flags are tech debt, clean them up after rollout. In an interview, the phrases "deploy separate from release" and "kill switch" are a strong signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://martinfowler.com/articles/feature-toggles.html&quot; target=&quot;_blank&quot;>Martin Fowler — Feature Toggles</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://martinfowler.com/articles/feature-toggles.html" target="_blank">Martin Fowler — Feature Toggles</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to see a real django-waffle setup with a percentage rollout, or figure out when a flag should be short-lived versus a permanent config? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 21 (Feature Flags).</strong> Builds on deployment safety and rollbacks. Next: <em>Blue-Green &amp; Canary Deploys</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://martinfowler.com/articles/feature-toggles.html" target="_blank">Feature Toggles (aka Feature Flags)</a>, Pete Hodgson / Martin Fowler.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Code deployed but OFF = a dark launch. It separates 'deploy' (ship the code) from 'release' (turn it on for users)."
+                      : "Reconsider. Deployed-but-hidden behind an OFF flag is a dark launch — deploy separated from release.",
+          q2: correct ? "Yes. Flip the flag OFF — the kill switch is instant, no build or redeploy, and the incident ends in seconds."
+                      : "Reconsider. A rollback is slow (build + redeploy). The whole point of a flag is the instant kill switch — flip it OFF."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
+<script src="../assets/i18n.js?v=5"></script>
+<script src="../assets/nav.js?v=5"></script>
+</body>
+</html>
