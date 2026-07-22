@@ -51,7 +51,7 @@
     try { localStorage.setItem(KEY, lang); } catch (e) {}
     apply(lang);
     updateBtn();
-    toast(lang === 'ur' ? 'اردو — ON' : 'English — ON');
+    toast(lang === 'ur' ? 'Roman Urdu — ON' : 'English — ON');
   }
 
   // --- Visible floating toggle button (always on screen) ---
@@ -61,7 +61,7 @@
     // Show what you'll switch TO, so it reads like an action.
     btn.innerHTML = (lang === 'ur')
       ? '🌐 English'
-      : '🌐 اردو';
+      : '🌐 Roman Urdu';
     btn.setAttribute('title', lang === 'ur' ? 'Switch to English' : 'Roman Urdu mein parho');
   }
   function makeButton() {
