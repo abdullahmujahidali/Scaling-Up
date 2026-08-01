@@ -1,5 +1,31 @@
 # Notes & Preferences
 
+## ⚠️ ACTIVE MISSION (as of 2026-07-31): AWS DVA-C02
+
+The system design track below is **paused**. Current priority is passing the
+**AWS Certified Developer – Associate (DVA-C02)** exam, target ~21 Aug 2026.
+See [MISSION-AWS.md](./MISSION-AWS.md) and learning record 0008.
+
+### AWS-track rules (in addition to everything below)
+
+- **English is the binding constraint.** Learner said directly: *"i am not that good at
+  english so you have to help me with it."* AWS questions are long and wordy by design.
+  Teach the *English of the exam* in every lesson, not just the AWS content.
+- **Practice questions stay in ENGLISH.** The real exam is English-only, so drilling in
+  Roman Urdu would train an unusable skill. Roman Urdu is for the *explanation* and the
+  teaching prose — via the normal `data-ur` toggle, which stays on everything.
+- **He has real AWS hands-on experience.** Never teach "what is a server" or basic
+  concepts. Teach: the exact numbers/limits, AWS's *opinions* about best practice, and
+  the traps. The gap is exam technique, not AWS familiarity.
+- **Lean on the Django/Celery bridge** the same way the system design track leans on
+  Django — "you already do this at work, AWS just calls it something else."
+- **Optimise for passing, not completeness.** Externally motivated + time-pressured.
+  Depth for its own sake is off-mission here.
+- Uses `assets/exam.css` in addition to `lesson.css`. Exam questions are deliberately
+  styled to look dense/grey like the real thing, not friendly like `.quiz`.
+- Content spine = Stephane Maarek's Udemy DVA-C02 course (88% done). This workspace is
+  the retention + exam-technique layer on top, not a replacement.
+
 ## Learner profile
 - Backend engineer, strong Python + Django. Has built real apps with the ORM, migrations, request/response cycle.
 - Self-rates as weak across all four system design areas (databases, scaling/caching, distributed theory, async/messaging) — but Django gives a head start on database and request-handling intuition. Use that bridge constantly: "you already know X from Django, here's how it generalizes."

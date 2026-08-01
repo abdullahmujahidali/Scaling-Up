@@ -8,6 +8,19 @@
   var COURSE = [
     { kind: 'home' },
     { kind: 'week' },
+    // AWS DVA-C02 track — active priority (exam target ~21 Aug 2026).
+    { track: 'AWS', label: '☁️ AWS DVA-C02 (active)', header: true },
+    { kind: 'awshub' },
+    { kind: 'awsexams' },
+    { file: '0045-aws-how-to-read-a-question.html', num: 'A1', title: 'How to Read an Exam Question' },
+    // Domain notes live in /reference/, so they use `ref` rather than `file`.
+    { ref: 'dva-study-notes.html',            num: '★',  title: 'Master Study Notes' },
+    { ref: 'dva-domain1-development.html',    num: 'D1', title: 'Domain 1 · Development (32%)' },
+    { ref: 'dva-domain2-security.html',       num: 'D2', title: 'Domain 2 · Security (26%)' },
+    { ref: 'dva-domain3-deployment.html',     num: 'D3', title: 'Domain 3 · Deployment (24%)' },
+    { ref: 'dva-domain4-troubleshooting.html', num: 'D4', title: 'Domain 4 · Troubleshooting (18%)' },
+    { ref: 'dva-numbers.html',                num: '★',  title: 'Numbers Cheat Sheet' },
+    { ref: 'dva-resources.html',              num: '📚', title: 'Resources (bilingual)' },
     { track: 'A', label: 'System Design', header: true },
     { file: '0001-the-design-framework.html', num: '1',  title: 'The Design Framework' },
     { file: '0002-consistency-and-availability.html', num: '2a', title: 'Consistency' },
@@ -65,7 +78,8 @@
   // in /reference/, the home page at root. We detect by folder.
   var inLessons = /\/lessons\//.test(location.pathname);
   var inReference = /\/reference\//.test(location.pathname);
-  var toRoot = (inLessons || inReference) ? '../' : '';
+  var inExams = /\/exams\//.test(location.pathname);
+  var toRoot = (inLessons || inReference || inExams) ? '../' : '';
   var toLessons = toRoot + 'lessons/';
 
   // Build the sidebar markup.
@@ -81,14 +95,29 @@
              '<a class="cnav-ref' + w2cur + '" href="' + toRoot + 'this-week-2.html" style="margin-top:0;border-top:none;padding-top:0.42rem;">🗓️ Week 2 plan</a>';
     }
     if (it.kind === 'glossary') {
-      var gcur = inReference ? ' cnav-current' : '';
+      // Match the glossary file itself, not merely "we're in /reference/" —
+      // the AWS domain notes also live there and must not steal the highlight.
+      var gcur = (here === 'glossary.html') ? ' cnav-current' : '';
       return '<a class="cnav-ref' + gcur + '" href="' + toRoot + 'reference/glossary.html">📑 Glossary</a>';
+    }
+    if (it.kind === 'awshub') {
+      var acur = (here === 'aws-index.html') ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + acur + '" href="' + toRoot + 'aws-index.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">☁️ AWS exam hub</a>';
+    }
+    if (it.kind === 'awsexams') {
+      // Highlight on the hub itself and on any individual exam page (/exams/*).
+      var ecur = (here === 'exams.html' || /\/exams\//.test(location.pathname)) ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + ecur + '" href="' + toRoot + 'exams.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">📝 15 practice exams</a>';
     }
     if (it.header) {
       return '<div class="cnav-track">Track ' + it.track + ' · ' + it.label + '</div>';
     }
-    var cur = (it.file === here) ? ' cnav-current' : '';
-    return '<a class="cnav-item' + cur + '" href="' + toLessons + it.file + '">' +
+    // `ref` items live in /reference/, `file` items live in /lessons/.
+    var target = it.ref ? (toRoot + 'reference/' + it.ref) : (toLessons + it.file);
+    var cur = ((it.ref || it.file) === here) ? ' cnav-current' : '';
+    return '<a class="cnav-item' + cur + '" href="' + target + '">' +
              '<span class="cnav-num">' + it.num + '</span>' +
              '<span class="cnav-title">' + it.title + '</span>' +
            '</a>';
