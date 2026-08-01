@@ -102,6 +102,10 @@
     }
   });
 
+  // Exposed so scripts that inject content AFTER load (e.g. exam-engine.js
+  // rendering the review screen) can re-translate the new nodes.
+  window.__applyLang = function () { apply(lang); };
+
   // Apply saved preference on load + inject the visible button.
   function init() { apply(lang); makeButton(); }
   if (document.readyState === 'loading') {
