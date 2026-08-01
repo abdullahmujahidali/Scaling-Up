@@ -13,6 +13,12 @@
     { kind: 'awshub' },
     { kind: 'awsexams' },
     { file: '0045-aws-how-to-read-a-question.html', num: 'A1', title: 'How to Read an Exam Question' },
+    { file: '0046-aws-lambda-limits.html',          num: 'A2', title: 'Lambda — the limits tested' },
+    { file: '0047-aws-dynamodb-keys-and-indexes.html', num: 'A3', title: 'DynamoDB — Query vs Scan, LSI vs GSI' },
+    { file: '0048-aws-iam-policy-evaluation.html',  num: 'A4', title: 'IAM — policy evaluation' },
+    { file: '0049-aws-messaging-services.html',     num: 'A5', title: 'SQS vs SNS vs Kinesis' },
+    { file: '0050-aws-deployment-strategies.html',  num: 'A6', title: 'Deployment strategies' },
+    { file: '0051-aws-observability.html',          num: 'A7', title: 'CloudWatch, X-Ray, CloudTrail' },
     // Domain notes live in /reference/, so they use `ref` rather than `file`.
     { ref: 'dva-study-notes.html',            num: '★',  title: 'Master Study Notes' },
     { ref: 'dva-domain1-development.html',    num: 'D1', title: 'Domain 1 · Development (32%)' },

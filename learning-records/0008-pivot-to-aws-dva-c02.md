@@ -156,6 +156,47 @@ Verified in a real browser: full 65-question run submitted with 10 deliberate wr
 answers scored exactly 55/65 with the correct per-domain split, review filters worked,
 and the best score persisted to the hub. Test score cleared afterwards.
 
+## Bilingual resources + master notes, and lessons A2–A7 (2026-08-01)
+
+Learner reported the resource links were unusable: *"the links you added problem is i
+dont have good english so those resources i need in roman urdu as wlel and i want notes
+coming from you that i will prepare and pass the exam"*. Two distinct asks, both honoured:
+
+- `reference/dva-resources.html` — every resource with a Roman Urdu explanation of what
+  it is, why it matters, and **how much time to give it**. `RESOURCES-AWS.md` stays as the
+  markdown source of record; the HTML page is the bilingual, usable version. It opens by
+  saying most of the list is optional — three things pass this exam.
+- `reference/dva-study-notes.html` — the "notes from you" request. Deliberately **not** a
+  service-by-service textbook (the four domain pages already are that). Organised around
+  exam behaviour: exam reality (50 of 65 count, compensatory, no guessing penalty), exam
+  English, guaranteed questions, a 20-row **trigger-word lookup table**, confusable pairs
+  with memory hooks, numbers, and a two-pass exam-day plan.
+
+Then, asked to *"build it fully"* with the exam booking set for Monday. The real gap was
+**teaching**: 6 reference pages but only 1 lesson. Reference is lookup material; it does
+not build recall. Built A2–A7, one per guaranteed-question topic, following the A1
+pattern exactly (spaced recall → analogy → exam English → exam-shaped questions with
+feedback on both right and wrong → numbers → Django bridge → win → sources):
+
+| Lesson | Topic | Domain |
+|---|---|---|
+| A2 | Lambda limits: 15 min, API GW 29 s, Reserved vs Provisioned | 1 (32%) |
+| A3 | DynamoDB: Query vs Scan, LSI vs GSI (L = Local = Locked) | 1 (32%) |
+| A4 | IAM policy evaluation: explicit Deny > Allow > implicit deny | 2 (26%) |
+| A5 | SQS vs SNS vs Kinesis, SNS+SQS fan-out, visibility timeout | 1 (32%) |
+| A6 | Deployment strategies, buildspec vs appspec | 3 (24%) |
+| A7 | CloudWatch/X-Ray/CloudTrail = WHAT/WHERE/WHO | 4 (18%) |
+
+Each Django bridge is specific, not decorative: API Gateway's 29 s = the gunicorn
+timeout; SQS visibility timeout = Celery's `visibility_timeout` (same double-run bug); a
+GSI = `db_index=True`; feature flags = canary. The 3-week plan on the hub now schedules
+the lessons by day and puts **"Day 2 (Monday): BOOK THE EXAM"** in the table.
+
+Verified in a real browser: all pages 200, every internal link resolves, every quiz id
+has a matching feedback message, wrong-answer clicks reveal the correct option, the
+recall widgets toggle, and the Roman Urdu toggle swaps and restores (saved preference
+left on English).
+
 ## Open threads
 
 - **Book the exam date.** Nothing drives completion like a booked date. Also: ask the
