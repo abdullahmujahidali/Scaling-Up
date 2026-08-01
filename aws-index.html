@@ -93,10 +93,48 @@
     <p data-ur="Har number jo exam poochta hai, ek page par. ISAY PRINT KARO aur deewar par laga do. Roz 5 minute — pehle yaad karne ki koshish karo, phir dekho.">Every number the exam asks for, on one page. PRINT THIS and put it on a wall. Five minutes a day — try to recall first, then look.</p>
   </div>
 
-  <h2 data-ur="📖 Lessons (exam technique)">📖 Lessons (exam technique)</h2>
+  <h2 data-ur="📖 Lessons — tarteeb se parho">📖 Lessons — work through them in order</h2>
+  <p data-ur="Notes lookup ke liye hain; <strong>lessons parhaate hain</strong>. Har lesson ek concept, ek misaal (analogy) se shuru, pichlay lesson ka 30-second recall, exam-shaped sawal, aur Django ka jor. Yeh saat lessons exam ke <em>guaranteed</em> sawalon ko cover karte hain.">The notes are for lookup; <strong>the lessons teach</strong>. Each is one concept, opens with an everyday analogy, starts with a 30-second recall of the previous lesson, has exam-shaped questions, and bridges to Django. These seven cover the exam's <em>guaranteed</em> questions.</p>
+
   <div class="card">
     <h3><a href="lessons/0045-aws-how-to-read-a-question.html">Lesson A1 · How to Read an AWS Exam Question</a></h3>
     <p data-ur="Start yahan se karo. AWS ka sawal kaise parhna hai, qualifying words (MOST cost-effective, LEAST operational overhead), aur elimination technique. Yeh skill har 50 scored sawal par kaam aati hai.">Start here. How to read an AWS question, the qualifying words (MOST cost-effective, LEAST operational overhead), and the elimination technique. This skill pays off on all 50 scored questions.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">32%</span>
+    <h3><a href="lessons/0046-aws-lambda-limits.html">Lesson A2 · Lambda — the limits the exam tests</a></h3>
+    <p data-ur="Woh 15-minute wala qanoon jo poore sawal ka jawab palat deta hai, API Gateway ka 29-second trap, aur Reserved vs Provisioned concurrency ka farq. Is ke baad tum ek nazar mein do options kaat sakoge.">The 15-minute rule that flips whole questions, API Gateway's 29-second trap, and Reserved vs Provisioned concurrency. Afterwards you can eliminate two options on sight.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">32%</span>
+    <h3><a href="lessons/0047-aws-dynamodb-keys-and-indexes.html">Lesson A3 · DynamoDB — Query vs Scan, LSI vs GSI</a></h3>
+    <p data-ur="Do guaranteed sawal. Scan kyun hamesha ghalat jawab hota hai, &quot;filter laga do&quot; wala jhoota option, aur L = Local = Locked wala hook jo LSI/GSI ka faisla 5 second mein kar deta hai.">Two guaranteed questions. Why Scan is always the wrong answer, the fake &quot;just add a filter&quot; option, and the L = Local = Locked hook that settles LSI vs GSI in five seconds.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">26%</span>
+    <h3><a href="lessons/0048-aws-iam-policy-evaluation.html">Lesson A4 · IAM — policy evaluation</a></h3>
+    <p data-ur="Exam ka sab se sasta point. Qanoon ek line ka hai (explicit Deny hamesha jeetta hai) aur sawal lagbhag har exam mein aata hai. Saath mein: jawab hamesha &quot;key hata do, role lagao&quot; hota hai.">The cheapest point on the exam. A one-line rule (explicit Deny always wins) and a question on it nearly every time. Plus: the answer is always &quot;remove the key, use a role&quot;.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">32%</span>
+    <h3><a href="lessons/0049-aws-messaging-services.html">Lesson A5 · SQS vs SNS vs Kinesis</a></h3>
+    <p data-ur="Poora messaging khandaan alag alag pehchano, aur exam ka pasandeeda pattern (SNS + SQS fan-out). Saath mein duplicate processing ka asal sabab — visibility timeout, jo bilkul tumhara Celery wala masla hai.">Tell the whole messaging family apart, plus the exam's favourite pattern (SNS + SQS fan-out). And the real cause of duplicate processing — the visibility timeout, which is exactly your Celery problem.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">24%</span>
+    <h3><a href="lessons/0050-aws-deployment-strategies.html">Lesson A6 · Deployment strategies</a></h3>
+    <p data-ur="Domain 3 ka sab se zyada poocha jaane wala sawal. Blue/green, canary, linear, all-at-once — har ek ka woh jumla jo sawal mein aata hai. Aur buildspec vs appspec ka trap.">Domain 3's most-asked question. Blue/green, canary, linear, all-at-once — and the phrase that signals each. Plus the buildspec vs appspec trap.</p>
+  </div>
+
+  <div class="card">
+    <span class="weight">18%</span>
+    <h3><a href="lessons/0051-aws-observability.html">Lesson A7 · CloudWatch, X-Ray and CloudTrail</a></h3>
+    <p data-ur="KYA, KAHAN, KIS NE — teen tools, teen alag sawal. Memory metric wala trap (CloudWatch Agent ke bagair memory hoti hi nahi) aur error codes: 429, 502, 504.">WHAT, WHERE, WHO — three tools, three different questions. The memory-metric trap (there is no memory without the CloudWatch Agent) and the error codes: 429, 502, 504.</p>
   </div>
 
   <hr>
@@ -109,18 +147,18 @@
     <tbody>
       <tr>
         <td class="wk" data-ur="Hafta 1<br>1–7 Aug">Week 1<br>1–7 Aug</td>
-        <td data-ur="<strong>Course khatam + Domain 1 &amp; 2</strong>"><strong>Finish the course + Domains 1 &amp; 2</strong></td>
-        <td data-ur="Din 1–2: Maarek course ka baqi 12% khatam karo. Din 3–4: Domain 1 notes parho (Lambda + DynamoDB), har section ke baad khud se test karo. Din 5–6: Domain 2 notes (IAM, KMS, Cognito). Din 7: <strong>Pehla poora practice exam do</strong> — score se ghabrao mat, yeh sirf diagnostic hai.">Days 1–2: finish the last 12% of the Maarek course. Days 3–4: read the Domain 1 notes (Lambda + DynamoDB), self-testing after each section. Days 5–6: Domain 2 notes (IAM, KMS, Cognito). Day 7: <strong>take your first full practice exam</strong> — don't worry about the score, it's a diagnostic.</td>
+        <td data-ur="<strong>Lessons A1–A4 + course khatam</strong>"><strong>Lessons A1–A4 + finish the course</strong></td>
+        <td data-ur="<strong>Din 1 (aaj):</strong> Lesson <a href='lessons/0045-aws-how-to-read-a-question.html'>A1</a> + <a href='lessons/0046-aws-lambda-limits.html'>A2</a>. <strong>Din 2 (Monday): EXAM BOOK KARO</strong> — 10 minute ka kaam, aur sab se bara faisla. <strong>Din 3:</strong> <a href='lessons/0047-aws-dynamodb-keys-and-indexes.html'>A3</a> + <a href='lessons/0048-aws-iam-policy-evaluation.html'>A4</a>. <strong>Din 4–6:</strong> Maarek course ka baqi 12% khatam karo (aakhri sections sab se zyada tested hain). <strong>Din 7:</strong> <a href='exams.html'>pehla poora practice exam</a> — score se ghabrao mat, yeh diagnostic hai. Mujhe per-domain breakdown bhejo."><strong>Day 1 (today):</strong> Lessons <a href="lessons/0045-aws-how-to-read-a-question.html">A1</a> + <a href="lessons/0046-aws-lambda-limits.html">A2</a>. <strong>Day 2 (Monday): BOOK THE EXAM</strong> — a 10-minute job, and the biggest single decision. <strong>Day 3:</strong> <a href="lessons/0047-aws-dynamodb-keys-and-indexes.html">A3</a> + <a href="lessons/0048-aws-iam-policy-evaluation.html">A4</a>. <strong>Days 4–6:</strong> finish the last 12% of the Maarek course (its final sections are the most heavily tested). <strong>Day 7:</strong> <a href="exams.html">first full practice exam</a> — don't worry about the score, it's a diagnostic. Send me the per-domain breakdown.</td>
       </tr>
       <tr>
         <td class="wk" data-ur="Hafta 2<br>8–14 Aug">Week 2<br>8–14 Aug</td>
         <td data-ur="<strong>Domain 3 &amp; 4 + kamzoriyan</strong>"><strong>Domains 3 &amp; 4 + weak spots</strong></td>
-        <td data-ur="Din 8–9: Domain 3 notes (deployment strategies, CloudFormation/SAM, buildspec vs appspec). Din 10–11: Domain 4 notes (CloudWatch, X-Ray, caching). Din 12–13: Hafta 1 ke practice exam mein jo domain sab se kamzor tha, us par wapas jao. Din 14: <strong>Doosra practice exam</strong>.">Days 8–9: Domain 3 notes (deployment strategies, CloudFormation/SAM, buildspec vs appspec). Days 10–11: Domain 4 notes (CloudWatch, X-Ray, caching). Days 12–13: return to whichever domain was weakest in your Week 1 practice exam. Day 14: <strong>second practice exam</strong>.</td>
+        <td data-ur="<strong>Din 8:</strong> Lesson <a href='lessons/0049-aws-messaging-services.html'>A5</a> (SQS/SNS/Kinesis). <strong>Din 9:</strong> <a href='lessons/0050-aws-deployment-strategies.html'>A6</a> + Domain 3 notes. <strong>Din 10:</strong> <a href='lessons/0051-aws-observability.html'>A7</a> + Domain 4 notes. <strong>Din 11:</strong> practice exam 2. <strong>Din 12–13:</strong> jo domain sab se kamzor nikla us ke notes dobara, phir usi ke sawal. <strong>Din 14:</strong> practice exam 3."><strong>Day 8:</strong> Lesson <a href="lessons/0049-aws-messaging-services.html">A5</a> (SQS/SNS/Kinesis). <strong>Day 9:</strong> <a href="lessons/0050-aws-deployment-strategies.html">A6</a> + the Domain 3 notes. <strong>Day 10:</strong> <a href="lessons/0051-aws-observability.html">A7</a> + the Domain 4 notes. <strong>Day 11:</strong> practice exam 2. <strong>Days 12–13:</strong> re-read the notes for whichever domain was weakest, then drill that domain. <strong>Day 14:</strong> practice exam 3.</td>
       </tr>
       <tr>
         <td class="wk" data-ur="Hafta 3<br>15–21 Aug">Week 3<br>15–21 Aug</td>
         <td data-ur="<strong>Sirf practice + numbers</strong>"><strong>Practice only + the numbers</strong></td>
-        <td data-ur="Din 15–19: <strong>Roz ek practice exam</strong>, phir har ghalat jawab ka review — sirf yeh mat dekho ke sahi kya tha, balke yeh samjho ke tum ghalat kyun gaye (knowledge ki kami thi ya reading ki?). Roz subah numbers cheat sheet 5 minute. Din 20: halka review, koi naya topic nahi. <strong>Din 21: EXAM.</strong>">Days 15–19: <strong>one practice exam per day</strong>, then review every wrong answer — don't just note the right answer, work out <em>why</em> you got it wrong (missing knowledge, or misreading?). Numbers sheet for 5 min each morning. Day 20: light review, no new topics. <strong>Day 21: EXAM.</strong></td>
+        <td data-ur="Din 15–19: <strong>Roz ek practice exam</strong>, phir har ghalat jawab ka review — sirf yeh mat dekho ke sahi kya tha, balke yeh samjho ke tum ghalat kyun gaye (knowledge ki kami thi ya reading ki?). Roz subah 5 minute: <a href='reference/dva-study-notes.html#triggers'>trigger words table</a> aur <a href='reference/dva-numbers.html'>numbers sheet</a>. <strong>Koi naya topic nahi.</strong> Din 20: sirf <a href='reference/dva-study-notes.html'>Master Study Notes</a> parho, phir jaldi so jao. <strong>Din 21: EXAM.</strong>">Days 15–19: <strong>one practice exam per day</strong>, then review every wrong answer — don't just note the right answer, work out <em>why</em> you got it wrong (missing knowledge, or misreading?). Five minutes each morning: the <a href="reference/dva-study-notes.html#triggers">trigger words table</a> and the <a href="reference/dva-numbers.html">numbers sheet</a>. <strong>No new topics.</strong> Day 20: read only the <a href="reference/dva-study-notes.html">Master Study Notes</a>, then sleep early. <strong>Day 21: EXAM.</strong></td>
       </tr>
     </tbody>
   </table>
