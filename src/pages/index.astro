@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/index.html?raw';
+const headExtra = `<style>
+  .hero { text-align: center; padding: 1rem 0 0.5rem; }
+  .hero .eyebrow { text-align: center; }
+  .lesson-card {
+    display: block; border: 1px solid var(--rule); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1rem 0; background: #fff; text-decoration: none;
+    border-bottom: 1px solid var(--rule); transition: border-color .12s, transform .12s;
+  }
+  .lesson-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .lesson-card .num {
+    font-family: ui-sans-serif, sans-serif; font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+  }
+  .lesson-card .title { font-size: 1.2rem; font-weight: 600; color: var(--ink); margin: 0.2rem 0; }
+  .lesson-card .blurb { color: var(--muted); font-size: 0.92rem; margin: 0; }
+  .ref-row { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0; }
+  .ref-row a {
+    flex: 1; min-width: 160px; text-align: center; padding: 0.9rem; border: 1px solid var(--rule);
+    border-radius: 8px; background: #fff; font-family: ui-sans-serif, sans-serif; font-size: 0.9rem;
+  }
+  .ref-row a:hover { border-color: var(--link); }
+</style>`;
+---
+<Base title={"Scaling Up · System Design Course"} nav={false} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

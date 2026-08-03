@@ -1,0 +1,123 @@
+<div class="exam-shell">
+
+  <header class="masthead" style="padding-bottom:0.5rem;">
+    <p class="eyebrow">AWS DVA-C02 · Practice Exams</p>
+    <h1 data-ur="Full mock exams — bilkul asli exam ki tarah">Full mock exams — just like the real thing</h1>
+    <p class="subtitle" data-ur="Har exam: 65 sawal, 130 minute, timer, aur aakhir mein poora score + har sawal ka jawab aur wajah. Asli exam ki tarah domain weighting bhi wahi hai.">Each exam: 65 questions, a 130-minute timer, and a full score at the end with an explanation for every question. Domain weighting matches the real exam exactly.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b id="s-taken">0</b><span>exams taken</span></div>
+    <div class="stat"><b id="s-best">—</b><span>best score</span></div>
+    <div class="stat"><b id="s-avg">—</b><span>average</span></div>
+    <div class="stat"><b id="s-passed">0</b><span>passed</span></div>
+  </div>
+
+  <div class="readiness none" id="readiness">
+    Take your first exam to see where you stand. Do not worry about the score — the first
+    one is a diagnostic, not a verdict.
+  </div>
+
+  <div class="exam-grid" id="exam-grid"></div>
+
+  <div class="key" style="margin-top:1.5rem;">
+    <span class="callout-label" data-ur="Inhein kaise use karo">How to use these</span>
+    <span data-ur="<strong>1. Timer ke saath baitho.</strong> Phone door rakho, notes band. Asli exam mein bhi yahi hoga.<br><strong>2. Koi sawal khali mat chhoro.</strong> Ghalat jawab ka koi extra nuksan nahi — guess hamesha behtar hai.<br><strong>3. Sab se zaroori hissa: submit ke baad review.</strong> Har ghalat jawab ki wajah parho, aur khud se poocho — mujhe pata nahi tha, ya maine sawal ghalat parha? Yehi farq batata hai ke aage kya karna hai.<br><strong>4. 800+ consistently aane par exam book karo.</strong> Yeh exams asli se thore mushkil hain, to margin milta hai."><strong>1. Sit with the timer running.</strong> Phone away, notes closed — same as exam day.<br><strong>2. Never leave a question blank.</strong> There is no penalty for a wrong answer, so a guess always beats nothing.<br><strong>3. The most valuable part is the review after you submit.</strong> Read the explanation for every wrong answer and ask yourself: did I not know it, or did I misread the question? That distinction tells you what to do next.<br><strong>4. Book the real exam once you consistently score 800+.</strong> These run slightly harder than the real thing, so that gives you margin.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Paste me any question you got wrong and I'll show you which word decided it. If a question's English is confusing, paste it and I'll rewrite it simply first, then explain the AWS part.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><a href="aws-index.html">← Back to the AWS hub</a> · <a href="reference/dva-numbers.html">Numbers cheat sheet</a> · <a href="index.html">Home</a></p>
+  </footer>
+
+</div>
+
+<script>
+/* The hub reads the same localStorage record the exam engine writes, so scores
+   appear here automatically after each attempt. */
+var EXAMS = [
+  { id:'exam-01', n:1,  focus:'Balanced — all domains' },
+  { id:'exam-02', n:2,  focus:'Balanced — all domains' },
+  { id:'exam-03', n:3,  focus:'Balanced — all domains' },
+  { id:'exam-04', n:4,  focus:'Balanced — all domains' },
+  { id:'exam-05', n:5,  focus:'Balanced — all domains' },
+  { id:'exam-06', n:6,  focus:'Harder — trap-heavy wording' },
+  { id:'exam-07', n:7,  focus:'Harder — limits and edge cases' },
+  { id:'exam-08', n:8,  focus:'Harder — two plausible answers' },
+  { id:'exam-09', n:9,  focus:'Harder — multi-service scenarios' },
+  { id:'exam-10', n:10, focus:'Harder — cost and trade-offs' },
+  { id:'exam-11', n:11, focus:'Harder — mixed review' },
+  { id:'exam-12', n:12, focus:'Harder — mixed review' },
+  { id:'exam-13', n:13, focus:'Harder — mixed review' },
+  { id:'exam-14', n:14, focus:'Harder — final preparation' },
+  { id:'exam-15', n:15, focus:'Harder — final preparation' }
+];
+
+(function () {
+  var results = {};
+  try { results = JSON.parse(localStorage.getItem('dva-exam-results') || '{}'); } catch (e) {}
+
+  var grid = document.getElementById('exam-grid');
+  var scores = [], passed = 0;
+
+  grid.innerHTML = EXAMS.map(function (e) {
+    var r = results[e.id];
+    var badge, sub;
+    if (r) {
+      scores.push(r.best);
+      if (r.passed) passed++;
+      badge = '<span class="badge ' + (r.passed ? 'pass' : 'fail') + '">' + r.best + '</span>';
+      sub = ' best · ' + r.attempts + ' attempt' + (r.attempts > 1 ? 's' : '');
+    } else {
+      badge = '<span class="badge none">not taken</span>';
+      sub = '';
+    }
+    return '<a class="exam-card" href="exams/' + e.id + '.html">' +
+             '<span class="en">Exam ' + e.n + ' · 65 questions</span>' +
+             '<div class="et">' + e.focus + '</div>' +
+             '<div class="escore">' + badge + sub + '</div>' +
+           '</a>';
+  }).join('');
+
+  document.getElementById('s-taken').textContent = scores.length;
+  document.getElementById('s-passed').textContent = passed;
+  if (scores.length) {
+    var best = Math.max.apply(null, scores);
+    var avg = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+    document.getElementById('s-best').textContent = best;
+    document.getElementById('s-avg').textContent = avg;
+
+    // Readiness advice keyed on the AVERAGE, not the best score — one lucky
+    // paper is not evidence of readiness.
+    var el = document.getElementById('readiness'), msg, cls;
+    if (scores.length < 3) {
+      cls = 'none';
+      msg = '<strong>' + scores.length + ' exam' + (scores.length > 1 ? 's' : '') + ' taken.</strong> ' +
+            'Take at least three before drawing conclusions — a single paper can be lucky or unlucky. ' +
+            'Keep going, and review every wrong answer as you go.';
+    } else if (avg >= 800) {
+      cls = 'ready';
+      msg = '<strong>Average ' + avg + ' — you are ready.</strong> You are comfortably above the 720 pass mark ' +
+            'with margin, and these exams run harder than the real one. Book the exam.';
+    } else if (avg >= 720) {
+      cls = 'close';
+      msg = '<strong>Average ' + avg + ' — passing, but without much margin.</strong> You would likely pass, ' +
+            'but a harder exam form could push you under 720. Aim for a consistent 800+ before booking.';
+    } else if (avg >= 620) {
+      cls = 'close';
+      msg = '<strong>Average ' + avg + ' — close.</strong> Focus on your weakest domain from the per-domain ' +
+            'breakdown rather than restudying everything. That is where the fastest points are.';
+    } else {
+      cls = 'notyet';
+      msg = '<strong>Average ' + avg + ' — more study needed before booking.</strong> This is exactly what ' +
+            'practice exams are for: finding the gaps while it is still free to find them. Work through the ' +
+            'domain notes for your weakest areas, then retake.';
+    }
+    el.className = 'readiness ' + cls;
+    el.innerHTML = msg;
+  }
+})();
+</script>

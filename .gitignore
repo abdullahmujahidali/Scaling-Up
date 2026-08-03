@@ -1,0 +1,20 @@
+# Dependencies — reinstall with `npm install`
+node_modules/
+
+# Astro build output and cache — regenerate with `npm run build`
+dist/
+.astro/
+
+# Playwright artifacts from browser verification
+.playwright-mcp/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-error.log*

@@ -1,0 +1,125 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Reference · Cheat Sheet</p>
+    <h1 data-ur="Numbers Cheat Sheet — yeh sab yaad karo">The Numbers Cheat Sheet</h1>
+    <p class="subtitle" data-ur="AWS exam specific numbers poochta hai. Yeh woh saare numbers hain jo DVA-C02 mein aate hain, ek jagah. Isay print kar ke deewar par laga do — exam se pehle roz 5 minute dekho.">AWS asks for exact numbers. Every number that appears on DVA-C02, in one place. Print this and stick it on a wall — 5 minutes a day before the exam.</p>
+    <div class="meta">
+      <span>Print this one</span>
+      <span class="star-key">⭐ = most frequently tested</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Isay kaise istemaal karo">How to use this sheet</span>
+    <span data-ur="Poori sheet ek saath yaad karne ki koshish mat karo. Pehle sirf <strong>⭐ wale rows</strong> yaad karo — yeh sab se zyada aate hain. Har roz sheet dekho, magar <em>pehle apne aap se poocho</em> phir dekho. Sirf parhne se yaad nahi hota; yaad karne ki koshish se hota hai.">Don't try to memorise the whole sheet at once. Learn the <strong>⭐ rows</strong> first — they appear most. Look at the sheet daily, but <em>test yourself first, then look</em>. Reading doesn't build memory; trying to recall does.</span>
+  </div>
+
+  <h2 data-ur="AWS Lambda">AWS Lambda</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Exam mein kyun matter karta hai">Why it matters on the exam</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Max timeout</td><td class="n">900 sec (15 min)</td><td data-ur="Isse lamba kaam = Lambda ghalat, Fargate sahi. Exam ka #1 number.">Longer work = Lambda is wrong, Fargate is right. The #1 exam number.</td></tr>
+      <tr><td>Memory range</td><td class="n">128 MB – 10,240 MB</td><td data-ur="CPU memory ke saath barhta hai — alag set nahi hota.">CPU scales with memory — it can't be set separately.</td></tr>
+      <tr><td>1 vCPU at</td><td class="n">1,769 MB</td><td data-ur="Performance tuning ke sawal mein aata hai.">Appears in performance tuning questions.</td></tr>
+      <tr><td>/tmp storage</td><td class="n">512 MB – 10,240 MB</td><td data-ur="Bari files process karne ke liye. Default 512 MB.">For processing large files. Default 512 MB.</td></tr>
+      <tr><td>Deployment pkg (zip)</td><td class="n">50 MB zipped / 250 MB unzipped</td><td data-ur="Isse bara? S3 se upload karo, ya container image.">Bigger? Upload via S3, or use a container image.</td></tr>
+      <tr><td>Container image</td><td class="n">10 GB</td><td data-ur="Bari dependencies (ML libraries) ke liye jawab.">The answer for big dependencies (ML libraries).</td></tr>
+      <tr class="star"><td>⭐ Payload sync</td><td class="n">6 MB</td><td data-ur="Request aur response dono. Bara data = S3 mein rakho, pointer bhejo.">Request and response each. Larger data = store in S3, pass a pointer.</td></tr>
+      <tr><td>Payload async</td><td class="n">256 KB</td><td data-ur="S3/SNS se invoke karne par.">When invoked from S3/SNS.</td></tr>
+      <tr><td>Env variables total</td><td class="n">4 KB</td><td data-ur="Isi liye bare secrets Secrets Manager mein.">Why large secrets go in Secrets Manager.</td></tr>
+      <tr><td>Layers per function</td><td class="n">5</td><td>&nbsp;</td></tr>
+      <tr><td>Concurrent executions</td><td class="n">1,000 (default, per region)</td><td data-ur="Barhaya ja sakta hai. API Gateway ki 10,000 limit se mismatch hota hai.">Can be raised. Mismatches API Gateway's 10,000 limit.</td></tr>
+      <tr><td>Async retries</td><td class="n">2 extra (3 total)</td><td data-ur="Phir DLQ ya Destination par jaata hai.">Then it goes to a DLQ or Destination.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="DynamoDB">DynamoDB</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Exam mein kyun matter karta hai">Why it matters on the exam</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Max item size</td><td class="n">400 KB</td><td data-ur="Bara data S3 mein, DynamoDB mein sirf S3 key.">Big data in S3, only the S3 key in DynamoDB.</td></tr>
+      <tr class="star"><td>⭐ LSI per table</td><td class="n">5</td><td data-ur="Sirf table banate waqt. Baad mein NAHI.">Only at table creation. NEVER afterwards.</td></tr>
+      <tr class="star"><td>⭐ GSI per table</td><td class="n">20</td><td data-ur="Kabhi bhi add karo. Sirf eventually consistent.">Add any time. Eventually consistent only.</td></tr>
+      <tr><td>Query/Scan result</td><td class="n">1 MB per call</td><td data-ur="Zyada chahiye to pagination.">Need more? Paginate.</td></tr>
+      <tr><td>1 RCU</td><td class="n">4 KB strongly consistent<br>(or 2 × eventually)</td><td data-ur="Capacity calculation ke sawal mein.">In capacity-calculation questions.</td></tr>
+      <tr><td>1 WCU</td><td class="n">1 KB per second</td><td>&nbsp;</td></tr>
+      <tr><td>Streams retention</td><td class="n">24 hours</td><td>&nbsp;</td></tr>
+      <tr><td>Transactions</td><td class="n">100 items / 4 MB</td><td>&nbsp;</td></tr>
+      <tr><td>BatchGetItem</td><td class="n">100 items / 16 MB</td><td>&nbsp;</td></tr>
+      <tr><td>BatchWriteItem</td><td class="n">25 items / 16 MB</td><td>&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="SQS, SNS, Kinesis">SQS, SNS, Kinesis</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Exam mein kyun matter karta hai">Why it matters on the exam</th></tr></thead>
+    <tbody>
+      <tr><td>SQS message size</td><td class="n">256 KB</td><td data-ur="Bara? S3 + Extended Client Library.">Bigger? S3 + Extended Client Library.</td></tr>
+      <tr><td>SQS retention</td><td class="n">4 days default, 14 days max</td><td data-ur="Minimum 60 seconds.">Minimum 60 seconds.</td></tr>
+      <tr class="star"><td>⭐ SQS visibility timeout</td><td class="n">30 sec default, 12 hrs max</td><td data-ur="Consumer isse lamba le to message DOBARA process hota hai. Classic duplicate sawal.">If the consumer takes longer, the message is processed TWICE. The classic duplicates question.</td></tr>
+      <tr><td>SQS long polling</td><td class="n">1 – 20 seconds</td><td data-ur="&quot;Reduce empty responses/cost&quot; = long polling.">&quot;Reduce empty responses/cost&quot; = long polling.</td></tr>
+      <tr><td>SQS FIFO throughput</td><td class="n">300/sec (3,000 batched)</td><td data-ur="Standard = unlimited.">Standard = unlimited.</td></tr>
+      <tr><td>SNS message size</td><td class="n">256 KB</td><td>&nbsp;</td></tr>
+      <tr><td>Kinesis shard</td><td class="n">1 MB/s or 1,000 rec/s in<br>2 MB/s out</td><td data-ur="&quot;ProvisionedThroughputExceeded&quot; = shards barhao.">&quot;ProvisionedThroughputExceeded&quot; = add shards.</td></tr>
+      <tr><td>Kinesis retention</td><td class="n">24 hrs default, up to 365 days</td><td data-ur="&quot;Replay data&quot; ka jawab Kinesis hai, SQS nahi.">&quot;Replay the data&quot; = Kinesis, not SQS.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="API Gateway, S3, KMS">API Gateway, S3, KMS</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Exam mein kyun matter karta hai">Why it matters on the exam</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ API GW timeout</td><td class="n">29 seconds</td><td data-ur="Lambda 15 min chal sakta hai magar API GW 29 sec baad 504 deta hai.">Lambda can run 15 min but API GW returns 504 after 29 sec.</td></tr>
+      <tr><td>API GW throttle</td><td class="n">10,000 req/sec (burst 5,000)</td><td data-ur="Account level default.">Account-level default.</td></tr>
+      <tr><td>API GW cache TTL</td><td class="n">300 sec default (0–3600)</td><td>&nbsp;</td></tr>
+      <tr><td>API GW payload</td><td class="n">10 MB</td><td>&nbsp;</td></tr>
+      <tr><td>S3 max object</td><td class="n">5 TB</td><td>&nbsp;</td></tr>
+      <tr><td>S3 single PUT</td><td class="n">5 GB max</td><td data-ur="Isse bara = multipart upload ZAROORI.">Larger = multipart upload REQUIRED.</td></tr>
+      <tr><td>S3 multipart advised</td><td class="n">&gt; 100 MB</td><td data-ur="Recommended, zaroori nahi.">Recommended, not required.</td></tr>
+      <tr class="star"><td>⭐ KMS direct encrypt</td><td class="n">4 KB</td><td data-ur="Isse bara = envelope encryption (GenerateDataKey).">Larger = envelope encryption (GenerateDataKey).</td></tr>
+      <tr><td>KMS key rotation</td><td class="n">1 year (automatic)</td><td>&nbsp;</td></tr>
+      <tr><td>KMS key deletion wait</td><td class="n">7 – 30 days</td><td data-ur="Foran delete nahi hoti.">Never immediate.</td></tr>
+      <tr><td>STS temp credentials</td><td class="n">15 min – 12 hours</td><td>&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Exam ki apni ginti">The exam itself</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Iska matlab">What it means for you</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Total questions</td><td class="n">65 (50 scored + 15 unscored)</td><td data-ur="Ajeeb sawal? Shayad un 15 mein se ho. Ghabrao mat.">A bizarre question? Possibly one of the 15. Don't panic.</td></tr>
+      <tr class="star"><td>⭐ Passing score</td><td class="n">720 / 1000</td><td data-ur="Motay tor par 35 sahi out of 50 scored.">Roughly 35 correct out of the 50 scored.</td></tr>
+      <tr><td>Time</td><td class="n">130 minutes</td><td data-ur="= 2 minute per sawal. 2 min se zyada = flag karo, aage barho.">= 2 min/question. Over 2 min = flag it and move on.</td></tr>
+      <tr><td>Cost</td><td class="n">150 USD</td><td data-ur="Team lead se poocho ke company pay karti hai ya nahi.">Ask your team lead if the company pays.</td></tr>
+      <tr><td>Domain 1 · Development</td><td class="n">32% (~16 q)</td><td data-ur="Lambda + DynamoDB. Sab se zyada waqt yahan lagao.">Lambda + DynamoDB. Spend the most time here.</td></tr>
+      <tr><td>Domain 2 · Security</td><td class="n">26% (~13 q)</td><td data-ur="Sab se predictable — aasaan points.">The most predictable — easy points.</td></tr>
+      <tr><td>Domain 3 · Deployment</td><td class="n">24% (~12 q)</td><td data-ur="Deployment strategies + CloudFormation/SAM.">Deployment strategies + CloudFormation/SAM.</td></tr>
+      <tr><td>Domain 4 · Troubleshooting</td><td class="n">18% (~9 q)</td><td data-ur="CloudWatch + X-Ray. Sab se chhota.">CloudWatch + X-Ray. The smallest.</td></tr>
+      <tr><td>Guessing penalty</td><td class="n">NONE</td><td data-ur="Khali chhora = ghalat. Hamesha guess karo.">A blank = wrong. Always guess.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Sab se zyada confuse hone wale teen jore">The three most confused pairs</span>
+    <span data-ur="<strong>1. Reserved vs Provisioned concurrency</strong> — Reserved = limit lagata hai. Provisioned = pehle se garam rakhta hai (cold start ka ilaaj). &quot;Cold start&quot; = Provisioned.<br><br><strong>2. Secrets Manager vs Parameter Store</strong> — &quot;automatically rotate&quot; = Secrets Manager. &quot;MOST cost-effective&quot; + config = Parameter Store.<br><br><strong>3. Blue/Green vs Canary</strong> — Blue/Green = 100% traffic ek saath switch. Canary = thora thora (10% → 100%). Sawal mein koi percentage ya &quot;small portion of users&quot; = Canary."><strong>1. Reserved vs Provisioned concurrency</strong> — Reserved = sets a cap. Provisioned = keeps environments warm (the cold-start cure). &quot;Cold start&quot; = Provisioned.<br><br><strong>2. Secrets Manager vs Parameter Store</strong> — &quot;automatically rotate&quot; = Secrets Manager. &quot;MOST cost-effective&quot; + config = Parameter Store.<br><br><strong>3. Blue/Green vs Canary</strong> — Blue/Green switches 100% at once. Canary shifts gradually (10% → 100%). Any percentage or &quot;small portion of users&quot; = Canary.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want me to quiz you on these numbers cold, with no sheet in front of you? Just say &quot;quiz me on the numbers&quot;. Recall practice beats re-reading every time.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Numbers cheat sheet.</strong> ← <a href="dva-domain4-troubleshooting.html">Domain 4</a> · <a href="../aws-index.html">Back to the AWS hub</a></p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" target="_blank">AWS Lambda quotas</a></li>
+      <li><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ServiceQuotas.html" target="_blank">Amazon DynamoDB quotas</a></li>
+      <li><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-quotas.html" target="_blank">Amazon SQS quotas</a></li>
+      <li><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html" target="_blank">API Gateway quotas</a></li>
+      <li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/limits.html" target="_blank">AWS KMS quotas</a></li>
+      <li><a href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html" target="_blank">DVA-C02 Exam Guide</a> — questions, scoring, domains</li>
+    </ol>
+  </footer>
+
+</div>

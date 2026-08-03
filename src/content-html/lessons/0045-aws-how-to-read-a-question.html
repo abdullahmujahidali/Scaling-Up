@@ -1,0 +1,232 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Lesson A1 · Exam Technique</p>
+    <h1 data-ur="AWS ka sawal kaise parhein: ek lafz jawab decide karta hai">How to read an AWS exam question: one word decides the answer</h1>
+    <p class="subtitle" data-ur="DVA-C02 mein aksar 2 options bilkul sahi hote hain. Sirf ek chhota sa lafz batata hai ke AWS kaunsa wala chahta hai. Woh lafz dhoondhna hi asli skill hai.">In DVA-C02, two options are often both technically correct. One small word tells you which one AWS wants. Finding that word is the real skill.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: the qualifying word</span>
+      <span>Win: stop losing points you already knew</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>AWS exam mein tumhara AWS knowledge test nahi hota — tumhari <em>reading</em> test hoti hai. Do options aksar dono kaam karte hain. Sawal mein chhupa hua ek lafz — MOST cost-effective, LEAST operational overhead, FASTEST — batata hai ke kaunsa wala &quot;sahi&quot; hai.</strong> Pehle woh lafz dhoondho, phir options parho. Ulta karoge to phansoge."><strong>The AWS exam does not only test your AWS knowledge — it tests your <em>reading</em>. Two options often both work. One hidden word in the question — MOST cost-effective, LEAST operational overhead, FASTEST — decides which one is &quot;right&quot;.</strong> Find that word first, then read the options. Do it the other way round and you will get trapped.</span>
+  </div>
+
+  <h2 data-ur="Kahani: bike lene aaye customer">The story: a customer buying a bike</h2>
+  <p data-ur="Socho tum ek bike shop chala rahe ho. Ek customer andar aata hai aur kehta hai: <em>&quot;Mujhe ek bike chahiye jo mujhe kaam par le jaaye — aur main <strong>sab se kam paisa</strong> kharch karna chahta hoon.&quot;</em> Tumhare paas 4 bikes hain. Chaaron usay kaam par le ja sakti hain. Chaaron &quot;sahi jawab&quot; hain agar sawal sirf &quot;kaam par le jaaye&quot; hota. Lekin usne <strong>sab se kam paisa</strong> kaha — to ab sirf ek jawab hai: sab se sasti bike. Baaki teen ab <em>ghalat</em> ho gayin, halanke woh kaam karti hain.">Imagine you run a bike shop. A customer walks in and says: <em>&quot;I need a bike to get me to work — and I want to spend the <strong>least money</strong>.&quot;</em> You have 4 bikes. All 4 can get them to work. All 4 would be &quot;correct answers&quot; if the question were only &quot;gets me to work&quot;. But they said <strong>least money</strong> — so now there is exactly one answer: the cheapest bike. The other three became <em>wrong</em>, even though they work.</p>
+  <p data-ur="AWS ka exam bilkul yehi karta hai. Sawal ek scenario deta hai, phir chaar options deta hai jo aksar sab technically kaam karte hain. Aur kahin ek chhota sa lafz chhupa hota hai — jaise <strong>MOST cost-effective</strong> ya <strong>LEAST operational overhead</strong> — jo teen options ko ghalat bana deta hai. Yehi woh lafz hai jise tez parhte waqt log miss kar dete hain.">The AWS exam does exactly this. The question gives a scenario, then four options that often all technically work. And hidden somewhere is one small word — like <strong>MOST cost-effective</strong> or <strong>LEAST operational overhead</strong> — that makes three of them wrong. That word is the one people miss when reading fast.</p>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — yeh lafz yaad kar lo">Exam English — memorise these words</span>
+    <span data-ur="Yeh woh lafz hain jo AWS baar baar istemaal karta hai. Inka matlab exam mein bilkul specific hota hai — yeh &quot;acha lagta hai&quot; wali baat nahi, yeh <em>rules</em> hain. Roman Urdu matlab neeche diya hai. Inhein pehchanna seekh lo, yeh har sawal mein aayenge.">These are the words AWS uses over and over. In the exam they have very specific meanings — they are not vague preferences, they are <em>rules</em>. Learn to spot them; they appear in nearly every question.</span>
+  </div>
+
+  <table class="elim">
+    <thead>
+      <tr>
+        <th data-ur="Sawal mein yeh lafz">The word in the question</th>
+        <th data-ur="Iska asli matlab">What it actually means</th>
+        <th data-ur="To jawab aksar yeh hota hai">So the answer is usually</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>MOST cost-effective</strong><br><span style="color:#6b6b6b" data-ur="sab se sasta">cheapest that still works</span></td>
+        <td data-ur="Paisa hi faisla karta hai. Performance tab tak matter nahi karti jab tak requirement poori ho rahi hai.">Money decides. Performance doesn't matter as long as the requirement is met.</td>
+        <td data-ur="Serverless, S3 lifecycle rules, Spot, on-demand capacity, chhota instance">Serverless, S3 lifecycle rules, Spot, on-demand capacity</td>
+      </tr>
+      <tr>
+        <td><strong>LEAST operational overhead</strong><br><span style="color:#6b6b6b" data-ur="sab se kam maintenance kaam">least work to run and maintain</span></td>
+        <td data-ur="Tum khud server manage nahi karna chahte. Patching, scaling, servers — AWS kare, tum nahi.">You don't want to manage servers. Patching, scaling, servers — AWS does it, not you.</td>
+        <td data-ur="Managed / serverless service: Lambda, Fargate, DynamoDB, S3, SQS">Managed / serverless: Lambda, Fargate, DynamoDB, S3, SQS</td>
+      </tr>
+      <tr>
+        <td><strong>LEAST / MINIMUM code changes</strong><br><span style="color:#6b6b6b" data-ur="code sab se kam badlo">change the code as little as possible</span></td>
+        <td data-ur="Aisa jawab chuno jo app ke bahar kaam kare — config, layer, sidecar — na ke poori rewrite.">Pick the option that works outside the app — config, a layer, a sidecar — not a rewrite.</td>
+        <td data-ur="Environment variables, Lambda layers, Parameter Store, ALB rules">Environment variables, Lambda layers, Parameter Store, ALB rules</td>
+      </tr>
+      <tr>
+        <td><strong>MOST secure</strong><br><span style="color:#6b6b6b" data-ur="sab se mehfooz">most secure</span></td>
+        <td data-ur="Kabhi bhi access key ya password code mein nahi. Hamesha temporary credentials aur least privilege.">Never an access key or password in code. Always temporary credentials and least privilege.</td>
+        <td data-ur="IAM roles, STS temporary credentials, Secrets Manager, KMS">IAM roles, STS temporary credentials, Secrets Manager, KMS</td>
+      </tr>
+      <tr>
+        <td><strong>Real-time / FASTEST</strong><br><span style="color:#6b6b6b" data-ur="foran, turant">immediately, right now</span></td>
+        <td data-ur="Batch aur scheduled options foran ghalat ho jaate hain. Latency hi faisla karti hai.">Batch and scheduled options become wrong instantly. Latency decides.</td>
+        <td data-ur="ElastiCache, Kinesis Data Streams, DynamoDB Streams, direct call">ElastiCache, Kinesis Data Streams, DynamoDB Streams</td>
+      </tr>
+      <tr>
+        <td><strong>HIGHLY available / durable</strong><br><span style="color:#6b6b6b" data-ur="hamesha chalti rahe">must survive failure</span></td>
+        <td data-ur="Ek jagah par sab kuch rakhna ghalat hai. Multi-AZ chahiye.">Everything in one place is wrong. It needs Multi-AZ.</td>
+        <td data-ur="Multi-AZ, S3, DynamoDB, replicas">Multi-AZ, S3, DynamoDB, replicas</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Asli sawal par karke dekho">Watch it work on a real-shaped question</h2>
+  <p data-ur="Neeche ek sawal hai bilkul DVA-C02 ke andaz mein. Peela highlight wala lafz woh hai jo jawab decide karta hai. Pehle usay dhoondho.">Below is a question shaped exactly like a DVA-C02 one. The highlighted word is the one that decides the answer. Find it first.</p>
+
+  <div class="exam-q" id="e1">
+    <span class="exam-tag">Domain 1 · Development · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek company ek image-processing app chalati hai. Users S3 bucket mein images upload karte hain. Har upload par ek thumbnail banana hai. Traffic bohot uneven hai — kuch ghante bilkul khali, kuch ghante hazaron uploads. Team servers manage nahi karna chahti. Kaunsa solution yeh requirement <span class=&quot;qual&quot;>SAB SE KAM operational overhead</span> ke saath poora karta hai?">A company runs an image-processing application. Users upload images to an S3 bucket. A thumbnail must be generated for every upload. Traffic is very uneven — some hours are idle, some hours have thousands of uploads. The team does not want to manage servers. Which solution meets these requirements with the <span class="qual">LEAST operational overhead</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="EC2 instances ka ek Auto Scaling group jo S3 bucket ko har minute poll karta hai">An Auto Scaling group of EC2 instances that polls the S3 bucket every minute</button>
+      <button class="opt" data-correct="true" data-ur="S3 event notification lagao jo har upload par ek Lambda function trigger kare">Configure an S3 event notification that triggers a Lambda function on each upload</button>
+      <button class="opt" data-correct="false" data-ur="ECS par ek container chalao jo EC2 launch type use karta ho aur queue parhta ho">Run a container on ECS with the EC2 launch type that reads from a queue</button>
+      <button class="opt" data-correct="false" data-ur="Ek EC2 instance jis par cron job har 5 minute mein naye files check kare">An EC2 instance with a cron job checking for new files every 5 minutes</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <h2 data-ur="Elimination — asli technique yehi hai">Elimination — this is the actual technique</h2>
+  <p data-ur="Tum aksar jawab &quot;jaante&quot; nahi ho. Tum do ghalat options <em>hatate</em> ho, phir bache huye do mein se chunte ho. Yeh dekho ke upar wala sawal kaise toot-ta hai:">You often don't &quot;know&quot; the answer. You <em>remove</em> two wrong options, then choose between the last two. Here's how the question above breaks down:</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Option">Option</th><th data-ur="Faisla">Verdict</th><th data-ur="Kyun">Why</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-ur="EC2 Auto Scaling group jo poll karta hai">EC2 Auto Scaling group polling</td>
+        <td class="verdict-out" data-ur="BAHAR">OUT</td>
+        <td data-ur="EC2 ka matlab hai tum servers manage kar rahe ho — patching, scaling, cost jab idle ho. Yeh &quot;least operational overhead&quot; ka ulta hai.">EC2 means you manage servers — patching, scaling, paying while idle. The opposite of least operational overhead.</td>
+      </tr>
+      <tr>
+        <td data-ur="S3 event → Lambda">S3 event → Lambda</td>
+        <td class="verdict-in" data-ur="ANDAR">IN</td>
+        <td data-ur="Koi server nahi, event-driven, khud scale karta hai, idle mein 0 cost. Bilkul wahi jo lafz maang raha hai.">No servers, event-driven, scales itself, costs nothing when idle. Exactly what the qualifying word asks for.</td>
+      </tr>
+      <tr>
+        <td data-ur="ECS EC2 launch type">ECS with EC2 launch type</td>
+        <td class="verdict-out" data-ur="BAHAR">OUT</td>
+        <td data-ur="Trap! ECS serverless lagta hai, magar <strong>EC2 launch type</strong> ka matlab hai tum phir bhi EC2 instances manage kar rahe ho. Agar yahan Fargate hota to yeh mukabla karta.">Trap! ECS sounds serverless, but <strong>EC2 launch type</strong> means you still manage EC2 instances. Had it said Fargate, this would compete.</td>
+      </tr>
+      <tr>
+        <td data-ur="EC2 par cron har 5 minute">EC2 cron every 5 minutes</td>
+        <td class="verdict-out" data-ur="BAHAR">OUT</td>
+        <td data-ur="Server bhi manage karna hai, aur 5 minute ki deri bhi. Do wajah se ghalat.">You manage a server AND you get a 5-minute delay. Wrong on two counts.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Sab se bara trap — yeh dhyan se">The biggest trap — watch for this</span>
+    <span data-ur="Dekho option 3 kaise kaam karta hai. &quot;ECS&quot; parh kar dimaag kehta hai <em>&quot;containers, modern, serverless!&quot;</em> — magar asli lafz <strong>EC2 launch type</strong> hai, jo poora matlab badal deta hai. AWS aksar 90% sahi option deta hai jismein ek lafz ghalat hota hai. <strong>Isi liye options ko poora, aakhir tak parhna zaroori hai.</strong> Aadha parh kar &quot;haan yehi hai&quot; kehna sab se aam ghalti hai.">Look at how option 3 works. Reading &quot;ECS&quot; your brain says <em>&quot;containers, modern, serverless!&quot;</em> — but the real words are <strong>EC2 launch type</strong>, which changes the whole meaning. AWS often gives a 90%-correct option with one wrong word in it. <strong>This is why you must read every option to the end.</strong> Half-reading and thinking &quot;yes, that's it&quot; is the most common mistake.</span>
+  </div>
+
+  <h2 data-ur="Tumhari 4-qadam reading method">Your 4-step reading method</h2>
+  <p data-ur="Har sawal par yeh karo. Exam mein har sawal ke liye tumhare paas 2 minute hain — yeh method usi ke andar fit hota hai.">Do this on every question. You have 2 minutes per question in the exam — this method fits inside that.</p>
+  <ol>
+    <li data-ur="<strong>Aakhri line pehle parho.</strong> Sawal ka asli maang hamesha aakhri jumle mein hoti hai. Woh lafz dhoondho: MOST cost-effective? LEAST overhead? MOST secure? Yeh 10 second ka kaam hai aur poora sawal isi par ghoomta hai."><strong>Read the last line first.</strong> The actual ask is always in the final sentence. Find the qualifying word: MOST cost-effective? LEAST overhead? MOST secure? That's a 10-second job and the whole question turns on it.</li>
+    <li data-ur="<strong>Ab scenario parho, aur limits notice karo.</strong> &quot;15 minute se zyada chalta hai&quot; → Lambda bahar. &quot;Order zaroori hai&quot; → SQS FIFO. &quot;Millions of requests&quot; → cache. Yeh chhoti details options ko khud kaat deti hain."><strong>Now read the scenario, noticing limits.</strong> &quot;Runs longer than 15 minutes&quot; → Lambda is out. &quot;Order matters&quot; → SQS FIFO. &quot;Millions of requests&quot; → cache. These small details eliminate options for you.</li>
+    <li data-ur="<strong>Do options kaato jo saaf ghalat hain.</strong> Aksar do options waqai ghalat hote hain (ghalat service, ya requirement hi poori nahi karte). Ab tumhara chance 25% se 50% ho gaya."><strong>Cut the two clearly wrong options.</strong> Usually two are genuinely wrong (wrong service, or don't meet the requirement at all). Your odds just went from 25% to 50%.</li>
+    <li data-ur="<strong>Bache huye do par woh lafz dobara lagao.</strong> Dono kaam karte hain — magar kaunsa zyada sasta / kam maintenance / zyada mehfooz hai? Woh lafz hi tie tor-ta hai. Yehi poora game hai."><strong>Apply the qualifying word to the final two.</strong> Both work — but which is cheaper / lower-maintenance / more secure? The word breaks the tie. That's the whole game.</li>
+  </ol>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Exam ki ginti — yeh yaad rakho">Exam maths — know these</span>
+    <ul>
+      <li data-ur="<strong>65 sawal, magar sirf 50 count hote hain.</strong> 15 sawal experimental hain aur score mein nahi jaate. Agar koi sawal bilkul ajeeb lage — mumkin hai woh un 15 mein se ho. Ghabrao mat.">
+        <strong>65 questions, but only 50 are scored.</strong> 15 are experimental and don't count. If a question feels bizarre, it may be one of those 15. Don't panic.</li>
+      <li data-ur="<strong>Pass = 720 out of 1000</strong> (scaled score, 100–1000). Motay tor par ~35 sahi jawab out of 50 scored.">
+        <strong>Pass = 720 of 1000</strong> (scaled, 100–1000). Roughly ~35 correct out of the 50 scored.</li>
+      <li data-ur="<strong>130 minute ÷ 65 sawal = 2 minute per sawal.</strong> Agar ek sawal par 2 minute se zyada laga — flag karo aur aage barho. Wapas aa sakte ho.">
+        <strong>130 minutes ÷ 65 = 2 minutes per question.</strong> Over 2 minutes on one? Flag it and move on. You can come back.</li>
+      <li data-ur="<strong>Ghalat jawab ka koi extra nuksan nahi.</strong> Khali chhora hua sawal = ghalat. To <em>kabhi</em> koi sawal khali mat chhoro — hamesha guess karo.">
+        <strong>No penalty for a wrong answer.</strong> A blank is scored as wrong. So <em>never</em> leave one blank — always guess.</li>
+      <li data-ur="<strong>Compensatory scoring.</strong> Har domain alag se pass karna zaroori nahi — sirf overall pass chahiye. Ek kamzor domain tumhein fail nahi karta.">
+        <strong>Compensatory scoring.</strong> You don't need to pass each domain — only overall. One weak domain will not fail you.</li>
+    </ul>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: agar sawal mein &quot;LEAST operational overhead&quot; likha hai, to tum kis tarah ke jawab ki taraf jhukoge — aur kis se door bhagoge?">From memory: if a question says &quot;LEAST operational overhead&quot;, which kind of answer do you lean toward — and which do you run from?</div>
+    <div class="answer" data-ur="<strong>Jhuko:</strong> managed / serverless — Lambda, Fargate, DynamoDB, S3, SQS. AWS servers chalata hai, tum nahi. <strong>Bhago:</strong> koi bhi cheez jismein tum EC2 manage karo — Auto Scaling groups, cron on EC2, ECS with EC2 launch type, self-managed database. Agar tumhein patch ya scale karna par raha hai, to woh &quot;operational overhead&quot; hai."><strong>Lean toward:</strong> managed / serverless — Lambda, Fargate, DynamoDB, S3, SQS. AWS runs the servers, not you. <strong>Run from:</strong> anything where you manage EC2 — Auto Scaling groups, cron on EC2, ECS with EC2 launch type, self-managed databases. If you have to patch or scale it, that IS operational overhead.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="e2">
+    <span class="exam-tag">Domain 2 · Security · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek developer ne ek Python app likhi hai jo EC2 instance par chalti hai aur DynamoDB table parhti hai. Abhi app mein IAM access key aur secret key hard-coded hain. Security team ne kaha hai ke credentials code se nikalne hain. Kaunsa solution <span class=&quot;qual&quot;>SAB SE ZYADA mehfooz</span> hai?">A developer wrote a Python app that runs on an EC2 instance and reads a DynamoDB table. The app currently has an IAM access key and secret key hard-coded in it. The security team requires credentials to be removed from the code. Which solution is <span class="qual">MOST secure</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Access keys ko EC2 instance par environment variables mein daal do">Move the access keys into environment variables on the EC2 instance</button>
+      <button class="opt" data-correct="false" data-ur="Access keys ko S3 bucket mein ek encrypted file mein rakho aur startup par parho">Store the access keys in an encrypted file in S3 and read it at startup</button>
+      <button class="opt" data-correct="true" data-ur="EC2 instance ko ek IAM role attach karo aur access keys bilkul hata do">Attach an IAM role to the EC2 instance and remove the access keys entirely</button>
+      <button class="opt" data-correct="false" data-ur="Access keys ko ek config file mein rakho jiski permissions 600 hon">Store the access keys in a config file with 600 file permissions</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="e3">
+    <span class="exam-tag">Domain 1 · Development · spot the trap</span>
+    <p class="scenario" data-ur="Ek data processing job ek bare CSV file ko parh kar transform karta hai. Job ko poora hone mein tayyari se <strong>45 minute</strong> lagte hain. Yeh job din mein ek baar chalta hai. Team compute servers manage nahi karna chahti. Kaunsa solution requirement poora karta hai <span class=&quot;qual&quot;>SAB SE KAM operational overhead</span> ke saath?">A data processing job reads a large CSV file and transforms it. The job consistently takes <strong>45 minutes</strong> to complete. It runs once per day. The team does not want to manage compute servers. Which solution meets the requirement with the <span class="qual">LEAST operational overhead</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek Lambda function jo EventBridge schedule se rozana trigger ho">A Lambda function triggered daily by an EventBridge schedule</button>
+      <button class="opt" data-correct="true" data-ur="Ek AWS Fargate task jo EventBridge schedule se rozana chale">An AWS Fargate task run daily on an EventBridge schedule</button>
+      <button class="opt" data-correct="false" data-ur="Ek EC2 instance jismein cron job rozana chale">An EC2 instance with a cron job running daily</button>
+      <button class="opt" data-correct="false" data-ur="Lambda function ko 45 minute timeout par set karo">A Lambda function configured with a 45-minute timeout</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Woh limit jo abhi tumne dekhi">The limit you just used</span>
+    <ul>
+      <li data-ur="<strong>Lambda ka maximum timeout = 15 minute (900 seconds).</strong> Yeh exam ka sab se zyada test hone wala number hai. Jab bhi sawal mein koi kaam 15 minute se lamba ho — Lambda foran ghalat ho jata hai, chahe baaki sab kuch serverless ho. Uski jagah <strong>Fargate</strong> aata hai: serverless bhi, aur time limit bhi nahi."><strong>Lambda maximum timeout = 15 minutes (900 seconds).</strong> This is the single most-tested number on the exam. Whenever a task runs longer than 15 minutes, Lambda is instantly wrong no matter how serverless everything else sounds. <strong>Fargate</strong> takes its place: also serverless, but no time limit.</li>
+    </ul>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="Tumne yeh sab kaam par pehle hi kiya hua hai — bas exam ki zubaan mein nahi. Jab tumne Celery task banaya kyunke ek kaam request-response cycle ke liye bohot lamba tha, tumne wahi faisla liya jo yahan &quot;Lambda vs Fargate&quot; hai: <em>kaam kitni der chalta hai?</em> Jab tumne settings mein <code>SECRET_KEY</code> environment variable se parha bajaye code mein likhne ke, tumne wahi kiya jo &quot;IAM role vs hard-coded keys&quot; hai. <strong>Tumhara AWS experience already exam ke bohot saare jawab jaanta hai — masla sirf yeh hai ke AWS unhein alag lafzon mein poochta hai.</strong> Isi liye pehla lesson services par nahi, lafzon par hai.">You have already done all of this at work — just not in exam language. When you moved something into a Celery task because it took too long for the request-response cycle, you made the exact decision that &quot;Lambda vs Fargate&quot; is here: <em>how long does the work run?</em> When you read <code>SECRET_KEY</code> from an environment variable instead of writing it in code, you made the &quot;IAM role vs hard-coded keys&quot; call. <strong>Your AWS experience already knows many of the exam's answers — the problem is only that AWS asks in different words.</strong> That is exactly why this first lesson is about words, not services.</span>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab tum AWS ka sawal ek system se parh sakte ho: <strong>(1) aakhri line pehle — qualifying lafz dhoondho, (2) scenario mein limits notice karo, (3) do saaf ghalat options kaato, (4) bache huye do par woh lafz lagao.</strong> Tumne yeh bhi seekh liya ke AWS ka sab se aam trap kya hai — ek 90% sahi option jismein ek lafz ghalat ho (&quot;ECS <em>with EC2 launch type</em>&quot;). Aur tumhein exam ki ginti pata hai: 50 scored sawal, pass 720, 2 minute per sawal, kabhi khali mat chhoro. Yeh skill har aane wale lesson mein kaam aayegi.">You can now read an AWS question systematically: <strong>(1) last line first — find the qualifying word, (2) notice limits in the scenario, (3) cut the two clearly wrong options, (4) apply the word to the final two.</strong> You also learned AWS's most common trap — a 90%-correct option with one wrong word in it (&quot;ECS <em>with EC2 launch type</em>&quot;). And you know the exam maths: 50 scored questions, pass at 720, 2 minutes each, never leave a blank. This skill pays off in every lesson that follows.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html&quot; target=&quot;_blank&quot;>Official DVA-C02 Exam Guide</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — yeh AWS ka apna document hai, sab se zyada bharosay ke laayak. Chhota hai, ek baar poora parh lo. Khaas kar &quot;Content outline&quot; wala hissa: har domain ke task statements diye hain — yehi asli syllabus hai.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html" target="_blank">Official DVA-C02 Exam Guide</a><sup class="cite"><a href="#s1">1</a></sup> — AWS's own document, the highest-trust source there is. It's short; read it once end to end. Especially the &quot;Content outline&quot; section: it lists the task statements per domain — that is the real syllabus.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Bring me any practice question you got wrong and I'll show you which word you missed. If a question's English is confusing, paste it and I'll rewrite it in simpler words first, then explain the AWS part. That's exactly what I'm here for — don't struggle with the English alone.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson A1 (How to Read an AWS Exam Question).</strong> First lesson of the <a href="../MISSION-AWS.md">DVA-C02 track</a>. Next: <a href="0046-aws-lambda-limits.html">A2 · Lambda — the limits the exam tests</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html" target="_blank">AWS Certified Developer – Associate (DVA-C02) Exam Guide</a> — domains, weightings, 65 questions / 50 scored, 130 minutes, passing score 720, compensatory scoring, no guessing penalty.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" target="_blank">AWS Lambda quotas</a> — maximum function timeout of 900 seconds (15 minutes).</li>
+      <li id="s3"><a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank">AWS Certified Developer – Associate</a> — registration and exam cost (150 USD).</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          e1: correct ? "Correct. \"LEAST operational overhead\" + uneven traffic = serverless. S3 event → Lambda has no servers to manage, scales to thousands automatically, and costs nothing while idle. Note the trap in option 3: ECS sounds serverless, but \"EC2 launch type\" means you still manage EC2."
+                      : "Reconsider. The deciding phrase is \"LEAST operational overhead\" — meaning you manage nothing. Any option with EC2 in it (including ECS with the EC2 launch type) fails that. S3 event → Lambda is the serverless answer.",
+          e2: correct ? "Correct. An IAM role gives the EC2 instance temporary, auto-rotating credentials — there is no key to leak, at all. The other three all still HAVE a long-lived key somewhere; they just hide it better. \"MOST secure\" means eliminate the secret, not relocate it."
+                      : "Reconsider. Options 1, 2 and 4 all still store a permanent access key somewhere — they only move it. A leaked key is still a leaked key. \"MOST secure\" = IAM role, so no long-lived credential exists at all. This is a guaranteed exam pattern.",
+          e3: correct ? "Correct — and you caught the trap. The job takes 45 minutes, but Lambda's hard maximum is 15 minutes, so options 1 and 4 are impossible (option 4 is a fake: you cannot set a 45-minute Lambda timeout). EC2 means managing a server. Fargate is serverless with no time limit."
+                      : "Reconsider. Read the runtime again: 45 minutes. Lambda's hard maximum timeout is 15 minutes — so both Lambda options are impossible, and option 4 is a fake config that AWS won't accept. EC2 means managing servers. That leaves Fargate: serverless, no time limit."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

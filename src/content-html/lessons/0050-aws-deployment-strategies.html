@@ -1,0 +1,187 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Lesson A6 · Domain 3 (24%)</p>
+    <h1 data-ur="Deployment strategies: blue/green, canary, linear">Deployment strategies: blue/green, canary, linear</h1>
+    <p class="subtitle" data-ur="Domain 3 exam ka 24% hai aur uska sab se zyada poocha jaane wala topic yehi hai. Chaar tareeqe hain, aur har ek ka ek jumla hai jo sawal mein aata hai. Woh jumla pehchano, jawab mil gaya.">Domain 3 is 24% of the exam and this is its most-asked topic. There are four approaches, and each has a phrase that appears in the question. Recognise the phrase and you have the answer.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: how much risk during a release</span>
+      <span>Win: the most-asked Domain 3 question</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="A5 se yaad karo: &quot;har subscriber ko apni copy aur retry bhi chahiye&quot; — kaunsa pattern?">Recall from A5: &quot;each subscriber needs its own copy with retries&quot; — which pattern?</div>
+    <div class="answer" data-ur="<strong>SNS + SQS fan-out</strong> — ek SNS topic, aur har subscriber ka apna SQS queue. SNS akela messages mehfooz nahi rakhta."><strong>SNS + SQS fan-out</strong> — one SNS topic, and an SQS queue per subscriber. SNS alone doesn't store messages.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="Har strategy asal mein ek hi sawal ka jawab hai: <strong>agar naya version kharab nikla to kitne users ko nuqsan pohanchega, aur wapas jaane mein kitna waqt lagega?</strong><br><br><strong>Blue/Green = 0 downtime, foran wapas</strong> (magar dugna paisa).<br><strong>Canary = pehle thore users, phir sab</strong> (do qadam).<br><strong>Linear = barabar hisson mein aahista aahista</strong> (jaise har 10 minute mein 10%).<br><strong>All-at-once = sab se sasta, magar downtime.</strong>">Every strategy answers one question: <strong>if the new version is bad, how many users get hurt, and how fast can you go back?</strong><br><br>
+      <strong>Blue/Green = zero downtime, instant rollback</strong> (but double the cost).<br>
+      <strong>Canary = a small group first, then everyone</strong> (two steps).<br>
+      <strong>Linear = equal slices, gradually</strong> (e.g. 10% every 10 minutes).<br>
+      <strong>All-at-once = cheapest, but there is downtime.</strong></span>
+  </div>
+
+  <h2 data-ur="Kahani: restaurant ka naya khana">The story: a restaurant's new dish</h2>
+  <p data-ur="Tumhare restaurant ne ek naya salan banaya hai. Tum nahi jaante logon ko pasand aayega ya nahi. Chaar tareeqe hain:">Your restaurant has invented a new curry. You don't know whether people will like it. Four approaches:</p>
+  <ul>
+    <li data-ur="<strong>All-at-once:</strong> purana salan bilkul band, sirf naya. Agar kharab nikla to aaj sab customers naraz. Sab se sasta, sab se khatarnak."><strong>All-at-once:</strong> stop the old curry entirely, serve only the new one. If it's bad, every customer today is unhappy. Cheapest, riskiest.</li>
+    <li data-ur="<strong>Canary:</strong> pehle sirf 5 customers ko naya salan do. Woh khush hain? Ab sab ko de do. Naraz hain? Sirf 5 log mutasir hue. (&quot;Canary&quot; woh chiriya thi jo koyle ki khaan mein zehreeli gas pehle pakar leti thi — thora sa nuqsan, bare hadse se bachao.)"><strong>Canary:</strong> serve the new curry to 5 customers first. They're happy? Roll it out to everyone. Unhappy? Only 5 people were affected. (A &quot;canary&quot; was the bird taken into coal mines to detect gas first — a small loss that prevents a disaster.)</li>
+    <li data-ur="<strong>Linear:</strong> har ghante 10% customers ko naya salan. Aahista aahista sab tak. Masla dikhe to rok do."><strong>Linear:</strong> each hour, 10% more customers get the new curry. Gradually everyone. Spot a problem and you stop.</li>
+    <li data-ur="<strong>Blue/Green:</strong> saath wale kamre mein poora doosra kitchen laga do, jismein naya salan tayyar ho. Jab tayyar ho jaye to sab customers ko us kamre mein bhej do. Kharab nikla? Foran wapas purane kamre mein — 10 second ka kaam. Magar tumhein <strong>do kitchen</strong> ka kiraya dena para."><strong>Blue/Green:</strong> build a second, complete kitchen next door cooking the new curry. When it's ready, send all customers to that room. Bad? Send them straight back to the old room — a 10-second job. But you paid rent on <strong>two kitchens</strong>.</li>
+  </ul>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Sawal mein yeh jumla">The phrase in the question</th><th data-ur="Jawab">Answer</th><th data-ur="Kimat">The cost</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-ur="⭐ &quot;zero downtime&quot; + &quot;foran rollback&quot; / &quot;instant rollback&quot;">⭐ &quot;zero downtime&quot; + &quot;instant rollback&quot;</td>
+        <td><strong>Blue/Green</strong></td>
+        <td data-ur="Kuch der ke liye dugna infrastructure — sab se mehnga.">Double the infrastructure for a while — the most expensive.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;thore users par test karo phir sab par&quot;, &quot;10% pehle&quot;">&quot;test on a small percentage first, then all&quot;, &quot;10% first&quot;</td>
+        <td><strong>Canary</strong></td>
+        <td data-ur="Do qadam: chhota hissa, phir baaki sab.">Two steps: a small slice, then the rest.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;barabar hisson mein aahista aahista&quot;, &quot;har 10 minute mein 10%&quot;">&quot;equal increments over time&quot;, &quot;10% every 10 minutes&quot;</td>
+        <td><strong>Linear</strong></td>
+        <td data-ur="Sab se lamba waqt leta hai.">Takes the longest.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;sab se sasta&quot;, &quot;downtime qubool hai&quot;, dev environment">&quot;lowest cost&quot;, &quot;downtime is acceptable&quot;, a dev environment</td>
+        <td><strong>All-at-once</strong></td>
+        <td data-ur="Downtime hoti hai. Sirf tab jab sawal saaf kahe ke downtime chalega.">There is downtime. Only when the question explicitly permits it.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;instances ko batch mein badlo, kam capacity qubool&quot;">&quot;replace instances in batches, reduced capacity is acceptable&quot;</td>
+        <td><strong>Rolling</strong></td>
+        <td data-ur="Deployment ke doran capacity kam ho jati hai.">Capacity drops during the deployment.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Lambda ke deployment names — CodeDeploy inhein aise likhta hai">Lambda deployment names — how CodeDeploy writes them</span>
+    <ul>
+      <li data-ur="<strong>Canary10Percent5Minutes</strong> = pehle 10% traffic, 5 minute rukо, phir baaki 100%. Do qadam."><strong>Canary10Percent5Minutes</strong> = 10% of traffic first, wait 5 minutes, then the remaining 100%. Two steps.</li>
+      <li data-ur="<strong>Linear10PercentEvery10Minutes</strong> = har 10 minute mein 10% barhta jaye. Das qadam."><strong>Linear10PercentEvery10Minutes</strong> = 10% more every 10 minutes. Ten steps.</li>
+      <li data-ur="<strong>AllAtOnce</strong> = ek dam saara traffic naye version par."><strong>AllAtOnce</strong> = all traffic to the new version immediately.</li>
+      <li data-ur="Yeh naam exam mein bilkul aise hi likhe aate hain — inhein parhna seekh lo, naam khud bata deta hai ke kya hota hai.">These names appear on the exam exactly like this — learn to read them; the name itself tells you the behaviour.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Trap — buildspec vs appspec">Trap — buildspec vs appspec</span>
+    <span data-ur="Do files hain aur exam inhein aapas mein badal kar poochta hai:<br><br><strong><code>buildspec.yml</code> → CodeBuild ka.</strong> Ismein likha hota hai ke code kaise <em>banana</em> (build) aur test karna hai.<br><strong><code>appspec.yml</code> → CodeDeploy ka.</strong> Ismein likha hota hai ke naya version kaise <em>lagana</em> (deploy) hai aur hooks kya chalane hain.<br><br>Yaad rakhne ka tareeqa: <strong>build</strong>spec = <strong>build</strong> karne wali service. <strong>app</strong>spec = <strong>app</strong> ko jagah par rakhne wali service.">Two files, and the exam swaps them to trick you:<br><br>
+      <strong><code>buildspec.yml</code> → belongs to CodeBuild.</strong> It describes how to <em>build</em> and test the code.<br>
+      <strong><code>appspec.yml</code> → belongs to CodeDeploy.</strong> It describes how to <em>deploy</em> the new version and which hooks to run.<br><br>
+      Memory hook: <strong>build</strong>spec = the service that <strong>builds</strong>. <strong>app</strong>spec = the service that puts the <strong>app</strong> in place.</span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — deployment ke lafz">Exam English — deployment words</span>
+    <span data-ur="<strong>&quot;downtime&quot;</strong> = woh waqt jab service band ho. <strong>&quot;roll back&quot;</strong> = purane version par wapas jana. <strong>&quot;cut over&quot;</strong> = traffic ko naye version par shift karna. <strong>&quot;shift traffic&quot;</strong> = wohi baat. <strong>&quot;in place&quot;</strong> = usi server par upgrade karna (naya server nahi banana). <strong>&quot;immutable&quot;</strong> = purana chhua hi nahi jata, naye servers banaye jate hain.">
+      <strong>&quot;downtime&quot;</strong> = time when the service is unavailable. <strong>&quot;roll back&quot;</strong> = return to the previous version. <strong>&quot;cut over&quot;</strong> = switch traffic to the new version. <strong>&quot;shift traffic&quot;</strong> = the same thing. <strong>&quot;in place&quot;</strong> = upgrade on the same servers (no new ones). <strong>&quot;immutable&quot;</strong> = the old ones are never touched; new servers are built instead.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3 · Deployment · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek payments application ko update karna hai. Business ki shart hai: <strong>bilkul downtime nahi</strong>, aur agar naye version mein masla ho to <strong>foran purane version par wapas</strong> jaana mumkin ho. Cost ki koi hadd nahi batayi gayi. Kaunsi deployment strategy yeh <span class=&quot;qual&quot;>SAB SE ACHA</span> poora karti hai?">A payments application must be updated. The business requires <strong>zero downtime</strong> and the ability to <strong>return to the previous version immediately</strong> if there's a problem. No cost constraint was stated. Which deployment strategy <span class="qual">BEST</span> meets this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="All-at-once deployment">All-at-once deployment</button>
+      <button class="opt" data-correct="true" data-ur="Blue/green deployment">Blue/green deployment</button>
+      <button class="opt" data-correct="false" data-ur="Rolling deployment">Rolling deployment</button>
+      <button class="opt" data-correct="false" data-ur="Linear deployment jismein har 10 minute mein 10% traffic shift ho">Linear deployment shifting 10% of traffic every 10 minutes</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3 · Deployment · read the name</span>
+    <p class="scenario" data-ur="Ek team apne Lambda function ka naya version aise release karna chahti hai ke pehle <strong>thora sa traffic</strong> us par jaye, kuch der <strong>errors check</strong> karein, aur agar sab theek ho to <strong>baaki saara traffic</strong> shift kar dein. CodeDeploy ki kaunsi configuration yeh karti hai?">A team wants to release a new Lambda version by first sending it <strong>a small amount of traffic</strong>, watching for <strong>errors</strong> for a while, and then shifting <strong>all remaining traffic</strong> if it looks healthy. Which CodeDeploy configuration does this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AllAtOnce">AllAtOnce</button>
+      <button class="opt" data-correct="true" data-ur="Canary10Percent5Minutes">Canary10Percent5Minutes</button>
+      <button class="opt" data-correct="false" data-ur="Linear10PercentEvery10Minutes">Linear10PercentEvery10Minutes</button>
+      <button class="opt" data-correct="false" data-ur="Rolling with additional batch">Rolling with additional batch</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 3 · Deployment · the two files</span>
+    <p class="scenario" data-ur="Ek developer CodeDeploy se EC2 par application deploy kar raha hai. Usay deployment ke doran ek script chalani hai jo naye version ke shuru hone se pehle purani service band kare. Yeh hook kis file mein likha jata hai?">A developer is deploying an application to EC2 with CodeDeploy. They need a script to run during deployment that stops the old service before the new version starts. In which file is this hook defined?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="buildspec.yml">buildspec.yml</button>
+      <button class="opt" data-correct="true" data-ur="appspec.yml">appspec.yml</button>
+      <button class="opt" data-correct="false" data-ur="template.yaml">template.yaml</button>
+      <button class="opt" data-correct="false" data-ur="Dockerfile">Dockerfile</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="Tum yeh faisla har release par lete ho. Jab tum Django app deploy karte ho aur <code>migrate</code> chala kar gunicorn restart karte ho — woh <strong>all-at-once</strong> hai, aur usi mein woh chand second ki downtime hoti hai jo tumne dekhi hogi. Jab tum naye servers par naya version chala kar load balancer ka rukh mor dete ho — woh <strong>blue/green</strong> hai. Aur jab tum koi feature sirf 5% users ke liye on karte ho (feature flag — lesson 0035) — woh bilkul <strong>canary</strong> ki soch hai. <strong>Tumne yeh sab kiya hua hai; exam sirf inke naam poochta hai.</strong>">You make this decision on every release. When you deploy a Django app by running <code>migrate</code> and restarting gunicorn — that's <strong>all-at-once</strong>, and it's exactly where those few seconds of downtime you've seen come from. When you bring up new servers with the new version and repoint the load balancer — that's <strong>blue/green</strong>. And when you enable a feature for just 5% of users (feature flags — lesson 0035) — that's precisely <strong>canary</strong> thinking. <strong>You have done all of this; the exam only asks for the names.</strong></span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: &quot;zero downtime + instant rollback&quot; = kaunsi strategy, aur uski qeemat kya hai? Aur buildspec kis service ki file hai?">From memory: &quot;zero downtime + instant rollback&quot; = which strategy, and what does it cost? And buildspec belongs to which service?</div>
+    <div class="answer" data-ur="<strong>Blue/Green</strong> — qeemat yeh ke kuch der do poore environments chalte hain (dugna infrastructure). <strong>buildspec.yml = CodeBuild</strong> (appspec.yml = CodeDeploy)."><strong>Blue/Green</strong> — the cost is running two full environments for a while (double infrastructure). <strong>buildspec.yml = CodeBuild</strong> (appspec.yml = CodeDeploy).</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab tum Domain 3 ka sab se zyada poocha jaane wala sawal jeet sakte ho. &quot;Zero downtime + instant rollback&quot; = Blue/Green, hamesha. Tum CodeDeploy ke naam parh kar samajh sakte ho ke woh kya karta hai. Aur buildspec/appspec ka jora ab nahi phansayega. Domain 3 exam ka 24% hai.">You can now win Domain 3's most-asked question. &quot;Zero downtime + instant rollback&quot; = Blue/Green, every time. You can read a CodeDeploy config name and know what it does. And the buildspec/appspec pair won't catch you out. Domain 3 is 24% of the exam.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/codedeploy/latest/userguide/primary-components.html&quot; target=&quot;_blank&quot;>CodeDeploy deployment configurations</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — canary/linear ke asal naam AWS ke apne lafzon mein.">📖 <a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/primary-components.html" target="_blank">CodeDeploy deployment configurations</a><sup class="cite"><a href="#s1">1</a></sup> — the exact canary/linear names in AWS's own words.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> If a deployment question gives you four strategies that all sound reasonable, paste it. The deciding phrase is usually about rollback speed or cost — I'll show you which.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson A6 (Deployment strategies).</strong> Part of the <a href="../MISSION-AWS.md">DVA-C02 track</a>. Previous: <a href="0049-aws-messaging-services.html">A5 · SQS vs SNS vs Kinesis</a>. Next: <a href="0051-aws-observability.html">A7 · CloudWatch, X-Ray and CloudTrail</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/primary-components.html" target="_blank">CodeDeploy components and deployment configurations</a> — canary, linear and all-at-once traffic-shifting options and their naming.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file.html" target="_blank">CodeDeploy AppSpec file reference</a> — <code>appspec.yml</code> defines deployment lifecycle event hooks.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html" target="_blank">CodeBuild buildspec reference</a> — <code>buildspec.yml</code> defines build and test phases.</li>
+      <li id="s4"><a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.deploy-existing-version.html" target="_blank">Elastic Beanstalk deployment policies</a> — all-at-once, rolling, rolling with additional batch, immutable, and blue/green trade-offs.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Two phrases decide it: \"zero downtime\" and \"immediately\" roll back. Blue/green runs a complete second environment, so switching back is just repointing traffic — instant. All-at-once has downtime. Rolling and linear both take time to reverse because instances or traffic move gradually. Note the question said cost was not constrained, which is what makes blue/green affordable here."
+                      : "Reconsider. \"Immediately roll back\" is the deciding phrase. With rolling or linear, going back means moving instances or traffic gradually again — that is not immediate. All-at-once causes downtime, which is explicitly forbidden. Only blue/green keeps a complete old environment standing, so rollback is a single traffic switch.",
+          q2: correct ? "Correct. Canary means two steps: a small slice first, a pause to observe, then everything else. That is exactly Canary10Percent5Minutes — 10% for 5 minutes, then the rest. Linear would move in ten equal steps instead of two, which is not what was described."
+                      : "Reconsider. Read the description again: a small amount first, a pause, then ALL the rest. That is two steps — which is canary. Linear10PercentEvery10Minutes moves in ten equal increments, not a small slice followed by everything. AllAtOnce skips the observation window entirely.",
+          q3: correct ? "Correct. Deployment lifecycle hooks (like stopping the old service before the new one starts) live in appspec.yml, which belongs to CodeDeploy. Memory hook: appspec = putting the app in place; buildspec = building it."
+                      : "Reconsider. buildspec.yml belongs to CodeBuild and describes how to compile and test — not how to deploy. Deployment lifecycle hooks belong to CodeDeploy, which reads appspec.yml. template.yaml is CloudFormation/SAM, and a Dockerfile builds an image."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

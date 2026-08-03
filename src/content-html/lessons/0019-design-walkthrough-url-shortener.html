@@ -1,0 +1,115 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 12 · Week 2 · Day 6 · Capstone</p>
+    <h1 data-ur="Sab jor kar: ek URL shortener design karo">Putting it together: design a URL shortener</h1>
+    <p class="subtitle" data-ur="Ek asli &quot;Design X&quot; pe tumhara pehla poora run — framework aur har woh tool use karke jo tumne seekha hai.">Your first full run at a real "Design X" — using the framework and every tool you've learned.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>Skill: apply the whole toolkit</span>
+      <span>Win: run a design end-to-end</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Is lesson mein kya alag hai">What's different about this lesson</span>
+    <span data-ur="Aaj koi naya concept nahi. Iske bajaye hum <strong>sab kuch use karte hain</strong> — 5-step framework plus consistency, caching, load balancing, databases, indexes. Interviews asal mein aise hi feel hoti hain. Har step ka jawab <em>mera parhne se pehle</em> dene ki koshish karo.">No new concept today. Instead we <strong>use everything</strong> — the 5-step framework plus consistency, caching, load balancing, databases, indexes. This is how interviews actually feel. Try to answer each step <em>before</em> reading mine.</span>
+  </div>
+
+  <h2 data-ur="Prompt: &quot;Ek URL shortener design karo&quot; (bit.ly jaisa)">The prompt: "Design a URL shortener" (like bit.ly)</h2>
+  <p data-ur="<code>example.com/some/very/long/link</code> ko <code>short.ly/aB3x9</code> mein badlo, aur jab koi short link visit kare, usse long wale pe redirect kardo. Chalo <a href=&quot;0001-the-design-framework.html&quot;>5-step framework</a> chalate hain.">Turn <code>example.com/some/very/long/link</code> into <code>short.ly/aB3x9</code>, and when someone visits the short link, redirect them to the long one. Let's run the <a href="0001-the-design-framework.html">5-step framework</a>.</p>
+
+  <h3 data-ur="Step 1 · Scope — kya &amp; kitna bara">Step 1 · Scope — what &amp; how big</h3>
+  <p data-ur="<em>Pehle tumhari baari — tum kaunse sawal poochte?</em>"><em>Your turn first — what questions would you ask?</em></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Mera scoping dikhao">Reveal my scoping</div>
+    <div class="answer" data-ur="<strong>Features (in scope):</strong> ek short link banao; ek short link ko long URL pe redirect karo. <strong>Out of scope:</strong> user accounts, analytics dashboards, custom aliases (focused rehne ke liye inhein kaat do).<br>
+      <strong>Scale questions:</strong> rozana kitne naye links, rozana kitne redirects? Key insight: yeh <strong>bohot zyada read-heavy</strong> hai — thore creates, dher saare redirects. Yeh ek haqeeqat poora design chalati hai.">
+      <strong>Features (in scope):</strong> create a short link; redirect a short link to the long URL. <strong>Out of scope:</strong> user accounts, analytics dashboards, custom aliases (cut them to stay focused).<br>
+      <strong>Scale questions:</strong> how many new links/day, how many redirects/day? Key insight: this is <strong>massively read-heavy</strong> — few creates, tons of redirects. That one fact drives the whole design.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3 data-ur="Step 2 · Estimate — rough numbers">Step 2 · Estimate — rough numbers</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Napkin math dikhao">Reveal the napkin math</div>
+    <div class="answer" data-ur="Maan lo rozana 100M naye links (writes) lekin rozana 10B redirects (reads) — ek <strong>100:1 read:write ratio</strong>. Reads dominate karti hain. Yeh foran kehta hai: <strong>humein heavy caching aur read replicas chahiye hongi</strong> (Week 1!). Storage: 100M/day × chand saal ≈ arbon rows — bara, lekin har row bohot chhoti.">
+      Say 100M new links/day (writes) but 10B redirects/day (reads) — a <strong>100:1 read:write ratio</strong>. Reads dominate. That immediately says: <strong>we'll need heavy caching and read replicas</strong> (Week 1!). Storage: 100M/day × a few years ≈ billions of rows — big, but each row is tiny.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3 data-ur="Step 3 · Draw — high-level design">Step 3 · Draw — the high-level design</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Boxes &amp; arrows dikhao">Reveal the boxes &amp; arrows</div>
+    <div class="answer" data-ur="<strong>DNS</strong> → <strong>load balancer</strong> → <strong>app servers</strong> (stateless!) → <strong>cache</strong> (Redis) check karo → miss pe, <strong>database</strong> hit karo. Yeh poora happy path hai — aur tumne har box Weeks 1–2 mein draw kiya:
+      <br>• Load balancer + stateless servers → <a href=&quot;0005-load-balancers.html&quot;>Lesson 3</a><br>• Hot links ke liye cache → <a href=&quot;0006-caching.html&quot;>Lesson 4</a><br>• Aage DNS → <a href=&quot;0014-dns-and-cdn.html&quot;>Lesson 9</a>">
+      <strong>DNS</strong> → <strong>load balancer</strong> → <strong>app servers</strong> (stateless!) → check <strong>cache</strong> (Redis) → on miss, hit the <strong>database</strong>. That's the whole happy path — and you drew every box in Weeks 1–2:
+      <br>• Load balancer + stateless servers → <a href="0005-load-balancers.html">Lesson 3</a><br>• Cache for hot links → <a href="0006-caching.html">Lesson 4</a><br>• DNS out front → <a href="0014-dns-and-cdn.html">Lesson 9</a>
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 640 90" role="img" aria-label="Request flow for the URL shortener">
+      <g font-family="ui-sans-serif, sans-serif" font-size="10" text-anchor="middle" fill="#333">
+        <rect x="10" y="30" width="70" height="34" rx="5" fill="#f3f1ea" stroke="#1a1a1a"/><text x="45" y="51">DNS</text>
+        <rect x="100" y="30" width="90" height="34" rx="5" fill="#f6e9e9" stroke="#9b1c1c"/><text x="145" y="51" fill="#9b1c1c">load balancer</text>
+        <rect x="210" y="30" width="90" height="34" rx="5" fill="#e8f3ec" stroke="#1d6b3a"/><text x="255" y="51" fill="#1d6b3a">app servers</text>
+        <rect x="320" y="30" width="80" height="34" rx="5" fill="#e8f3ec" stroke="#1d6b3a"/><text x="360" y="51" fill="#1d6b3a">cache</text>
+        <rect x="420" y="30" width="100" height="34" rx="5" fill="#eef3f8" stroke="#2a4d8f"/><text x="470" y="51" fill="#2a4d8f">database</text>
+        <line x1="80" y1="47" x2="98" y2="47" stroke="#666"/><line x1="190" y1="47" x2="208" y2="47" stroke="#666"/>
+        <line x1="300" y1="47" x2="318" y2="47" stroke="#666"/><line x1="400" y1="47" x2="418" y2="47" stroke="#666" stroke-dasharray="3 2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="Yahan har box ek Week 1–2 ka lesson hai. Yehi point hai.">Every box here is a Week 1–2 lesson. That's the point.</figcaption>
+  </figure>
+
+  <h3 data-ur="Step 4 · Deep-dive — do mushkil hissay">Step 4 · Deep-dive — the two hard parts</h3>
+  <p data-ur="<strong>(a) Hum short code kaise generate karte hain?</strong>"><strong>(a) How do we generate the short code?</strong></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Dikhao">Reveal</div>
+    <div class="answer" data-ur="Har link ko ek unique number (ek ID) do aur usse <strong>base62</strong> (a–z, A–Z, 0–9) mein encode karo taake <code>aB3x9</code> jaisi ek short string mile. 62⁷ ≈ 3.5 trillion combos 7 characters mein — kaafi. Database ki primary key humein woh unique number muft mein de deti hai.">Give each link a unique number (an ID) and encode it in <strong>base62</strong> (a–z, A–Z, 0–9) to get a short string like <code>aB3x9</code>. 62⁷ ≈ 3.5 trillion combos in 7 characters — plenty. The database's primary key gives us the unique number for free.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+  <p data-ur="<strong>(b) Redirect rozana 10B pe itna tez kaise hai?</strong>"><strong>(b) How is the redirect so fast at 10B/day?</strong></p>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Dikhao">Reveal</div>
+    <div class="answer" data-ur="Lookup hai &quot;short code → long URL.&quot; Do moves isse instant bana dete hain:<br>
+      1. Short-code column ko <strong>index</strong> karo (<a href=&quot;0009-database-indexes.html&quot;>B2</a>) taake DB seedha row pe jump kare, koi full scan nahi.<br>
+      2. Hot links ko Redis mein <strong>cache</strong> karo (<a href=&quot;0006-caching.html&quot;>Lesson 4</a>) — zyada tar redirects mashhoor links ke ek chhote set ke liye hote hain, isliye woh database ko chhoote tak nahi. Aur baaqi ke liye <strong>read replicas</strong> (<a href=&quot;0012-replication-and-sharding.html&quot;>Lesson 7</a>) add karo.">
+      The lookup is "short code → long URL." Two moves make it instant:<br>
+      1. <strong>Index</strong> the short-code column (<a href="0009-database-indexes.html">B2</a>) so the DB jumps straight to the row, no full scan.<br>
+      2. <strong>Cache</strong> hot links in Redis (<a href="0006-caching.html">Lesson 4</a>) — most redirects are for a small set of popular links, so they never even touch the database. And add <strong>read replicas</strong> (<a href="0012-replication-and-sharding.html">Lesson 7</a>) for the rest.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h3 data-ur="Step 5 · Trade off — humne kya chhora?">Step 5 · Trade off — what did we give up?</h3>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Zor se bolne wale tradeoffs dikhao">Reveal the tradeoffs to name out loud</div>
+    <div class="answer" data-ur="• <strong>Consistency:</strong> ek bilkul naye link ko sab read replicas pe aane mein thora waqt lag sakta hai (<strong>eventual consistency</strong>, <a href=&quot;0002-consistency-and-availability.html&quot;>2a</a>) — yahan bilkul theek hai; link chalne se pehle 1-second delay koi notice nahi karta.<br>
+      • <strong>CAP:</strong> hum <strong>AP</strong> ki taraf jhukenge (<a href=&quot;0008-cap-theorem.html&quot;>Lesson 5</a>) — refuse karne ke bajaye hamesha redirect karo, chahe thora stale ho.<br>
+      • <strong>SQL vs NoSQL:</strong> huge scale pe simple key→value lookups (<a href=&quot;0010-sql-vs-nosql.html&quot;>Lesson 6</a>) asal mein ek key-value/NoSQL store ko achhi tarah suit karti hain — ek defensible choice jise batana chahiye.">
+      • <strong>Consistency:</strong> a brand-new link might take a moment to appear on all read replicas (<strong>eventual consistency</strong>, <a href="0002-consistency-and-availability.html">2a</a>) — totally fine here; nobody notices a 1-second delay before a link works.<br>
+      • <strong>CAP:</strong> we'd lean <strong>AP</strong> (<a href="0008-cap-theorem.html">Lesson 5</a>) — always redirect, even if slightly stale, over refusing.<br>
+      • <strong>SQL vs NoSQL:</strong> simple key→value lookups at huge scale (<a href="0010-sql-vs-nosql.html">Lesson 6</a>) actually suit a key-value/NoSQL store well — a defensible choice worth stating.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Tumne abhi ek asli &quot;Design X&quot; end-to-end chalayi — usse scope kiya, estimate kiya, draw kiya, do hisson pe deep gaye, aur tradeoffs ko naam diya. Aur <em>har</em> woh tool jo tumne istemaal kiya woh kuch tha jo tumne seekha hai: framework, load balancer, cache, index, replicas, consistency, CAP, SQL/NoSQL. Yeh ratna nahi hai — yeh <strong>designing</strong> hai. Yeh bilkul wohi hai jo interview aur promotion conversation test karti hai.">You just ran a real "Design X" end-to-end — scoped it, estimated, drew it, went deep on two parts, and named the tradeoffs. And <em>every</em> tool you reached for was something you've learned: framework, load balancer, cache, index, replicas, consistency, CAP, SQL/NoSQL. That's not memorizing — that's <strong>designing</strong>. This is exactly what the interview and the promotion conversation test.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong data-ur="Main tumhara teacher hoon — chalo asli practice karte hain.">I'm your teacher — let's practice for real.</strong> <span data-ur="Ek aur classic chuno — &quot;Design a rate limiter,&quot; &quot;Design Twitter's feed,&quot; &quot;Design a chat app&quot; — aur <strong>mere saath isse zor se dry-run karo</strong>. Main interviewer banunga aur tumhare <em>structure</em> ko critique karunga, sirf jawab ko nahi. Yeh woh single sab se zyada value wali cheez hai jo tum ab kar sakte ho.">Pick another classic — "Design a rate limiter," "Design Twitter's feed," "Design a chat app" — and <strong>dry-run it out loud with me</strong>. I'll play interviewer and critique your <em>structure</em>, not just the answer. This is the single highest-value thing you can do now.</span>
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 12 (capstone).</strong> Uses the whole toolkit. Day 7 = review the week + quiz. Then Week 3.</p>
+  </footer>
+
+</div>

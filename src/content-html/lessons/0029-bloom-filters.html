@@ -1,0 +1,138 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B10 · Offline Pack</p>
+    <h1 data-ur="Bloom filters: &quot;bilkul nahi hai&quot; ya &quot;shayad hai&quot;">Bloom filters: "definitely not" or "probably yes"</h1>
+    <p class="subtitle" data-ur="Ek tiny, super-fast data structure jo mehngi lookup se pehle poochti hai — aur agar jawab &quot;nahi hai&quot; ho toh tum pura kaam skip kar dete ho.">A tiny, super-fast data structure you ask before an expensive lookup — and if it says "not there," you skip the whole check.</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: Bloom filter</span>
+      <span>Win: skip expensive lookups safely</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (cache yaad karo)">30-second warm-up (recall caching)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: hum cache kyun rakhte hain? Ek line.">From memory: why do we keep a cache? One line.</div>
+    <div class="answer" data-ur="Taake mehngi cheez (disk, database, network) ko baar baar hit na karna paray — jawab pehle se paas hoto foran de do. Bloom filter bhi wohi rooh hai: <em>mehngi lookup se bachao</em> — bas woh &quot;nahi&quot; keh kar bachati hai, &quot;yeh raha jawab&quot; keh kar nahi.">So we don't hit the expensive thing (disk, database, network) again and again — if the answer's already near, serve it fast. A Bloom filter is the same spirit: <em>avoid an expensive lookup</em> — except it saves you by saying "no," not by holding the answer.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek Bloom filter do baaton mein se ek keh sakti hai: &quot;yeh item BILKUL set mein nahi hai&quot; (100% pakka) ya &quot;yeh SHAYAD set mein hai&quot; (chhota sa chance ke ghalat ho). Koi false negatives nahi — sirf kabhi kabhi false positives.</strong> Isi liye &quot;definitely not&quot; par bharosa kar ke tum mehngi check skip kar sakte ho."><strong>A Bloom filter tells you one of two things: "this item is DEFINITELY not in the set" (100% sure) or "this item is PROBABLY in the set" (small chance of being wrong). No false negatives — only occasional false positives.</strong> That's why you can trust "definitely not" and skip the expensive check.</span>
+  </div>
+
+  <h2 data-ur="Kahani: bouncer ke paas rough guest list">The story: a bouncer with a rough guest list</h2>
+  <p data-ur="Socho ek club ka <strong>bouncer</strong> gate par khara hai. Andar ek moti, detailed guest list hai (poora database) jise check karne mein waqt lagta hai. Bouncer ke haath mein sirf ek <strong>rough note</strong> hai — kuch nishaniyan jinse woh foran andaza laga leta hai.">Picture a club <strong>bouncer</strong> at the gate. Inside there's a thick, detailed guest list (the full database) that takes time to check. In the bouncer's hand is just a <strong>rough note</strong> — a few markers that let him guess instantly.</p>
+  <ul>
+    <li data-ur="Tum aate ho. Bouncer apni rough note dekhta hai aur kehta hai: &quot;Tumhari nishaniyan yahan bilkul nahi hain — tum <strong>definitely list par nahi</strong>. Wapas jao.&quot; Woh moti list kholta hi nahi. Turant, aur 100% sahi.">You arrive. The bouncer glances at his rough note and says: "Your markers aren't here at all — you're <strong>definitely not on the list</strong>. Turn back." He never opens the thick list. Instant, and 100% correct.</li>
+    <li data-ur="Ya woh kehta hai: &quot;Tumhari nishaniyan match kar rahi hain — tum <strong>shayad list par ho</strong>. Aao, ab main moti list mein tumhara naam confirm karta hoon.&quot; Yahan woh <em>poori</em> check karta hai — kyunke shayad kisi aur ki nishaniyan ittefaqan match ho gayin (yeh ek false positive hai).">Or he says: "Your markers match — you're <strong>probably on the list</strong>. Come in, now let me confirm your name in the thick list." Here he does the <em>full</em> check — because maybe someone else's markers matched by coincidence (that's a false positive).</li>
+  </ul>
+  <p data-ur="Ghor karo: bouncer ne kabhi kisi <em>asli</em> mehmaan ko galti se &quot;nahi&quot; nahi kaha. Agar tum list par ho, tumhari nishaniyan zaroor match hongi. &quot;Definitely not&quot; hamesha sacha hai — bas &quot;probably yes&quot; kabhi kabhi ghalat hota hai. Yehi Bloom filter hai.">Notice: the bouncer never wrongly told a <em>real</em> guest "no." If you're on the list, your markers will match. "Definitely not" is always true — only "probably yes" is sometimes wrong. That's a Bloom filter.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 190" role="img" aria-label="Bloom filter answers definitely-no fast or probably-yes then full check">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="70" width="150" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="105" y="94" font-weight="700" fill="#2a4d8f">Bloom filter</text>
+        <text x="105" y="112" fill="#6b6b6b" font-size="11">tiny, in memory</text>
+        <line x1="180" y1="82" x2="300" y2="55" stroke="#9b1c1c" stroke-width="2"/>
+        <text x="250" y="45" fill="#9b1c1c" font-weight="700">"definitely not"</text>
+        <text x="250" y="60" fill="#6b6b6b" font-size="11">→ skip, done</text>
+        <line x1="180" y1="110" x2="300" y2="140" stroke="#1c7c3a" stroke-width="2"/>
+        <text x="255" y="132" fill="#1c7c3a" font-weight="700">"probably yes"</text>
+        <rect x="440" y="112" width="170" height="55" rx="8" fill="#eef9ee" stroke="#1c7c3a"/>
+        <text x="525" y="136" font-weight="700" fill="#1c7c3a">Full lookup</text>
+        <text x="525" y="154" fill="#6b6b6b" font-size="11">disk / DB / network</text>
+        <line x1="425" y1="140" x2="440" y2="140" stroke="#1c7c3a" stroke-width="2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="&quot;Definitely not&quot; par kaam khatam. Sirf &quot;probably yes&quot; par mehngi full lookup chalti hai.">On "definitely not" you're done. Only "probably yes" triggers the expensive full lookup.</figcaption>
+  </figure>
+
+  <h2 data-ur="Yeh chalti kaise hai (halki si)">How it works (lightly)</h2>
+  <ul>
+    <li data-ur="Ek chhota sa <strong>bit array</strong> (bas 0s aur 1s) rakho, shuru mein sab 0."><strong>Keep a small <strong>bit array</strong></strong> (just 0s and 1s), all zero to start.</li>
+    <li data-ur="Item add karne ke liye: use kuch <strong>hash functions</strong> se guzaro, jo array mein chand positions dete hain — un positions ko 1 kar do.">To add an item: run it through a few <strong>hash functions</strong> that point to a few positions in the array — set those positions to 1.</li>
+    <li data-ur="Poochne ke liye &quot;kya X hai?&quot;: wohi hashes chalao. Agar <em>koi bhi</em> position 0 hai → X <strong>definitely nahi</strong> (add hota toh woh bit 1 hota). Agar <em>sab</em> 1 hain → X <strong>shayad hai</strong> (mumkin hai woh bits kisi aur item ne set kiye hon).">To ask "is X here?": run the same hashes. If <em>any</em> position is 0 → X is <strong>definitely not</strong> (adding it would have set that bit). If <em>all</em> are 1 → X is <strong>probably</strong> here (those bits may have been set by other items).</li>
+  </ul>
+  <p data-ur="Isi liye false negatives namumkin hain aur false positives mumkin: ek added item apne saare bits 1 chhorta hai, magar overlapping bits kabhi kabhi ek na-add item ko bhi &quot;shayad&quot; dikha dete hain.">That's why false negatives are impossible and false positives are possible: an added item always leaves all its bits at 1, but overlapping bits can occasionally make a never-added item look "probably here."</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Farz karo tumhein baar baar poochna hai &quot;kya is user ne yeh article dekha hai?&quot; ya &quot;kya yeh username pehle se mojood hai?&quot; — har baar ek DB query mehngi hai. Ek Bloom filter memory mein rakho: agar woh &quot;definitely not&quot; kahe, tum <code>User.objects.filter(...)</code> chalaye baghair foran aage barh jaate ho; sirf &quot;probably&quot; par DB hit karte ho. <strong>Redis</strong> mein Bloom filter support hai (RedisBloom module — <code>BF.ADD</code> / <code>BF.EXISTS</code>), toh tum ise apne workers ke darmiyan share kar sakte ho. Aur yeh sirf theory nahi — <strong>Cassandra</strong> aur <strong>HBase</strong> andar hi andar Bloom filters use karte hain taake ek key ke liye disk read skip kar saken jab woh definitely us file mein nahi.">Say you keep asking "has this user seen this article?" or "does this username already exist?" — each one is an expensive DB query. Keep a Bloom filter in memory: if it says "definitely not," you move on instantly without running <code>User.objects.filter(...)</code>; only on "probably" do you hit the DB. <strong>Redis</strong> has Bloom filter support (the RedisBloom module — <code>BF.ADD</code> / <code>BF.EXISTS</code>), so you can share one across your workers. And this isn't just theory — <strong>Cassandra</strong> and <strong>HBase</strong> use Bloom filters internally to skip a disk read for a key when it's definitely not in that file.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: Bloom filter &quot;probably yes&quot; kehti hai. Kya tum bharosa kar ke seedha item serve kar sakte ho?">Quick check: the Bloom filter says "probably yes." Can you trust it and serve the item directly?</div>
+    <div class="answer" data-ur="Nahi. &quot;Probably yes&quot; galat ho sakta hai (false positive), toh tumhein <strong>ab asli mehngi lookup karni parti hai</strong> confirm karne ke liye. Bharosa tum sirf doosri taraf par karte ho: &quot;definitely not&quot; hamesha sacha hai, isi liye us par tum poori check safe skip karte ho.">No. "Probably yes" can be wrong (a false positive), so you <strong>now do the real expensive lookup</strong> to confirm. You only fully trust the other side: "definitely not" is always true, which is what lets you safely skip the full check.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Bloom filter muft nahi hai. <strong>(1)</strong> Tum ek chhoti si <em>false-positive rate</em> qubool karte ho — jitni zyada items daaloge ya jitni chhoti array, utna woh badhti hai (tuning ka masla hai). <strong>(2)</strong> Aam Bloom filter se items <em>aasani se remove nahi</em> ho sakte — ek bit clear karne se doosre items toot sakte hain (iske liye Counting Bloom filter jaisi variant chahiye). Badle mein tum bohat bara time aur memory bachate ho. Interview line: &quot;Main Bloom filter lagaunga taake mehngi lookups skip ho — no false negatives, bas ek tunable false-positive rate ke saath, aur removes handle nahi hotay.&quot;">A Bloom filter isn't free. <strong>(1)</strong> You accept a small <em>false-positive rate</em> — it grows as you add more items or shrink the array (it's a tuning problem). <strong>(2)</strong> A plain Bloom filter <em>can't easily remove</em> items — clearing one bit could break other items (you'd need a variant like a Counting Bloom filter). In exchange you save huge time and memory. Interview line: "I'd put a Bloom filter in front to skip expensive lookups — no false negatives, just a tunable false-positive rate, and it can't handle removes."</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek Bloom filter ek username ke liye kehti hai &quot;definitely not in the set.&quot; Sahi agla qadam kya hai?">A Bloom filter says "definitely not in the set" for a username. What's the correct next step?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="DB query skip kar do — woh username pakka mojood nahi.">Skip the DB query — that username definitely doesn't exist.</button>
+      <button class="opt" data-correct="false" data-ur="DB query phir bhi chalao — Bloom filter galat ho sakti hai.">Run the DB query anyway — the Bloom filter might be wrong.</button>
+      <button class="opt" data-correct="false" data-ur="Item ko dobara add karo aur phir se poocho.">Re-add the item and ask again.</button>
+      <button class="opt" data-correct="false" data-ur="Kuch nahi keh sakte — Bloom filters kabhi pakka nahi hote.">Can't tell — Bloom filters are never certain.</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Bloom filters ke baare mein kaunsa statement DURUST hai?">Which statement about Bloom filters is TRUE?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Woh false negatives de sakte hain magar false positives kabhi nahi.">They can give false negatives but never false positives.</button>
+      <button class="opt" data-correct="true" data-ur="Woh false positives de sakte hain magar false negatives kabhi nahi.">They can give false positives but never false negatives.</button>
+      <button class="opt" data-correct="false" data-ur="Woh har item ki poori copy store karte hain.">They store a full copy of every item.</button>
+      <button class="opt" data-correct="false" data-ur="Un se items utni hi aasani se remove hote hain jitni add.">Items can be removed as easily as they're added.</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Bloom filter: ek tiny structure jo &quot;<strong>definitely not</strong>&quot; (100% pakka, full check skip karo) ya &quot;<strong>probably yes</strong>&quot; (ab asli lookup karo) kehta hai. No false negatives, sirf ek chhota false-positive rate, aur removes mushkil. Ise DB/disk/network hit se pehle rakho taake bara time aur memory bachao — Cassandra, HBase, aur Redis yehi karte hain, aur ab tum bhi jaante ho.">Bloom filter: a tiny structure that says "<strong>definitely not</strong>" (100% sure, skip the full check) or "<strong>probably yes</strong>" (now do the real lookup). No false negatives, just a small false-positive rate, and removes are hard. Put it before a DB/disk/network hit to save big time and memory — Cassandra, HBase, and Redis do exactly this, and now so do you.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://en.wikipedia.org/wiki/Bloom_filter&quot; target=&quot;_blank&quot;>Bloom filter — Wikipedia</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://en.wikipedia.org/wiki/Bloom_filter" target="_blank">Bloom filter — Wikipedia</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to size a Bloom filter for a target false-positive rate, or wire RedisBloom into a Django view? Or curious how a Counting Bloom filter allows removes? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B10 (Bloom Filters).</strong> Builds on <a href="0006-caching.html">caching</a> — both avoid the expensive hit. Pairs with database indexes and Cassandra/HBase reads.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://en.wikipedia.org/wiki/Bloom_filter" target="_blank">Bloom filter</a>, Wikipedia.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. 'Definitely not' is always true (no false negatives), so you can safely skip the expensive DB query."
+                      : "Reconsider. 'Definitely not' is the one answer a Bloom filter is 100% sure about — it's safe to skip the query.",
+          q2: correct ? "Yes. An added item always sets all its bits, so a real member never reads as absent — no false negatives. Overlapping bits can cause false positives."
+                      : "Reconsider. The defining property: no false negatives, only occasional false positives."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

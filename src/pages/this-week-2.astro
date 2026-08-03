@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/this-week-2.html?raw';
+const headExtra = `<style>
+  .day { display: flex; gap: 1rem; align-items: flex-start; border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem 1.3rem; margin: 0.9rem 0; background: #fff; transition: border-color .12s; }
+  .day.done { background: var(--good-soft); border-color: var(--good); }
+  .day-check { flex: 0 0 auto; margin-top: 0.15rem; }
+  .day-check input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--good); }
+  .day-body { flex: 1; }
+  .day-label { font-family: ui-sans-serif, sans-serif; font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; color: var(--muted); }
+  .day-title { font-size: 1.15rem; font-weight: 600; margin: 0.1rem 0 0.3rem; }
+  .day-title a { color: var(--ink); }
+  .day-track { display:inline-block; font-family: ui-sans-serif, sans-serif; font-size: 0.66rem;
+    font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 20px; margin-left: 0.5rem; vertical-align: middle; }
+  .track-a { background: var(--accent-soft); color: var(--accent); }
+  .track-b { background: #eef3f8; color: var(--link); }
+  .track-rest { background: #f3f1ea; color: var(--muted); }
+  .day-blurb { color: var(--muted); font-size: 0.9rem; margin: 0; }
+  .progress-wrap { margin: 1.5rem 0; }
+  .progress-bar { height: 12px; background: var(--rule); border-radius: 20px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--good); width: 0%; transition: width .3s; }
+  .progress-text { font-family: ui-sans-serif, sans-serif; font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+</style>`;
+---
+<Base title={"Week 2 · Scaling Up"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

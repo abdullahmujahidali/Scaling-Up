@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import body from '../../content-html/lessons/0001-the-design-framework.html?raw';
+const headExtra = undefined;
+---
+<Base title={"Lesson 1 · The Design Framework"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DVA-C02 Practice Exam 14</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=7">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=7">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>Practice Exam 14</h1>
+      <p class="sub">AWS Certified Developer – Associate (DVA-C02) · full-length mock · harder — final preparation</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>65</b><span>questions</span></div>
+        <div class="exam-fact"><b>130</b><span>minutes</span></div>
+        <div class="exam-fact"><b>720</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~47</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start exam</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../exams.html">Back to all exams</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">130:00</span></div>
+      <div class="meta">Practice Exam 14</div>
+      <div class="meta" id="answered-count">0 / 65 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit exam</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"exam-14","title":"Practice Exam 14","minutes":130};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function processes an SQS queue. During a spike the queue grows to 200,000 messages and the function scales to 1,000 concurrent executions, exhausting the account concurrency pool and throttling other functions. What is the correct fix?",
+  "options": [
+   "Set reserved concurrency on this function to bound its share of the pool",
+   "Increase the SQS visibility timeout",
+   "Reduce the batch size to 1",
+   "Enable long polling"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Reserved concurrency caps how much of the shared account pool one function may consume, guaranteeing headroom for everything else while the queue drains more slowly. Visibility timeout affects redelivery, a smaller batch size increases invocation count and makes contention worse, and long polling reduces empty receives rather than concurrency."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must query a DynamoDB table by a boolean <code>is_active</code> attribute where 99 percent of items are inactive. Which index design is MOST efficient?",
+  "options": [
+   "A sparse GSI where the indexed attribute is written only for active items",
+   "A GSI with is_active as the partition key",
+   "An LSI on is_active",
+   "A Scan with a filter on is_active"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A sparse index contains only items that carry the indexed attribute, so writing it only for active records produces an index holding one percent of the data — cheap to store and to query. A GSI keyed on a boolean has only two partition key values and creates a severe hot partition, an LSI cannot change the partition key, and a Scan reads everything."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A team must decide between an SQS FIFO queue at 300 messages per second and their requirement of 3,000 messages per second with ordering per customer. What is the correct approach?",
+  "options": [
+   "Use FIFO with batching, which supports up to 3,000 messages per second, and distribute customers across message groups",
+   "Switch to a standard queue and accept losing ordering",
+   "Use SNS instead",
+   "Split into 10 separate FIFO queues manually"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "FIFO queues support 300 transactions per second without batching and up to 3,000 messages per second with batching, and using the customer ID as the message group preserves per-customer ordering while allowing parallelism across groups. Standard queues abandon the ordering requirement, SNS provides no ordering, and manual queue splitting adds routing complexity unnecessarily."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must invoke a Lambda function synchronously from an Application Load Balancer and return a 4 MB JSON response. What happens?",
+  "options": [
+   "The response fails because Lambda responses through ALB are limited to 1 MB",
+   "The response succeeds because Lambda allows 6 MB synchronous responses",
+   "The response is compressed automatically",
+   "The response is truncated to 1 MB"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "When Lambda is invoked through an Application Load Balancer the response is limited to 1 MB, which is stricter than Lambda's own 6 MB synchronous limit. Exceeding it produces an error rather than truncation, so large payloads must be stored in S3 and returned as a presigned URL."
+ },
+ {
+  "id": 5,
+  "domain": 1,
+  "multi": true,
+  "scenario": "Which TWO are required for a Lambda function to consume from an Amazon MSK or self-managed Kafka topic?",
+  "options": [
+   "An event source mapping configured for the cluster and topic",
+   "Execution role permissions for the cluster and, where used, Secrets Manager access for credentials",
+   "A public subnet with an internet gateway",
+   "A DynamoDB table for offsets",
+   "An SQS queue in front of Kafka"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Lambda consumes Kafka through an event source mapping that manages polling and offsets, and the execution role needs permissions for the cluster plus access to any credentials held in Secrets Manager. Public subnets are not required, Lambda tracks offsets itself, and no intermediate queue is needed."
+ },
+ {
+  "id": 6,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A developer must ensure a DynamoDB write is rejected if it would exceed a stored balance. Which mechanism enforces this atomically?",
+  "options": [
+   "A condition expression comparing the balance within the same UpdateItem call",
+   "Reading the balance, checking it in code, then writing",
+   "A Scan followed by a conditional write",
+   "A global secondary index on balance"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Evaluating the condition inside the same UpdateItem makes the check and the write atomic, so a concurrent update cannot slip between them. Reading and then writing leaves a race window where two requests both observe a sufficient balance, and scans and indexes address query patterns rather than atomicity."
+ },
+ {
+  "id": 7,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must process an S3 object as soon as it is uploaded, but processing must not begin until a separate metadata record exists in DynamoDB. What is the MOST reliable design?",
+  "options": [
+   "Write the metadata record first, then upload the object, and trigger processing from the S3 event",
+   "Trigger on the S3 event and retry until the metadata appears",
+   "Poll DynamoDB every second",
+   "Process without the metadata and reconcile later"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Ordering the writes so the dependency exists before the triggering event removes the race entirely, which is far more reliable than compensating for it afterwards. Retrying until metadata appears wastes invocations and may never succeed, per-second polling is expensive and still racy, and processing without the record risks incorrect results."
+ },
+ {
+  "id": 8,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which is the correct approach for a Step Functions workflow that must process 10,000 items with a maximum of 50 running at once?",
+  "options": [
+   "A distributed Map state with MaxConcurrency set to 50",
+   "A Parallel state with 10,000 branches",
+   "A sequential loop",
+   "A Wait state between items"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A Map state iterates over a collection running the same steps per item, and MaxConcurrency bounds how many execute simultaneously — with distributed Map handling very large item counts. Parallel states require statically defined branches, sequential processing is far too slow, and Wait states only add delay."
+ },
+ {
+  "id": 9,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application needs an API that supports 100,000 requests per second with the lowest possible cost and latency, and does not need request validation, usage plans or caching. Which should be used?",
+  "options": [
+   "API Gateway HTTP API",
+   "API Gateway REST API",
+   "API Gateway WebSocket API",
+   "Application Load Balancer with Lambda targets"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "HTTP APIs cost substantially less and add less latency than REST APIs, and the features being given up — request validation, usage plans, API keys and caching — are explicitly not required here. WebSocket APIs serve persistent connections, and an ALB introduces a 1 MB Lambda response limit and hourly charges."
+ },
+ {
+  "id": 10,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which statement about DynamoDB adaptive capacity is correct?",
+  "options": [
+   "It automatically shifts capacity toward hot partitions, but does not eliminate the need for a well-distributed partition key",
+   "It removes all need for good key design",
+   "It doubles table capacity automatically",
+   "It applies only to on-demand tables"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Adaptive capacity redistributes throughput toward busier partitions and isolates frequently accessed items, which mitigates moderate skew. It cannot overcome a fundamentally poor key design where nearly all traffic targets one value, so high-cardinality keys remain essential."
+ },
+ {
+  "id": 11,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function must process records from a Kinesis stream and write results to S3, guaranteeing no data loss if the function fails. What configuration supports this?",
+  "options": [
+   "Rely on Kinesis retention and Lambda checkpointing so failed batches are retried from the last successful position, with an on-failure destination for poison records",
+   "Delete records after reading them",
+   "Set retention to zero",
+   "Disable retries"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Kinesis retains records for the configured retention period and Lambda checkpoints progress, so a failure resumes from the last successful position rather than losing data, while an on-failure destination captures records that can never succeed. Records cannot be individually deleted, and disabling retries discards transient failures."
+ },
+ {
+  "id": 12,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which approach BEST supports an application that must return search results ranked by relevance across millions of documents with sub-second latency?",
+  "options": [
+   "Amazon OpenSearch Service with an appropriately sized cluster",
+   "DynamoDB with multiple GSIs",
+   "S3 Select across objects",
+   "RDS with LIKE queries"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "OpenSearch is built for full-text relevance ranking over large corpora using inverted indexes, delivering sub-second results. DynamoDB indexes support key-based lookups rather than relevance scoring, S3 Select filters within individual objects, and SQL LIKE queries cannot scale to millions of rows with ranking."
+ },
+ {
+  "id": 13,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application writes 100 items per second, each 500 bytes, to DynamoDB. How many WCU are consumed by the base table?",
+  "options": [
+   "100 WCU, because each item under 1 KB consumes 1 WCU",
+   "50 WCU",
+   "200 WCU",
+   "500 WCU"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Write capacity is measured in 1 KB units rounded up, so a 500 byte item still consumes one full WCU and 100 writes per second requires 100 WCU. Capacity is never prorated below 1 KB, which is why batching small items into larger ones can reduce cost."
+ },
+ {
+  "id": 14,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which is the correct way to handle an EventBridge rule whose target fails intermittently?",
+  "options": [
+   "Configure a retry policy and a dead-letter queue on the target",
+   "Increase the rule frequency",
+   "Delete and recreate the rule",
+   "Add a second identical rule"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "EventBridge targets support configurable retry policies with maximum age and attempts, plus a dead-letter queue that preserves events which still fail, so nothing is silently lost. Changing frequency, recreating the rule, or duplicating it does not improve delivery reliability."
+ },
+ {
+  "id": 15,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must support idempotent POST requests where clients may retry after a timeout. What must the client provide and the server store?",
+  "options": [
+   "A client-generated idempotency key that the server records with the result, returning the original result on repeat",
+   "A timestamp only",
+   "A random value the server ignores",
+   "Nothing; POST is idempotent by default"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The client supplies a unique idempotency key with the request, and the server records it alongside the outcome so a repeat returns the original result rather than performing the operation twice. Timestamps do not identify a specific request, ignoring the value defeats the mechanism, and POST is explicitly not idempotent by definition."
+ },
+ {
+  "id": 16,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which is true about Lambda ephemeral storage in /tmp across invocations?",
+  "options": [
+   "It persists for the life of the execution environment, so warm invocations may see earlier files and must not assume it is empty",
+   "It is cleared before every invocation",
+   "It is shared across all concurrent executions",
+   "It is backed by S3"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The /tmp directory belongs to the execution environment and survives between warm invocations, which is useful for caching but means code must not assume a clean directory and must avoid leaking sensitive data between requests. Each concurrent environment has its own isolated storage."
+ },
+ {
+  "id": 17,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must reduce the latency of a Lambda function that loads a 50 MB model file from S3 on every cold start. What is the MOST effective change?",
+  "options": [
+   "Package the model in the deployment artifact or a container image so it loads from local storage, and consider provisioned concurrency",
+   "Increase the timeout",
+   "Reduce the memory",
+   "Use a smaller S3 bucket"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Downloading 50 MB during initialisation dominates cold start time, so shipping the model inside the container image or package removes the network fetch entirely, and provisioned concurrency avoids paying initialisation on request paths. Timeout and bucket size do not affect load time, and less memory would slow it further."
+ },
+ {
+  "id": 18,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which statement about SNS message delivery to an SQS queue is correct?",
+  "options": [
+   "Delivery is considered successful once the message is in the queue, and SNS does not track whether the consumer processed it",
+   "SNS retries until the consumer processes the message",
+   "SNS deletes the message after delivery",
+   "SNS requires the consumer to acknowledge"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "SNS's responsibility ends when the message is accepted by the queue, after which SQS retention and consumer behaviour govern processing. This separation is exactly why the fan-out pattern is durable — a failing consumer does not affect delivery, because the message waits in the queue."
+ },
+ {
+  "id": 19,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which approach BEST handles an application that must process events in near real time but tolerate occasional bursts far above steady state?",
+  "options": [
+   "A queue or stream to absorb the burst, with consumers that scale within a bounded concurrency limit",
+   "Provision compute for the maximum burst permanently",
+   "Reject requests above the steady rate",
+   "Process everything synchronously"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Buffering absorbs the burst while bounded consumer scaling protects downstream systems, giving near real-time processing without provisioning for peak. Permanent peak provisioning wastes money, rejecting excess loses work, and synchronous processing propagates the burst directly to every downstream dependency."
+ },
+ {
+  "id": 20,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which is the correct interpretation of a DynamoDB Query that returns an empty result set with no error?",
+  "options": [
+   "No items matched the key condition, which is a valid result rather than a failure",
+   "The table does not exist",
+   "The request was throttled",
+   "Permissions are missing"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "An empty result simply means nothing matched the key condition and must be handled as a normal outcome. A missing table, throttling and insufficient permissions all raise distinct exceptions rather than returning empty results."
+ },
+ {
+  "id": 21,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must guarantee that a message is processed within 30 seconds of arrival or escalated. Which design supports this?",
+  "options": [
+   "Monitor the age of the oldest message and alarm when it exceeds the threshold, with adequate consumer concurrency",
+   "Set the visibility timeout to 30 seconds",
+   "Set message retention to 30 seconds",
+   "Use a delay queue of 30 seconds"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Oldest message age directly measures processing delay, so alarming on it detects breaches of the service objective while sufficient consumer concurrency prevents them. Visibility timeout governs redelivery, short retention would delete unprocessed messages, and a delay queue deliberately postpones delivery."
+ },
+ {
+  "id": 22,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An application must allow a Lambda function to read from an S3 bucket in another account where objects are encrypted with an SSE-KMS key in that account. Which permission is MOST commonly overlooked?",
+  "options": [
+   "kms:Decrypt granted to the function's role in the other account's key policy",
+   "s3:GetObject in the bucket policy",
+   "The function's own execution role",
+   "The bucket's region"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Cross-account S3 access with SSE-KMS requires the key policy in the owning account to grant decrypt to the external role, in addition to the bucket policy and the caller's identity policy. Missing the KMS grant produces AccessDenied that appears to be an S3 problem, which is why it is so frequently overlooked."
+ },
+ {
+  "id": 23,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which approach BEST prevents a Lambda function from being invoked by an unintended API Gateway API in the same account?",
+  "options": [
+   "A resource-based policy with a SourceArn condition naming the specific API",
+   "Reserved concurrency",
+   "A VPC endpoint",
+   "A shorter timeout"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The SourceArn condition restricts invocation permission to one specific API, so another API in the same account cannot invoke the function even though both use the same service principal. Concurrency, networking and timeout settings govern execution rather than who may invoke."
+ },
+ {
+  "id": 24,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is true about temporary credentials returned by an EC2 instance profile?",
+  "options": [
+   "They rotate automatically before expiry and are retrieved from the instance metadata service, ideally IMDSv2",
+   "They are permanent",
+   "They must be manually refreshed by the application",
+   "They are stored in a file on disk"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The metadata service supplies temporary credentials that AWS rotates automatically, and the SDK retrieves and refreshes them transparently. IMDSv2 requires a session token, which protects against server-side request forgery attacks that could otherwise expose credentials."
+ },
+ {
+  "id": 25,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which practice ensures that an application's error responses do not aid an attacker?",
+  "options": [
+   "Return generic error messages to clients while logging full detail server-side",
+   "Return full stack traces to the client",
+   "Return the database error verbatim",
+   "Return the internal file path"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Detailed errors belong in server-side logs where only operators see them, while clients receive a generic message and a correlation identifier. Stack traces, verbatim database errors and internal paths all disclose implementation details that assist reconnaissance and exploitation."
+ },
+ {
+  "id": 26,
+  "domain": 2,
+  "multi": true,
+  "scenario": "Which TWO are correct about encrypting data in transit for an application using an Application Load Balancer?",
+  "options": [
+   "Terminate TLS at the load balancer using an ACM certificate",
+   "Optionally re-encrypt traffic between the load balancer and targets for end-to-end encryption",
+   "TLS cannot be used with an ALB",
+   "Certificates must be manually renewed every 90 days",
+   "Encryption in transit requires a VPN"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "An ALB terminates TLS using an ACM certificate that renews automatically, and the listener can re-encrypt to the targets when end-to-end encryption is required. TLS is fully supported, ACM handles renewal, and a VPN is unnecessary for encrypting client traffic."
+ },
+ {
+  "id": 27,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is the correct way to restrict a Cognito identity pool role so users can only read their own DynamoDB items?",
+  "options": [
+   "Use a dynamodb:LeadingKeys condition with the ${cognito-identity.amazonaws.com:sub} policy variable",
+   "Grant full table access and filter in the application",
+   "Create one table per user",
+   "Use a shared role with no conditions"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The LeadingKeys condition combined with the identity policy variable restricts access to items whose partition key equals the caller's identity, enforcing isolation in IAM rather than application code. Application-level filtering can be bypassed by a bug, per-user tables do not scale, and an unconditioned shared role provides no isolation."
+ },
+ {
+  "id": 28,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about AWS Secrets Manager versus hard-coded credentials in a container image is correct?",
+  "options": [
+   "Secrets Manager keeps credentials out of the image and supports rotation and revocation, whereas an image containing credentials distributes them to anyone who can pull it",
+   "They are equally secure",
+   "Images are encrypted so credentials are safe",
+   "Credentials in images expire automatically"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "An image containing credentials distributes them to everyone able to pull it, they persist in image layers even if later deleted, and they cannot be rotated without rebuilding. Secrets Manager keeps the value outside the artifact where it can be rotated and revoked centrally. Registry encryption does not prevent authorised pulls."
+ },
+ {
+  "id": 29,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which approach BEST detects that an S3 bucket policy was changed to allow public access?",
+  "options": [
+   "AWS Config rules or IAM Access Analyzer alerting on public access, combined with account-level Block Public Access as prevention",
+   "A weekly manual review",
+   "Checking the console occasionally",
+   "Relying on the bucket name"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Config rules and Access Analyzer evaluate policies continuously and alert on public exposure, while account-level Block Public Access prevents it from taking effect at all — detection plus prevention. Manual reviews and occasional checks leave long windows of exposure, and naming conventions enforce nothing."
+ },
+ {
+  "id": 30,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is required for an application to use a KMS asymmetric key to verify a signature?",
+  "options": [
+   "kms:Verify permission, or the public key retrieved via kms:GetPublicKey for local verification",
+   "kms:Decrypt",
+   "kms:GenerateDataKey",
+   "No permissions"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Signature verification uses kms:Verify, or the public key can be retrieved once with kms:GetPublicKey and used locally to verify without further KMS calls. Decrypt and GenerateDataKey serve encryption workflows rather than signing."
+ },
+ {
+  "id": 31,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which practice BEST protects an application against cross-site request forgery when using cookie-based sessions?",
+  "options": [
+   "Use SameSite cookie attributes and anti-CSRF tokens validated server-side",
+   "Rely on HTTPS alone",
+   "Use long-lived sessions",
+   "Store the session identifier in localStorage"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "SameSite attributes prevent the browser from sending cookies on cross-site requests, and server-validated anti-CSRF tokens ensure a request originated from your own application. HTTPS protects the transport without preventing forged requests, long sessions widen the window, and localStorage exchanges CSRF risk for XSS exposure."
+ },
+ {
+  "id": 32,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is true about IAM roles used by AWS services such as Lambda and ECS?",
+  "options": [
+   "The service assumes the role on the resource's behalf, and the trust policy must name the service principal",
+   "The role must have a password",
+   "The role uses permanent access keys",
+   "The trust policy is optional"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A service role's trust policy names the service principal such as lambda.amazonaws.com, allowing that service to assume the role and supply temporary credentials to the workload. Roles never have passwords or permanent keys, and without a trust policy the role cannot be assumed at all."
+ },
+ {
+  "id": 33,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which approach BEST secures communication between microservices inside a VPC?",
+  "options": [
+   "Security groups restricting traffic to the specific source security groups, plus TLS between services",
+   "Open security groups with application-level checks only",
+   "Public subnets for all services",
+   "Disabling encryption inside the VPC"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Referencing source security groups restricts reachability to legitimate callers, and TLS protects the traffic itself, giving defence in depth. Open security groups rely entirely on application checks, public subnets expose services unnecessarily, and disabling encryption leaves internal traffic readable to anything on the network path."
+ },
+ {
+  "id": 34,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about API Gateway usage plans is correct?",
+  "options": [
+   "They apply throttling and quota limits per API key, which is metering rather than authentication",
+   "They authenticate callers securely",
+   "They encrypt requests",
+   "They replace IAM authorisation"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Usage plans meter and throttle traffic per API key, which is useful for tiering and abuse control but is explicitly not an authentication mechanism — AWS documentation is clear that API keys should be paired with real authorisation. They neither encrypt requests nor replace IAM."
+ },
+ {
+  "id": 35,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is the correct response to discovering that an application logged a customer's full payment card number once, three months ago?",
+  "options": [
+   "Treat it as a data exposure: purge the affected logs where possible, notify per policy and regulation, and fix the logging",
+   "Ignore it because it happened once",
+   "Encrypt the log group going forward only",
+   "Reduce retention so it expires naturally"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Card data in logs is a reportable exposure requiring purging where feasible, notification according to policy and regulation, and a code fix to prevent recurrence. Ignoring it, encrypting only future logs, or waiting for retention to expire all leave the exposed data accessible in the meantime."
+ },
+ {
+  "id": 36,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which approach ensures that a Lambda function cannot read secrets belonging to other applications?",
+  "options": [
+   "Scope the execution role to the specific secret ARNs and use resource policies on the secrets where appropriate",
+   "Grant secretsmanager:GetSecretValue on all secrets",
+   "Use one shared secret for all applications",
+   "Store secrets in environment variables instead"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Restricting the role to specific secret ARNs, optionally reinforced by resource policies on the secrets themselves, enforces isolation between applications. Wildcard access lets any compromised function read everything, a shared secret removes isolation by design, and environment variables neither isolate nor rotate."
+ },
+ {
+  "id": 37,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is true about enabling encryption on an existing unencrypted EBS volume?",
+  "options": [
+   "It cannot be enabled in place; create an encrypted snapshot copy and restore it to a new volume",
+   "It can be toggled on the running volume",
+   "Encryption is always enabled by default and cannot be changed",
+   "Only new accounts support encryption"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "An existing unencrypted EBS volume cannot be encrypted in place; the supported path is snapshotting it, copying the snapshot with encryption enabled, and creating a new volume from that copy. Account-level default encryption ensures newly created volumes are encrypted automatically going forward."
+ },
+ {
+  "id": 38,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which practice reduces the risk of an insider exfiltrating data through an application?",
+  "options": [
+   "Least-privilege access, egress restrictions, and monitoring for unusual data access volumes",
+   "Granting broad access to trusted staff",
+   "Disabling audit logs to reduce noise",
+   "Allowing unrestricted outbound internet access"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Limiting what each principal can reach, constraining where data can be sent, and alerting on unusual access volumes together make large-scale exfiltration difficult and detectable. Broad trust-based access removes the limits, disabling audit logs removes detection, and unrestricted egress removes the barrier."
+ },
+ {
+  "id": 39,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A CloudFormation stack update replaces a resource whose logical ID was renamed. What is the consequence for a DynamoDB table with data?",
+  "options": [
+   "A new empty table is created and the old one is deleted unless a retention policy protects it, losing the data",
+   "The table is renamed in place",
+   "The data is migrated automatically",
+   "Nothing changes"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CloudFormation identifies resources by logical ID, so renaming one means deleting the original and creating a new empty resource — catastrophic for a table with data unless DeletionPolicy: Retain protects it. There is no in-place rename and no automatic data migration."
+ },
+ {
+  "id": 40,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which practice BEST supports deploying a change that must be reversible within seconds?",
+  "options": [
+   "Keep the previous version live behind an alias or target group and shift traffic back on failure",
+   "Rebuild and redeploy the previous version from source",
+   "Restore from a backup",
+   "Fix forward only"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "When the previous version is still running, rollback is a traffic-routing decision that completes in seconds. Rebuilding from source takes minutes at best, restoring from backup is slower still and may lose data, and fixing forward under pressure extends the outage."
+ },
+ {
+  "id": 41,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about SAM's sam deploy --guided is correct?",
+  "options": [
+   "It prompts for parameters and saves them to a configuration file for repeatable subsequent deployments",
+   "It deploys without CloudFormation",
+   "It skips the change set",
+   "It is required for every deployment"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The guided flow collects stack name, region, parameters and capabilities and writes them to samconfig.toml so later deployments run non-interactively. Deployment still proceeds through CloudFormation with a change set, and the guided mode is needed only for the initial configuration."
+ },
+ {
+  "id": 42,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which approach BEST prevents a pipeline from deploying an artifact that was never tested?",
+  "options": [
+   "Promote the exact artifact produced and tested by earlier stages, rather than rebuilding at deploy time",
+   "Rebuild in the deploy stage for freshness",
+   "Deploy from the developer's machine",
+   "Use the latest tag"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Promoting the identical artifact through stages guarantees that what was tested is what deploys. Rebuilding at deploy time can resolve different dependencies and produce an untested binary, deploying from a developer machine bypasses the pipeline entirely, and mutable tags can point at different content over time."
+ },
+ {
+  "id": 43,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which is the correct way to roll out a configuration change to 10 percent of application instances first?",
+  "options": [
+   "Use AWS AppConfig with a gradual deployment strategy and alarm-based rollback",
+   "Change an environment variable and redeploy everything",
+   "Edit configuration directly in production",
+   "Restart all instances simultaneously"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AppConfig deploys configuration gradually to a growing percentage of targets, monitors CloudWatch alarms, and rolls back automatically on regression — treating configuration with the same rigour as code. Redeploying everything, editing production directly, or restarting simultaneously all apply the change to everyone at once."
+ },
+ {
+  "id": 44,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about ECS deployment circuit breaker is correct?",
+  "options": [
+   "It detects repeatedly failing deployments and can roll back automatically to the last stable task set",
+   "It stops the service permanently",
+   "It applies only to EC2 launch type",
+   "It replaces health checks"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The deployment circuit breaker recognises when new tasks keep failing to reach a steady state and can automatically roll the service back to the previous working task definition, avoiding an indefinite failure loop. It works with both launch types and complements rather than replaces health checks."
+ },
+ {
+  "id": 45,
+  "domain": 3,
+  "multi": true,
+  "scenario": "Which TWO practices reduce the risk of secrets appearing in a CloudFormation template?",
+  "options": [
+   "Use NoEcho on sensitive parameters so values are masked in the console and events",
+   "Reference Secrets Manager or Parameter Store dynamically rather than passing plaintext values",
+   "Hard-code secrets and restrict template access",
+   "Store secrets in Outputs for convenience",
+   "Email templates containing secrets"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "NoEcho masks parameter values in console output, API responses and stack events, and dynamic references resolve secrets at deployment without placing plaintext in the template at all. Hard-coding places secrets in version control permanently, Outputs expose values to anyone who can describe the stack, and emailing templates distributes them uncontrollably."
+ },
+ {
+  "id": 46,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which is the MOST likely cause of a CodeDeploy Lambda deployment stuck in progress?",
+  "options": [
+   "A pre-traffic or post-traffic hook function is not reporting status back to CodeDeploy",
+   "The Lambda function has too much memory",
+   "The alias does not exist",
+   "The deployment configuration is invalid"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Lifecycle hook functions must explicitly report success or failure to CodeDeploy using PutLifecycleEventHookExecutionStatus, and a hook that finishes without reporting leaves the deployment waiting until it times out. Memory settings do not stall deployments, and a missing alias or invalid configuration would fail immediately rather than hang."
+ },
+ {
+  "id": 47,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which approach BEST manages a template that has grown to 900 resources and become slow and risky to update?",
+  "options": [
+   "Split it into smaller stacks aligned to lifecycle boundaries, using exports or parameters to connect them",
+   "Add more parameters",
+   "Increase the stack timeout",
+   "Deploy it less frequently"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Splitting by lifecycle — networking, data, application — means each stack changes at its own pace, deployments are faster, and the blast radius of any single update shrinks. Parameters and timeouts do not reduce coupling, and deploying less often makes each release larger and riskier."
+ },
+ {
+  "id": 48,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which is the correct approach when a deployment must be coordinated with a third party's release?",
+  "options": [
+   "Deploy behind a feature flag so the new behaviour can be enabled independently of the deployment",
+   "Deploy at the same moment and hope timing aligns",
+   "Delay all deployments until the third party is ready",
+   "Deploy and immediately roll back if the third party is not ready"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A feature flag decouples deployment from release, so code can ship safely in a disabled state and be activated the moment the third party is ready — with instant deactivation if needed. Simultaneous deployment depends on fragile timing, delaying everything blocks unrelated work, and deploy-then-rollback wastes effort and risks instability."
+ },
+ {
+  "id": 49,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about CodeBuild build badges is correct?",
+  "options": [
+   "They provide a public URL showing the latest build status for a project",
+   "They deploy the application",
+   "They store artifacts",
+   "They replace notifications"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Build badges expose a shareable image reflecting the most recent build result, commonly embedded in a repository README. They report status only and do not deploy, store artifacts, or replace event-driven notifications."
+ },
+ {
+  "id": 50,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which practice BEST prevents a pipeline from being blocked by a flaky test?",
+  "options": [
+   "Identify and fix or quarantine the flaky test, tracking it rather than blanket-retrying everything",
+   "Retry the whole pipeline until it passes",
+   "Delete the test",
+   "Disable all tests"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A flaky test either has a real intermittent defect behind it or a timing bug in the test, so it should be quarantined with a tracked ticket while the underlying cause is fixed. Blanket retries mask genuine intermittent failures, and deleting or disabling tests removes coverage permanently."
+ },
+ {
+  "id": 51,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which is the correct interpretation of CodeDeploy's minimum healthy hosts setting?",
+  "options": [
+   "It defines how many instances must remain healthy during deployment, controlling how aggressively instances are taken out of service",
+   "It sets the total instance count",
+   "It configures auto scaling",
+   "It defines the health check endpoint"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Minimum healthy hosts governs deployment concurrency by requiring a floor of healthy instances, so a low value deploys faster with less capacity and a high value is safer but slower. It does not control fleet size, auto scaling, or the health check itself."
+ },
+ {
+  "id": 52,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which approach BEST supports testing infrastructure changes for a stack containing stateful resources?",
+  "options": [
+   "Deploy to an isolated environment with the same template but separate data, and review a production change set before applying",
+   "Test directly on production data",
+   "Skip testing stateful resources",
+   "Delete and recreate production"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "An isolated environment with its own data exercises the template safely, and the production change set then reveals whether any resource would be replaced. Testing against production data risks corruption, skipping stateful testing leaves the riskiest changes unverified, and recreating production destroys data outright."
+ },
+ {
+  "id": 53,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about deploying Lambda functions with container images is correct?",
+  "options": [
+   "The image must be in ECR in the same region as the function, and the function is updated by pointing to a new image URI or digest",
+   "Images can be pulled from any public registry",
+   "Images are limited to 250 MB",
+   "Container images cannot use environment variables"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Lambda pulls container images from ECR in the same region, and deployment means updating the function to a new image URI or digest. Images may be up to 10 GB rather than 250 MB, environment variables work normally, and arbitrary public registries are not supported as a source."
+ },
+ {
+  "id": 54,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An application shows a sharp latency increase that correlates exactly with a DynamoDB table's UserErrors metric rising. What does this suggest?",
+  "options": [
+   "Client-side errors such as validation or conditional check failures are occurring, and retries are inflating latency",
+   "The table is under-provisioned",
+   "The region is down",
+   "The IAM role expired"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "UserErrors counts 400-class client errors such as validation failures and conditional check failures, so a correlated latency rise suggests requests failing and being retried. Under-provisioning would show as throttling in a different metric, and regional or credential failures produce broader and more distinct symptoms."
+ },
+ {
+  "id": 55,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the MOST effective way to reduce the p99 latency of an API whose backend is already fast?",
+  "options": [
+   "Investigate the tail causes such as cold starts, connection setup, retries and garbage collection rather than optimising average backend time",
+   "Increase backend capacity",
+   "Reduce the number of endpoints",
+   "Add more logging"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "When average backend time is already low, tail latency comes from occasional events — cold starts, connection establishment, retries after transient failures, or garbage collection pauses — so those specific causes must be identified. Adding capacity improves an average that is not the problem, and extra logging can worsen latency."
+ },
+ {
+  "id": 56,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which practice BEST supports diagnosing an issue reported by a single customer among millions of requests?",
+  "options": [
+   "Log a customer or tenant identifier as a structured field so their requests can be isolated in Logs Insights and X-Ray",
+   "Increase log verbosity globally",
+   "Ask the customer to reproduce",
+   "Review all logs manually"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A structured tenant identifier — indexed as an X-Ray annotation and present in logs — lets one customer's traffic be isolated instantly among millions of requests. Global verbosity increases cost and noise, reproduction is not always possible, and manual review does not scale."
+ },
+ {
+  "id": 57,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the correct interpretation of an increase in Lambda's ConcurrentExecutions metric without a corresponding increase in Invocations?",
+  "options": [
+   "Function duration has increased, so more executions overlap at the same request rate",
+   "Traffic has increased",
+   "The function is throttled",
+   "Memory is exhausted"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Concurrency equals request rate multiplied by duration, so with a steady request rate rising concurrency means each invocation is taking longer — commonly a slow downstream dependency. Throttling would appear in the Throttles metric, and memory exhaustion produces errors."
+ },
+ {
+  "id": 58,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which approach BEST validates that a caching layer has not introduced stale data problems?",
+  "options": [
+   "Monitor cache hit rate alongside application correctness checks, and verify invalidation on write paths",
+   "Assume the cache is correct",
+   "Increase the TTL",
+   "Disable monitoring"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Caching bugs typically surface as correct-looking but stale responses, so both cache behaviour and data correctness must be observed, with particular attention to whether writes invalidate cached entries. Assuming correctness hides the problem, and a longer TTL widens the staleness window."
+ },
+ {
+  "id": 59,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which metric BEST indicates that an Application Load Balancer is unable to reach healthy targets?",
+  "options": [
+   "UnHealthyHostCount rising with HTTPCode_ELB_5XX_Count",
+   "RequestCount falling",
+   "NewConnectionCount rising",
+   "ActiveConnectionCount stable"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Unhealthy targets combined with load-balancer-generated 5xx responses indicates the ALB has no healthy destinations to route to. Falling request counts and connection metrics describe traffic volume rather than target health."
+ },
+ {
+  "id": 60,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which approach BEST reduces the cost of storing high-cardinality operational data while preserving the ability to investigate?",
+  "options": [
+   "Keep high-cardinality detail in logs queried on demand, and reserve metrics for low-cardinality aggregates",
+   "Create a metric for every unique identifier",
+   "Store everything as metrics",
+   "Delete all operational data weekly"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CloudWatch bills per unique metric, so high-cardinality dimensions such as user or request identifiers explode cost, whereas logs store that detail cheaply and support ad-hoc queries. Metrics should carry low-cardinality aggregates, and deleting data weekly destroys investigative capability."
+ },
+ {
+  "id": 61,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the MOST likely explanation for a Lambda function whose duration is consistently just under its configured timeout?",
+  "options": [
+   "The function is being limited by a slow dependency or retry loop that nearly exhausts the available time",
+   "The memory is too high",
+   "The deployment package is too large",
+   "The region is misconfigured"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Durations clustering just below the timeout suggest work is being cut short or retried until time runs out, typically a slow dependency or an internal retry loop consuming the budget. Memory and package size affect performance and cold starts rather than producing this pattern."
+ },
+ {
+  "id": 62,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which practice MOST improves the ability to correlate a spike in errors with a specific deployment?",
+  "options": [
+   "Emit deployment markers or annotate dashboards with release events, and include the version in logs and traces",
+   "Rely on memory of deployment times",
+   "Check the pipeline history manually each time",
+   "Deploy less often"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deployment markers on dashboards and a version tag in logs and traces make correlation immediate and unambiguous. Relying on recollection or manually cross-referencing pipeline history is slow during an incident, and deploying less often makes each release larger and harder to attribute."
+ },
+ {
+  "id": 63,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the correct first step when an application's cost increases sharply with no traffic change?",
+  "options": [
+   "Use Cost Explorer to identify which service and usage type increased, then correlate with recent changes",
+   "Reduce all capacity immediately",
+   "Delete unused resources at random",
+   "Ignore it until the next billing cycle"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Identifying the specific service and usage type driving the increase narrows the cause quickly — often a new logging configuration, a NAT gateway path, or a runaway retry loop. Blanket capacity reduction risks an outage, random deletion is dangerous, and waiting lets the cost accumulate."
+ },
+ {
+  "id": 64,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which approach BEST verifies that an application degrades gracefully when a non-critical dependency fails?",
+  "options": [
+   "Inject a failure of that dependency in a test environment and confirm the application still serves core functionality",
+   "Assume the fallback works",
+   "Remove the dependency entirely",
+   "Test only when it fails naturally"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deliberately failing the dependency proves the fallback path actually executes correctly, since untested fallback code frequently contains its own defects. Assuming it works leaves that unverified, removing the dependency changes the system, and waiting for natural failure means production is the test."
+ },
+ {
+  "id": 65,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the MOST useful practice for reducing the time to identify the cause of a recurring intermittent failure?",
+  "options": [
+   "Capture detailed context including correlation IDs, inputs and downstream responses at the moment of failure",
+   "Increase log retention only",
+   "Add more dashboards",
+   "Restart services when it happens"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Intermittent failures are hard to reproduce, so capturing rich context at the moment they occur is often the only way to diagnose them. Longer retention preserves data that may lack the necessary detail, dashboards summarise rather than explain, and restarting clears the evidence along with the symptom."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=7"></script>
+<script src="../assets/i18n.js?v=7"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 19 · Offline Pack</p>
+    <h1 data-ur="Object storage (S3): bade files ko database mein mat rakho">Object storage (S3): don't keep big files in your database</h1>
+    <p class="subtitle" data-ur="Images, videos, PDFs, backups — inko warehouse (S3) mein rakho, aur database mein sirf uska ticket (URL) rakho.">Images, videos, PDFs, backups — keep them in a warehouse (S3), and keep only the ticket (URL) in your database.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: object storage</span>
+      <span>Win: know where files really belong</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (CDN yaad karo)">30-second warm-up (recall the CDN)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek <strong>CDN</strong> kya karta hai, aur user ke qareeb kya cheez serve karta hai?">From memory: what does a <strong>CDN</strong> do, and what kind of thing does it serve close to the user?</div>
+    <div class="answer" data-ur="Ek <strong>CDN</strong> tumhare static files (images, JS, CSS, videos) ki copies duniya bhar ke edge servers par rakhta hai, taake user ke qareeb se serve ho — tez, aur tumhare server par load kam. Aaj hum dekhenge <em>woh files pehli jagah rehti kahan hain</em> — jawab hai object storage, aur CDN uske aage baithta hai.">A <strong>CDN</strong> keeps copies of your static files (images, JS, CSS, videos) on edge servers around the world, so they're served from close to the user — fast, and less load on your server. Today we look at <em>where those files actually live</em> — the answer is object storage, and the CDN sits in front of it.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Bade files (images, videos, PDFs, backups) database ke andar mat rakho. Unhein object storage (S3) mein rakho, jo saste mein arbon files rakhne ke liye bani hai, aur database mein sirf uska URL/key store karo.</strong> Database structured, queryable data ke liye hai — blobs ke liye nahi."><strong>Don't store big files (images, videos, PDFs, backups) inside your database. Put them in object storage (S3), which is built to hold billions of files cheaply, and store only the URL/key in your database.</strong> A database is for structured, queryable data — not blobs.</span>
+  </div>
+
+  <h2 data-ur="Kahani: cloakroom aur tumhara bhaari suitcase">The story: the cloakroom and your heavy suitcase</h2>
+  <p data-ur="Tum ek meeting room mein ja rahe ho jo chhoti, mehngi aur crowded hai — sirf log aur kaghaz uske andar aane chahiye. Tumhare paas ek <strong>bhaari suitcase</strong> hai. Do options hain:">You're walking into a meeting room that's small, expensive, and crowded — only people and papers should come inside. You've got a <strong>heavy suitcase</strong>. Two options:</p>
+  <ul>
+    <li data-ur="<strong>Suitcase andar ghaseeto:</strong> meeting room bhar jaata hai, chalna mushkil, har koi slow. Agli meeting ke liye jagah bhi kam. Yeh hai file ko <em>database ke andar</em> rakhna."><strong>Drag the suitcase inside:</strong> the meeting room fills up, moving around gets hard, everyone slows down. Less room for the next meeting too. That's storing the file <em>inside the database</em>.</li>
+    <li data-ur="<strong>Cloakroom / warehouse mein chhodo:</strong> counter par suitcase de do, badle mein ek <strong>chhoti ticket</strong> lo. Meeting room khaali aur tez rehta hai. Jab suitcase chahiye, ticket dikhao. Yeh hai file ko <em>object storage</em> mein rakhna aur database mein sirf ticket (URL) rakhna."><strong>Leave it at the cloakroom / warehouse:</strong> hand the suitcase over at the counter, get back a <strong>small ticket</strong> in return. The meeting room stays empty and fast. When you want the suitcase, you show the ticket. That's storing the file in <em>object storage</em> and keeping only the ticket (URL) in your database.</li>
+  </ul>
+  <p data-ur="Warehouse ek hi cheez mein bohat acha hai: arbon boxes ko saste mein rakhna, har ek ka apna ticket. Meeting room ek hi cheez mein acha hai: chhoti, saaf, queryable cheezein. Dono ko unka apna kaam karne do.">The warehouse is great at exactly one thing: holding billions of boxes cheaply, each with its own ticket. The meeting room is great at one thing: small, clean, queryable things. Let each do its own job.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 200" role="img" aria-label="App stores file in object storage, keeps only the URL in the database">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="70" width="130" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="95" y="95" font-weight="700" fill="#2a4d8f">Django app</text>
+        <text x="95" y="113" fill="#6b6b6b" font-size="11">handles upload</text>
+
+        <rect x="255" y="20" width="150" height="60" rx="8" fill="#e9f7ef" stroke="#1e7d45"/>
+        <text x="330" y="45" font-weight="700" fill="#1e7d45">Object storage (S3)</text>
+        <text x="330" y="63" fill="#6b6b6b" font-size="11">the file bytes live here</text>
+
+        <rect x="255" y="120" width="150" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="330" y="145" font-weight="700" fill="#2a4d8f">Postgres</text>
+        <text x="330" y="163" fill="#6b6b6b" font-size="11">stores only the URL/key</text>
+
+        <rect x="480" y="20" width="130" height="60" rx="8" fill="#fdf1e3" stroke="#b5651d"/>
+        <text x="545" y="45" font-weight="700" fill="#b5651d">CDN</text>
+        <text x="545" y="63" fill="#6b6b6b" font-size="11">serves it fast</text>
+
+        <line x1="160" y1="90" x2="255" y2="55" stroke="#1e7d45" stroke-width="2"/>
+        <text x="205" y="62" fill="#1e7d45" font-size="11">file →</text>
+        <line x1="160" y1="105" x2="255" y2="145" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="205" y="135" fill="#2a4d8f" font-size="11">url →</text>
+        <line x1="405" y1="50" x2="480" y2="50" stroke="#b5651d" stroke-width="2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="File bytes S3 mein jaate hain; database mein sirf uska URL; CDN use user tak tez pohanchata hai.">The file bytes go to S3; the database keeps only its URL; the CDN delivers it to users fast.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django mein tum <code>django-storages</code> plus S3 use karte ho. Tumhara <code>FileField</code>/<code>ImageField</code> ab local disk ke bajaye S3 par point karta hai — user uploads seedhe warehouse mein jaate hain, aur database column mein sirf key/path store hoti hai (bytes nahi). <code>collectstatic</code> bhi S3 par ja sakta hai, aur CloudFront (CDN) us bucket ke aage baith kar sab kuch tez serve karta hai. Tum ek Postgres column mein file bytes <em>kabhi</em> nahi rakhte: row bloat ho jaati hai, backups bhaari, <code>SELECT *</code> slow, aur RAM barbaad — Postgres ka kaam hai chhoti, indexed, queryable rows, na ke 200MB video blob. Ek secure direct upload ke liye <strong>presigned URL</strong> use karo: tumhara backend ek short-lived signed URL banata hai, aur browser file seedhe S3 par bhejta hai — bade file tumhare Django server se guzarte hi nahi.">In Django you use <code>django-storages</code> plus S3. Your <code>FileField</code>/<code>ImageField</code> now points at S3 instead of local disk — user uploads land in the warehouse, and the database column stores only the key/path (not the bytes). <code>collectstatic</code> can also push to S3, with CloudFront (a CDN) sitting in front of the bucket to serve everything fast. You <em>never</em> put file bytes in a Postgres column: rows bloat, backups get huge, <code>SELECT *</code> slows down, and RAM is wasted — Postgres is for small, indexed, queryable rows, not a 200MB video blob. For a secure direct upload use a <strong>presigned URL</strong>: your backend mints a short-lived signed URL and the browser uploads straight to S3 — big files never pass through your Django server.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: user ne profile picture upload ki. Database ki row mein <em>kya</em> jaata hai?">Quick check: a user uploaded a profile picture. What goes into the database row?</div>
+    <div class="answer" data-ur="Sirf <strong>URL ya key</strong> (jaise <code>avatars/u123.jpg</code>), image ke bytes nahi. Asli image bytes S3 mein rehte hain; app zaroorat par us URL se serve/link karti hai (aksar CDN ke zariye).">Only the <strong>URL or key</strong> (like <code>avatars/u123.jpg</code>), not the image bytes. The actual image bytes live in S3; the app serves/links to that URL when needed (often via a CDN).</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Object storage muft nahi aata: yeh <strong>alag infrastructure</strong> hai (ek aur cheez jo configure aur secure karni hai), aur kuch operations par <strong>eventual consistency</strong> ho sakti hai — ek file likhne ya delete karne ke foran baad har node use consistent nahi dekh sakta. Iske badle mein tumhein files ke liye behad <strong>sasta aur zyada scalable</strong> storage milta hai. Interview mein yeh kaho: &quot;blobs S3 mein, sirf URL database mein — thori eventual consistency qubool, kyunke cost aur scale ka faida bohat bada hai.&quot;">Object storage isn't free: it's <strong>separate infrastructure</strong> (one more thing to configure and secure), and some operations can be <strong>eventually consistent</strong> — right after you write or delete a file, not every node may see it consistently. In exchange you get storage for files that's dramatically <strong>cheaper and more scalable</strong>. In an interview, say: &quot;blobs go to S3, only the URL goes in the database — I accept a bit of eventual consistency because the cost and scale win is huge.&quot;</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek user 30MB ki PDF upload karta hai. Behtareen jagah kahan rakhni hai?">A user uploads a 30MB PDF. What's the best place to put it?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek Postgres <code>bytea</code> column mein bytes ke tor par">As bytes in a Postgres <code>bytea</code> column</button>
+      <button class="opt" data-correct="true" data-ur="Object storage (S3) mein file rakho, database mein uska URL/key">The file in object storage (S3), its URL/key in the database</button>
+      <button class="opt" data-correct="false" data-ur="Ek Redis cache mein string ki tarah">As a string in a Redis cache</button>
+      <button class="opt" data-correct="false" data-ur="Django app ke local disk par har web server par">On the Django app's local disk on every web server</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tum chahte ho browser ek bada video seedhe S3 par upload kare bina tumhare Django server se guzre, phir bhi secure rahe. Kaunsa tool use karoge?">You want the browser to upload a big video straight to S3 without passing through your Django server, while staying secure. Which tool do you use?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek public bucket jise koi bhi likh sake">A public bucket anyone can write to</button>
+      <button class="opt" data-correct="true" data-ur="Ek presigned URL jo backend banata hai aur browser use karta hai">A presigned URL the backend generates and the browser uses</button>
+      <button class="opt" data-correct="false" data-ur="Video ko database mein rakho, phir S3 par copy karo">Store the video in the database, then copy it to S3</button>
+      <button class="opt" data-correct="false" data-ur="Ek CDN cache purge">A CDN cache purge</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Bade files object storage (S3) mein jaate hain — arbon files, saste, har ek apne URL ke saath, aksar CDN ke zariye serve. Database mein sirf <strong>URL/key</strong> jaati hai, kabhi bytes nahi. Django mein: <code>django-storages</code> + S3 for uploads aur <code>collectstatic</code>, presigned URLs for secure direct uploads. Tradeoff: alag infra aur thori eventual consistency — magar files ke liye bohat sasta aur scalable. Ab tum jaante ho files rehti kahan hain.">Big files go to object storage (S3) — billions of files, cheap, each with its own URL, often served via a CDN. Only the <strong>URL/key</strong> goes in the database, never the bytes. In Django: <code>django-storages</code> + S3 for uploads and <code>collectstatic</code>, presigned URLs for secure direct uploads. Tradeoff: separate infra and a little eventual consistency — but far cheaper and more scalable for files. Now you know where files really live.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://django-storages.readthedocs.io/&quot; target=&quot;_blank&quot;>django-storages documentation</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — S3 backend setup ke liye.">📖 <a href="https://django-storages.readthedocs.io/" target="_blank">django-storages documentation</a><sup class="cite"><a href="#s1">1</a></sup> — for the S3 backend setup.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to wire up <code>django-storages</code> with S3 and CloudFront on a real project, or see a presigned-URL upload flow end to end? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 19 (Object Storage).</strong> Builds on <a href="0014-dns-and-cdn.html">DNS &amp; CDN (14)</a> — the CDN sits in front of your S3 bucket.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://django-storages.readthedocs.io/" target="_blank">django-storages documentation</a>, Jazzband.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. The file bytes go to object storage (S3); the database keeps only the URL/key. Cheap, scalable, and it keeps Postgres lean."
+                      : "Reconsider. Big blobs bloat the database (or overload a cache/local disk). Put the file in S3 and store just its URL/key in the DB.",
+          q2: correct ? "Yes. A presigned URL is a short-lived, signed link your backend generates so the browser can upload directly to S3 — secure, and the file skips your server."
+                      : "Reconsider. You want a presigned URL: your backend signs a short-lived URL so the browser uploads straight to S3 without exposing the bucket or routing bytes through Django."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

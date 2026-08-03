@@ -1,0 +1,205 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 01</p>
+    <h1 data-ur="Framework: design interview mein kabhi freeze na hona">The Framework: how to never freeze in a design interview</h1>
+    <p class="subtitle" data-ur="Har &quot;Design X&quot; sawal ke liye aik hi repeatable tareeqa — aur kaam pe har architecture baat-cheet ke liye bhi.">One repeatable scaffold for every "Design X" question — and every architecture conversation at work.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>Skill: structure a design from scratch</span>
+      <span>Win: a 5-step script you can run on autopilot</span>
+    </div>
+  </header>
+
+  <p data-ur="Yeh cheez logon ko phansati hai: <em>&quot;Design Twitter&quot;</em> jaisa sawal asal mein knowledge ka test nahi hai. Yeh <strong>communication ka test</strong> hai. Interviewer dekhna chahta hai ke aap kisi barri aur vague cheez ko aaram se, tarteeb se, bol kar tor sakte hain ya nahi. Kaam pe design review mein bhi yehi hai — jo engineer senior lagta hai, woh aksar wohi hota hai jiske paas aik <em>structure</em> hota hai.">Here's the thing that trips people up: a question like <em>"Design Twitter"</em> isn't really a knowledge test. It's a <strong>communication test</strong>. The interviewer wants to see if you can take something huge and vague and break it down calmly, in order, out loud. The same is true in a design review at work — the engineer who looks senior is usually just the one with a <em>structure</em>.</p>
+
+  <p data-ur="Achhi khabar: yeh structure seekha ja sakta hai, aur har baar wohi paanch steps hote hain. Ise aik dafa seekh lo, phir jab dimagh khaali ho jaye to yeh script kaam aati hai.">Good news: that structure is learnable, and it's the same five steps every time. Learn this once and you have a script to fall back on when your brain goes blank.</p>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Poora sabak aik line mein">The whole lesson in one line</span>
+    <span data-ur="Har design in steps ko follow karta hai: <strong>Scope → Estimate → Draw → Deep-dive → Trade off</strong>. Inhe tarteeb se chalao, saath saath bolte jao.">Every design follows: <strong>Scope → Estimate → Draw → Deep-dive → Trade off</strong>. Run them in order, narrate as you go.</span>
+  </div>
+
+  <h2 data-ur="Paanch steps">The five steps</h2>
+
+  <figure>
+    <svg viewBox="0 0 700 200" role="img" aria-label="Five-step design framework flow diagram">
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#6b6b6b"/>
+        </marker>
+      </defs>
+      <!-- boxes -->
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <g>
+          <rect x="10" y="70" width="110" height="60" rx="8" fill="#f6e9e9" stroke="#9b1c1c"/>
+          <text x="65" y="95" font-weight="700" fill="#9b1c1c">1 · Scope</text>
+          <text x="65" y="113" fill="#6b6b6b">what + how big</text>
+        </g>
+        <g>
+          <rect x="155" y="70" width="110" height="60" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+          <text x="210" y="95" font-weight="700" fill="#2a4d8f">2 · Estimate</text>
+          <text x="210" y="113" fill="#6b6b6b">napkin math</text>
+        </g>
+        <g>
+          <rect x="300" y="70" width="110" height="60" rx="8" fill="#e8f3ec" stroke="#1d6b3a"/>
+          <text x="355" y="95" font-weight="700" fill="#1d6b3a">3 · Draw</text>
+          <text x="355" y="113" fill="#6b6b6b">boxes + arrows</text>
+        </g>
+        <g>
+          <rect x="445" y="70" width="110" height="60" rx="8" fill="#fbf3e2" stroke="#b8860b"/>
+          <text x="500" y="95" font-weight="700" fill="#8a6400">4 · Deep-dive</text>
+          <text x="500" y="113" fill="#6b6b6b">1–2 hard parts</text>
+        </g>
+        <g>
+          <rect x="590" y="70" width="100" height="60" rx="8" fill="#f3f1ea" stroke="#1a1a1a"/>
+          <text x="640" y="95" font-weight="700">5 · Trade off</text>
+          <text x="640" y="113" fill="#6b6b6b">defend it</text>
+        </g>
+        <!-- arrows -->
+        <line x1="120" y1="100" x2="153" y2="100" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="265" y1="100" x2="298" y2="100" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="410" y1="100" x2="443" y2="100" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="555" y1="100" x2="588" y2="100" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#arrow)"/>
+      </g>
+    </svg>
+    <figcaption data-ur="Wohi paanch steps, har sawal ke liye. ~45 min interview ≈ 5 / 5 / 10 / 20 / 5 minute.">The same five steps, every question. ~45 min interview ≈ 5 / 5 / 10 / 20 / 5 minutes.</figcaption>
+  </figure>
+
+  <h3 data-ur="1 · Scope — <em>kya</em> aur <em>kitna barra</em> pin down karo">1 · Scope — pin down <em>what</em> and <em>how big</em></h3>
+  <p data-ur="Abhi architecture ko haath mat lagao. Pehle sawal pooch kar problem ko chhota karo. &quot;Design Twitter&quot; ke sau matlab ho sakte hain — to aap decide karo kaunsa slice bana rahe ho. Do cheezein pin down karo: <strong>functional requirements</strong> (kaunse features? masalan &quot;post a tweet, see a feed&quot; — aur baaqi ko saaf saaf cut karo) aur <strong>non-functional requirements</strong> (kitne users, read-heavy ya write-heavy, kitna fast feel hona chahiye, kya kabhi thora stale data dikhana chalega?).">Don't touch architecture yet. First ask questions to shrink the problem. "Design Twitter" could mean a hundred things — so you decide which slice you're building. Nail down two things: the <strong>functional requirements</strong> (what features? e.g. "post a tweet, see a feed" — and explicitly cut the rest) and the <strong>non-functional requirements</strong> (how many users, read-heavy or write-heavy, how fast must it feel, can it ever show slightly stale data?).</p>
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Step 1 aap har dafa karte ho jab Django app shuru karte ho: models likhne se pehle aap poochte ho &quot;core entities aur main user actions kya hain?&quot; System design bas iske upar <em>scale</em> ke sawal add karta hai — yeh requests per second kitne hain, aur data kitna hai.">You already do step 1 whenever you start a Django app: before writing models you ask "what are the core entities and the main user actions?" System design just adds the <em>scale</em> questions on top — how many of these requests per second, and how much data.</span>
+  </div>
+
+  <h3 data-ur="2 · Estimate — napkin math karo">2 · Estimate — do the napkin math</h3>
+  <p data-ur="Kuch rough numbers baad ke har decision ko badal dete hain. Agar 100 requests/sec hain, to aik server theek hai. Agar 1,000,000 requests/sec hain, to ab aap bahut saare servers, caching, aur sharding ki baat kar rahe ho. Aapko exact figures ki zaroorat nahi — aapko sahi <em>order of magnitude</em> chahiye. (Ise hum aik baad wale lesson mein theek se drill karenge; abhi ke liye bas yeh jaan lo ke yeh required step hai, optional nahi.)">A few rough numbers change every later decision. If it's 100 requests/sec, one server is fine. If it's 1,000,000 requests/sec, you're now talking about many servers, caching, and sharding. You don't need exact figures — you need the right <em>order of magnitude</em>. (We'll drill this properly in a later lesson; for now just know it's a required step, not optional.)</p>
+
+  <h3 data-ur="3 · Draw — boxes aur arrows">3 · Draw — boxes and arrows</h3>
+  <p data-ur="High level pe happy path ka sketch banao: client → load balancer → app servers → database, plus aik cache aur shayad aik queue. Pehle ise simple aur complete rakho. Yeh drawing woh map ban jaati hai jis pe aap baaqi interview mein ungli rakh kar point karoge.">Sketch the happy path at a high level: client → load balancer → app servers → database, plus a cache and maybe a queue. Keep it simple and complete first. This drawing becomes the map you'll point at for the rest of the interview.</p>
+
+  <h3 data-ur="4 · Deep-dive — 1–2 hard parts pe deep jao">4 · Deep-dive — go deep on 1–2 hard parts</h3>
+  <p data-ur="Yahin interview asal mein jeeta ya haara jaata hai. Interviewer chunta hai (ya aap offer karte ho) spicy part — &quot;feed kaise banti hai?&quot;, &quot;isko consistent kaise rakhte ho?&quot; — aur aap sirf usi pe deep jaate ho. Step 3 mein breadth, yahan depth.">This is where the interview is actually won or lost. The interviewer picks (or you offer) the spicy part — "how does the feed get built?", "how do you keep this consistent?" — and you go deep on just that. Breadth in step 3, depth here.</p>
+
+  <h3 data-ur="5 · Trade off — jo chhora us ka naam lo">5 · Trade off — name what you gave up</h3>
+  <p data-ur="Har choice ki koi keemat hoti hai. Senior engineers keemat bol kar batate hain: <em>&quot;Main yahan speed ke liye cache use kar raha hoon, lekin iska matlab data kuch seconds stale ho sakta hai — feed ke liye woh theek hai.&quot;</em> Tradeoff ka naam lena seniority ka sab se saaf signal hai, interviews mein <strong>aur</strong> real design reviews mein.">Every choice costs something. Senior engineers say the cost out loud: <em>"I'm using a cache here for speed, but that means the data can be a few seconds stale — for a feed that's fine."</em> Naming the tradeoff is the single clearest signal of seniority, in interviews <strong>and</strong> in real design reviews.</p>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Sab se barri #1 ghalti">The #1 mistake</span>
+    <span data-ur="Step 1 kiye bina seedha step 3 pe kood jaana (databases draw karna). Aap galat cheez impressive tareeqe se bana loge. Hamesha pehle scope karo — aik clarifying sawal bhi aapko credibility aur sochne ka time deta hai.">Jumping straight to step 3 (drawing databases) without doing step 1. You'll build the wrong thing impressively. Always scope first — even one clarifying question buys you credibility and thinking time.</span>
+  </div>
+
+  <h2 data-ur="Ise pakka karo — active recall">Lock it in — active recall</h2>
+  <p data-ur="Bas sar mat hilao. Answer ko chhupao, paanch steps zor se bolo, <em>phir</em> reveal karo. Memory se yaad karna hi ise chipkata hai.">Don't just nod. Cover the answer, say the five steps out loud, <em>then</em> reveal. Retrieving from memory is what makes it stick.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Design framework ke paanch steps tarteeb se batao — aur har aik ka aik-lafzi point.">Name the five steps of the design framework, in order — and the one-word point of each.</div>
+    <div class="answer" data-ur="<strong>1 · Scope</strong> — kya + kitna barra (requirements).<br>
+      <strong>2 · Estimate</strong> — napkin math (orders of magnitude).<br>
+      <strong>3 · Draw</strong> — boxes + arrows (high-level happy path).<br>
+      <strong>4 · Deep-dive</strong> — 1–2 hard parts pe deep jao.<br>
+      <strong>5 · Trade off</strong> — jo chhora us ka naam lo.">
+      <strong>1 · Scope</strong> — what + how big (requirements).<br>
+      <strong>2 · Estimate</strong> — napkin math (orders of magnitude).<br>
+      <strong>3 · Draw</strong> — boxes + arrows (high-level happy path).<br>
+      <strong>4 · Deep-dive</strong> — go deep on 1–2 hard parts.<br>
+      <strong>5 · Trade off</strong> — name what you gave up.
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Quick check">Quick check</h2>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Interviewer kehta hai &quot;Design Instagram.&quot; Aapke paas 45 minute hain. Aapka <em>pehla</em> move kya hai?">Interviewer says "Design Instagram." You have 45 minutes. What's your <em>first</em> move?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Posts aur users ke liye database schema draw karo">Draw the database schema for posts and users</button>
+      <button class="opt" data-correct="true" data-ur="Poocho kaunse features scope mein hain aur takreeban kitne users">Ask which features are in scope and roughly how many users</button>
+      <button class="opt" data-correct="false" data-ur="Main store ke liye SQL aur NoSQL mein se chuno">Pick between SQL and NoSQL for the main store</button>
+      <button class="opt" data-correct="false" data-ur="Batao ke CDN images jaldi kaise serve karta hai">Explain how a CDN serves images quickly</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Kaam pe design review mein aap kehte ho &quot;let's add a cache.&quot; Kya cheez isko junior ki bajaye <em>senior</em> banati hai?">In a design review at work you say "let's add a cache." What makes that sound <em>senior</em> rather than junior?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Exact cache product ka naam lena jo aap yahan use karoge">Naming the exact cache product you would use here</button>
+      <button class="opt" data-correct="false" data-ur="Yeh kehna ke caching speed ke liye industry best practice hai">Saying caching is an industry best practice for speed</button>
+      <button class="opt" data-correct="true" data-ur="Keemat ka naam lena — reads faster ho jaate hain lekin data stale ho sakta hai">Naming the cost — reads get faster but data can go stale</button>
+      <button class="opt" data-correct="false" data-ur="Diagram mein cache ko saaf labelled box ki tarah draw karna">Drawing the cache as a clearly labelled box in the diagram</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <h2 data-ur="Tradeoff drill">Tradeoff drill</h2>
+  <p data-ur="Yeh woh muscle hai jo aap sab se zyada use karoge. Scenario parho, woh move chuno jo aap defend kar sako, foran feedback lo. Aik &quot;behtar&quot; answer hota hai, lekin reasoning pick se zyada matter karti hai.">This is the muscle you'll use most. Read the scenario, pick the move you'd defend, get instant feedback. There's a "better" answer, but the reasoning matters more than the pick.</p>
+
+  <div class="quiz" id="q3">
+    <div class="q" data-ur="<strong>Scenario:</strong> 10 minute bache hain, aap ne news feed ka aik solid high-level design draw kar liya hai. Interviewer khamosh hai aur wait kar raha hai. Aap kya karoge?"><strong>Scenario:</strong> 10 minutes left, you've drawn a solid high-level design for a news feed. The interviewer is quiet and waiting. What do you do?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Aur boxes add karo — aik search service, notifications, analytics">Add more boxes — a search service, notifications, analytics</button>
+      <button class="opt" data-correct="true" data-ur="Feed-building step chuno aur ispe deep jao ke yeh kaise kaam karta hai">Pick the feed-building step and go deep on how it works</button>
+      <button class="opt" data-correct="false" data-ur="Traffic numbers ko dobara aur zyada precisely estimate karo">Re-estimate the traffic numbers more precisely</button>
+      <button class="opt" data-correct="false" data-ur="Poocho ke kya woh chahte hain aap asal code likhna shuru karo">Ask if they'd like you to start writing actual code</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki aapki jeet">Your win today</span>
+    <span data-ur="Aapke paas aik 5-step script hai — <strong>Scope, Estimate, Draw, Deep-dive, Trade off</strong> — jo kisi bhi &quot;Design X&quot; sawal aur kisi bhi architecture discussion pe kaam karta hai. Agli baar jab koi aap ki taraf vague systems sawal phenke, aap khaali page ko ghoor nahi rahe hote. Aap step 1 chala rahe hote ho.">You have a 5-step script — <strong>Scope, Estimate, Draw, Deep-dive, Trade off</strong> — that works on any "Design X" question and any architecture discussion. Next time someone throws a vague systems question at you, you're not staring at a blank page. You're running step 1.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="Bilkul isi process ka sab se behtareen free walkthrough, worked examples ke saath:">The single best free walkthrough of this exact process, with worked examples:</p>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer#how-to-approach-a-system-design-interview-question&quot; target=&quot;_blank&quot;>The System Design Primer — &quot;How to approach a system design interview question&quot;</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. Sirf woh section parho; yeh inhi paanch steps ko mirror karta hai aur do worked questions add karta hai.">📖 <a href="https://github.com/donnemartin/system-design-primer#how-to-approach-a-system-design-interview-question" target="_blank">The System Design Primer — "How to approach a system design interview question"</a><sup class="cite"><a href="#s1">1</a></sup>. Read just that section; it mirrors these five steps and adds a couple of worked questions.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — use me.</strong> Stuck on what a "non-functional requirement" really means? Want to dry-run "Design X" with me and get feedback on your structure? Confused why we estimate before drawing? Just ask. The fastest way to learn this is to attempt a design out loud and have me critique your <em>structure</em>, not your answer.
+  </div>
+
+  <footer class="lesson-foot">
+    <p data-ur="<strong>Course ka Lesson 1.</strong> Aage (Lesson 2): <em>Consistency &amp; Availability patterns</em>."><strong>Lesson 1 of the course.</strong> Up next (Lesson 2): <em>Consistency &amp; Availability patterns</em>.</p>
+    <p data-ur="📑 <a href=&quot;../reference/glossary.html&quot;>Glossary</a> ko aik tab mein khula rakho — ise aksar skim karo taake vocabulary chipak jaye.">📑 Keep the <a href="../reference/glossary.html">Glossary</a> open in a tab — skim it often to make the vocabulary stick.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer" target="_blank">The System Design Primer — Donne Martin</a>. Most-starred open-source system design resource.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  // Quiz: click an option, lock in, show feedback.
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) {
+          quiz.querySelectorAll('button.opt').forEach(function(b){
+            if (b.dataset.correct === 'true') b.classList.add('correct');
+          });
+        }
+        var msg = {
+          q1: correct
+            ? "Right. Scope first, always. One clarifying question buys credibility and thinking time."
+            : "Too early. That's a step-3-or-later move. First scope: which features, how many users? Otherwise you might build the wrong thing impressively.",
+          q2: correct
+            ? "Exactly. Naming the cost — faster reads, possibly stale data — is the clearest seniority signal there is."
+            : "Not the senior signal. The product, the 'best practice' framing, and the neat diagram are all fine, but what marks seniority is naming the tradeoff: faster reads vs. staleness.",
+          q3: correct
+            ? "Yes. With time left and a solid sketch, depth beats breadth. Step 4 is where the interview is won."
+            : "Reconsider. More boxes spreads you thin, re-estimating is busywork, and code isn't the point. Go deep on one hard part — that's step 4."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,142 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 22 · Offline Pack</p>
+    <h1 data-ur="Health checks: load balancer ko kaise pata chalta hai ke server zinda hai">Health checks: how the load balancer knows a server is alive</h1>
+    <p class="subtitle" data-ur="&quot;Running&quot; aur &quot;actually able to serve&quot; do alag cheezein hain. Ek chhota /health endpoint yeh farq batata hai.">"Running" and "actually able to serve" are two different things. A tiny /health endpoint tells them apart.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: health checks</span>
+      <span>Win: keep dead servers out of rotation</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (failover ka heartbeat yaad karo)">30-second warm-up (recall the heartbeat from failover)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: active–passive failover mein <strong>heartbeat</strong> kya karta hai?">From memory: what does the <strong>heartbeat</strong> do in active–passive failover?</div>
+    <div class="answer" data-ur="Yeh do servers ke darmiyan ek chhota &quot;still alive?&quot; ping hai jo har second ya aise jaata hai. Jab spare heartbeat sunna band karta hai, woh maan leta hai ke active mar gaya aur sambhal leta hai. Health check wahi idea hai — lekin <em>load balancer</em> yeh ping bhejta hai, aur sirf &quot;zinda&quot; nahi balke &quot;serve karne ke qaabil&quot; poochta hai.">It's a small "still alive?" ping between two servers every second or so. When the spare stops hearing it, it assumes the active died and takes over. A health check is the same idea — but the <em>load balancer</em> sends the ping, and it asks not just "alive" but "able to serve."</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Har server ek chhota endpoint expose karta hai (jaise /health) jo &quot;theek hoon&quot; par 200 OK deta hai. Load balancer ise regularly ping karta hai; agar yeh kuch dafa fail ho jaaye, woh server ko rotation se nikaal deta hai (traffic band) jab tak woh dobara healthy na ho.</strong> Aise dead server chup-chaap requests nigal nahi paate."><strong>Each server exposes a tiny endpoint (like /health) that returns 200 OK when it's fine. The load balancer pings it regularly; if it fails a few times, the server is pulled out of rotation (no traffic) until it's healthy again.</strong> That's how a dead server stops silently swallowing requests.</span>
+  </div>
+
+  <h2 data-ur="Kahani: nurse ka round">The story: the nurse's rounds</h2>
+  <p data-ur="Ek hospital ward mein soch. Nurse har thori der baad <strong>rounds</strong> karti hai — har patient ke paas ja kar pulse check karti hai. Zyada tar patients response dete hain: pulse theek hai, agla. Lekin ek patient respond nahi karta. Nurse use zabardasti ward mein nahi rakhti — use <strong>intensive care mein shift kar deti hai</strong> (normal rotation se bahar) jab tak woh stable na ho. Woh dubaara list mein tab aata hai jab uska pulse phir theek ho.">Picture a hospital ward. Every little while a nurse does <strong>rounds</strong> — walks up to each patient and checks their pulse. Most patients respond: pulse fine, next one. But one patient doesn't respond. The nurse doesn't leave them sitting in the ward — she <strong>moves them to intensive care</strong> (out of the normal rotation) until they're stable. They come back onto the list only when the pulse is good again.</p>
+  <p data-ur="Nurse = load balancer. Pulse check = health check ping. Patient jo respond nahi karta = server jo /health par fail karta hai. Intensive care = rotation se bahar nikaal dena. Simple, aur yehi poora idea hai.">The nurse = the load balancer. The pulse check = the health check ping. The patient who doesn't respond = a server failing /health. Intensive care = pulling it out of rotation. Simple, and that's the whole idea.</p>
+
+  <figure>
+    <svg viewBox="0 0 660 210" role="img" aria-label="Load balancer pings each server's health endpoint and removes the unhealthy one">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="250" y="20" width="160" height="46" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="330" y="40" font-weight="700" fill="#2a4d8f">Load balancer</text>
+        <text x="330" y="57" fill="#6b6b6b" font-size="11">pings /health regularly</text>
+
+        <rect x="40" y="140" width="150" height="52" rx="8" fill="#e8f5ee" stroke="#1c7c46"/>
+        <text x="115" y="162" font-weight="700" fill="#1c7c46">Server 1</text>
+        <text x="115" y="179" fill="#1c7c46" font-size="11">200 OK ✓ in rotation</text>
+
+        <rect x="255" y="140" width="150" height="52" rx="8" fill="#e8f5ee" stroke="#1c7c46"/>
+        <text x="330" y="162" font-weight="700" fill="#1c7c46">Server 2</text>
+        <text x="330" y="179" fill="#1c7c46" font-size="11">200 OK ✓ in rotation</text>
+
+        <rect x="470" y="140" width="150" height="52" rx="8" fill="#f9eaea" stroke="#9b1c1c"/>
+        <text x="545" y="162" font-weight="700" fill="#9b1c1c">Server 3</text>
+        <text x="545" y="179" fill="#9b1c1c" font-size="11">fails ✗ pulled out</text>
+
+        <line x1="300" y1="66" x2="130" y2="140" stroke="#1c7c46" stroke-width="1.5"/>
+        <line x1="330" y1="66" x2="330" y2="140" stroke="#1c7c46" stroke-width="1.5"/>
+        <line x1="360" y1="66" x2="530" y2="140" stroke="#9b1c1c" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="545" y="120" fill="#9b1c1c" font-size="10">no traffic</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Load balancer sirf un servers ko traffic bhejta hai jo /health par 200 OK dete hain.">The load balancer only sends traffic to servers that return 200 OK on /health.</figcaption>
+  </figure>
+
+  <h2 data-ur="Liveness vs readiness — ek ehem farq">Liveness vs readiness — an important distinction</h2>
+  <p data-ur="&quot;Healthy&quot; ke do matlab hain, aur inhein alag rakhna interviews aur real outages dono mein maayne rakhta hai:">"Healthy" means two different things, and keeping them apart matters both in interviews and in real outages:</p>
+  <ul>
+    <li data-ur="<strong>Liveness — kya yeh bilkul chal raha hai?</strong> Process zinda hai, hang nahi hua. Agar liveness fail ho, sahi jawab process ko <em>restart</em> karna hai (naya server nahi banana). Ise <strong>sasta</strong> rakho — koi DB query nahi."><strong>Liveness — is it running at all?</strong> The process is alive and not hung. If liveness fails, the right fix is to <em>restart</em> the process. Keep it <strong>cheap</strong> — no DB query.</li>
+    <li data-ur="<strong>Readiness — kya yeh traffic lene ke liye tayyar hai?</strong> Startup mukammal ho gaya, DB reachable hai, cache warm hai. Agar readiness fail ho, process theek hai lekin abhi traffic mat bhejo — bas rotation se hata do, restart mat karo."><strong>Readiness — is it ready to take traffic?</strong> Startup finished, DB reachable, cache warmed. If readiness fails, the process is fine but just don't send traffic yet — pull it from rotation, don't restart it.</li>
+  </ul>
+  <p data-ur="Ek naya server jo abhi boot ho raha hai woh <em>alive</em> hai lekin abhi <em>ready</em> nahi. Ek server jiska DB connection toot gaya hai woh alive hai lekin ready nahi. Yeh farq bachata hai tumhein &quot;restart loop&quot; se — kyunke agar tum readiness ko liveness samajh lo, orchestrator ek theek process ko baar baar maar dega.">A new server still booting is <em>alive</em> but not yet <em>ready</em>. A server whose DB connection dropped is alive but not ready. This distinction saves you from a "restart loop" — because if you treat readiness as liveness, the orchestrator keeps killing a perfectly fine process.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django mein ek lightweight <code>/health/</code> view banao jo bas <code>HttpResponse(&quot;ok&quot;, status=200)</code> return kare — koi auth nahi, koi ORM query nahi, koi template render nahi. Yeh tumhara <strong>liveness</strong> check hai: sasta aur foran. Phir ek alag <code>/ready/</code> view jo <em>halka sa</em> gehra ho — jaise <code>connection.cursor().execute(&quot;SELECT 1&quot;)</code> se check kare ke Postgres reachable hai. Kubernetes mein <code>livenessProbe</code> <code>/health/</code> ko hit karta hai (fail → pod restart) aur <code>readinessProbe</code> <code>/ready/</code> ko (fail → Service se pod hata, traffic band). Khabardar: agar tumhara /health har request par DB, Redis aur Celery sab check kare, to ek slow DB tumhare saare healthy servers ko ek saath &quot;unhealthy&quot; mark karwa sakta hai — aur ek chhoti dikkat poore fleet ko gira deti hai. Isi liye /health ko koi auth ya heavy kaam nahi chahiye.">In Django, make a lightweight <code>/health/</code> view that just returns <code>HttpResponse("ok", status=200)</code> — no auth, no ORM query, no template render. That's your <strong>liveness</strong> check: cheap and instant. Then a separate <code>/ready/</code> view that's <em>slightly</em> deeper — e.g. run <code>connection.cursor().execute("SELECT 1")</code> to check Postgres is reachable. In Kubernetes, the <code>livenessProbe</code> hits <code>/health/</code> (fail → restart the pod) and the <code>readinessProbe</code> hits <code>/ready/</code> (fail → remove pod from the Service, stop traffic). Careful: if your /health checks the DB, Redis and Celery on every request, one slow DB can get all your healthy servers marked "unhealthy" at once — and a small hiccup topples the whole fleet. That's exactly why /health should need no auth and do no heavy work.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: naya deploy hua server jo abhi migrations chala raha hai — liveness pass karega ya readiness fail?">Quick check: a freshly deployed server still running migrations — does it pass liveness or fail readiness?</div>
+    <div class="answer" data-ur="Dono! Process <strong>alive</strong> hai (liveness pass), lekin abhi traffic lene ke liye tayyar <strong>nahi</strong> (readiness fail). Load balancer ko ise rotation se bahar rakhna chahiye jab tak startup mukammal na ho — restart <em>nahi</em> karna chahiye, warna woh kabhi ready hi nahi hoga.">Both apply! The process is <strong>alive</strong> (liveness passes), but it's <strong>not</strong> ready to take traffic yet (readiness fails). The load balancer should keep it out of rotation until startup finishes — and should <em>not</em> restart it, or it will never get ready.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Health check ki <strong>gehrai</strong> ek tradeoff hai. <strong>Bahut gehra</strong> (har ping par DB + Redis + downstream APIs check karo): woh khud load banata hai, aur ek downstream hiccup poore fleet ko ek saath unhealthy mark karwa deta hai — cascade failure. <strong>Bahut shallow</strong> (bas &quot;process zinda hai&quot;): asli failures miss ho jaati hain — server &quot;OK&quot; kehta rehta hai jabke uska DB dead hai aur woh sirf 500s de raha hai. Sahi jagah: liveness <em>sasta</em>, readiness bas itna gehra ke asli readiness pakde — aur usmein bhi timeouts aur circuit-breaker sochte hue.">The <strong>depth</strong> of a health check is a tradeoff. <strong>Too deep</strong> (check DB + Redis + downstream APIs on every ping): it creates its own load, and one downstream hiccup marks the whole fleet unhealthy at once — a cascade failure. <strong>Too shallow</strong> (just "the process is alive"): you miss real failures — the server keeps saying "OK" while its DB is dead and it only serves 500s. The sweet spot: liveness <em>cheap</em>, readiness just deep enough to catch real un-readiness — and even then with timeouts and circuit-breaker thinking.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek server ka process theek chal raha hai, lekin uska database connection tooth gaya hai to woh har request par 500 return kar raha hai. Tum chahte ho load balancer ise traffic bhejna band kare lekin process ko restart <em>na</em> kare. Tumhein kaunsi check chahiye?">A server's process is running fine, but its database connection dropped so it returns 500 on every request. You want the load balancer to stop sending it traffic but <em>not</em> restart the process. Which check do you need?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek liveness check — DB down hone par process ko restart karega">A liveness check — it restarts the process when the DB is down</button>
+      <button class="opt" data-correct="true" data-ur="Ek readiness check — DB reachable na ho to server ko rotation se hataata hai bina restart kiye">A readiness check — it removes the server from rotation when the DB isn't reachable, without restarting</button>
+      <button class="opt" data-correct="false" data-ur="Koi check nahi — load balancer khud 500s dekh kar samajh jaata hai">No check — the load balancer figures it out from the 500s on its own</button>
+      <button class="opt" data-correct="false" data-ur="Ek auth-protected admin endpoint jo full system diagnostics chalaye">An auth-protected admin endpoint that runs full system diagnostics</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumhara /health endpoint har ping par Postgres, Redis aur teen downstream APIs check karta hai. Ek din ek downstream API 2 seconds slow ho jaati hai, aur achanak tumhare saare servers &quot;unhealthy&quot; mark ho kar rotation se nikal jaate hain — poora site down. Asli galti kya thi?">Your /health endpoint checks Postgres, Redis, and three downstream APIs on every ping. One day a downstream API gets 2 seconds slow, and suddenly all your servers get marked "unhealthy" and pulled from rotation — the whole site is down. What was the real mistake?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Health check bahut gehra tha — ek downstream hiccup ne poore healthy fleet ko unhealthy mark karwa diya">The health check was too deep — one downstream hiccup marked the whole healthy fleet unhealthy</button>
+      <button class="opt" data-correct="false" data-ur="Health check bahut shallow tha — usmein aur zyada checks add karne chahiye the">The health check was too shallow — it should have added even more checks</button>
+      <button class="opt" data-correct="false" data-ur="Load balancer ko health checks bilkul nahi karne chahiye the">The load balancer shouldn't do health checks at all</button>
+      <button class="opt" data-correct="false" data-ur="Servers waqai down the — health check theek kaam kar raha tha">The servers really were down — the health check worked correctly</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Health checks: har server ek chhota <code>/health</code> endpoint expose karta hai; load balancer/orchestrator ise regularly ping karta hai aur fail hone par server ko rotation se nikaal deta hai. <strong>Liveness</strong> (chal raha hai? → fail par restart) ko <strong>readiness</strong> (traffic ke liye tayyar? → fail par rotation se hatao) se alag rakho. /health ko sasta, auth-free rakho, aur gehrai ka tradeoff samjho — bahut gehra cascade banaata hai, bahut shallow real failures miss karta hai. Yeh seedha failover (2b) ke heartbeat aur load balancers (lesson 3) se jurta hai.">Health checks: each server exposes a tiny <code>/health</code> endpoint; the load balancer/orchestrator pings it regularly and pulls the server out of rotation on failure. Keep <strong>liveness</strong> (running? → restart on fail) separate from <strong>readiness</strong> (ready for traffic? → remove from rotation on fail). Keep /health cheap and auth-free, and understand the depth tradeoff — too deep cascades, too shallow misses real failures. This ties straight back to the heartbeat in failover (2b) and to load balancers (lesson 3).</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/&quot; target=&quot;_blank&quot;>Kubernetes — Configure Liveness, Readiness and Startup Probes</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/" target="_blank">Kubernetes — Configure Liveness, Readiness and Startup Probes</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to write an actual Django <code>/health/</code> + <code>/ready/</code> pair, or wire up livenessProbe/readinessProbe YAML for your app? Unsure how deep a readiness check should go before it becomes dangerous? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 22 (Health Checks).</strong> Ties together the heartbeat from <a href="0003-failover.html">failover (2b)</a> and <a href="0005-load-balancers.html">load balancers (lesson 3)</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/" target="_blank">Configure Liveness, Readiness and Startup Probes</a>, Kubernetes Documentation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. 'Fine process, can't serve, don't restart, just stop traffic' = readiness. Liveness would kill and restart the process, which wouldn't fix a dropped DB connection."
+                      : "Reconsider. You want to stop traffic without restarting — that's readiness. Liveness restarts the process, which won't bring the DB back.",
+          q2: correct ? "Yes. A too-deep health check turns one downstream hiccup into a fleet-wide outage: every server checks the slow dependency, every server fails, everything gets pulled. Keep liveness cheap and readiness shallow."
+                      : "Reconsider. Every server failed at once because each one checked the same slow downstream in its health check — that's a too-deep check causing a cascade, not a real server failure."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

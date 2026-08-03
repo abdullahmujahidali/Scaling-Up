@@ -1,0 +1,43 @@
+---
+/**
+ * Base.astro — the page shell every page shares.
+ *
+ * This replaces the boilerplate that each of the 81 HTML pages used to carry:
+ * doctype, head, stylesheet links, the language toggle and the sidebar script.
+ * Change it here once and every page changes.
+ *
+ * Props:
+ *   title    — <title> text (required)
+ *   nav      — false on pages that deliberately have no sidebar (exam pages,
+ *              where a sidebar during a timed exam is a distraction)
+ *   headExtra— raw markup for page-specific <style> blocks
+ */
+export interface Props {
+  title: string;
+  nav?: boolean;
+  headExtra?: string;
+}
+
+const { title, nav = true, headExtra = '' } = Astro.props;
+
+// Assets live in /public and are served from the site root, so the same
+// absolute path works from /lessons/, /reference/ and the root alike. This is
+// what page.js used to compute by hand from the URL depth.
+const v = '9'; // cache-buster: bump when CSS or JS changes
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <link rel="stylesheet" href={`/assets/lesson.css?v=${v}`} />
+  <link rel="stylesheet" href={`/assets/exam.css?v=${v}`} />
+  <Fragment set:html={headExtra} />
+</head>
+<body>
+  <slot />
+  <script src={`/assets/i18n.js?v=${v}`} is:inline></script>
+  {nav && <script src={`/assets/nav.js?v=${v}`} is:inline></script>}
+</body>
+</html>

@@ -1,0 +1,145 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 18 · Offline Pack</p>
+    <h1 data-ur="Consistent hashing: ek server add karo, sab keys na hilein">Consistent hashing: add a server without moving every key</h1>
+    <p class="subtitle" data-ur="Data ko servers par phailane ka smart tareeqa taake scale up ya down karna ek cache stampede na ban jaaye.">A smarter way to spread data across servers so scaling up or down doesn't cause a cache stampede.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: the hash ring</span>
+      <span>Win: scale a cache cluster smoothly</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (sharding yaad karo)">30-second warm-up (recall sharding)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: <strong>sharding</strong> kya karti hai, aur ek key ko uski shard tak &quot;map&quot; kaun karta hai?">From memory: what does <strong>sharding</strong> do, and what &quot;maps&quot; a key to its shard?</div>
+    <div class="answer" data-ur="<strong>Sharding</strong> ek bare dataset ko chhote pieces (shards) mein tor kar alag servers par rakhti hai taake koi ek machine sab kuch na sambhale. Ek key ko uski shard tak map karne ke liye simplest tareeqa hai <code>hash(key) % N</code> — key ko hash karo, phir server count par modulo lo. Aaj hum dekhenge ke woh <code>% N</code> chhupa hua ek maslah kyun hai."><strong>Sharding</strong> splits one big dataset into smaller pieces (shards) on separate servers so no single machine holds everything. The simplest way to map a key to its shard is <code>hash(key) % N</code> — hash the key, then take modulo the server count. Today we'll see why that <code>% N</code> is a hidden problem.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Servers aur keys ko ek circle (ring) par socho; har key clockwise agle server ki hai. Server add ya remove karo aur sirf us ek jagah ke paas ki keys hilti hain — baaqi sab jahan hai wahin rehti hain.</strong> Yeh <code>hash(key) % N</code> ka woh massive reshuffle rok deta hai."><strong>Picture servers and keys placed around a circle (a ring); each key belongs to the next server clockwise. Add or remove a server and only the keys near that one spot move — everything else stays put.</strong> That's how it avoids the massive reshuffle of <code>hash(key) % N</code>.</span>
+  </div>
+
+  <h2 data-ur="Maslah: modulo har cheez tor deta hai">The problem: modulo breaks everything</h2>
+  <p data-ur="Farz karo tumhare paas <strong>4 cache servers</strong> hain aur tum <code>hash(key) % 4</code> se decide karte ho ke kaunsa server kaunsi key rakhta hai. Ab tum ek 5th server add karte ho performance ke liye. Ab formula <code>hash(key) % 5</code> ban gaya. Masla yeh: <code>% 4</code> aur <code>% 5</code> tقریban <em>har</em> key ka jawab badal dete hain.">Suppose you have <strong>4 cache servers</strong> and you use <code>hash(key) % 4</code> to decide which server holds which key. Now you add a 5th server for performance. The formula becomes <code>hash(key) % 5</code>. The problem: <code>% 4</code> and <code>% 5</code> give a different answer for almost <em>every</em> key.</p>
+  <p data-ur="Iska matlab har key ab kisi <em>alag</em> server par hai. Har lookup miss karta hai, sab cache doobara build hota hai, aur ek dam se saara load database par gir jaata hai — ise <strong>cache stampede</strong> kehte hain. Ek chhota sa change (ek server add karna) ne poora cache invalid kar diya.">That means nearly every key now lives on a <em>different</em> server. Every lookup misses, the whole cache rebuilds at once, and all that load slams the database — this is a <strong>cache stampede</strong>. One tiny change (adding a server) invalidated the entire cache.</p>
+
+  <h2 data-ur="Kahani: ek gol clock face aur clockwise madadgar">The story: a round clock face and clockwise helpers</h2>
+  <p data-ur="Ek gol <strong>clock face</strong> imagine karo. Uske kinaare par kuch <strong>madadgar (helpers)</strong> khare hain — koi 2 baje, koi 5 baje, koi 9 baje. Kaam ke <strong>parchey (items)</strong> bhi clock ke gird jagah jagah rakhe hue hain. Rule simple hai: har parcha uss madadgar ka hai jo uss se agla <em>clockwise</em> khara hai.">Imagine a round <strong>clock face</strong>. Standing around its edge are a few <strong>helpers</strong> — one at 2 o'clock, one at 5, one at 9. Slips of <strong>work (items)</strong> are also placed around the clock at various spots. The rule is simple: each slip belongs to the helper standing next <em>clockwise</em> from it.</p>
+  <p data-ur="Ab ek madadgar (5 baje wala) ghar chala jaata hai. Kya hota hai? Sirf woh parchey jo pehle uss ke slice mein girte the ab agle clockwise madadgar (9 baje wale) ke paas chale jaate hain. <strong>Baaqi tamam parchey bilkul apni jagah rehte hain</strong> — 2 baje aur 9 baje wale abhi bhi wahi kaam kar rahe hain jo pehle kar rahe the. Naya madadgar add karna bhi aisa hi hai: woh clock par ek jagah khara ho jaata hai aur sirf apne saamne wali slice le leta hai, poora kaam dobara nahi bant-ta.">Now one helper (the one at 5) goes home. What happens? Only the slips that used to fall in their slice now go to the next clockwise helper (the one at 9). <strong>Every other slip stays exactly where it was</strong> — the 2 o'clock and 9 o'clock helpers keep doing the same work as before. Adding a new helper is the same: they stand at one spot on the clock and take over just the slice in front of them, without redistributing all the work.</p>
+  <p data-ur="Map to tech: <strong>clock face = hash ring</strong>. <strong>Madadgar = servers</strong> (ring par ek jagah rakhe gaye). <strong>Parchey = keys</strong> (bhi ring par hash kiye gaye). &quot;Agla clockwise madadgar&quot; = woh server jo key ko rakhta hai. Ek helper ka aana ya jaana sirf uske paas ki keys hilata hai, sab ko nahi.">Map it to tech: <strong>clock face = the hash ring</strong>. <strong>Helpers = servers</strong> (each placed at a spot on the ring). <strong>Slips = keys</strong> (also hashed onto the ring). &quot;Next clockwise helper&quot; = the server that owns the key. A helper joining or leaving only shifts the keys near it, not all of them.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 240" role="img" aria-label="Keys on a hash ring go to the next server clockwise">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <circle cx="200" cy="120" r="85" fill="none" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="200" y="120" fill="#6b6b6b" font-size="11">the ring</text>
+        <!-- servers -->
+        <circle cx="200" cy="35" r="7" fill="#2a4d8f"/>
+        <text x="200" y="22" font-weight="700" fill="#2a4d8f">S1</text>
+        <circle cx="274" cy="163" r="7" fill="#2a4d8f"/>
+        <text x="298" y="167" font-weight="700" fill="#2a4d8f">S2</text>
+        <circle cx="126" cy="163" r="7" fill="#2a4d8f"/>
+        <text x="102" y="167" font-weight="700" fill="#2a4d8f">S3</text>
+        <!-- keys -->
+        <circle cx="255" cy="70" r="5" fill="#9b1c1c"/>
+        <text x="255" y="60" fill="#9b1c1c" font-size="11">key A</text>
+        <circle cx="235" cy="195" r="5" fill="#9b1c1c"/>
+        <text x="235" y="215" fill="#9b1c1c" font-size="11">key B</text>
+        <!-- clockwise arrows to owner -->
+        <text x="272" y="112" fill="#6b6b6b" font-size="10">A → S2 (next cw)</text>
+        <text x="150" y="205" fill="#6b6b6b" font-size="10">B → S3 (next cw)</text>
+        <!-- right side explanation -->
+        <text x="490" y="60" font-weight="700" fill="#2a4d8f">Remove S2?</text>
+        <text x="490" y="82" fill="#6b6b6b">only key A moves →</text>
+        <text x="490" y="100" fill="#6b6b6b">to the next server clockwise.</text>
+        <text x="490" y="130" fill="#6b6b6b">key B and all others</text>
+        <text x="490" y="148" fill="#6b6b6b">stay exactly where they are.</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Har key clockwise agle server ki hai. Ek server hataao — sirf uski keys agle server par jaati hain, baaqi sab jahan hain wahin.">Each key belongs to the next server clockwise. Remove a server — only its keys move to the next one, the rest stay put.</figcaption>
+  </figure>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: <code>hash(key) % N</code> ke saath 4 se 5 servers jaane par kitni keys move hoti hain? Aur ring ke saath?">Quick check: with <code>hash(key) % N</code>, how many keys move when you go 4 → 5 servers? And with the ring?</div>
+    <div class="answer" data-ur="<code>% N</code> ke saath: تقریban <strong>saari</strong> keys (N badal gaya, toh har jawab badal gaya). Ring ke saath: sirf ~<strong>1/N</strong> keys — woh jo naye server ke bilkul paas girti hain. Yehi consistent hashing ka poora faida hai.">With <code>% N</code>: nearly <strong>all</strong> keys (N changed, so every answer changed). With the ring: only ~<strong>1/N</strong> of keys — the ones that fall right next to the new server. That's the whole point of consistent hashing.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Chhota sa masla: uneven load, aur uska hal (virtual nodes)">A small snag: uneven load, and its fix (virtual nodes)</h2>
+  <p data-ur="Agar har server ring par sirf <strong>ek</strong> jagah baithe, to badqismati se woh points aik doosre ke bahut qareeb aa sakte hain, aur ek server ko baaqi se kahin zyada keys mil jaayein. Hal: har server ko ring par <strong>keh nuqton (virtual nodes)</strong> par rakho — misal ke tor par har asli server ke liye 100 chhote points. Ab keys zyada barabari se bant jaati hain, kyunke har server ka &quot;slice&quot; poore ring mein phaila hota hai.">If each server sits at just <strong>one</strong> spot on the ring, unlucky placement can put those points close together, giving one server far more keys than the rest. The fix: place each server at <strong>several points (virtual nodes)</strong> on the ring — say 100 small points per real server. Now keys spread out much more evenly, because each server's &quot;slice&quot; is scattered all around the ring.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Yaad hai <a href=&quot;0012-replication-and-sharding.html&quot;>sharding (12)</a>? Wahan tum decide karte the ke kaunsi row kaunsi shard par jaaye. Consistent hashing wahi decision hai lekin <em>smooth scaling</em> ke saath. Sab se seedha jagah jahan tum ise Django mein touch karte ho: <strong>distributed cache</strong>. Jab tum Memcached ya Redis ka ek <em>cluster</em> chalate ho (ek single node nahi), to client ko decide karna hota hai ke kaunsi key kis node par hai — aur woh aksar consistent hashing use karta hai. Isi liye tum ek cache node add ya remove kar sakte ho aur poora cache invalid nahi hota. Django ke andar tum <code>CACHES</code> mein bas ek cluster point karte ho; yeh ring uske neeche kaam kar raha hota hai taake tumhara <code>cache.get()</code>/<code>cache.set()</code> deployment ke doran bhi zinda rahe.">Remember <a href=&quot;0012-replication-and-sharding.html&quot;>sharding (12)</a>? There you decided which row goes to which shard. Consistent hashing is that same decision but with <em>smooth scaling</em>. The most direct place you touch this in Django: the <strong>distributed cache</strong>. When you run a <em>cluster</em> of Memcached or Redis (not a single node), the client must decide which key lives on which node — and it often uses consistent hashing. That's why you can add or remove a cache node without invalidating the whole cache. Inside Django you just point <code>CACHES</code> at a cluster; the ring works underneath so your <code>cache.get()</code>/<code>cache.set()</code> survive a deploy.</span>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff: interview mein iska naam lo">The tradeoff: name it in interviews</span>
+    <span data-ur="Consistent hashing <code>hash(key) % N</code> se <strong>zyada complex</strong> hai — tumhein ek ring maintain karna parta hai aur clockwise lookups ke liye ek sorted structure. Aur bina <strong>virtual nodes</strong> ke load uneven ho sakta hai, jis se ek node hot-spot ban jaata hai. Toh yeh muft nahi: tum simplicity ka thora hissa dete ho taake add/remove par massive reshuffle na ho. Chhote, fixed cluster ke liye plain modulo theek hai; jahan tum aksar scale up/down karte ho wahan consistent hashing jeet-ti hai.">Consistent hashing is <strong>more complex</strong> than <code>hash(key) % N</code> — you must maintain a ring and a sorted structure for clockwise lookups. And without <strong>virtual nodes</strong> the load can be uneven, turning one node into a hot spot. So it isn't free: you trade a little simplicity to avoid the massive reshuffle on add/remove. For a small, fixed cluster plain modulo is fine; where you scale up/down often, consistent hashing wins.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tumhara cache cluster <code>hash(key) % N</code> use karta hai. Tum ek node add karte ho aur database load achanak spike kar jaata hai. Iski wajah…">Your cache cluster uses <code>hash(key) % N</code>. You add a node and the database load suddenly spikes. The reason is…</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="N badal gaya, toh تقریban har key ek naye node par remap ho gayi — sab cache miss, ek cache stampede.">N changed, so nearly every key remapped to a new node — all cache misses, a cache stampede.</button>
+      <button class="opt" data-correct="false" data-ur="Naya node bahut slow tha, isliye reads timeout ho rahe the.">The new node was too slow, so reads were timing out.</button>
+      <button class="opt" data-correct="false" data-ur="Modulo hashing keys ko permanently corrupt kar deta hai.">Modulo hashing permanently corrupts the keys.</button>
+      <button class="opt" data-correct="false" data-ur="Database ne connections ka pool khatam kar diya.">The database ran out of its connection pool.</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Consistent hashing mein ek server ko ring par kai jagah (virtual nodes) par rakhne ka maqsad kya hai?">In consistent hashing, what is the purpose of placing one server at several spots (virtual nodes) on the ring?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Taake keys encrypt ho jaayein.">So the keys get encrypted.</button>
+      <button class="opt" data-correct="true" data-ur="Taake keys servers par zyada barabari se bantein aur koi ek node hot-spot na bane.">So keys spread more evenly across servers and no single node becomes a hot spot.</button>
+      <button class="opt" data-correct="false" data-ur="Taake ring ka size kam ho jaaye.">So the ring takes up less size.</button>
+      <button class="opt" data-correct="false" data-ur="Taake har key do baar store ho (backup).">So every key is stored twice (a backup).</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="<code>hash(key) % N</code> add/remove par sab hila deta hai (cache stampede). <strong>Consistent hashing</strong> servers aur keys ko ek <strong>ring</strong> par rakhta hai — har key clockwise agle server ki — toh ek node add/remove par sirf ~1/N keys hilti hain. <strong>Virtual nodes</strong> load ko even rakhte hain. Yeh distributed caches, sharded databases aur load distribution ko smoothly scale karne deta hai — aur interview mein &quot;ring + virtual nodes&quot; kehna ek strong signal hai."><code>hash(key) % N</code> reshuffles everything on add/remove (cache stampede). <strong>Consistent hashing</strong> places servers and keys on a <strong>ring</strong> — each key belongs to the next server clockwise — so adding/removing a node moves only ~1/N of keys. <strong>Virtual nodes</strong> keep the load even. This is what lets distributed caches, sharded databases, and load distribution scale smoothly — and saying &quot;ring + virtual nodes&quot; in an interview is a strong signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#under-the-hood&quot; target=&quot;_blank&quot;>System Design Primer — hashing &amp; sharding the data</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#under-the-hood" target="_blank">System Design Primer — hashing &amp; sharding the data</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to sketch the ring for a real Redis cluster you use, or work out how many keys move when you go from 3 nodes to 4? Or unsure why virtual nodes fix the uneven-load problem? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 18 (Consistent Hashing).</strong> Builds on <a href="0012-replication-and-sharding.html">replication &amp; sharding (12)</a> and <a href="0006-caching.html">caching (6)</a>. It's how a cache cluster decides which node holds a key.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer" target="_blank">The System Design Primer</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Changing N in hash(key) % N remaps almost every key, so the cache empties all at once and the database gets stampeded."
+                      : "Reconsider. Adding a node changes N, and modulo remaps nearly every key — mass cache misses hit the database (a stampede).",
+          q2: correct ? "Yes. Virtual nodes scatter each server across many ring points, so slices are similar in size and no single node gets overloaded."
+                      : "Reconsider. Virtual nodes place each server at many points on the ring so keys spread evenly and no node becomes a hot spot."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import body from '../../content-html/reference/dva-numbers.html?raw';
+const headExtra = `<style>
+  /* Dense two-column layout for printing — this sheet is meant to be printed
+     and stuck on a wall, so it optimises for scanning, not reading. */
+  table.nums { width:100%; border-collapse:collapse; margin:1rem 0 1.8rem;
+               font-family:ui-sans-serif,-apple-system,sans-serif; font-size:0.79rem; }
+  table.nums th, table.nums td { border:1px solid var(--rule); padding:0.42rem 0.55rem; text-align:left; }
+  table.nums th { background:var(--code-bg); font-weight:700; }
+  table.nums td.n { font-weight:700; color:var(--accent); white-space:nowrap; }
+  table.nums tr.star td { background:#fffbe8; }
+  .star-key { font-size:0.8rem; color:var(--muted); font-family:ui-sans-serif,sans-serif; }
+  @media print { .ask-teacher, .cnav, nav { display:none !important; } h2 { break-after:avoid; } table.nums { break-inside:auto; } }
+</style>`;
+---
+<Base title={"DVA-C02 · The Numbers Cheat Sheet"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

@@ -1,0 +1,164 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Lesson A3 · Domain 1 (32%)</p>
+    <h1 data-ur="DynamoDB: Query vs Scan, aur LSI vs GSI">DynamoDB: Query vs Scan, and LSI vs GSI</h1>
+    <p class="subtitle" data-ur="DynamoDB Domain 1 ka doosra sab se bara topic hai. Exam lagbhag hamesha do cheezein poochta hai: Scan ki jagah Query kyun, aur naye index ke liye LSI ya GSI. Dono ka jawab ek qanoon se aata hai.">DynamoDB is the second-biggest topic in Domain 1. The exam almost always asks two things: why Query instead of Scan, and LSI or GSI for a new index. One rule answers both.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: find rows by key, never by searching</span>
+      <span>Win: two guaranteed exam questions</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="A2 se yaad karo: Lambda ka max timeout kitna hai, aur API Gateway ka?">Recall from A2: what's Lambda's max timeout, and API Gateway's?</div>
+    <div class="answer" data-ur="<strong>Lambda 15 minute (900 second). API Gateway 29 second.</strong> Aaj ka topic isi se jura hai: agar query sust hai to Lambda timeout ho sakta hai — magar asal masla query ka tareeqa hota hai, timeout nahi."><strong>Lambda 15 minutes (900 seconds). API Gateway 29 seconds.</strong> Today's topic connects: a slow query can time out a Lambda — but the real problem is usually how you queried, not the timeout.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>DynamoDB mein cheez hamesha <em>key se</em> dhoondo, kabhi <em>talash kar ke</em> nahi.</strong> Query = key se seedha pohanchna (tez, sasta). Scan = poora table parh kar dhoondhna (sust, mehnga). Exam mein &quot;application sust hai&quot; ya &quot;cost zyada hai&quot; + Scan = jawab hai <strong>Query istemaal karo</strong>, aur agar us attribute par key nahi to <strong>GSI banao</strong>."><strong>In DynamoDB you always fetch by <em>key</em>, never by <em>searching</em>.</strong> Query = go straight to it by key (fast, cheap). Scan = read the entire table looking for it (slow, expensive). On the exam, &quot;the application is slow&quot; or &quot;costs are high&quot; + a Scan = the answer is <strong>use Query</strong>, and if there's no key on that attribute, <strong>create a GSI</strong>.</span>
+  </div>
+
+  <h2 data-ur="Kahani: kitabon wali almari">The story: a bookshelf</h2>
+  <p data-ur="Socho ek library hai jismein 50,000 kitabein hain. Tumhein &quot;Harry Potter&quot; chahiye. Do tareeqe hain:">Imagine a library with 50,000 books. You want &quot;Harry Potter&quot;. Two ways:</p>
+  <p data-ur="<strong>Tareeqa 1 (Scan):</strong> pehli shelf se shuru karo aur har kitab utha kar naam parho jab tak mil na jaye. 50,000 kitabein. Mil to jayegi — magar poora din lag jayega, aur agar library aur bari ho to aur zyada.<br><br><strong>Tareeqa 2 (Query):</strong> catalogue mein dekho — &quot;H&quot; wale khane mein. Seedha shelf 12 par jao, kitab utha lo. 10 second.">
+    <strong>Way 1 (Scan):</strong> start at the first shelf and pick up every book to read its title until you find it. 50,000 books. You <em>will</em> find it — but it takes all day, and longer as the library grows.<br><br>
+    <strong>Way 2 (Query):</strong> look in the catalogue under &quot;H&quot;. Go straight to shelf 12 and take the book. Ten seconds.</p>
+  <p data-ur="DynamoDB mein Scan bilkul tareeqa 1 hai — aur tumhein <strong>har us kitab ka paisa dena parta hai jo tumne uthaayi</strong>, sirf us ka nahi jo chahiye thi. Isi liye Scan sust bhi hai aur mehnga bhi. Ab <strong>index</strong> ka matlab samjho: index wohi <em>catalogue</em> hai. Agar catalogue sirf title se bana hai aur tum <em>lekhak</em> ke naam se dhoondna chaho, to naya catalogue banana parega — yehi GSI hai.">In DynamoDB, a Scan is exactly Way 1 — and <strong>you pay for every book you picked up</strong>, not just the one you wanted. That's why Scan is both slow and expensive. Now the meaning of an <strong>index</strong>: the index <em>is</em> the catalogue. If the catalogue is only by title and you want to search by <em>author</em>, you need a new catalogue — that's a GSI.</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Cheez">Operation</th><th data-ur="Yeh kya karta hai">What it does</th><th data-ur="Cost aur speed">Cost and speed</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>GetItem</strong></td>
+        <td data-ur="Poori key deke ek hi item wapas leta hai. Sab se tez.">Fetches exactly one item by its full key. Fastest.</td>
+        <td data-ur="Sab se sasta">Cheapest</td>
+      </tr>
+      <tr>
+        <td><strong>Query</strong></td>
+        <td data-ur="Partition key deke us ke saare items leta hai (sort key se chhaan bhi sakte ho). ⭐ Exam ka pasandeeda jawab.">Fetches all items for a partition key (optionally filtered by sort key). ⭐ The exam's preferred answer.</td>
+        <td data-ur="Tez aur sasta — sirf jo parha uska paisa">Fast and cheap — you pay only for what it read</td>
+      </tr>
+      <tr>
+        <td><strong>Scan</strong></td>
+        <td data-ur="Poora table parhta hai, phir filter lagata hai. ⚠️ Filter <em>parhne ke baad</em> lagta hai — is liye filter cost kam NAHI karta.">Reads the whole table, then filters. ⚠️ The filter applies <em>after</em> reading — so a filter does NOT reduce cost.</td>
+        <td data-ur="Sust aur mehnga">Slow and expensive</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Trap — &quot;filter laga do&quot; wala jawab">Trap — the &quot;just add a filter&quot; option</span>
+    <span data-ur="AWS aksar aisa option deta hai: &quot;Scan par FilterExpression laga do taake kam data aaye.&quot; Yeh <strong>ghalat</strong> hai. FilterExpression data <em>parhne ke baad</em> lagta hai — DynamoDB phir bhi poora table parhta hai aur tumhein phir bhi poora paisa lagta hai. Sirf network par kam data aata hai. Cost aur speed bilkul wohi rehti hai. Yeh option isi liye rakha jaata hai ke logic sahi lagta hai magar hai ghalat.">AWS often offers: &quot;add a FilterExpression to the Scan so less data is returned.&quot; This is <strong>wrong</strong>. A FilterExpression applies <em>after</em> the read — DynamoDB still reads the whole table and you still pay the full cost. Only the amount sent over the network shrinks. Speed and cost are unchanged. The option exists precisely because the logic sounds right but isn't.</span>
+  </div>
+
+  <h2 data-ur="LSI vs GSI — is jore ka hook">LSI vs GSI — the hook for this pair</h2>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Yaad rakhne ka tareeqa">The memory hook</span>
+    <span data-ur="<strong>L = Local = Locked.</strong> LSI sirf us waqt ban sakta hai jab table banaya ja raha ho — baad mein kabhi nahi. Aur uski partition key wohi rehti hai, sirf sort key badalti hai.<br><br><strong>G = Global = Ghar jab chaho badlo.</strong> GSI kabhi bhi ban sakta hai, chaahe table saalon se production mein ho, aur koi bhi attribute key bana sakta hai.<br><br>⭐ <strong>Exam ka shortcut:</strong> sawal mein &quot;existing table&quot;, &quot;already in production&quot;, ya &quot;table already contains data&quot; likha ho → jawab <strong>GSI</strong> hai, kyunke LSI ab mumkin hi nahi raha.">
+      <strong>L = Local = Locked.</strong> An LSI can only be created while the table is being created — never afterwards. Its partition key stays the same; only the sort key differs.<br><br>
+      <strong>G = Global = Go ahead any time.</strong> A GSI can be created whenever, even on a table that's been in production for years, and any attribute can be its key.<br><br>
+      ⭐ <strong>Exam shortcut:</strong> if the question says &quot;existing table&quot;, &quot;already in production&quot;, or &quot;the table already contains data&quot; → the answer is <strong>GSI</strong>, because an LSI is no longer possible.</span>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="DynamoDB ke woh numbers jo exam poochta hai">The DynamoDB numbers the exam asks for</span>
+    <ul>
+      <li data-ur="<strong>Item ka size: max 400 KB.</strong> Is se bara data → file S3 mein rakho aur DynamoDB mein sirf uska link. ⭐ Yeh bohot poocha jaata hai."><strong>Item size: max 400 KB.</strong> Bigger than that → store the file in S3 and keep only the pointer in DynamoDB. ⭐ Asked often.</li>
+      <li data-ur="<strong>Query/Scan ka nateeja: max 1 MB</strong> per call — is se zyada ho to pagination karni parti hai."><strong>Query/Scan result: max 1 MB</strong> per call — beyond that you must paginate.</li>
+      <li data-ur="<strong>LSI: 5 per table, sirf table banate waqt.</strong> <strong>GSI: 20 per table, kabhi bhi.</strong>"><strong>LSI: 5 per table, only at table creation.</strong> <strong>GSI: 20 per table, any time.</strong></li>
+      <li data-ur="<strong>Capacity: On-demand</strong> (traffic ka andaza na ho, ya bohot ooncha-neecha) <strong>vs Provisioned</strong> (traffic pata ho — sasta parta hai). Sawal mein &quot;unpredictable&quot; ya &quot;spiky&quot; = On-demand."><strong>Capacity: On-demand</strong> (unknown or very spiky traffic) <strong>vs Provisioned</strong> (predictable traffic — cheaper). &quot;Unpredictable&quot; or &quot;spiky&quot; in the question = On-demand.</li>
+      <li data-ur="<strong>Strongly consistent read</strong> 2× paisa leti hai aur GSI par mumkin hi nahi. Default <strong>eventually consistent</strong> hai."><strong>A strongly consistent read</strong> costs 2× and is not possible on a GSI at all. The default is <strong>eventually consistent</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — DynamoDB ke sawal mein yeh lafz">Exam English — words in DynamoDB questions</span>
+    <span data-ur="<strong>&quot;throttled&quot; / &quot;ProvisionedThroughputExceededException&quot;</strong> = capacity khatam ho gayi. <strong>&quot;hot partition&quot;</strong> = saara traffic ek hi partition key par ja raha hai (jawab: aisi key chuno jismein variety ho). <strong>&quot;eventually consistent&quot;</strong> = jawab thora purana ho sakta hai. <strong>&quot;single-digit millisecond&quot;</strong> = DynamoDB ki normal speed; agar sawal <strong>&quot;microsecond&quot;</strong> kahe to jawab <strong>DAX</strong> hai.">
+      <strong>&quot;throttled&quot; / &quot;ProvisionedThroughputExceededException&quot;</strong> = you ran out of capacity. <strong>&quot;hot partition&quot;</strong> = all traffic hitting one partition key (answer: choose a key with more variety). <strong>&quot;eventually consistent&quot;</strong> = the answer may be slightly stale. <strong>&quot;single-digit millisecond&quot;</strong> = DynamoDB's normal speed; if the question says <strong>&quot;microsecond&quot;</strong>, the answer is <strong>DAX</strong>.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 1 · Development · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek application ek DynamoDB table par Scan chalati hai jismein 40 million items hain, taake customerId ke mutabiq orders mil sakein. Latency bohot zyada hai aur cost barh rahi hai. Table pehle se production mein hai aur uski partition key <code>orderId</code> hai. Kaunsa solution latency aur cost <span class=&quot;qual&quot;>SAB SE ZYADA</span> kam karega?">An application runs a Scan on a DynamoDB table with 40 million items to find orders by <code>customerId</code>. Latency is high and costs are rising. The table is already in production and its partition key is <code>orderId</code>. Which solution will reduce latency and cost the <span class="qual">MOST</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Scan par FilterExpression laga do taake sirf us customer ke orders aayein">Add a FilterExpression to the Scan so only that customer's orders are returned</button>
+      <button class="opt" data-correct="true" data-ur="customerId par ek Global Secondary Index banao aur Scan ki jagah Query karo">Create a Global Secondary Index on <code>customerId</code> and use Query instead of Scan</button>
+      <button class="opt" data-correct="false" data-ur="customerId par ek Local Secondary Index banao aur Scan ki jagah Query karo">Create a Local Secondary Index on <code>customerId</code> and use Query instead of Scan</button>
+      <button class="opt" data-correct="false" data-ur="Table ki provisioned read capacity barha do">Increase the table's provisioned read capacity</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 1 · Development · the numbers</span>
+    <p class="scenario" data-ur="Ek application users ke uploaded documents DynamoDB mein rakhna chahti hai. Har document <strong>2 MB se 8 MB</strong> tak ka hai. Metadata (naam, tareekh, owner) par tez query bhi chahiye. Kaunsa design requirement poora karta hai?">An application needs to store user-uploaded documents in DynamoDB. Each document is between <strong>2 MB and 8 MB</strong>. Fast queries on metadata (name, date, owner) are also required. Which design meets the requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Document ko DynamoDB item mein binary attribute ki tarah rakho">Store the document as a binary attribute inside the DynamoDB item</button>
+      <button class="opt" data-correct="true" data-ur="Document S3 mein rakho, aur DynamoDB mein metadata ke saath sirf S3 object ka key rakho">Store the document in S3 and keep only the metadata plus the S3 object key in DynamoDB</button>
+      <button class="opt" data-correct="false" data-ur="Document ko compress karke DynamoDB mein rakho">Compress the document and store it in DynamoDB</button>
+      <button class="opt" data-correct="false" data-ur="Document ko kai items mein tor kar rakho">Split the document across multiple items</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="Yeh bilkul wohi cheez hai jo tum Django mein rozana dekhte ho. Jab tum <code>Order.objects.filter(customer_id=5)</code> chalate ho aur <code>customer_id</code> par <strong>database index nahi</strong> hota, to Postgres poora table parhta hai — usay &quot;sequential scan&quot; kehte hain. Tum <code>db_index=True</code> laga kar migration chalate ho, aur query foran tez ho jati hai. <strong>DynamoDB ka GSI bilkul wahi hai jo Django ka <code>db_index=True</code> hai</strong> — ek naya raasta us column tak. Aur &quot;Scan + filter&quot; wala trap bilkul wahi hai jo Python mein poori queryset laa kar list comprehension se filter karna — kaam to karta hai, magar database ne mehnat poori ki. Farq sirf itna hai ke DynamoDB tumse us mehnat ka <em>paisa</em> leta hai, is liye ghalti zyada mehsoos hoti hai.">This is exactly what you see in Django every day. When you run <code>Order.objects.filter(customer_id=5)</code> and there's <strong>no database index</strong> on <code>customer_id</code>, Postgres reads the whole table — a &quot;sequential scan&quot;. You add <code>db_index=True</code>, run the migration, and it's instantly fast. <strong>A DynamoDB GSI is exactly Django's <code>db_index=True</code></strong> — a new path to that column. And the &quot;Scan + filter&quot; trap is exactly like pulling the full queryset into Python and filtering with a list comprehension — it works, but the database already did all the work. The only difference is that DynamoDB <em>charges</em> you for that work, so the mistake hurts more visibly.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: table production mein hai aur naye attribute par query chahiye — LSI ya GSI? Kyun? Aur DynamoDB item ka max size?">From memory: the table is in production and you need to query a new attribute — LSI or GSI? Why? And the max DynamoDB item size?</div>
+    <div class="answer" data-ur="<strong>GSI</strong> — kyunke <strong>L = Local = Locked</strong>: LSI sirf table banate waqt ban sakta hai, baad mein kabhi nahi. Table pehle se maujood hai, is liye LSI ka option automatically mar gaya. <strong>Item max = 400 KB.</strong>"><strong>GSI</strong> — because <strong>L = Local = Locked</strong>: an LSI can only be created with the table, never after. The table already exists, so the LSI option is automatically dead. <strong>Max item = 400 KB.</strong></div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab tum do guaranteed sawal jeet sakte ho. Scan dikhe to jawab &quot;Query + GSI&quot;. &quot;Existing table&quot; dikhe to LSI foran kaat do. Tum &quot;filter laga do&quot; wale jhoote option ko pehchan loge, aur 400 KB wali hadd bhi jaante ho — jis ka jawab hamesha &quot;S3 mein file, DynamoDB mein link&quot; hai.">You can now win two guaranteed questions. See a Scan → the answer is &quot;Query + GSI&quot;. See &quot;existing table&quot; → eliminate LSI immediately. You'll spot the fake &quot;just add a filter&quot; option, and you know the 400 KB ceiling — whose answer is always &quot;file in S3, pointer in DynamoDB&quot;.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-indexes-general.html&quot; target=&quot;_blank&quot;>DynamoDB — best practices for indexes</a><sup class=&quot;cite&quot;><a href=&quot;#s2&quot;>2</a></sup> — AWS ke apne lafzon mein LSI/GSI ka farq aur kab kaunsa.">📖 <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-indexes-general.html" target="_blank">DynamoDB — best practices for indexes</a><sup class="cite"><a href="#s2">2</a></sup> — the LSI/GSI difference and when to use each, in AWS's own words.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> DynamoDB questions are wordy and often hide the deciding phrase in the middle. Paste any one you got wrong and I'll point at the exact phrase that decided it.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson A3 (DynamoDB keys and indexes).</strong> Part of the <a href="../MISSION-AWS.md">DVA-C02 track</a>. Previous: <a href="0046-aws-lambda-limits.html">A2 · Lambda limits</a>. Next: <a href="0048-aws-iam-policy-evaluation.html">A4 · IAM policy evaluation</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ServiceQuotas.html" target="_blank">Amazon DynamoDB service quotas</a> — 400 KB maximum item size, 1 MB maximum Query/Scan result, 5 LSIs and 20 GSIs per table.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-indexes-general.html" target="_blank">Best practices for using secondary indexes in DynamoDB</a> — LSIs can only be created when the table is created; GSIs can be added at any time.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Scan.html" target="_blank">Working with Scan in DynamoDB</a> — a filter expression is applied after the scan completes, so it does not reduce the read capacity consumed.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct — and you caught two traps. A GSI on customerId lets you Query directly instead of scanning 40 million items. Option 3 is impossible: the table is ALREADY in production, and an LSI can only be created with the table. Option 1 is the classic fake — a filter runs after the read, so you still pay for the full scan."
+                      : "Reconsider. Two traps here. Option 3 is impossible because the table is already in production and an LSI can only be created at table-creation time (L = Local = Locked). Option 1 does not help: a FilterExpression is applied after the scan reads everything, so the cost is unchanged. Option 4 just pays more for the same waste. The answer is a GSI on customerId plus Query.",
+          q2: correct ? "Correct. Documents are 2–8 MB but a DynamoDB item cannot exceed 400 KB, so options 1 and 3 are impossible (compression will not reliably take 8 MB under 400 KB). Splitting across items (option 4) is possible but complex and slow. The standard AWS pattern is: large object in S3, metadata plus the S3 key in DynamoDB."
+                      : "Reconsider. Check the size limit: a DynamoDB item has a hard maximum of 400 KB, and these documents are 2–8 MB. That rules out storing them in the item, compressed or not. The standard AWS pattern — and the exam's expected answer — is the large object in S3 with metadata and the S3 key in DynamoDB."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
