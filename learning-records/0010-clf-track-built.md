@@ -195,23 +195,68 @@ back-link). Explanations render under "Why:" in the review section, and the
 "Wrong N" filter works. All test attempts were cleared from localStorage
 afterwards; his language preference was left untouched.
 
+## Update 4: the two remaining gaps closed
+
+He asked to make both tracks fully exam-ready. The two gaps flagged in Update 3
+are now closed.
+
+### 1. Ordering and matching question types now work
+
+AIF-C01 uses two question types CLF does not — **ordering** and **matching** —
+and AWS awards **no partial credit** on either. The engine previously rendered
+only single/multi-select, so he would have met that format cold on exam day.
+
+`assets/exam-engine.js` now supports both:
+- **Ordering** — click options in sequence; a numbered badge shows each
+  position, clicking again removes and renumbers.
+- **Matching** — one `<select>` per prompt. Deliberately NOT drag-and-drop,
+  which is unusable with a keyboard and on a 390px phone.
+- **Scored strictly**: every position must match, mirroring AWS.
+- **`isAnswered()` added**: a half-filled ordering or matching question counts
+  as unanswered in the palette and submit warning. Without this the palette
+  would show it as done and it would silently score zero.
+- **Review screen** names the exact mistake — which position was wrong and what
+  he put there — and says so explicitly when a sequence was left incomplete.
+
+`exams/build.cjs` validates both types (correct-length ordering with no
+duplicate indices; one correct index per matching prompt) and allows the 3
+options a matching question legitimately has.
+
+**`exams/questions/aif-08.json`** is a dedicated drill: 4 ordering + 6 matching
++ 10 standard questions, so he practises the *format*, not just the content.
+
+### 2. Full-length mock exams
+
+`clf-mock-01` and `aif-mock-01`: **65 questions, 90 minutes** each, matching the
+real papers' domain weightings (CLF 16/19/22/8; AIF 13/16/18/9/9). These build
+exam-day stamina that 20-question quizzes cannot. The validator now accepts
+either 20 or 65 questions per bank, with the proportional tolerance scaling by
+length rather than being loosened.
+
+Three questions in the AIF mock initially duplicated scenarios from existing
+quizzes — the cross-bank duplicate check caught them and they were rewritten.
+
+**Totals now: 17 CLF/AIF banks, 430 questions**, every one explained.
+
+### Verified in-browser
+
+Ordering: numbered badges, renumbering on removal, partial placement correctly
+counting as unanswered. Matching: 4 rows, dropdowns, partial completion counts
+as unanswered, stacks vertically at 390px with no overflow. Scoring: a single
+swapped pair in ordering and one wrong match each cost the full mark (18/20,
+then 19/20 with one swap) — confirming the all-or-nothing behaviour. Review
+screen names the exact wrong positions. CLF mock verified at 65q/90min/700/~46.
+**DVA regression re-checked**: still "full-length mock", 720, "Start exam",
+`../exams.html`, and no new question types leaked into its banks.
+
 ## Still open
 
 1. **Neither exam is booked.** The plan cannot be scheduled without dates. Ask.
 2. **ESL +30 must be requested before booking** — one request covers *both*
    exams. Still the biggest lever, still unconfirmed as done.
-3. **Team lead: does the company pay the fees?** Now **200 USD** for both.
-   Still unasked.
-4. ~~C4/I4 not built~~ — **done** (see Update 3). Both tracks now cover every
-   domain of both exam guides.
-5. ~~No practice questions~~ — **done**: 14 quizzes, 280 questions with
-   explanations.
-6. **Ordering and matching questions are still not supported.** AIF uses both
-   and awards **no partial credit** for them, but the exam engine only renders
-   single- and multi-select. The quizzes therefore drill the *content* of those
-   questions but not their *format*. Worth building if he finds them hard —
-   it needs new question types in `exam-engine.js` plus validation in
-   `build.cjs`. Flagged in the lessons and cheat sheet so he is not surprised.
-7. **No full-length 65-question mocks for CLF/AIF.** The quizzes are 20-question
-   revision sets. Closer to exam day he will want at least one timed
-   65-question/90-minute paper per certification to build stamina.
+3. **Team lead: does the company pay the fees?** 200 USD for both. Still unasked.
+4. **Only one mock per certification.** A second would help closer to exam day,
+   but only if his first attempt shows he needs it — build on evidence, not
+   speculation.
+5. **Quiz scores should drive what gets built next.** If AIF questions land
+   below ~70%, write more questions in his weak domains rather than guessing now.

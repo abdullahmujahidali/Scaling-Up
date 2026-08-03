@@ -21,6 +21,13 @@
        explain: 'why the right answer is right AND the others are wrong',
        explainUr: 'Roman Urdu'          // optional
      }
+
+   AIF also uses two extra types, which AWS scores all-or-nothing:
+     type: 'ordering'   options are the steps; `correct` is the required ORDER
+                        of option indices, e.g. correct: [2,0,3,1]
+     type: 'matching'   `prompts` are the left-hand items; `correct[i]` is the
+                        option index that pairs with prompts[i]
+   Both are graded strictly — every position must match to earn the mark.
    Practice questions stay in ENGLISH on purpose — the real exam is English-only.
    Roman Urdu is available for explanations, where it helps comprehension not muscle memory. */
 
@@ -90,12 +97,39 @@
     return document.documentElement.getAttribute('data-lang') === 'ur';
   }
 
+  // ---------- question types ----------
+  // 'single' / 'multi'  — options + correct indices (the original two types)
+  // 'ordering'          — put q.options into the right sequence; the answer is
+  //                       an ordered array of option indices, and q.correct is
+  //                       the required order.
+  // 'matching'          — pair each q.prompts[i] with an option; the answer is
+  //                       an array where answer[i] is the option index chosen
+  //                       for prompt i, and q.correct holds the right indices.
+  // AWS awards NO partial credit on ordering and matching, so both are scored
+  // strictly: every position must match.
+  function typeOf(q) {
+    if (q.type) return q.type;
+    return q.multi ? 'multi' : 'single';
+  }
+
   // ---------- scoring ----------
   function isCorrect(qi) {
     var q = QUESTIONS[qi];
-    var given = (state.answers[qi] || []).slice().sort().join(',');
+    var given = state.answers[qi] || [];
+    var t = typeOf(q);
+
+    if (t === 'ordering' || t === 'matching') {
+      // Order matters, and every slot must be filled and exact.
+      if (given.length !== q.correct.length) return false;
+      for (var i = 0; i < q.correct.length; i++) {
+        if (given[i] !== q.correct[i]) return false;
+      }
+      return true;
+    }
+
+    var g = given.slice().sort().join(',');
     var want = q.correct.slice().sort().join(',');
-    return given === want && given !== '';
+    return g === want && g !== '';
   }
 
   function computeResult() {
@@ -154,17 +188,54 @@
     var sel = state.answers[state.idx] || [];
     var needed = q.correct.length;
 
-    var opts = q.options.map(function (opt, i) {
-      var on = sel.indexOf(i) !== -1;
-      return '<button class="eopt' + (on ? ' selected' : '') + '" data-i="' + i + '">' +
-               '<span class="eopt-mark">' + (q.multi ? (on ? '☑' : '☐') : (on ? '●' : '○')) + '</span>' +
-               '<span class="eopt-text">' + opt + '</span>' +
-             '</button>';
-    }).join('');
+    var t = typeOf(q);
+    var body, note = '';
 
-    var multiNote = q.multi
-      ? '<p class="multi-note">Choose ' + (needed === 2 ? 'TWO' : needed === 3 ? 'THREE' : needed) + '.</p>'
-      : '';
+    if (t === 'ordering') {
+      // Click options in sequence; a numbered badge shows the position chosen.
+      // Clicking a chosen option again removes it and renumbers the rest.
+      note = '<p class="multi-note">Click the steps in the correct order. ' +
+             'Click again to remove. <strong>All must be correct — there is no partial credit.</strong></p>';
+      body = '<div class="eopts">' + q.options.map(function (opt, i) {
+        var pos = sel.indexOf(i);
+        var on = pos !== -1;
+        return '<button class="eopt' + (on ? ' selected' : '') + '" data-i="' + i + '">' +
+                 '<span class="eopt-mark">' + (on ? (pos + 1) : '○') + '</span>' +
+                 '<span class="eopt-text">' + opt + '</span>' +
+               '</button>';
+      }).join('') + '</div>' +
+      '<p class="multi-note">' + sel.length + ' of ' + q.options.length + ' placed.</p>';
+
+    } else if (t === 'matching') {
+      // One dropdown per prompt. Selects work well with a keyboard and on mobile,
+      // where drag-and-drop would be unusable.
+      note = '<p class="multi-note">Match each item to its answer. ' +
+             '<strong>All pairs must be correct — there is no partial credit.</strong></p>';
+      body = '<div class="ematch">' + q.prompts.map(function (pr, pi) {
+        var chosen = (sel[pi] === undefined || sel[pi] === null) ? '' : sel[pi];
+        var opts = ['<option value="">— choose —</option>'].concat(
+          q.options.map(function (opt, oi) {
+            return '<option value="' + oi + '"' + (String(chosen) === String(oi) ? ' selected' : '') +
+                   '>' + opt + '</option>';
+          })).join('');
+        return '<div class="ematch-row">' +
+                 '<div class="ematch-prompt">' + pr + '</div>' +
+                 '<select class="ematch-select" data-p="' + pi + '">' + opts + '</select>' +
+               '</div>';
+      }).join('') + '</div>';
+
+    } else {
+      body = '<div class="eopts">' + q.options.map(function (opt, i) {
+        var on = sel.indexOf(i) !== -1;
+        return '<button class="eopt' + (on ? ' selected' : '') + '" data-i="' + i + '">' +
+                 '<span class="eopt-mark">' + (q.multi ? (on ? '☑' : '☐') : (on ? '●' : '○')) + '</span>' +
+                 '<span class="eopt-text">' + opt + '</span>' +
+               '</button>';
+      }).join('') + '</div>';
+      note = q.multi
+        ? '<p class="multi-note">Choose ' + (needed === 2 ? 'TWO' : needed === 3 ? 'THREE' : needed) + '.</p>'
+        : '';
+    }
 
     root.innerHTML =
       '<div class="exam-qhead">' +
@@ -174,11 +245,21 @@
         '</button>' +
       '</div>' +
       '<div class="exam-scenario">' + q.scenario + '</div>' +
-      multiNote +
-      '<div class="eopts">' + opts + '</div>';
+      note +
+      body;
 
     root.querySelectorAll('.eopt').forEach(function (b) {
       b.addEventListener('click', function () { pick(parseInt(b.dataset.i, 10)); });
+    });
+    root.querySelectorAll('.ematch-select').forEach(function (s) {
+      s.addEventListener('change', function () {
+        var cur = (state.answers[state.idx] || []).slice();
+        // Keep the array dense so length checks in isCorrect() stay meaningful.
+        while (cur.length < q.prompts.length) cur.push(null);
+        cur[parseInt(s.dataset.p, 10)] = s.value === '' ? null : parseInt(s.value, 10);
+        state.answers[state.idx] = cur;
+        save(); renderPalette();
+      });
     });
     document.getElementById('flag-btn').addEventListener('click', function () {
       state.flagged[state.idx] = !state.flagged[state.idx];
@@ -193,7 +274,13 @@
   function pick(i) {
     var q = QUESTIONS[state.idx];
     var sel = state.answers[state.idx] || [];
-    if (q.multi) {
+    var t = typeOf(q);
+    if (t === 'ordering') {
+      // Append to the sequence, or remove it (the rest renumber automatically).
+      var op = sel.indexOf(i);
+      if (op === -1) sel = sel.concat([i]);
+      else sel = sel.filter(function (x) { return x !== i; });
+    } else if (q.multi) {
       var at = sel.indexOf(i);
       if (at === -1) sel = sel.concat([i]); else sel = sel.filter(function (x) { return x !== i; });
     } else {
@@ -204,12 +291,28 @@
     renderQuestion();
   }
 
+  // A question counts as answered only when it is COMPLETE — a half-finished
+  // ordering or matching question would otherwise look done in the palette and
+  // score zero, which is exactly the surprise we want to avoid.
+  function isAnswered(i) {
+    var q = QUESTIONS[i];
+    var a = state.answers[i];
+    if (!a || !a.length) return false;
+    var t = typeOf(q);
+    if (t === 'ordering') return a.length === q.options.length;
+    if (t === 'matching') {
+      if (a.length !== q.prompts.length) return false;
+      return a.every(function (x) { return x !== null && x !== undefined; });
+    }
+    return true;
+  }
+
   function renderPalette() {
     var p = document.getElementById('exam-palette');
     if (!p) return;
     p.innerHTML = QUESTIONS.map(function (q, i) {
       var cls = 'pal';
-      if (state.answers[i] && state.answers[i].length) cls += ' answered';
+      if (isAnswered(i)) cls += ' answered';
       if (state.flagged[i]) cls += ' flagged';
       if (i === state.idx) cls += ' current';
       return '<button class="' + cls + '" data-i="' + i + '">' + (i + 1) + '</button>';
@@ -220,18 +323,14 @@
       });
     });
 
-    var answered = Object.keys(state.answers).filter(function (k) {
-      return state.answers[k] && state.answers[k].length;
-    }).length;
+    var answered = QUESTIONS.filter(function (_, i) { return isAnswered(i); }).length;
     var c = document.getElementById('answered-count');
     if (c) c.textContent = answered + ' / ' + QUESTIONS.length + ' answered';
   }
 
   // ---------- rendering: results ----------
   function submitExam(auto) {
-    var answered = Object.keys(state.answers).filter(function (k) {
-      return state.answers[k] && state.answers[k].length;
-    }).length;
+    var answered = QUESTIONS.filter(function (_, i) { return isAnswered(i); }).length;
 
     if (!auto && answered < QUESTIONS.length) {
       var miss = QUESTIONS.length - answered;
@@ -352,14 +451,51 @@
       if (state.reviewFilter === 'flagged' && !state.flagged[i]) return '';
 
       var sel = state.answers[i] || [];
-      var opts = q.options.map(function (opt, oi) {
-        var right = q.correct.indexOf(oi) !== -1;
-        var chose = sel.indexOf(oi) !== -1;
-        var cls = right ? 'r-correct' : (chose ? 'r-wrong' : '');
-        var tag = right ? '<span class="tag good">correct</span>'
-                        : (chose ? '<span class="tag bad">you chose</span>' : '');
-        return '<li class="' + cls + '">' + opt + ' ' + tag + '</li>';
-      }).join('');
+      var t = typeOf(q);
+      var opts;
+
+      if (t === 'ordering') {
+        // Show the required sequence. For each slot, say what he actually put
+        // there — including "nothing", when the sequence was left incomplete.
+        var incomplete = sel.length < q.options.length;
+        opts = q.correct.map(function (oi, pos) {
+          var theirs = sel[pos];
+          var same = theirs === oi;
+          var tag;
+          if (same) tag = '<span class="tag good">you had this right</span>';
+          else if (theirs === undefined || theirs === null) tag = '<span class="tag bad">you placed nothing here</span>';
+          else tag = '<span class="tag bad">you put: ' + q.options[theirs] + '</span>';
+          return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
+                   '<strong>' + (pos + 1) + '.</strong> ' + q.options[oi] + ' ' + tag +
+                 '</li>';
+        }).join('');
+        if (incomplete) {
+          opts += '<li class="r-wrong"><em>You placed only ' + sel.length + ' of ' +
+                  q.options.length + ' items. Ordering questions score zero unless every ' +
+                  'position is filled and correct.</em></li>';
+        }
+      } else if (t === 'matching') {
+        opts = q.prompts.map(function (pr, pi) {
+          var want = q.correct[pi], got = sel[pi];
+          var same = got === want;
+          var tag = same ? '<span class="tag good">correct</span>'
+                         : (got === undefined || got === null
+                             ? '<span class="tag bad">you left this blank</span>'
+                             : '<span class="tag bad">you chose: ' + q.options[got] + '</span>');
+          return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
+                   '<strong>' + pr + '</strong> → ' + q.options[want] + ' ' + tag +
+                 '</li>';
+        }).join('');
+      } else {
+        opts = q.options.map(function (opt, oi) {
+          var right = q.correct.indexOf(oi) !== -1;
+          var chose = sel.indexOf(oi) !== -1;
+          var cls = right ? 'r-correct' : (chose ? 'r-wrong' : '');
+          var tag = right ? '<span class="tag good">correct</span>'
+                          : (chose ? '<span class="tag bad">you chose</span>' : '');
+          return '<li class="' + cls + '">' + opt + ' ' + tag + '</li>';
+        }).join('');
+      }
 
       var explainUr = q.explainUr ? ' data-ur="' + q.explainUr.replace(/"/g, '&quot;') + '"' : '';
 
@@ -367,7 +503,7 @@
         '<div class="review-head">' +
           '<span class="rq">Q' + (i + 1) + '</span>' +
           '<span class="rd">Domain ' + q.domain + '</span>' +
-          '<span class="rv">' + (ok ? '✔ correct' : (sel.length ? '✘ wrong' : '— unanswered')) + '</span>' +
+          '<span class="rv">' + (ok ? '✔ correct' : (isAnswered(i) ? '✘ wrong' : '— unanswered')) + '</span>' +
         '</div>' +
         '<div class="review-scenario">' + q.scenario + '</div>' +
         '<ul class="review-opts">' + opts + '</ul>' +

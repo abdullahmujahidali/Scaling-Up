@@ -23,8 +23,9 @@ AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
 way.
 
 **Coverage is complete:** CLF C1–C6 covers all 4 domains, AIF I1–I4 covers all 5,
-plus 14 quizzes (280 questions, every one explained) at `clf-quizzes.html` and
-`aif-quizzes.html`.
+plus **17 question banks / 430 questions**, every one explained: 7 CLF quizzes,
+8 AIF quizzes (Quiz 8 drills ordering+matching), and a **65-question / 90-minute
+full mock for each certification**. Indexes: `clf-quizzes.html`, `aif-quizzes.html`.
 
 **⚠️ `exams/build.js` is now `exams/build.cjs`** — `package.json` has
 `"type": "module"`, which breaks CommonJS `.js`. The builder is multi-cert
@@ -32,9 +33,11 @@ plus 14 quizzes (280 questions, every one explained) at `clf-quizzes.html` and
 65-question 21/17/15/12 validation while quizzes are checked proportionally.
 Regenerate with `npm run exams`; never hand-edit `exams/*.html`.
 
-**Not supported: ordering and matching questions.** AIF uses both with no partial
-credit, but the engine only renders single/multi-select. Quizzes drill their
-content, not their format.
+**Ordering and matching ARE supported** (added 2026-08-03). Set `type:
+'ordering'` (correct = the required order of option indices) or `type:
+'matching'` (`prompts` + one correct index each). Both score all-or-nothing like
+the real exam, and a partly-filled one counts as unanswered so the palette never
+misleads. Matching uses selects, not drag-and-drop, so it works on a phone.
 
 **Do not tell the learner he has made progress on DVA.** He has not started it.
 The "88% complete" figure in record 0008 refers to a *Udemy course*, and stating

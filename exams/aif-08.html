@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Quiz 8 — ordering & matching drill</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Quiz 8 — ordering & matching drill</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question revision quiz · ordering and matching question formats</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Quiz 8 — ordering & matching drill</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-08","title":"AIF Quiz 8 — ordering & matching drill","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Place the stages of a typical AI/ML lifecycle in the correct order, from first to last.",
+  "options": [
+   "Data collection and preparation",
+   "Model training",
+   "Model evaluation",
+   "Deployment",
+   "Monitoring and retraining"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "explain": "Data always comes first — a model can only learn from what you give it. Training follows, then evaluation against held-out data, then deployment, then ongoing monitoring which may trigger retraining. AWS gives no partial credit on ordering questions, so this sequence must be exact.",
+  "type": "ordering"
+ },
+ {
+  "id": 2,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Order these foundation model customisation approaches from LOWEST cost to HIGHEST cost.",
+  "options": [
+   "Prompt engineering",
+   "Retrieval Augmented Generation (RAG)",
+   "Fine-tuning",
+   "Pre-training from scratch"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Prompt engineering costs nothing beyond tokens. RAG adds retrieval infrastructure but leaves the model untouched. Fine-tuning requires training compute. Pre-training from scratch costs millions and is almost never the exam's answer. Work down this list only as far as you must.",
+  "type": "ordering"
+ },
+ {
+  "id": 3,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Order the steps of a Retrieval Augmented Generation (RAG) request, from first to last.",
+  "options": [
+   "The user's question is converted into an embedding",
+   "Similar document chunks are retrieved from the vector store",
+   "The retrieved chunks are added to the prompt as context",
+   "The foundation model generates an answer grounded in that context"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "RAG works by turning the question into a vector, finding semantically similar chunks, injecting them into the prompt, and only then generating. Understanding this order is what makes it obvious why RAG reflects updated documents immediately — the retrieval happens fresh on every request.",
+  "type": "ordering"
+ },
+ {
+  "id": 4,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Order these steps for responsibly investigating a report that a deployed model is producing biased outputs, from first to last.",
+  "options": [
+   "Measure bias across demographic subgroups with SageMaker Clarify",
+   "Examine the training data for representation gaps",
+   "Rebalance or augment the dataset",
+   "Retrain and re-evaluate the model before redeploying"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Measure before you act: confirm and quantify the bias first, then trace it to its usual source in the training data, then fix the data, then retrain and verify. Jumping straight to retraining without measuring means you cannot tell whether anything improved.",
+  "type": "ordering"
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Match each AWS service to the task it performs.",
+  "options": [
+   "Converts speech into written text",
+   "Analyses text for sentiment and entities",
+   "Identifies objects and faces in images",
+   "Converts written text into speech"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Transcribe = speech to text. Comprehend = understanding text (sentiment, entities, PII). Rekognition = images and video. Polly = text to speech. Remember Polly as the parrot that speaks, and Transcribe as writing down what was said.",
+  "type": "matching",
+  "prompts": [
+   "Amazon Transcribe",
+   "Amazon Comprehend",
+   "Amazon Rekognition",
+   "Amazon Polly"
+  ]
+ },
+ {
+  "id": 6,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Match each responsible-AI need to the AWS capability that addresses it.",
+  "options": [
+   "Detects bias and explains individual predictions",
+   "Blocks harmful content and denied topics",
+   "Routes low-confidence predictions to human reviewers",
+   "Documents a model's intended use and limitations"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Clarify = fairness and explainability. Guardrails = content safety in Bedrock. A2I = human-in-the-loop review. Model Cards = transparency documentation. The pair most often confused is Guardrails (stops it speaking) versus Clarify (explains why it spoke).",
+  "type": "matching",
+  "prompts": [
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Guardrails",
+   "Amazon Augmented AI (A2I)",
+   "Amazon SageMaker Model Cards"
+  ]
+ },
+ {
+  "id": 7,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Match each prompting technique to its description.",
+  "options": [
+   "No examples are provided, only the instruction",
+   "Exactly one example is provided",
+   "Several examples are provided",
+   "The model is asked to reason step by step"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Zero-shot gives no examples, one-shot gives exactly one, few-shot gives several, and chain-of-thought requests intermediate reasoning. The 'shot' count refers to examples; chain-of-thought is about reasoning, which is why it helps most on multi-step arithmetic and logic.",
+  "type": "matching",
+  "prompts": [
+   "Zero-shot prompting",
+   "One-shot prompting",
+   "Few-shot prompting",
+   "Chain-of-thought prompting"
+  ]
+ },
+ {
+  "id": 8,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Match each learning approach to the kind of data it requires.",
+  "options": [
+   "Labelled examples showing the correct answer",
+   "Unlabelled data, where the model finds structure itself",
+   "Feedback in the form of rewards and penalties"
+  ],
+  "correct": [
+   0,
+   1,
+   2
+  ],
+  "explain": "Supervised learning needs labels, unsupervised learning finds patterns without them, and reinforcement learning learns from rewards. Labels are the dividing line and are usually the most expensive part of an ML project.",
+  "type": "matching",
+  "prompts": [
+   "Supervised learning",
+   "Unsupervised learning",
+   "Reinforcement learning"
+  ]
+ },
+ {
+  "id": 9,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Match each security concern to the control that addresses it.",
+  "options": [
+   "Users hiding instructions in input to hijack the model",
+   "Confidential data appearing in model responses",
+   "Discovering personal data stored in Amazon S3",
+   "Recording who called which API and when"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "Prompt injection is countered by input validation and output filtering. Data leakage is countered by Guardrails masking PII. Macie discovers sensitive data in S3. CloudTrail provides the audit trail. Prompt injection is the AI equivalent of SQL injection — never trust user input as instructions.",
+  "type": "matching",
+  "prompts": [
+   "Prompt injection",
+   "Data leakage in output",
+   "Sensitive data discovery",
+   "Audit trail of API activity"
+  ]
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Match each evaluation metric to what it measures.",
+  "options": [
+   "Quality of generated summaries",
+   "Quality of machine translation",
+   "Of all genuine positive cases, how many were caught",
+   "Of all flagged cases, how many were genuine"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "explain": "ROUGE = summarisation, BLEU = translation, recall = how many real cases you caught, precision = how many of your flags were right. Recall matters when missing a case is dangerous (disease, fraud); precision matters when false alarms are costly (spam filters).",
+  "type": "matching",
+  "prompts": [
+   "ROUGE",
+   "BLEU",
+   "Recall",
+   "Precision"
+  ]
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company's support assistant must answer from documentation that is updated weekly and cite the source document. Which approach is correct?",
+  "options": [
+   "Retrieval Augmented Generation (RAG)",
+   "Fine-tuning weekly",
+   "Pre-training a new model",
+   "Raising the temperature"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Weekly updates plus a citation requirement both point to RAG, which reads live documents at query time and can reference them. Fine-tuning absorbs knowledge into weights, cannot cite sources, and would need repeating every week."
+ },
+ {
+  "id": 12,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about tokens is correct?",
+  "options": [
+   "A token is roughly three-quarters of a word, and you are billed for both input and output tokens",
+   "Tokens are only counted during training",
+   "A token is always exactly one word",
+   "Tokens apply only to image models"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Tokens are the units models read and generate — roughly three-quarters of a word — and both the prompt and the response are billed. This is why concise prompts and capped output lengths reduce cost."
+ },
+ {
+  "id": 13,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company wants to group customers by purchasing behaviour without any predefined categories. Which approach?",
+  "options": [
+   "Unsupervised learning (clustering)",
+   "Supervised classification",
+   "Generative AI",
+   "Reinforcement learning"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "No predefined categories means no labels, which is unsupervised learning — clustering finds the groupings itself. Supervised classification would require labelled examples of each category up front."
+ },
+ {
+  "id": 14,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A model performs excellently on its training data but poorly on new data. What is this called?",
+  "options": [
+   "Overfitting",
+   "Underfitting",
+   "Hallucination",
+   "Drift"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Overfitting means the model memorised the training data rather than learning generalisable patterns. Underfitting is the opposite — it learned too little and performs poorly everywhere. Drift is degradation over time after deployment."
+ },
+ {
+  "id": 15,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Which practice best prevents confidential information from appearing in a chatbot's responses?",
+  "options": [
+   "Bedrock Guardrails with PII masking plus output filtering",
+   "Increasing the temperature",
+   "Using a larger context window",
+   "Disabling CloudTrail logging"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Guardrails can detect and mask PII, and output filtering validates responses before delivery. Temperature and context window do not affect data leakage, and disabling logging would remove the audit trail you need."
+ },
+ {
+  "id": 16,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which AWS service provides serverless API access to foundation models from multiple providers?",
+  "options": [
+   "Amazon Bedrock",
+   "Amazon SageMaker AI",
+   "Amazon EC2",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Bedrock gives serverless API access to foundation models with no infrastructure to manage. SageMaker AI is for building and training your own models, which requires far more expertise."
+ },
+ {
+  "id": 17,
+  "domain": 3,
+  "multi": false,
+  "scenario": "An application needs consistent, repeatable answers to factual questions. Which inference setting?",
+  "options": [
+   "Set the temperature close to 0",
+   "Set the temperature close to 1",
+   "Increase max output tokens",
+   "Widen the context window"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Low temperature reduces randomness, producing consistent output suited to factual and numerical work. High temperature increases creative variation, which is the opposite of what factual answering needs."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Under the shared responsibility model, which is the customer's responsibility when using Amazon Bedrock?",
+  "options": [
+   "The data and prompts they supply, and IAM access control",
+   "Patching the Bedrock service infrastructure",
+   "Securing the physical data centre",
+   "Maintaining the foundation model's weights"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Your data, your prompts and your access control are always yours. AWS secures the infrastructure, the service and the model itself. The rule is unchanged on AI services: what you cannot touch belongs to AWS."
+ },
+ {
+  "id": 19,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which pair of AWS capabilities together support explaining and documenting a high-risk model?",
+  "options": [
+   "SageMaker Clarify and SageMaker Model Cards",
+   "Amazon Polly and Amazon Translate",
+   "Amazon Macie and AWS Shield",
+   "Amazon Forecast and Amazon Personalize"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Clarify explains why individual predictions occurred and measures bias; Model Cards document the model's intended use, data and limitations. Together they cover explainability and transparency, which regulators typically require."
+ },
+ {
+  "id": 20,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which AWS service would extract text and data from scanned invoices?",
+  "options": [
+   "Amazon Textract",
+   "Amazon Comprehend",
+   "Amazon Rekognition",
+   "Amazon Kendra"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Textract extracts text, forms and tables from scanned documents — 'text' plus 'extract'. Comprehend analyses the meaning of text that already exists, and Rekognition analyses images rather than reading documents."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

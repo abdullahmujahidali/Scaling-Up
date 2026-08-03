@@ -23,7 +23,7 @@ const { title, nav = true, headExtra = '' } = Astro.props;
 // Assets live in /public and are served from the site root, so the same
 // absolute path works from /lessons/, /reference/ and the root alike. This is
 // what page.js used to compute by hand from the URL depth.
-const v = '16'; // cache-buster: bump when CSS or JS changes
+const v = '17'; // cache-buster: bump when CSS or JS changes
 
 // On GitHub Pages the site is served from /<repo>/, so asset URLs need that
 // prefix. import.meta.env.BASE_URL is '/' locally and '/Scaling-Up/' in CI.

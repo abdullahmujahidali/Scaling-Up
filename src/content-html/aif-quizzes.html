@@ -20,6 +20,10 @@
 
   <div class="exam-grid" id="exam-grid"></div>
 
+  <h2 style="margin-top:2rem;" data-ur="🎯 Poora mock exam">🎯 Full-length mock exam</h2>
+  <p class="subtitle" style="margin-top:0;" data-ur="<strong>Yeh asli exam jaisa hai:</strong> 65 sawal, 90 minute, paanchon domains. Note: AIF mein <strong>ordering aur matching</strong> wale sawal bhi aate hain — unki mashq ke liye <a href="exams/aif-08.html">Quiz 8</a> khaas tor par banaya gaya hai."><strong>This is the real thing:</strong> 65 questions, 90 minutes, all five domains. Note that AIF also uses <strong>ordering and matching</strong> questions — <a href="exams/aif-08.html">Quiz 8</a> exists specifically to drill that format.</p>
+  <div class="exam-grid" id="mock-grid"></div>
+
   <div class="key" style="margin-top:1.5rem;">
     <span class="callout-label" data-ur="Inhein kaise use karo">How to use these</span>
     <span data-ur="<strong>1. Roz ek quiz.</strong> 20 sawal, 30 minute — yeh rozana ke liye bana hai, poore exam ki tarah thakane wala nahi.<br><strong>2. Koi sawal khali mat chhoro.</strong> Ghalat jawab par koi extra nuksan nahi — guess hamesha behtar hai.<br><strong>3. Sab se zaroori hissa submit ke baad hai.</strong> Har ghalat jawab ki wajah parho aur khud se poocho: mujhe pata nahi tha, ya maine sawal ghalat parha? Yeh do cheezein alag hain aur unka ilaaj bhi alag hai.<br><strong>4. 700 pass mark hai.</strong> Jab lagataar 800+ aane lage, tab exam book karo."><strong>1. One quiz a day.</strong> 20 questions in 30 minutes — built for daily practice rather than the exhaustion of a full mock.<br><strong>2. Never leave a question blank.</strong> There is no penalty for a wrong answer, so a guess always beats nothing.<br><strong>3. The most valuable part comes after you submit.</strong> Read the explanation for every wrong answer and ask: did I not know it, or did I misread the question? Those are different problems with different fixes.<br><strong>4. The pass mark is 700.</strong> Book the real exam once you consistently score 800+.</span>
@@ -45,7 +49,12 @@ var EXAMS = [
   { id:'aif-04', n:4, focus:'Balanced — all domains' },
   { id:'aif-05', n:5, focus:'Balanced — all domains' },
   { id:'aif-06', n:6, focus:'Balanced — all domains' },
-  { id:'aif-07', n:7, focus:'Balanced — all domains' }
+  { id:'aif-07', n:7, focus:'Balanced — all domains' },
+  { id:'aif-08', n:8, focus:'⭐ Ordering & matching drill — formats CLF does not use' }
+];
+
+var MOCKS = [
+  { id:'aif-mock-01', n:1, focus:'65 questions · 90 minutes · exam-day conditions' }
 ];
 
 (function () {
@@ -73,6 +82,28 @@ var EXAMS = [
              '<div class="escore">' + badge + sub + '</div>' +
            '</a>';
   }).join('');
+
+  var mockGrid = document.getElementById('mock-grid');
+  if (mockGrid) {
+    mockGrid.innerHTML = MOCKS.map(function (e) {
+      var r = results[e.id];
+      var badge, sub;
+      if (r) {
+        scores.push(r.best);
+        if (r.passed) passed++;
+        badge = '<span class="badge ' + (r.passed ? 'pass' : 'fail') + '">' + r.best + '</span>';
+        sub = ' best · ' + r.attempts + ' attempt' + (r.attempts > 1 ? 's' : '');
+      } else {
+        badge = '<span class="badge none">not taken</span>';
+        sub = '';
+      }
+      return '<a class="exam-card" href="exams/' + e.id + '.html">' +
+               '<span class="en">Full Mock Exam ' + e.n + '</span>' +
+               '<div class="et">' + e.focus + '</div>' +
+               '<div class="escore">' + badge + sub + '</div>' +
+             '</a>';
+    }).join('');
+  }
 
   document.getElementById('s-taken').textContent = scores.length;
   document.getElementById('s-passed').textContent = passed;

@@ -44,8 +44,8 @@ function page(meta, questions) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${cert.code} ${meta.title}</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=16">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
 </head>
 <body>
 <div class="exam-shell">
@@ -119,8 +119,8 @@ var EXAM_META = ${JSON.stringify({
 })};
 var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 </script>
-<script src="../assets/exam-engine.js?v=16"></script>
-<script src="../assets/i18n.js?v=16"></script>
+<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>
 `;
@@ -129,10 +129,15 @@ var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 // Question-bank shape per certification. DVA mocks are full-length and must
 // reproduce the real paper exactly; CLF/AIF quizzes are short revision sets, so
 // they are checked proportionally against the real domain weightings instead.
+// A bank may be a short revision quiz (20 q) or a full-length mock (65 q). The
+// proportional check adapts: tolerance scales with length, so a 65-question mock
+// is held to the same *shape* without demanding impossible exact counts.
+const CLF_W = { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 };
+const AIF_W = { 1: 0.20, 2: 0.24, 3: 0.28, 4: 0.14, 5: 0.14 };
 const SHAPES = {
   dva: { total: 65, exact: { 1: 21, 2: 17, 3: 15, 4: 12 } },
-  clf: { total: 20, tolerance: 1.5, weights: { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 } },
-  aif: { total: 20, tolerance: 1.5, weights: { 1: 0.20, 2: 0.24, 3: 0.28, 4: 0.14, 5: 0.14 } },
+  clf: { totals: [20, 65], tolerance: 1.5, weights: CLF_W },
+  aif: { totals: [20, 65], tolerance: 1.5, weights: AIF_W },
 };
 
 function validate(file, qs, cert) {
@@ -148,13 +153,37 @@ function validate(file, qs, cert) {
     byDomain[q.domain] = (byDomain[q.domain] || 0) + 1;
     if (!q.scenario) errs.push(`q${q.id} no scenario`);
     if (!q.explain) errs.push(`q${q.id} no explanation`);
-    if (!Array.isArray(q.options) || q.options.length < 4) errs.push(`q${q.id} needs >=4 options`);
+    // Matching questions legitimately have as few as 3 answer choices.
+    const minOpts = (q.type === 'matching' || q.type === 'ordering') ? 3 : 4;
+    if (!Array.isArray(q.options) || q.options.length < minOpts) errs.push(`q${q.id} needs >=${minOpts} options`);
     if (!Array.isArray(q.correct) || !q.correct.length) errs.push(`q${q.id} no correct answer`);
     (q.correct || []).forEach(c => {
       if (c < 0 || c >= (q.options || []).length) errs.push(`q${q.id} correct index ${c} out of range`);
     });
-    if (q.multi && (q.correct || []).length < 2) errs.push(`q${q.id} multi needs >=2 correct`);
-    if (!q.multi && (q.correct || []).length !== 1) errs.push(`q${q.id} single needs exactly 1 correct`);
+    // Ordering and matching are scored all-or-nothing by AWS, so a malformed
+    // bank would silently make a question unanswerable. Check them strictly.
+    const type = q.type || (q.multi ? 'multi' : 'single');
+    if (!['single', 'multi', 'ordering', 'matching'].includes(type)) {
+      errs.push(`q${q.id} unknown type "${type}"`);
+    } else if (type === 'ordering') {
+      if ((q.correct || []).length !== (q.options || []).length) {
+        errs.push(`q${q.id} ordering: correct must list every option exactly once`);
+      }
+      if (new Set(q.correct || []).size !== (q.correct || []).length) {
+        errs.push(`q${q.id} ordering: duplicate index in correct order`);
+      }
+    } else if (type === 'matching') {
+      if (!Array.isArray(q.prompts) || q.prompts.length < 3) {
+        errs.push(`q${q.id} matching needs >=3 prompts`);
+      }
+      if ((q.correct || []).length !== (q.prompts || []).length) {
+        errs.push(`q${q.id} matching: one correct index required per prompt`);
+      }
+    } else if (type === 'multi' && (q.correct || []).length < 2) {
+      errs.push(`q${q.id} multi needs >=2 correct`);
+    } else if (type === 'single' && (q.correct || []).length !== 1) {
+      errs.push(`q${q.id} single needs exactly 1 correct`);
+    }
     if (new Set(q.options || []).size !== (q.options || []).length) errs.push(`q${q.id} duplicate option text`);
     if (!validDomains.includes(q.domain)) errs.push(`q${q.id} bad domain ${q.domain}`);
   });
@@ -172,13 +201,19 @@ function validate(file, qs, cert) {
     // Short revision quizzes cannot hit the real paper's exact counts, so the
     // rule is proportional instead: every domain must appear, and none may run
     // more than `tolerance` questions away from its share of the real weighting.
-    if (qs.length !== shape.total) errs.push(`expected ${shape.total} questions, found ${qs.length}`);
+    if (!shape.totals.includes(qs.length)) {
+      errs.push(`expected ${shape.totals.join(' or ')} questions, found ${qs.length}`);
+    }
+    // Scale the allowance with paper length: a 65-question mock is 3.25x a
+    // quiz, so holding it to ±1.5 would be stricter than the real exam's own
+    // rounding. The proportional shape is what matters, not exact counts.
+    const tol = shape.tolerance * Math.max(1, qs.length / 20);
     validDomains.forEach(d => {
       const got = byDomain[d] || 0;
       const want = shape.weights[d] * qs.length;
       if (got === 0) errs.push(`domain ${d}: no questions (every domain must be represented)`);
-      else if (Math.abs(got - want) > shape.tolerance) {
-        errs.push(`domain ${d}: ${got} questions, expected ~${want.toFixed(1)} (±${shape.tolerance})`);
+      else if (Math.abs(got - want) > tol) {
+        errs.push(`domain ${d}: ${got} questions, expected ~${want.toFixed(1)} (±${tol.toFixed(1)})`);
       }
     });
   }

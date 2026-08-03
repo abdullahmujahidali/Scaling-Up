@@ -190,12 +190,12 @@
     if (it.kind === 'clfquizzes') {
       var qcur = (here === 'clf-quizzes.html' || /\/exams\/clf-/.test(location.pathname)) ? ' cnav-current' : '';
       return '<a class="cnav-ref' + qcur + '" href="' + toRoot + 'clf-quizzes.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">7 practice quizzes</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">7 quizzes + full mock</a>';
     }
     if (it.kind === 'aifquizzes') {
       var acur2 = (here === 'aif-quizzes.html' || /\/exams\/aif-/.test(location.pathname)) ? ' cnav-current' : '';
       return '<a class="cnav-ref' + acur2 + '" href="' + toRoot + 'aif-quizzes.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">7 practice quizzes</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">8 quizzes + full mock</a>';
     }
     if (it.kind === 'subhead') {
       return '<div class="cnav-subhead">' + it.label + '</div>';
