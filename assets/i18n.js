@@ -58,21 +58,30 @@
   var btn;
   function updateBtn() {
     if (!btn) return;
-    // Show what you'll switch TO, so it reads like an action.
-    btn.innerHTML = (lang === 'ur')
-      ? '🌐 English'
-      : '🌐 Roman Urdu';
+    // A filled bubble marks the language you are about to switch TO, so the
+    // control reads like marking an answer rather than a generic toggle.
+    var bubble = '<span style="display:inline-block;width:0.85rem;height:0.85rem;' +
+                 'border-radius:50%;border:1.5px solid #16181d;' +
+                 'background:' + (lang === 'ur' ? '#fff' : '#1a56b8') + ';' +
+                 'box-shadow:inset 0 0 0 2px #fff;flex:0 0 auto;"></span>';
+    btn.innerHTML = bubble + '<span>' + (lang === 'ur' ? 'English' : 'Roman Urdu') + '</span>';
     btn.setAttribute('title', lang === 'ur' ? 'Switch to English' : 'Roman Urdu mein parho');
+    btn.setAttribute('aria-label', lang === 'ur' ? 'Switch to English' : 'Switch to Roman Urdu');
   }
   function makeButton() {
     btn = document.createElement('button');
     btn.id = 'lang-toggle';
+    // Styled as an answer-sheet control rather than a floating action button:
+    // a filled bubble plus a label, echoing the OMR sheets this exam is sat on.
+    // Light and bordered so it sits on the page instead of hovering over it.
     btn.style.cssText =
-      'position:fixed;bottom:18px;right:18px;z-index:9998;' +
-      'background:#9b1c1c;color:#fff;border:none;border-radius:24px;' +
-      'padding:0.7rem 1.2rem;font-family:ui-sans-serif,-apple-system,sans-serif;' +
-      'font-size:0.95rem;font-weight:600;cursor:pointer;' +
-      'box-shadow:0 4px 14px rgba(0,0,0,0.35);transition:transform .1s;';
+      'position:fixed;bottom:20px;right:20px;z-index:9998;' +
+      'display:flex;align-items:center;gap:0.5rem;' +
+      'background:#fff;color:#16181d;border:1.5px solid #16181d;border-radius:2rem;' +
+      'padding:0.55rem 1rem 0.55rem 0.75rem;' +
+      'font-family:ui-sans-serif,-apple-system,"Segoe UI",sans-serif;' +
+      'font-size:0.82rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;' +
+      'box-shadow:0 2px 10px rgba(22,24,29,0.12);transition:transform .1s,box-shadow .1s;';
     btn.addEventListener('mouseenter', function(){ btn.style.transform = 'scale(1.05)'; });
     btn.addEventListener('mouseleave', function(){ btn.style.transform = 'scale(1)'; });
     btn.addEventListener('click', toggle);
