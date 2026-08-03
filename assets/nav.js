@@ -27,6 +27,7 @@
     { ref: 'dva-domain4-troubleshooting.html', num: 'D4', title: 'Domain 4 · Troubleshooting (18%)' },
     { ref: 'dva-numbers.html',                num: '★',  title: 'Numbers Cheat Sheet' },
     { ref: 'dva-resources.html',              num: '📚', title: 'Resources (bilingual)' },
+    { ref: 'dva-booking-guide.html',          num: '🎫', title: 'How to book the exam' },
     { track: 'A', label: 'System Design', header: true },
     { file: '0001-the-design-framework.html', num: '1',  title: 'The Design Framework' },
     { file: '0002-consistency-and-availability.html', num: '2a', title: 'Consistency' },
