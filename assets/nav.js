@@ -8,10 +8,13 @@
   var COURSE = [
     { kind: 'home' },
     { kind: 'week' },
-    // AWS DVA-C02 track — active priority (exam target ~21 Aug 2026).
-    { track: 'AWS', label: '☁️ AWS DVA-C02 (active)', header: true },
+    // AWS DVA-C02 track. Deferred 2026-08-03: the team lead redirected to the
+    // Foundational certs (AI Practitioner + Cloud Practitioner) first, so this
+    // track is kept intact and collapsed rather than deleted — it resumes after.
+    { track: 'AWS', label: '☁️ AWS DVA-C02', header: true, collapsed: true, note: 'later' },
     { kind: 'awshub' },
     { kind: 'awsexams' },
+    { kind: 'subhead', label: 'Lessons' },
     { file: '0045-aws-how-to-read-a-question.html', num: 'A1', title: 'How to Read an Exam Question' },
     { file: '0046-aws-lambda-limits.html',          num: 'A2', title: 'Lambda — the limits tested' },
     { file: '0047-aws-dynamodb-keys-and-indexes.html', num: 'A3', title: 'DynamoDB — Query vs Scan, LSI vs GSI' },
@@ -20,6 +23,7 @@
     { file: '0050-aws-deployment-strategies.html',  num: 'A6', title: 'Deployment strategies' },
     { file: '0051-aws-observability.html',          num: 'A7', title: 'CloudWatch, X-Ray, CloudTrail' },
     // Domain notes live in /reference/, so they use `ref` rather than `file`.
+    { kind: 'subhead', label: 'Notes & tools' },
     { ref: 'dva-study-notes.html',            num: '★',  title: 'Master Study Notes' },
     { ref: 'dva-domain1-development.html',    num: 'D1', title: 'Domain 1 · Development (32%)' },
     { ref: 'dva-domain2-security.html',       num: 'D2', title: 'Domain 2 · Security (26%)' },
@@ -28,7 +32,7 @@
     { ref: 'dva-numbers.html',                num: '★',  title: 'Numbers Cheat Sheet' },
     { ref: 'dva-resources.html',              num: '📚', title: 'Resources (bilingual)' },
     { ref: 'dva-booking-guide.html',          num: '🎫', title: 'How to book the exam' },
-    { track: 'A', label: 'System Design', header: true },
+    { track: 'A', label: 'System Design', header: true, collapsed: true, note: 'paused' },
     { file: '0001-the-design-framework.html', num: '1',  title: 'The Design Framework' },
     { file: '0002-consistency-and-availability.html', num: '2a', title: 'Consistency' },
     { file: '0003-failover.html', num: '2b', title: 'Failover' },
@@ -53,7 +57,7 @@
     { file: '0034-observability.html', num: '20', title: 'Observability' },
     { file: '0035-feature-flags.html', num: '21', title: 'Feature Flags' },
     { file: '0036-health-checks.html', num: '22', title: 'Health Checks' },
-    { track: 'B', label: 'Backend Depth', header: true },
+    { track: 'B', label: 'Backend Depth', header: true, collapsed: true, note: 'paused' },
     { file: '0007-the-gil.html', num: 'B1', title: 'The GIL' },
     { file: '0009-database-indexes.html', num: 'B2', title: 'Database Indexes' },
     { file: '0011-n-plus-1-queries.html', num: 'B3', title: 'N+1 Queries' },
@@ -67,7 +71,7 @@
     { file: '0032-webhooks.html', num: 'B11', title: 'Webhooks' },
     { file: '0033-database-migrations.html', num: 'B12', title: 'Safe DB Migrations' },
     { file: '0037-sessions-vs-jwt.html', num: 'B13', title: 'Sessions vs JWT' },
-    { track: 'F', label: 'Fundamentals (DSA)', header: true },
+    { track: 'F', label: 'Fundamentals (DSA)', header: true, collapsed: true, note: 'paused' },
     { file: '0038-big-o.html', num: 'F1', title: 'Big-O Notation' },
     { file: '0039-hash-tables.html', num: 'F2', title: 'Hash Tables' },
     { file: '0040-arrays-vs-linked-lists.html', num: 'F3', title: 'Arrays vs Linked Lists' },
@@ -88,6 +92,31 @@
   var inExams = /\/exams\//.test(location.pathname);
   var toRoot = (inLessons || inReference || inExams) ? '../' : '';
   var toLessons = toRoot + 'lessons/';
+
+  // --- Collapsible track state -------------------------------------------
+  // Saved per track in localStorage. Defaults come from `collapsed` in COURSE,
+  // so a fresh visitor sees only the active track expanded.
+  var OPEN_KEY = 'scaling-up-nav-open';
+  var openState = {};
+  try { openState = JSON.parse(localStorage.getItem(OPEN_KEY) || '{}'); } catch (e) { openState = {}; }
+
+  // Which track does the current page belong to? A collapsed track must still
+  // open when you are standing inside it, or the sidebar hides your location.
+  var currentTrack = null;
+  (function () {
+    var t = null;
+    for (var i = 0; i < COURSE.length; i++) {
+      if (COURSE[i].header) { t = COURSE[i].track; continue; }
+      if ((COURSE[i].file || COURSE[i].ref) === here) { currentTrack = t; return; }
+    }
+  })();
+
+  function isOpen(track) {
+    if (track === currentTrack) return true;              // never hide where you are
+    if (Object.prototype.hasOwnProperty.call(openState, track)) return !!openState[track];
+    var hdr = COURSE.find(function (c) { return c.header && c.track === track; });
+    return !(hdr && hdr.collapsed);                        // fall back to the default
+  }
 
   // Build the sidebar markup.
   var items = COURSE.map(function (it) {
@@ -118,8 +147,25 @@
       return '<a class="cnav-ref' + ecur + '" href="' + toRoot + 'exams.html" ' +
              'style="margin-top:0;border-top:none;padding-top:0.42rem;">📝 15 practice exams</a>';
     }
+    if (it.kind === 'subhead') {
+      return '<div class="cnav-subhead">' + it.label + '</div>';
+    }
     if (it.header) {
-      return '<div class="cnav-track">Track ' + it.track + ' · ' + it.label + '</div>';
+      // Collapsible section header. Count how many entries it owns so the
+      // collapsed state can say "(22)" without the user expanding it.
+      var count = 0;
+      for (var i = COURSE.indexOf(it) + 1; i < COURSE.length; i++) {
+        if (COURSE[i].header) break;
+        if (COURSE[i].file || COURSE[i].ref) count++;
+      }
+      var open = isOpen(it.track);
+      return '<div class="cnav-track cnav-track-toggle' + (open ? ' cnav-open' : '') + '" ' +
+                  'data-track="' + it.track + '" role="button" tabindex="0">' +
+               '<span class="cnav-caret">' + (open ? '▾' : '▸') + '</span>' +
+               '<span class="cnav-track-label">' + it.label + '</span>' +
+               '<span class="cnav-track-meta">' + count +
+                 (it.note ? ' · ' + it.note : '') + '</span>' +
+             '</div>';
     }
     // `ref` items live in /reference/, `file` items live in /lessons/.
     var target = it.ref ? (toRoot + 'reference/' + it.ref) : (toLessons + it.file);
@@ -146,8 +192,44 @@
     nav.classList.toggle('cnav-open');
   });
 
+  // --- Expand / collapse a track ------------------------------------------
+  // Everything between one track header and the next belongs to that header.
+  function membersOf(headerEl) {
+    var out = [], n = headerEl.nextElementSibling;
+    while (n && !n.classList.contains('cnav-track')) { out.push(n); n = n.nextElementSibling; }
+    return out;
+  }
+  function paint(headerEl, open) {
+    membersOf(headerEl).forEach(function (el) { el.style.display = open ? '' : 'none'; });
+    headerEl.classList.toggle('cnav-open', open);
+    var caret = headerEl.querySelector('.cnav-caret');
+    if (caret) caret.textContent = open ? '▾' : '▸';
+  }
+  nav.querySelectorAll('.cnav-track-toggle').forEach(function (h) {
+    paint(h, h.classList.contains('cnav-open'));          // apply initial state
+    function flip() {
+      var nowOpen = !h.classList.contains('cnav-open');
+      paint(h, nowOpen);
+      openState[h.dataset.track] = nowOpen;
+      try { localStorage.setItem(OPEN_KEY, JSON.stringify(openState)); } catch (e) {}
+    }
+    h.addEventListener('click', flip);
+    h.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+    });
+  });
+
   // Prev / Next footer buttons — auto-computed from the current position.
-  var lessonsOnly = COURSE.filter(function (it) { return it.file; });
+  // Scoped to the CURRENT TRACK: the tracks are separate courses, so "Next"
+  // from the last AWS lesson must not fall through into System Design.
+  var lessonsOnly = (function () {
+    var out = [], t = null;
+    COURSE.forEach(function (it) {
+      if (it.header) { t = it.track; return; }
+      if (it.file && t === currentTrack) out.push(it);
+    });
+    return out;
+  })();
   var idx = lessonsOnly.findIndex(function (it) { return it.file === here; });
   if (idx !== -1) {
     var prev = lessonsOnly[idx - 1];
