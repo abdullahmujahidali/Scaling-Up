@@ -197,6 +197,30 @@ th { font-family: ui-sans-serif, sans-serif; font-size: 0.78rem; text-transform:
   font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: #d98c8c; font-weight: 700; margin: 1.1rem 0.5rem 0.4rem;
 }
+/* Collapsible track header: caret + label + "(count · paused)" on the right. */
+/* Grid keeps the caret in its own column so the label can wrap without the
+   count colliding with it; the meta sits on its own line underneath. */
+.cnav-track-toggle {
+  display: grid; grid-template-columns: 0.9rem 1fr; gap: 0 0.35rem;
+  cursor: pointer; padding: 0.4rem 0.4rem; border-radius: 6px;
+  user-select: none; margin: 1.1rem 0.1rem 0.3rem; align-items: start;
+}
+.cnav-track-toggle:hover { background: rgba(255,255,255,0.07); }
+.cnav-track-toggle:focus-visible { outline: 2px solid #d98c8c; outline-offset: 1px; }
+.cnav-caret { font-size: 0.6rem; opacity: 0.8; line-height: 1.5; }
+.cnav-track-label { grid-column: 2; line-height: 1.35; }
+.cnav-track-meta {
+  grid-column: 2; font-size: 0.56rem; letter-spacing: 0.06em;
+  color: #8a8a8a; font-weight: 600; text-transform: none; margin-top: 0.12rem;
+}
+/* A collapsed track is dimmed; the open one reads as the active place. */
+.cnav-track-toggle:not(.cnav-open) .cnav-track-label { color: #9a8080; }
+.cnav-track-toggle.cnav-open .cnav-track-label { color: #e8a0a0; }
+/* Sub-group label inside a track (e.g. "Lessons", "Notes & tools"). */
+.cnav-subhead {
+  font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #777; font-weight: 700; margin: 0.7rem 0.6rem 0.25rem;
+}
 .cnav-item {
   display: flex; align-items: baseline; gap: 0.5rem; color: #ccc;
   padding: 0.42rem 0.5rem; border-radius: 6px; border: none; font-size: 0.85rem;
