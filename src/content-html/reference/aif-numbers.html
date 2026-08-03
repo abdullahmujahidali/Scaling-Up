@@ -1,0 +1,109 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Reference · Cheat Sheet</p>
+    <h1 data-ur="AIF Terms aur Trigger Words">AIF Terms &amp; Trigger Words</h1>
+    <p class="subtitle" data-ur="AIF numbers nahi poochta — woh <em>lafz</em> aur <em>service ke naam</em> poochta hai. Is liye yeh sheet numbers ki jagah teen cheezein deti hai: trigger words (lafz se seedha jawab), har service ka ek jumla, aur woh jorey jo aapas mein gaddmadd ho jaate hain.">AIF barely asks numbers — it asks <em>words</em> and <em>service names</em>. So this sheet gives you three things instead: trigger words (word → answer), a one-line job per service, and the pairs that blur together.</p>
+    <div class="meta">
+      <span>Print this one</span>
+      <span class="star-key">⭐ = most frequently tested</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Isay kaise istemaal karo">How to use this sheet</span>
+    <span data-ur="Pehle sirf <strong>⭐ wale rows</strong> karo. Har roz dekho, magar <em>pehle apne aap se poocho, phir dekho</em>.<br><br><strong>Tumhare liye khaas:</strong> pehla table (Trigger Words) sab se zyada faida dega. AIF ke zyada tar sawal ek lafz par ghoomte hain — woh lafz pehchan lo to sawal poora samjhe baghair bhi jawab aa jata hai.">Do the <strong>⭐ rows</strong> first. Look daily, but <em>test yourself first, then look</em>.<br><br><strong>Specifically for you:</strong> the first table pays the most. Most AIF questions turn on a single word — recognise it and the answer arrives without fully parsing the sentence.</span>
+  </div>
+
+  <h2 data-ur="⭐ Trigger words — lafz se jawab tak">⭐ Trigger words — from word to answer</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Sawal mein yeh lafz">If the question says</th><th data-ur="Jawab yeh hai">The answer is</th><th data-ur="Kyun">Why</th></tr></thead>
+    <tbody>
+      <tr class="star"><td data-ur="&quot;company ka apna data&quot;, &quot;taza/latest maloomat&quot;, &quot;aksar badalta hai&quot;">&quot;company's own data&quot;, &quot;up-to-date&quot;, &quot;changes often&quot;</td><td class="n">RAG (Bedrock Knowledge Bases)</td><td data-ur="RAG jawab ke waqt documents parhta hai — file badlo, model wesa ka wesa.">RAG reads documents at answer time — change the file, not the model.</td></tr>
+      <tr class="star"><td data-ur="&quot;style/tone badalna&quot;, &quot;khaas maidan ki zubaan&quot;">&quot;change the style/tone&quot;, &quot;domain-specific&quot;</td><td class="n" data-ur="Fine-tuning">Fine-tuning</td><td data-ur="Fine-tuning andaaz badalta hai, maloomat nahi.">Fine-tuning changes manner, not knowledge.</td></tr>
+      <tr class="star"><td data-ur="&quot;hallucination kam karna&quot;, &quot;jawab durust ho&quot;">&quot;reduce hallucinations&quot;, &quot;accuracy&quot;</td><td class="n" data-ur="RAG grounding + output validation">RAG grounding + output validation</td><td data-ur="Temperature ka is se koi taalluq nahi — yeh aam ghalti hai.">Temperature is unrelated — a common wrong pick.</td></tr>
+      <tr class="star"><td data-ur="&quot;nuqsandeh content rokna&quot;, &quot;safety&quot;, &quot;mauzu block karna&quot;">&quot;prevent harmful content&quot;, &quot;block topics&quot;</td><td class="n">Bedrock Guardrails</td><td data-ur="Guardrails model ke moonh par pehra hai.">Guardrails is a guard on the model's mouth.</td></tr>
+      <tr class="star"><td data-ur="&quot;bias&quot;, &quot;fairness&quot;, &quot;kyun yeh faisla hua&quot;">&quot;bias&quot;, &quot;fairness&quot;, &quot;why this decision&quot;</td><td class="n">SageMaker Clarify</td><td data-ur="Bias + explainability dono Clarify hain.">Both bias and explainability are Clarify.</td></tr>
+      <tr class="star"><td data-ur="&quot;human review&quot;, &quot;insaan check kare&quot;">&quot;human in the loop&quot;, &quot;human review&quot;</td><td class="n">Amazon A2I</td><td data-ur="Augmented AI = insaan ko process mein daalna.">Augmented AI = inserting a person into the process.</td></tr>
+      <tr class="star"><td data-ur="&quot;LEAST development effort&quot;, &quot;koi ML tajurba nahi&quot;">&quot;LEAST effort&quot;, &quot;no ML expertise&quot;</td><td class="n" data-ur="Ready-made managed service">A ready-made managed service</td><td data-ur="⚠️ SageMaker par apna model wala option takreeban hamesha ghalat.">⚠️ The custom-SageMaker option is almost always wrong.</td></tr>
+      <tr class="star"><td data-ur="&quot;pre-trained model istemaal karna&quot;, &quot;infrastructure manage nahi karni&quot;">&quot;use an existing FM&quot;, &quot;no infrastructure&quot;</td><td class="n">Amazon Bedrock</td><td data-ur="Bedrock = doosre ka model, serverless.">Bedrock = someone else's model, serverless.</td></tr>
+      <tr><td data-ur="&quot;apna custom model train karna&quot;, &quot;data scientists&quot;">&quot;train a custom model&quot;</td><td class="n">Amazon SageMaker AI</td><td data-ur="SageMaker = apna model banao.">SageMaker = build your own.</td></tr>
+      <tr class="star"><td data-ur="&quot;user ne hidayat chhupa kar bheji&quot;">&quot;ignore previous instructions&quot;</td><td class="n" data-ur="Prompt injection">Prompt injection</td><td data-ur="= SQL injection wali soch. Bachao: validate in, filter out, Guardrails.">= the SQL-injection instinct. Defence: validate in, filter out, Guardrails.</td></tr>
+      <tr><td data-ur="&quot;labelled data se predict karna&quot;">&quot;labelled data&quot;, &quot;predict a category&quot;</td><td class="n" data-ur="Supervised learning (classification)">Supervised learning (classification)</td><td data-ur="Label maujood = supervised. Category = classification.">Labels present = supervised. Category = classification.</td></tr>
+      <tr><td data-ur="&quot;bina label ke group banana&quot;">&quot;group without labels&quot;</td><td class="n" data-ur="Unsupervised (clustering)">Unsupervised (clustering)</td><td data-ur="Koi label nahi = unsupervised.">No labels = unsupervised.</td></tr>
+      <tr><td data-ur="&quot;sentiment&quot;, &quot;customer reviews samajhna&quot;, &quot;PII dhoondna&quot;">&quot;sentiment&quot;, &quot;entities&quot;, &quot;PII in text&quot;</td><td class="n">Amazon Comprehend</td><td data-ur="Comprehend = tehreer ka matlab samajhna.">Comprehend = understanding text.</td></tr>
+      <tr><td data-ur="&quot;tasveer/video mein pehchanna&quot;">&quot;images&quot;, &quot;video&quot;, &quot;faces&quot;</td><td class="n">Amazon Rekognition</td><td data-ur="Naam hi kaam bata raha hai.">The name says the job.</td></tr>
+      <tr><td data-ur="&quot;scanned form/invoice se data nikalna&quot;">&quot;scanned documents&quot;, &quot;forms&quot;</td><td class="n">Amazon Textract</td><td data-ur="Text + extract.">Text + extract.</td></tr>
+      <tr><td data-ur="&quot;model waqt ke saath kharab ho raha hai&quot;">&quot;model degrading over time&quot;, &quot;drift&quot;</td><td class="n">SageMaker Model Monitor</td><td data-ur="Production mein nigrani.">Monitoring in production.</td></tr>
+      <tr><td data-ur="&quot;data internet par na jaye&quot;">&quot;must not traverse the internet&quot;</td><td class="n">AWS PrivateLink</td><td data-ur="Private connection, internet se bacha kar.">A private connection avoiding the internet.</td></tr>
+      <tr><td data-ur="&quot;S3 mein zaati maloomat dhoondna&quot;">&quot;find PII in S3&quot;</td><td class="n">Amazon Macie</td><td data-ur="Macie = S3 mein PII discovery.">Macie = PII discovery in S3.</td></tr>
+      <tr><td data-ur="&quot;kis ne kya kiya&quot;, &quot;audit trail&quot;">&quot;who did what&quot;, &quot;audit trail&quot;</td><td class="n">AWS CloudTrail</td><td data-ur="CLF wala jawab, yahan bhi wohi.">The CLF answer, unchanged here.</td></tr>
+      <tr><td data-ur="&quot;model ki dastaveez&quot;, &quot;transparency&quot;">&quot;document the model&quot;, &quot;transparency&quot;</td><td class="n">SageMaker Model Cards</td><td data-ur="Model ka &quot;shanakhti card&quot;.">The model's identity card.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Woh jorey jo gaddmadd hote hain">The pairs that blur together</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Jora">Pair</th><th data-ur="Farq">The difference</th><th data-ur="Yaad rakhne ka jumla">The phrase to hold</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ RAG vs Fine-tuning</td><td data-ur="RAG = naya maaloomat. Fine-tuning = naya andaaz.">RAG = new information. Fine-tuning = new manner.</td><td data-ur="&quot;Kya jaanta hai&quot; banam &quot;kaise bolta hai&quot;.">&quot;What it knows&quot; vs &quot;how it speaks&quot;.</td></tr>
+      <tr class="star"><td>⭐ Guardrails vs Clarify</td><td data-ur="Guardrails = safety, aage ka bachao (GenAI). Clarify = fairness aur explainability, peechay ka tajziya (ML).">Guardrails = safety, forward-looking (GenAI). Clarify = fairness &amp; explainability, backward-looking (ML).</td><td data-ur="Guardrails bolne se rokta hai; Clarify batata hai kyun bola.">Guardrails stops it speaking; Clarify explains why it spoke.</td></tr>
+      <tr class="star"><td>⭐ Bedrock vs SageMaker</td><td data-ur="Bedrock = doosre ka model istemaal karo. SageMaker = apna model banao.">Bedrock = use someone else's model. SageMaker = build your own.</td><td data-ur="Bawarchi kiraye par banam apna kitchen.">Hire a chef vs build a kitchen.</td></tr>
+      <tr><td>Training vs Inference</td><td data-ur="Training = seekhna (mehnga, ek baar). Inference = istemaal (sasta, har request).">Training = learning (expensive, once). Inference = using (cheap, per request).</td><td data-ur="migrate banam runserver."><code>migrate</code> vs <code>runserver</code>.</td></tr>
+      <tr><td>Overfitting vs Underfitting</td><td data-ur="Overfitting = ratta laga liya (training par acha, naye par bura). Underfitting = kuch seekha hi nahi (dono jagah bura).">Overfitting = memorised (good on training, bad on new). Underfitting = barely learned (bad everywhere).</td><td data-ur="Ratta banam bilkul na parhna.">Rote memorising vs not studying at all.</td></tr>
+      <tr><td>Transcribe vs Polly</td><td data-ur="Transcribe = awaz → tehreer. Polly = tehreer → awaz.">Transcribe = speech → text. Polly = text → speech.</td><td data-ur="Polly = tota = bolta hai.">Polly = parrot = speaks.</td></tr>
+      <tr><td>Transparency vs Explainability</td><td data-ur="Transparency = model ke baare mein batana (Model Cards). Explainability = faisla kyun hua (Clarify).">Transparency = disclosure about the model (Model Cards). Explainability = why a decision happened (Clarify).</td><td data-ur="&quot;Yeh kya hai&quot; banam &quot;is ne aisa kyun kiya&quot;.">&quot;What is it&quot; vs &quot;why did it do that&quot;.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Services — har ek ka ek jumla">Services — one line each</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Service">Service</th><th data-ur="Kaam">Job</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Amazon Bedrock</td><td data-ur="Foundation models API se istemaal karna (GenAI). Serverless.">Using foundation models via API (GenAI). Serverless.</td></tr>
+      <tr class="star"><td>⭐ Amazon SageMaker AI</td><td data-ur="Apna ML model banana, train karna, deploy karna.">Building, training and deploying your own ML models.</td></tr>
+      <tr class="star"><td>⭐ Bedrock Knowledge Bases</td><td data-ur="RAG — apne documents par jawab dena.">RAG — answering from your own documents.</td></tr>
+      <tr class="star"><td>⭐ Bedrock Guardrails</td><td data-ur="Nuqsandeh content rokna, mauzu block karna, PII chhupana.">Blocking harmful content and topics, masking PII.</td></tr>
+      <tr><td>Bedrock Agents / AgentCore</td><td data-ur="Model ko tools istemaal karke kaam karne dena.">Letting the model use tools and take actions.</td></tr>
+      <tr><td>Bedrock Model Evaluation</td><td data-ur="Models ko parkhna aur mawazna karna.">Testing and comparing models.</td></tr>
+      <tr class="star"><td>⭐ SageMaker Clarify</td><td data-ur="Bias dhoondna + explainability.">Detecting bias + explainability.</td></tr>
+      <tr><td>SageMaker Model Monitor</td><td data-ur="Production mein model ka bigarna (drift) pakarna.">Catching drift in production.</td></tr>
+      <tr><td>SageMaker Model Cards</td><td data-ur="Model ki dastaveez (transparency).">Model documentation (transparency).</td></tr>
+      <tr><td>SageMaker JumpStart</td><td data-ur="Pehle se bane models foran shuru karna.">Pre-built models to start fast.</td></tr>
+      <tr><td>SageMaker Ground Truth</td><td data-ur="Data par labels lagwana.">Getting data labelled.</td></tr>
+      <tr class="star"><td>⭐ Amazon A2I</td><td data-ur="Human-in-the-loop review.">Human-in-the-loop review.</td></tr>
+      <tr class="star"><td>⭐ Amazon Comprehend</td><td data-ur="Tehreer samajhna: sentiment, entities, PII, language.">Understanding text: sentiment, entities, PII, language.</td></tr>
+      <tr><td>Amazon Rekognition</td><td data-ur="Tasveer aur video pehchanna.">Images and video.</td></tr>
+      <tr><td>Amazon Textract</td><td data-ur="Scanned documents/forms se text nikalna.">Extracting text from scanned documents and forms.</td></tr>
+      <tr><td>Amazon Transcribe / Polly</td><td data-ur="Awaz → tehreer / tehreer → awaz.">Speech → text / text → speech.</td></tr>
+      <tr><td>Amazon Translate / Lex</td><td data-ur="Tarjuma / chatbot banana.">Translation / building chatbots.</td></tr>
+      <tr><td>Personalize / Forecast / Fraud Detector</td><td data-ur="Tajweez / aane wale waqt ka andaza / fraud pakarna.">Recommendations / forecasting / fraud detection.</td></tr>
+      <tr><td>Macie / PrivateLink</td><td data-ur="S3 mein PII dhoondna / private connection.">PII discovery in S3 / private connectivity.</td></tr>
+      <tr><td>CloudTrail / Config / Artifact / Audit Manager</td><td data-ur="Audit / settings ki nigrani / compliance reports / audit ki tayyari.">Audit / config tracking / compliance reports / audit preparation.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Exam ke apne numbers">The exam's own numbers</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Note">Note</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Passing score</td><td class="n">700 / 1000</td><td data-ur="Compensatory — har domain alag pass karna zaroori nahi.">Compensatory — no need to pass each domain.</td></tr>
+      <tr><td>Questions</td><td class="n" data-ur="65 kul · 50 scored">65 total · 50 scored</td><td data-ur="15 ginti mein nahi, magar pata nahi chalta. Sab ka jawab do.">15 don't count but aren't marked. Answer everything.</td></tr>
+      <tr class="star"><td>⭐ Question types</td><td class="n" data-ur="4 qismein">4 types</td><td data-ur="⚠️ Multiple choice, multiple response, <strong>ordering</strong>, <strong>matching</strong>. Aakhri do mein aadha sahi ka number NAHI milta.">⚠️ Multiple choice, multiple response, <strong>ordering</strong>, <strong>matching</strong>. The last two give NO partial credit.</td></tr>
+      <tr class="star"><td>⭐ Time</td><td class="n" data-ur="90 min (ESL ke saath 120)">90 min (120 with ESL)</td><td data-ur="ESL ek baar maango — CLF aur AIF dono par lagta hai.">Request ESL once — it covers both CLF and AIF.</td></tr>
+      <tr><td>Cost</td><td class="n">100 USD</td><td data-ur="Dono exam milkar 200 USD. Team lead se poocho.">200 USD for both. Ask your team lead.</td></tr>
+      <tr><td>Domain weights</td><td class="n" data-ur="28 / 24 / 20 / 14 / 14">28 / 24 / 20 / 14 / 14</td><td data-ur="Applications of FMs 28% · GenAI 24% · AI-ML basics 20% · Responsible AI 14% · Security 14%.">Applications of FMs 28% · GenAI 24% · AI/ML basics 20% · Responsible AI 14% · Security 14%.</td></tr>
+      <tr><td>Guessing</td><td class="n" data-ur="Koi saza nahi">No penalty</td><td data-ur="Khali chhorna = ghalat. Har sawal ka jawab do.">Blank = wrong. Answer every question.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Exam se ek raat pehle">The night before the exam</span>
+    <span data-ur="Sirf <strong>Trigger Words</strong> aur <strong>&quot;jorey&quot;</strong> wale table dekho. Naya kuch mat parho. Yaad rakho: <strong>700/1000</strong> chahiye, har domain alag pass karna zaroori nahi, aur ghalat jawab par koi saza nahi — is liye koi sawal khali mat chhoro.<br><br>Aur ordering/matching wale sawalon mein jaldi mat karo: unmein aadha sahi ka number nahi milta, is liye ek nazar dobara daalna faida deta hai.">Look only at the <strong>Trigger Words</strong> and <strong>pairs</strong> tables. Don't read anything new. Remember: <strong>700/1000</strong> overall, no per-domain pass needed, and no penalty for a wrong answer — so never leave a blank.<br><br>And don't rush the ordering/matching questions: with no partial credit, a second look genuinely pays.</span>
+  </div>
+
+  <p style="font-size:0.9rem;opacity:0.75" data-ur="<strong>Maakhaz</strong> (3 Aug 2026 ko verify kiya gaya): <a href='https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html' target='_blank'>AIF-C01 Exam Guide</a> (65 sawal / 50 scored, 700 pass, chaar qism ke sawal, domain weights), aur uske domain pages: <a href='https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html' target='_blank'>Domain 3</a> (RAG, Knowledge Bases, fine-tuning), <a href='https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain4.html' target='_blank'>Domain 4</a> (Clarify, Model Cards, A2I, Guardrails), <a href='https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html' target='_blank'>Domain 5</a> (Macie, PrivateLink, CloudTrail, prompt injection, RAG grounding)."><strong>Sources</strong> (verified 3 Aug 2026): <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html" target="_blank">AIF-C01 Exam Guide</a> (65 questions / 50 scored, 700 to pass, four question types, domain weightings), and its domain pages: <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html" target="_blank">Domain 3</a> (RAG, Knowledge Bases, fine-tuning), <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain4.html" target="_blank">Domain 4</a> (Clarify, Model Cards, A2I, Guardrails), <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html" target="_blank">Domain 5</a> (Macie, PrivateLink, CloudTrail, prompt injection, RAG grounding).</p>
+
+  <p class="back"><a href="../aif-index.html" data-ur="← AIF-C01 track">← AIF-C01 track</a></p>
+
+</div>

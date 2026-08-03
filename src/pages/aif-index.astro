@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/aif-index.html?raw';
+const headExtra = undefined;
+---
+<Base title={"AWS Certified AI Practitioner (AIF-C01) — track"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

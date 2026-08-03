@@ -1,0 +1,181 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I2 · Domains 1–3</p>
+    <h1 data-ur="Kaunsi AWS service? — naam se kaam pehchanna">Which AWS AI service? — matching name to job</h1>
+    <p class="subtitle" data-ur="Is exam ka bara hissa sirf yeh poochta hai: &quot;is kaam ke liye kaunsi service?&quot; Achi baat yeh hai ke har service ka <em>ek</em> kaam hai, aur naam aksar khud bata deta hai. Yeh lesson woh jori banata hai: kaam → service.">A large part of this exam simply asks: &quot;which service for this job?&quot; The good news is that each service has <em>one</em> job, and the name often tells you. This lesson builds that pairing: job → service.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>One concept: one service, one job</span>
+      <span>Win: the most common question type on the exam</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle I1 se yaad karo: RAG kab istemaal karte hain aur fine-tuning kab? Aur training aur inference mein kya farq hai?">First, recall from I1: when do you use RAG and when fine-tuning? And what's the difference between training and inference?</div>
+    <div class="answer" data-ur="<strong>RAG = naya maaloomat</strong> (taza data, apne documents, hallucination kam karna). <strong>Fine-tuning = naya andaaz</strong> (style, tone, khaas maidan). <strong>Training = seekhna</strong> (mehnga, ek baar); <strong>inference = istemaal</strong> (sasta, har request). Aaj hum in kaamon ko AWS ke naamon se jorenge."><strong>RAG = new information</strong> (fresh data, your own documents, reducing hallucinations). <strong>Fine-tuning = new manner</strong> (style, tone, specialist domain). <strong>Training = learning</strong> (expensive, once); <strong>inference = using</strong> (cheap, every request). Today we attach AWS names to these jobs.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Do bare naam yaad rakho, phir baaqi sab chhoti services hain jo ek ek kaam karti hain:</strong><br><br>⭐ <strong>Amazon Bedrock</strong> = <strong>GenAI</strong> ke liye. Foundation models (Claude, Titan waghera) ko API se istemaal karna. Koi server nahi, koi training nahi. <em>Sawal mein GenAI/LLM/chatbot/RAG = Bedrock.</em><br><br>⭐ <strong>Amazon SageMaker AI</strong> = <strong>apna ML model</strong> banane, train karne aur deploy karne ke liye. <em>Sawal mein &quot;custom model train karna&quot;, &quot;data scientists&quot;, &quot;full control&quot; = SageMaker.</em><br><br><strong>Farq ka aasaan qaida:</strong> Bedrock = <em>doosre ka bana hua</em> model istemaal karo. SageMaker = <em>apna</em> model banao."><strong>Learn two big names; everything else is a small single-job service:</strong><br><br>⭐ <strong>Amazon Bedrock</strong> = for <strong>GenAI</strong>. Using foundation models (Claude, Titan, etc.) via an API. No servers, no training. <em>GenAI / LLM / chatbot / RAG in a question = Bedrock.</em><br><br>⭐ <strong>Amazon SageMaker AI</strong> = for <strong>building, training and deploying your own ML model</strong>. <em>&quot;Train a custom model&quot;, &quot;data scientists&quot;, &quot;full control&quot; = SageMaker.</em><br><br><strong>The simple rule:</strong> Bedrock = use <em>someone else's</em> model. SageMaker = build <em>your own</em>.</span>
+  </div>
+
+  <h2 data-ur="Kahani: khana khilane ke teen tareeqe">The story: three ways to feed people</h2>
+  <p data-ur="Socho tumhein 100 logon ko khana khilana hai. <strong>Pehla tareeqa:</strong> ready-made packet khareed lo — biryani ka packet, karahi ka packet. Kholo aur pesh kar do. Koi mehnat nahi, magar jo packet mein hai wohi milega. <strong>Yeh AWS ki &quot;managed AI services&quot; hain</strong> — Rekognition, Transcribe, Comprehend. Ek kaam, foran, koi tajurba nahi chahiye.">Imagine feeding 100 people. <strong>First way:</strong> buy ready-made packets — open and serve. No effort, but you get exactly what's in the packet. <strong>These are AWS's managed AI services</strong> — Rekognition, Transcribe, Comprehend. One job each, instant, no expertise needed.</p>
+  <p data-ur="<strong>Doosra tareeqa:</strong> ek tajurbakaar bawarchi bulao jo pehle se sab pakana jaanta hai — tum usay bas bata do ke kya banana hai aur kis andaaz mein. <strong>Yeh Bedrock hai.</strong> Model pehle se train shuda hai; tum sirf prompt dete ho.">
+    <strong>Second way:</strong> hire an experienced chef who already knows how to cook everything — you just tell them what to make and how. <strong>This is Bedrock.</strong> The model is already trained; you supply the prompt.</p>
+  <p data-ur="<strong>Teesra tareeqa:</strong> apna kitchen banao, apna bawarchi rakho, apni recipe likho. Sab se zyada mehnat aur kharcha, magar poora control. <strong>Yeh SageMaker hai.</strong> Exam yeh dekhta hai ke tum halaat ke hisaab se sahi tareeqa chun sakte ho — aur zyada tar sawalon mein jawab <em>kam mehnat wala</em> hota hai.">
+    <strong>Third way:</strong> build your own kitchen, hire your own chef, write your own recipes. The most work and cost, but total control. <strong>This is SageMaker.</strong> The exam checks you can pick the right one — and in most questions the answer is the <em>least</em> effort option that meets the need.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Managed AI services — ek service, ek kaam">⭐ The managed AI services — one service, one job</span>
+    <ul>
+      <li data-ur="<strong>Amazon Rekognition</strong> = <strong>tasveer aur video</strong> pehchanna (chehre, cheezein, ghair-munasib content). Naam yaad rakho: &quot;recognition&quot; = pehchanna. Sawal mein image/video = yehi."><strong>Amazon Rekognition</strong> = <strong>images and video</strong> (faces, objects, unsafe content). The name says it: recognition. Image/video in a question = this.</li>
+      <li data-ur="<strong>Amazon Transcribe</strong> = <strong>awaz se tehreer</strong> (speech → text). Meeting ki recording ka likha hua roop."><strong>Amazon Transcribe</strong> = <strong>speech to text</strong>. A written record of a meeting recording.</li>
+      <li data-ur="<strong>Amazon Polly</strong> = <strong>tehreer se awaz</strong> (text → speech). Transcribe ka ulta. (Polly = tota, jo bolta hai — is se yaad rakho.)"><strong>Amazon Polly</strong> = <strong>text to speech</strong>. The reverse of Transcribe. (Polly = a parrot, which speaks — use that to remember.)</li>
+      <li data-ur="<strong>Amazon Translate</strong> = ek zubaan se doosri zubaan."><strong>Amazon Translate</strong> = one language to another.</li>
+      <li data-ur="⭐ <strong>Amazon Comprehend</strong> = <strong>tehreer ka matlab samajhna</strong> — sentiment (khush/naraz), entities (naam, jagah), language pehchanna, aur <strong>PII (zaati maloomat) dhoondna</strong>. Sawal mein &quot;customer reviews ka sentiment&quot; = Comprehend."><strong>⭐ Amazon Comprehend</strong> = <strong>understanding text</strong> — sentiment (positive/negative), entities (names, places), language detection, and <strong>finding PII</strong> (personal data). &quot;Sentiment of customer reviews&quot; = Comprehend.</li>
+      <li data-ur="<strong>Amazon Lex</strong> = <strong>chatbot banane</strong> ke liye (Alexa wali technology). Awaz aur tehreer dono."><strong>Amazon Lex</strong> = building <strong>chatbots</strong> (the technology behind Alexa). Voice and text.</li>
+      <li data-ur="<strong>Amazon Textract</strong> = <strong>scanned documents/forms se tehreer nikalna</strong> (&quot;text&quot; + &quot;extract&quot;). Invoice, form, PDF se data."><strong>Amazon Textract</strong> = <strong>extracting text from scanned documents and forms</strong> (&quot;text&quot; + &quot;extract&quot;). Invoices, forms, PDFs.</li>
+      <li data-ur="<strong>Amazon Personalize</strong> = <strong>tajweez (recommendations)</strong> — &quot;yeh bhi khareedein&quot;. <strong>Amazon Forecast</strong> = aane wale waqt ka andaza (sales, demand). <strong>Amazon Fraud Detector</strong> = fraud pehchanna. In teenon ka naam hi kaam bata deta hai."><strong>Amazon Personalize</strong> = <strong>recommendations</strong> (&quot;customers also bought&quot;). <strong>Amazon Forecast</strong> = predicting future values (sales, demand). <strong>Amazon Fraud Detector</strong> = detecting fraud. All three are named after their job.</li>
+      <li data-ur="<strong>Amazon Q</strong> = AWS ka apna AI assistant (business sawalon aur developers ke liye). <strong>Kiro</strong> aur <strong>Amazon Quick</strong> bhi exam guide mein naye naam hain."><strong>Amazon Q</strong> = AWS's own AI assistant (for business questions and for developers). <strong>Kiro</strong> and <strong>Amazon Quick</strong> also appear as newer names in the exam guide.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Bedrock ke andar ke naam — yeh alag alag cheezein hain">⭐ The names inside Bedrock — these are distinct things</span>
+    <ul>
+      <li data-ur="⭐ <strong>Bedrock Knowledge Bases</strong> = <strong>RAG</strong> ka AWS wala naam. Sawal mein RAG banana ho = yehi jawab. Yeh chunking, embedding aur search sab khud karta hai."><strong>⭐ Bedrock Knowledge Bases</strong> = AWS's name for <strong>RAG</strong>. If a question is about building RAG, this is the answer. It handles chunking, embedding and search for you.</li>
+      <li data-ur="⭐ <strong>Bedrock Guardrails</strong> = <strong>hifazati hadd bandi</strong> — nuqsandeh content rokna, mana kiye gaye mauzu block karna, PII chhupana. Sawal mein &quot;harmful content rokna&quot; ya &quot;safety&quot; = Guardrails, hamesha."><strong>⭐ Bedrock Guardrails</strong> = <strong>safety limits</strong> — blocking harmful content, denying topics, masking PII. &quot;Prevent harmful content&quot; or &quot;safety&quot; in a question = Guardrails, always.</li>
+      <li data-ur="<strong>Bedrock Agents</strong> = model ko kaam karne dena (tools bulana, kai qadam). <strong>Bedrock AgentCore</strong> exam guide ka naya naam hai."><strong>Bedrock Agents</strong> = letting the model take actions (calling tools, multi-step work). <strong>Bedrock AgentCore</strong> is the newer name in the exam guide.</li>
+      <li data-ur="<strong>Bedrock Model Evaluation</strong> = models ko parkhna aur mawazna karna. <strong>Bedrock Prompt Management</strong> = prompts ko sambhalna aur unke version rakhna."><strong>Bedrock Model Evaluation</strong> = testing and comparing models. <strong>Bedrock Prompt Management</strong> = storing and versioning prompts.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ SageMaker ke andar ke naam — zimmedar AI wale sawalon ka jawab">⭐ The names inside SageMaker — the Responsible AI answers</span>
+    <ul>
+      <li data-ur="⭐ <strong>SageMaker Clarify</strong> = <strong>bias dhoondna</strong> aur <strong>explainability</strong> (model ne kyun yeh jawab diya). Domain 4 (Responsible AI) mein sab se zyada poocha jane wala naam. Sawal mein &quot;bias detect karna&quot; = Clarify."><strong>⭐ SageMaker Clarify</strong> = <strong>detecting bias</strong> and providing <strong>explainability</strong> (why the model decided that). The most-asked name in Domain 4. &quot;Detect bias&quot; = Clarify.</li>
+      <li data-ur="⭐ <strong>SageMaker Model Monitor</strong> = production mein model ki nigrani — waqt ke saath model ka bigarna (drift) pakarna."><strong>⭐ SageMaker Model Monitor</strong> = watching the model in production — catching drift as its quality degrades over time.</li>
+      <li data-ur="⭐ <strong>Amazon Augmented AI (A2I)</strong> = <strong>insaan ko beech mein daalna</strong> (human review). Sawal mein &quot;human in the loop&quot; ya &quot;insaan check kare&quot; = A2I."><strong>⭐ Amazon Augmented AI (A2I)</strong> = <strong>putting a human in the loop</strong> for review. &quot;Human-in-the-loop&quot; or &quot;human review&quot; = A2I.</li>
+      <li data-ur="<strong>SageMaker Model Cards</strong> = model ki dastaveez (yeh model kya hai, kis data par bana, kis kaam ke liye). <strong>Transparency</strong> wale sawal ka jawab."><strong>SageMaker Model Cards</strong> = documentation of a model (what it is, what data it used, its intended use). The <strong>transparency</strong> answer.</li>
+      <li data-ur="<strong>SageMaker JumpStart</strong> = pehle se bane models aur solutions foran shuru karne ke liye. <strong>SageMaker Ground Truth</strong> = data par labels lagwana."><strong>SageMaker JumpStart</strong> = pre-built models and solutions to start quickly. <strong>SageMaker Ground Truth</strong> = getting your data labelled.</li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — service chunne wale sawal ki zubaan">Exam English — the language of service-picking questions</span>
+    <span data-ur="Yeh sawal aksar ek jaise dhaanche mein aate hain. Yeh lafz pehchano:<br><br><strong>&quot;with the LEAST development effort&quot;</strong> / <strong>&quot;LEAST operational overhead&quot;</strong> = sab se kam mehnat wala jawab chuno — yani ready-made managed service, na ke SageMaker par apna model.<br><strong>&quot;without managing infrastructure&quot;</strong> = koi server nahi = Bedrock ya managed service.<br><strong>&quot;pre-trained&quot;</strong> = pehle se train shuda (tumhein train nahi karna).<br><strong>&quot;custom model&quot;</strong> = apna model = SageMaker.<br><strong>&quot;out of the box&quot;</strong> = jaise hai wesa hi, bina kuch banaye.<br><strong>&quot;in the loop&quot;</strong> = process ke beech mein shamil (human in the loop = insaan bhi check karta hai).<br><strong>&quot;drift&quot;</strong> = waqt ke saath model ka khisak jana/bigarna.">These questions come in a standard shape. Learn these words:<br><br><strong>&quot;with the LEAST development effort&quot; / &quot;LEAST operational overhead&quot;</strong> = pick the lowest-effort answer — a ready-made managed service, not a custom SageMaker model.<br><strong>&quot;without managing infrastructure&quot;</strong> = no servers = Bedrock or a managed service.<br><strong>&quot;pre-trained&quot;</strong> = already trained (you don't train it).<br><strong>&quot;custom model&quot;</strong> = your own model = SageMaker.<br><strong>&quot;out of the box&quot;</strong> = works as-is, with nothing built.<br><strong>&quot;in the loop&quot;</strong> = included in the process (human-in-the-loop = a person also checks).<br><strong>&quot;drift&quot;</strong> = the model degrading or shifting over time.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 1 · service picking · the &quot;least effort&quot; rule</span>
+    <p class="scenario" data-ur="Ek company apne customer reviews ka <strong>sentiment</strong> (khush ya naraz) maloom karna chahti hai. Un ke paas koi ML tajurba nahi hai aur woh <span class=&quot;qual&quot;>SAB SE KAM development effort</span> chahte hain. Kaunsi service?">A company wants to determine the <strong>sentiment</strong> of its customer reviews. They have no ML expertise and want the <span class="qual">LEAST development effort</span>. Which service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Amazon Comprehend">Amazon Comprehend</button>
+      <button class="opt" data-correct="false" data-ur="Amazon SageMaker par apna classification model train karo">Train a custom classification model in Amazon SageMaker</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Rekognition">Amazon Rekognition</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Polly">Amazon Polly</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 4 · Responsible AI · the safety answer</span>
+    <p class="scenario" data-ur="Ek company Amazon Bedrock par ek customer-facing chatbot chala rahi hai. Woh chahti hai ke chatbot <strong>nuqsandeh content na de</strong> aur kuch mauzu par baat hi na kare. Kaunsi cheez yeh karti hai?">A company runs a customer-facing chatbot on Amazon Bedrock. They want to <strong>prevent harmful content</strong> and block certain topics entirely. What provides this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Amazon SageMaker Clarify">Amazon SageMaker Clarify</button>
+      <button class="opt" data-correct="true" data-ur="Amazon Bedrock Guardrails">Amazon Bedrock Guardrails</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Comprehend">Amazon Comprehend</button>
+      <button class="opt" data-correct="false" data-ur="Model ka temperature kam kar do">Lower the model's temperature</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 4 · bias &amp; explainability</span>
+    <p class="scenario" data-ur="Ek bank ka loan-approval model istemaal ho raha hai. Regulator poochta hai ke kya model kisi <strong>demographic group ke saath na-insafi</strong> kar raha hai, aur har faisle ki <strong>wajah</strong> kya thi. Kaunsi service yeh dono kaam karti hai?">A bank uses a loan-approval model. Regulators ask whether it is <strong>unfair to any demographic group</strong>, and want the <strong>reason</strong> behind each decision. Which service addresses both?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Amazon Bedrock Guardrails">Amazon Bedrock Guardrails</button>
+      <button class="opt" data-correct="true" data-ur="Amazon SageMaker Clarify">Amazon SageMaker Clarify</button>
+      <button class="opt" data-correct="false" data-ur="Amazon SageMaker JumpStart">Amazon SageMaker JumpStart</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Textract">Amazon Textract</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 3 · Bedrock vs SageMaker</span>
+    <p class="scenario" data-ur="Ek startup ek application banana chahti hai jo product ki tafseel likhe. Un ke paas <strong>data scientists nahi</strong> hain aur woh <strong>koi infrastructure manage nahi karna chahte</strong>. Woh ek pehle se maujood foundation model istemaal karna chahte hain. Kaunsi service?">A startup wants to build an application that writes product descriptions. They have <strong>no data scientists</strong> and want to <strong>manage no infrastructure</strong>. They intend to use an existing foundation model. Which service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Amazon Bedrock">Amazon Bedrock</button>
+      <button class="opt" data-correct="false" data-ur="Amazon SageMaker par apna language model train karo">Train a custom language model on Amazon SageMaker</button>
+      <button class="opt" data-correct="false" data-ur="EC2 par apna open-source model chalao">Self-host an open-source model on Amazon EC2</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Lex">Amazon Lex</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="Yeh faisla tum har hafte lete ho, sirf naam alag hain. Jab tumhein Django mein payments chahiye, tum <strong>Stripe ka SDK</strong> lagate ho — apna payment system nahi likhte. Jab tumhein email chahiye, tum SES ya SendGrid lete ho.<br><br>Bilkul yehi soch yahan chalti hai: <strong>managed service = library import karna</strong> (Comprehend, Rekognition — ek line, kaam ho gaya). <strong>Bedrock = ek API call</strong> jis mein aqal kiraye par milti hai. <strong>SageMaker = khud likhna</strong> — poora control, poori zimmedari.<br><br>Aur exam ka jhukao wohi hai jo achhe engineer ka hota hai: <em>jab tak koi khaas wajah na ho, ready-made cheez lo.</em> Is liye jab bhi &quot;LEAST effort&quot; likha ho, SageMaker wala option takreeban hamesha ghalat hota hai.">You make this call weekly, only the names differ. When you need payments in Django you reach for <strong>Stripe's SDK</strong> — you don't write a payment system. When you need email you take SES or SendGrid.<br><br>The same reasoning applies here: <strong>a managed service = importing a library</strong> (Comprehend, Rekognition — one line, done). <strong>Bedrock = an API call</strong> that rents intelligence. <strong>SageMaker = writing it yourself</strong> — full control, full responsibility.<br><br>And the exam leans the way a good engineer leans: <em>unless there's a specific reason, take the ready-made thing.</em> Which is why, whenever &quot;LEAST effort&quot; appears, the SageMaker option is almost always wrong.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: Bedrock aur SageMaker ka farq? Sentiment ke liye kaunsi service? &quot;Harmful content rokna&quot; = kya? &quot;Bias detect karna&quot; = kya? Aur &quot;human review&quot; = kya?">From memory: Bedrock vs SageMaker? Which service for sentiment? &quot;Prevent harmful content&quot; = what? &quot;Detect bias&quot; = what? And &quot;human review&quot; = what?</div>
+    <div class="answer" data-ur="<strong>Bedrock = doosre ka model istemaal karo (GenAI); SageMaker = apna model banao.</strong> <strong>Sentiment = Comprehend.</strong> <strong>Harmful content rokna = Bedrock Guardrails.</strong> <strong>Bias + explainability = SageMaker Clarify.</strong> <strong>Human review = Amazon A2I.</strong> Paanchon aa gaye? To service wale sawal ab tumhare liye tez aur aasaan hain."><strong>Bedrock = use someone else's model (GenAI); SageMaker = build your own.</strong> <strong>Sentiment = Comprehend.</strong> <strong>Prevent harmful content = Bedrock Guardrails.</strong> <strong>Bias + explainability = SageMaker Clarify.</strong> <strong>Human review = Amazon A2I.</strong> All five? Then service questions are now fast and easy for you.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Yeh exam ka sab se aam sawal ka dhaancha hai — &quot;is kaam ke liye kaunsi service?&quot; — aur ab tumhare paas har bare naam ka <em>ek</em> jumla hai. Yeh Domain 1, 3 aur 4 teenon mein kaam aata hai.<br><br>Aur yaad rakho woh qaida jo takreeban hamesha chalta hai: <strong>&quot;LEAST effort&quot; likha ho to ready-made service chuno, apna model kabhi nahi.</strong> Yeh ek qaida bohot se sawal khud hal kar deta hai.">This is the exam's most common question shape — &quot;which service for this job?&quot; — and you now have <em>one sentence</em> for every major name. It pays across Domains 1, 3 and 4.<br><br>And remember the rule that nearly always holds: <strong>when &quot;LEAST effort&quot; appears, pick the ready-made service, never the custom model.</strong> That single rule resolves a lot of questions on its own.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/aif-01-in-scope-services.html&quot; target=&quot;_blank&quot;>AIF-C01 In-Scope AWS Services</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS ki apni list ke kaunsi services exam mein aa sakti hain. Yeh list chhoti hai; ek nazar daal lo taake koi naam ajnabi na lage.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/aif-01-in-scope-services.html" target="_blank">AIF-C01 In-Scope AWS Services</a><sup class="cite"><a href="#s1">1</a></sup> — AWS's own list of which services can appear. It's short; skim it so no name looks foreign on exam day.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> There are a lot of names here and they blur together at first — that's normal and not a sign you're behind. Tell me which pair keeps mixing up (Clarify vs Guardrails is the usual one) and I'll give you a way to keep them apart.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I2 (AWS AI services).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Previous: <a href="0055-aif-vocabulary.html">I1 · The language of AI</a>. Next: <a href="0057-aif-responsible-ai.html">I3 · Responsible AI, security and governance</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain1.html" target="_blank">AIF-C01 Domain 1</a> — Task 1.2 names the managed AI/ML services tested: &quot;Amazon SageMaker AI, Amazon Transcribe, Amazon Translate, Amazon Comprehend, Amazon Lex, Amazon Polly&quot;. Task 1.3 names Amazon Bedrock, Amazon Q, Amazon Quick, Kiro and SageMaker AI across the AI/ML pipeline.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain2.html" target="_blank">AIF-C01 Domain 2</a> — Task 2.3 names &quot;Amazon Bedrock, Amazon SageMaker AI, SageMaker JumpStart, Amazon Quick, Kiro, Strands Agents, Amazon Bedrock AgentCore&quot; as the GenAI development services.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain4.html" target="_blank">AIF-C01 Domain 4</a> — Task 4.1 names Amazon Bedrock Guardrails for responsible-AI features, and &quot;Amazon SageMaker Clarify, SageMaker Model Monitor, Amazon Augmented AI (Amazon A2I)&quot; for detecting and monitoring bias. Task 4.2 names SageMaker Model Cards, SageMaker Clarify and Bedrock Model Evaluations for transparency and explainability. Verified 3 Aug 2026.</li>
+      <li id="s4"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html" target="_blank">AIF-C01 Domain 3</a> — Task 3.1 names Amazon Bedrock Knowledge Bases as the RAG example; Task 3.2 names Amazon Bedrock Prompt Management; Task 3.4 names Amazon Bedrock Model Evaluation.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Comprehend is the managed service for understanding text, and sentiment analysis is one of its built-in features — no ML expertise and no training needed. Training a custom SageMaker model would work but directly contradicts \"LEAST development effort\". Rekognition is for images; Polly is text-to-speech."
+                      : "Reconsider. Two clues point the same way: \"no ML expertise\" and \"LEAST development effort\". Comprehend does sentiment analysis out of the box. The SageMaker option is the classic distractor — it works, but it's the most effort, so the qualifier rules it out. Rekognition handles images, Polly generates speech.",
+          q2: correct ? "Correct. Guardrails is Bedrock's safety layer — it blocks harmful content, denies specified topics and can mask PII. Clarify is for bias and explainability in SageMaker, not content filtering. Temperature only affects randomness, not safety."
+                      : "Reconsider. The words \"prevent harmful content\" and \"block topics\" describe Bedrock Guardrails, the safety feature. Clarify is the bias/explainability tool and belongs to SageMaker. Comprehend analyses text but doesn't gate a chatbot's output. Temperature changes randomness, never safety. Memory hook: Guardrails = safety, Clarify = fairness.",
+          q3: correct ? "Correct. Clarify does both jobs the question asks for: detecting bias across demographic groups, and explaining feature importance behind individual predictions. That pairing — fairness plus explainability — is Clarify's signature on this exam."
+                      : "Reconsider. Two requirements appear together: unfairness to a demographic group (bias) and the reason for a decision (explainability). SageMaker Clarify is the single service covering both. Guardrails is Bedrock's content-safety feature, not a fairness auditor. JumpStart provides pre-built models; Textract extracts text from documents.",
+          q4: correct ? "Correct. \"No data scientists\", \"manage no infrastructure\" and \"use an existing foundation model\" all describe Bedrock — serverless access to pre-trained FMs via API. SageMaker and self-hosting on EC2 both require the expertise and infrastructure they explicitly don't want. Lex builds conversational bots, not free-form content generation."
+                      : "Reconsider. Three phrases point to the same answer: no data scientists, no infrastructure to manage, and using an existing foundation model. That is Amazon Bedrock. Training on SageMaker or self-hosting on EC2 both demand exactly what they said they lack. Lex is for chatbots with defined intents, not generating product copy."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

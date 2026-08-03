@@ -1,0 +1,184 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I1 · Domain 1 (20%) + Domain 2 (24%)</p>
+    <h1 data-ur="AI ki zubaan: woh lafz jin par baaqi sab khara hai">The language of AI: the words everything else stands on</h1>
+    <p class="subtitle" data-ur="Yeh exam tumse AI banane ko nahi kehta — woh poochta hai ke tum uski <em>zubaan</em> samajhte ho ya nahi. Tum ne khud kaha ke AI tumhare liye naya hai, is liye yeh lesson buniyad se shuru hota hai. Yahan koi cheez &quot;tum jaante ho&quot; farz nahi ki gayi.">This exam doesn't ask you to build AI — it asks whether you understand its <em>language</em>. You said AI is new to you, so this lesson starts from the ground. Nothing here assumes you already know an AI word.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>One concept: the vocabulary everything rests on</span>
+      <span>Win: read any AIF question without getting lost</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>AI ek bara daira hai. ML us ke andar hai. Deep Learning ML ke andar hai. GenAI Deep Learning ke andar hai.</strong> Har chhota daira apne se bare daire ka hissa hai — jaise: gaari → petrol gaari → Honda → Civic.<br><br>Aur sab se aham farq jo exam baar baar poochta hai:<br><strong>Roz-marra ka ML</strong> kisi cheez ka <em>andaza (predict)</em> lagata hai — &quot;yeh customer jayega ya rahega?&quot;<br><strong>GenAI</strong> kuch <em>naya banata (generate)</em> hai — tehreer, tasveer, code.<br><br>Sawal mein &quot;predict&quot;, &quot;classify&quot;, &quot;forecast&quot; = purana ML. &quot;Generate&quot;, &quot;summarise&quot;, &quot;write&quot;, &quot;chat&quot; = GenAI."><strong>AI is the big circle. ML sits inside it. Deep Learning sits inside ML. GenAI sits inside Deep Learning.</strong> Each smaller circle is a kind of the bigger one — like: vehicle → petrol car → Honda → Civic.<br><br>And the distinction the exam asks for again and again:<br><strong>Traditional ML</strong> <em>predicts</em> something — &quot;will this customer leave or stay?&quot;<br><strong>GenAI</strong> <em>creates</em> something new — text, images, code.<br><br>&quot;Predict&quot;, &quot;classify&quot;, &quot;forecast&quot; in a question = traditional ML. &quot;Generate&quot;, &quot;summarise&quot;, &quot;write&quot;, &quot;chat&quot; = GenAI.</span>
+  </div>
+
+  <h2 data-ur="Kahani: naya mulazim">The story: a new employee</h2>
+  <p data-ur="Socho tum ek naye mulazim ko kaam sikha rahe ho. <strong>Training</strong> woh waqt hai jab woh hazaron purani files parh kar seekh raha hai — mehnga, lamba, ek hi baar hota hai. <strong>Inference</strong> woh lamha hai jab tum us se poochte ho &quot;is customer ka kya karein?&quot; aur woh jawab deta hai — sasta, foran, baar baar hota hai.">Imagine training a new employee. <strong>Training</strong> is the period where they read thousands of past files and learn — expensive, slow, done once. <strong>Inference</strong> is the moment you ask them &quot;what should we do with this customer?&quot; and they answer — cheap, instant, happening constantly.</p>
+  <p data-ur="Yeh farq exam ka buniyadi farq hai. <strong>Training = seekhna. Inference = istemaal karna.</strong> Jab sawal kahe &quot;model ko production mein chala rahe hain aur har request par paisa lag raha hai&quot; — woh inference ki baat kar raha hai. Jab kahe &quot;model banane mein bohot kharcha aur waqt laga&quot; — woh training ki baat kar raha hai.">That difference is fundamental to the exam. <strong>Training = learning. Inference = using.</strong> When a question says &quot;the model is in production and each request costs money&quot;, it's talking about inference. When it says &quot;building the model was expensive and slow&quot;, that's training.</p>
+  <p data-ur="Ab is kahani ko aage barhao. <strong>Foundation Model (FM)</strong> woh mulazim hai jo pehle se poori duniya ki kitaabein parh chuka hai — usay tumne train nahi kiya, woh pehle se taiyaar aaya. <strong>Fine-tuning</strong> matlab usay apni company ka tareeqa sikhana. Aur <strong>RAG</strong> matlab usay apni company ki file cabinet ki chaabi de dena, taake jawab dete waqt woh tumhari files dekh kar bataye.">Now extend the story. A <strong>Foundation Model (FM)</strong> is an employee who has already read the world's libraries — you didn't train them, they arrived ready. <strong>Fine-tuning</strong> means teaching them your company's specific way of working. And <strong>RAG</strong> means handing them the key to your filing cabinet, so they consult your documents before answering.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Buniyadi lafz — inhein na jaante hue sawal parhna namumkin hai">The core words — you cannot read a question without these</span>
+    <ul>
+      <li data-ur="⭐ <strong>Model</strong> = woh cheez jo data se seekh kar jawab deti hai. <strong>Algorithm</strong> = woh tareeqa jis se model seekhta hai. (Model = pakka hua khana; algorithm = recipe.)"><strong>⭐ Model</strong> = the thing that learned from data and now gives answers. <strong>Algorithm</strong> = the method by which it learned. (Model = the cooked dish; algorithm = the recipe.)</li>
+      <li data-ur="⭐ <strong>Training</strong> = data se seekhna (mehnga, ek baar). <strong>Inference</strong> = seekhe hue model se jawab lena (sasta, baar baar). Inference ki chaar qismein: <strong>real-time</strong> (foran jawab), <strong>batch</strong> (bohot saara data ek saath, baad mein), <strong>asynchronous</strong> (bara kaam, jawab baad mein), <strong>serverless</strong> (kabhi kabhi chalta hai, server manage nahi karna)."><strong>⭐ Training</strong> = learning from data (expensive, once). <strong>Inference</strong> = getting answers from the trained model (cheap, constant). Four kinds of inference: <strong>real-time</strong> (instant answer), <strong>batch</strong> (lots of data at once, later), <strong>asynchronous</strong> (large job, answer comes later), <strong>serverless</strong> (occasional use, no servers to manage).</li>
+      <li data-ur="⭐ <strong>Token</strong> = tehreer ka chhota tukra (takreeban ¾ lafz). AI models tokens mein parhte aur likhte hain, <strong>aur paisa bhi tokens ke hisaab se lagta hai</strong> — yeh exam poochta hai. Lamba prompt = zyada tokens = zyada paisa."><strong>⭐ Token</strong> = a small piece of text (roughly ¾ of a word). Models read and write in tokens, <strong>and you are billed per token</strong> — the exam asks this. Longer prompt = more tokens = more cost.</li>
+      <li data-ur="⭐ <strong>Embedding / vector</strong> = tehreer ko numbers ki list mein badal dena, is tarah ke <em>milte-julte matlab</em> wali cheezein numbers mein bhi qareeb hoti hain. Isi liye search &quot;lafz&quot; ke bajaye &quot;matlab&quot; se ho sakta hai. Yeh RAG ki buniyad hai."><strong>⭐ Embedding / vector</strong> = turning text into a list of numbers such that things with <em>similar meaning</em> end up numerically close. That's how search can work by meaning rather than exact words. It's the foundation of RAG.</li>
+      <li data-ur="<strong>Chunking</strong> = bari document ko chhote tukron mein kaatna taake usay embed aur search kiya ja sake."><strong>Chunking</strong> = splitting a large document into smaller pieces so they can be embedded and searched.</li>
+      <li data-ur="⭐ <strong>Hallucination</strong> = jab model poore aitmaad ke saath <em>ghalat</em> baat kehta hai. Yeh GenAI ka sab se bara nuqs hai aur exam mein bar bar aata hai. Ilaaj: <strong>RAG</strong> (asal documents do) aur <strong>human review</strong>."><strong>⭐ Hallucination</strong> = when the model states something <em>false</em> with complete confidence. GenAI's biggest weakness and a recurring exam topic. The cures: <strong>RAG</strong> (give it real documents) and <strong>human review</strong>.</li>
+      <li data-ur="<strong>Foundation Model (FM)</strong> = bara, pehle se train shuda model jo bohot kaam kar sakta hai. <strong>LLM</strong> = FM ki woh qism jo tehreer par kaam karti hai. <strong>Multi-modal</strong> = jo ek se zyada qism ka data samajhta hai (tehreer + tasveer). <strong>Diffusion model</strong> = tasveer banane wala model."><strong>Foundation Model (FM)</strong> = a large, pre-trained model that can do many tasks. <strong>LLM</strong> = the text-focused kind of FM. <strong>Multi-modal</strong> = handles more than one data type (text + images). <strong>Diffusion model</strong> = the kind that generates images.</li>
+      <li data-ur="⭐ <strong>Seekhne ke teen tareeqe:</strong> <strong>Supervised</strong> = labelled data se seekhna (&quot;yeh email spam hai, yeh nahi&quot;). <strong>Unsupervised</strong> = bina label ke khud pattern dhoondna (clustering). <strong>Reinforcement</strong> = koshish aur inaam se seekhna (jaise game khelna). Sawal mein &quot;labelled data&quot; = supervised, &quot;grouping without labels&quot; = unsupervised."><strong>⭐ Three kinds of learning:</strong> <strong>Supervised</strong> = learning from labelled data (&quot;this email is spam, this isn't&quot;). <strong>Unsupervised</strong> = finding patterns with no labels (clustering). <strong>Reinforcement</strong> = learning by trial and reward (like playing a game). &quot;Labelled data&quot; = supervised; &quot;grouping without labels&quot; = unsupervised.</li>
+      <li data-ur="<strong>Agentic AI / AI agent</strong> = woh model jo sirf jawab nahi deta balke <em>kaam karta hai</em> — tools istemaal karta hai, kai qadam uthata hai. <strong>MCP (Model Context Protocol)</strong> = woh tareeqa jis se agents bahar ke systems se jurte hain. (Yeh naya hai aur exam guide mein saaf likha hai.)"><strong>Agentic AI / AI agent</strong> = a model that doesn't just answer but <em>takes actions</em> — using tools, working in multiple steps. <strong>MCP (Model Context Protocol)</strong> = the standard by which agents connect to external systems. (New, and named explicitly in the exam guide.)</li>
+    </ul>
+  </div>
+
+  <h2 data-ur="Teen tareeqe jin se model ko apna kaam sikhaya jaata hai">Three ways to make a model do your job</h2>
+  <p data-ur="Yeh exam ka sab se aham faisla hai (Domain 3, 28% — sab se bara domain). Teen tareeqe hain, aur farq <strong>kharche</strong> aur <strong>taza data</strong> ka hai:">This is the exam's most important decision (Domain 3, 28% — the largest domain). Three approaches, differing in <strong>cost</strong> and <strong>freshness of data</strong>:</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Tareeqa">Approach</th><th data-ur="Yeh kya hai">What it is</th><th data-ur="Kharcha">Cost</th><th data-ur="Jawab kab hota hai">When it's the answer</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Prompt engineering</strong><br><span style="color:#6b6b6b" data-ur="sirf achha sawal poochna">just asking better</span></td>
+        <td data-ur="Model ko behtar hidayat dena. Model bilkul nahi badalta.">Giving the model better instructions. The model itself is unchanged.</td>
+        <td class="n" data-ur="Sab se sasta">Cheapest</td>
+        <td data-ur="Hamesha pehle yehi try karo. Sawal mein &quot;lowest cost&quot; ya &quot;no training&quot; = yehi.">Always try this first. &quot;Lowest cost&quot; or &quot;no training required&quot; = this.</td>
+      </tr>
+      <tr style="background:var(--flag-soft)">
+        <td><strong>RAG</strong> ⭐<br><span style="color:#6b6b6b" data-ur="apni files dikhana">show it your files</span></td>
+        <td data-ur="Jawab dene se pehle model tumhare documents dhoondta hai aur unhein parh kar jawab deta hai. Model nahi badalta — sirf usay maloomat di jaati hai.">Before answering, the model searches your documents and answers from them. The model isn't changed — it's just given information.</td>
+        <td class="n" data-ur="Darmiyana">Medium</td>
+        <td data-ur="⭐ <strong>&quot;company ka apna data&quot;, &quot;taza/current maloomat&quot;, &quot;hallucination kam karna&quot;, &quot;jawab ka hawala chahiye&quot;</strong> = RAG, hamesha. Yeh sab se zyada poocha jane wala jawab hai.">⭐ <strong>&quot;company's own data&quot;, &quot;up-to-date information&quot;, &quot;reduce hallucinations&quot;, &quot;cite sources&quot;</strong> = RAG, always. The most frequently correct answer in this domain.</td>
+      </tr>
+      <tr>
+        <td><strong>Fine-tuning</strong><br><span style="color:#6b6b6b" data-ur="model ko dobara sikhana">retrain the model</span></td>
+        <td data-ur="Model ko apne data par dobara train karna. Model waqai badal jaata hai.">Retraining the model on your data. The model genuinely changes.</td>
+        <td class="n" data-ur="Mehnga">Expensive</td>
+        <td data-ur="Jab <strong>andaaz/style/zubaan</strong> badalni ho, ya koi khaas maidan (tibbi, qanooni) sikhana ho. <strong>Taza maloomat ke liye nahi</strong> — us ke liye RAG hai.">When you need to change <strong>style, tone or format</strong>, or teach a specialist domain (medical, legal). <strong>Not for fresh information</strong> — that's RAG's job.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Exam ka sab se bara trap — RAG banam Fine-tuning">The exam's biggest trap — RAG vs Fine-tuning</span>
+    <span data-ur="Yeh dono option takreeban har sawal mein saath aate hain, aur log ghalat chunte hain. Farq yaad rakhne ka aasaan tareeqa:<br><br><strong>RAG = model ko naya MAALUMAT dena.</strong> (Kya jaanta hai)<br><strong>Fine-tuning = model ka ANDAAZ badalna.</strong> (Kaise bolta hai)<br><br>Agar company ki policy har mahine badalti hai, to fine-tuning bewaqoofi hai — har mahine dobara train karna parega. RAG mein sirf document badal do, model wesa ka wesa. <strong>Is liye &quot;frequently changing&quot; ya &quot;latest&quot; ka lafz = RAG, kabhi fine-tuning nahi.</strong>">These two options appear together in almost every question, and people choose wrong. The easy way to hold the difference:<br><br><strong>RAG = giving the model new INFORMATION.</strong> (what it knows)<br><strong>Fine-tuning = changing the model's MANNER.</strong> (how it speaks)<br><br>If company policy changes monthly, fine-tuning is foolish — you'd retrain every month. With RAG you just replace the document and the model stays as it is. <strong>So &quot;frequently changing&quot; or &quot;latest&quot; = RAG, never fine-tuning.</strong></span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — AI ke sawal ki khaas zubaan">Exam English — the vocabulary of AI questions</span>
+    <span data-ur="<strong>&quot;infer&quot; / &quot;inference&quot;</strong> = model se jawab lena. (Aam English mein &quot;natija nikalna&quot;.)<br><strong>&quot;prompt&quot;</strong> = woh hidayat/sawal jo tum model ko dete ho.<br><strong>&quot;hallucination&quot;</strong> = model ka pur-aitmaad jhoot. Lafzi matlab &quot;wehm&quot;.<br><strong>&quot;ground truth&quot;</strong> = asal, durust jawab jis se model ko parkha jaata hai.<br><strong>&quot;bias&quot;</strong> = jhukao, na-insafi (kisi group ke saath ghalat sulook).<br><strong>&quot;overfitting&quot;</strong> = model ne training data <em>ratta</em> laga liya, naye data par fail. <strong>&quot;underfitting&quot;</strong> = model ne kuch seekha hi nahi.<br><strong>&quot;explainability&quot; / &quot;interpretability&quot;</strong> = yeh samajh aana ke model ne <em>kyun</em> yeh jawab diya.<br><strong>&quot;guardrails&quot;</strong> = hifazati hadd bandi — model ko ghalat/nuqsandeh baat kehne se rokna.<br><strong>&quot;curated&quot;</strong> = chun kar saaf kiya gaya (data).<br><strong>&quot;modality&quot;</strong> = data ki qism (tehreer, tasveer, awaz).">
+      <strong>&quot;infer&quot; / &quot;inference&quot;</strong> = getting an answer from a model. (In ordinary English, &quot;to conclude&quot;.)<br>
+      <strong>&quot;prompt&quot;</strong> = the instruction or question you give the model.<br>
+      <strong>&quot;hallucination&quot;</strong> = a confident falsehood from the model.<br>
+      <strong>&quot;ground truth&quot;</strong> = the real, correct answer used to judge the model.<br>
+      <strong>&quot;bias&quot;</strong> = unfair skew (treating some group wrongly).<br>
+      <strong>&quot;overfitting&quot;</strong> = the model <em>memorised</em> the training data and fails on new data. <strong>&quot;underfitting&quot;</strong> = it barely learned at all.<br>
+      <strong>&quot;explainability&quot; / &quot;interpretability&quot;</strong> = being able to see <em>why</em> the model gave that answer.<br>
+      <strong>&quot;guardrails&quot;</strong> = safety limits stopping the model saying harmful things.<br>
+      <strong>&quot;curated&quot;</strong> = carefully selected and cleaned (data).<br>
+      <strong>&quot;modality&quot;</strong> = the type of data (text, image, audio).</span>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="⚠️ AIF mein sawal ki qismein CLF se mukhtalif hain">⚠️ AIF has question types CLF does not</span>
+    <span data-ur="CLF mein sirf do qism hain (multiple choice aur multiple response). <strong>AIF mein chaar hain</strong> — aur do naye tumhare liye zyada mushkil hain:<br><br><strong>Ordering:</strong> 3–5 cheezon ko <em>sahi tarteeb</em> mein lagana. <strong>Matching:</strong> 3–7 cheezon ko aapas mein jorna.<br><br>⚠️ <strong>In dono mein aadha sahi ka koi number nahi milta</strong> — poora sahi karo warna zero. Is liye AI/ML lifecycle ki tarteeb (data → training → evaluation → deployment → monitoring) aur services ke kaam <em>bilkul</em> saaf hone chahiyein.<br><br>Achi khabar: yeh sawal parhne mein chhote hote hain, lambi English nahi hoti. Tumhare liye yeh acha hai.">CLF has only two types (multiple choice and multiple response). <strong>AIF has four</strong> — and the two extra ones are harder:<br><br><strong>Ordering:</strong> put 3–5 items in the <em>correct sequence</em>. <strong>Matching:</strong> pair 3–7 items correctly.<br><br>⚠️ <strong>Neither gives partial credit</strong> — all correct or zero. So the AI/ML lifecycle order (data → training → evaluation → deployment → monitoring) and what each service does must be <em>exactly</em> clear.<br><br>Good news: these questions are short to read — no long English paragraphs. That works in your favour.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3 · the RAG vs fine-tuning decision</span>
+    <p class="scenario" data-ur="Ek company ek chatbot banana chahti hai jo mulazimon ke sawalon ka jawab company ki <strong>internal HR policies</strong> se de. Yeh policies <strong>har mahine badalti hain</strong>. Company chahti hai ke jawab hamesha taza policy ke mutabiq hon. Kaunsa tareeqa <span class=&quot;qual&quot;>SAB SE MUNASIB</span> hai?">A company wants a chatbot that answers employee questions from its <strong>internal HR policies</strong>. These policies <strong>change every month</strong>. Answers must always reflect the current policy. Which approach is <span class="qual">MOST appropriate</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Har mahine model ko nayi policies par fine-tune karo">Fine-tune the model on the new policies each month</button>
+      <button class="opt" data-correct="true" data-ur="Retrieval Augmented Generation (RAG) istemaal karo jo policy documents se jawab laye">Use Retrieval Augmented Generation (RAG) over the policy documents</button>
+      <button class="opt" data-correct="false" data-ur="Apna foundation model shuru se train karo">Train a foundation model from scratch</button>
+      <button class="opt" data-correct="false" data-ur="Model ka temperature barha do">Increase the model's temperature</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 1 · traditional ML vs GenAI</span>
+    <p class="scenario" data-ur="Ek bank yeh <strong>andaza</strong> lagana chahta hai ke koi transaction fraud hai ya nahi. Un ke paas 5 saal ka data hai jismein har transaction par <strong>&quot;fraud&quot; ya &quot;fraud nahi&quot; ka label laga hua</strong> hai. Kaunsa tareeqa munasib hai?">A bank wants to <strong>predict</strong> whether a transaction is fraudulent. It has five years of transactions, each <strong>labelled &quot;fraud&quot; or &quot;not fraud&quot;</strong>. Which approach fits?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Supervised learning se ek classification model">A supervised learning classification model</button>
+      <button class="opt" data-correct="false" data-ur="Ek generative AI model jo fraud reports likhe">A generative AI model that writes fraud reports</button>
+      <button class="opt" data-correct="false" data-ur="Unsupervised clustering, kyunke data bohot zyada hai">Unsupervised clustering, because there is a lot of data</button>
+      <button class="opt" data-correct="false" data-ur="Ek bare language model par prompt engineering">Prompt engineering on a large language model</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 2 · the cost question</span>
+    <p class="scenario" data-ur="Ek team Amazon Bedrock par ek application chala rahi hai aur inference ka kharcha kam karna chahti hai. Token-based pricing ke baare mein kaunsa bayan <span class=&quot;qual&quot;>DURUST</span> hai?">A team runs an application on Amazon Bedrock and wants to reduce inference cost. Which statement about token-based pricing is <span class="qual">TRUE</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Sirf model ke jawab (output) ke tokens ka paisa lagta hai">You are charged only for the tokens in the model's output</button>
+      <button class="opt" data-correct="true" data-ur="Input aur output dono ke tokens ka paisa lagta hai, is liye chhota prompt kharcha kam karta hai">You are charged for both input and output tokens, so shorter prompts reduce cost</button>
+      <button class="opt" data-correct="false" data-ur="Har request ka ek hi fix paisa hai, lambai se farq nahi parta">Each request costs a flat fee regardless of length</button>
+      <button class="opt" data-correct="false" data-ur="Tokens sirf training ke waqt ginay jaate hain">Tokens are only counted during training</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="AI naya hai, magar <em>dhaancha</em> naya nahi. Yeh soch kar dekho:<br><br><strong>Embeddings + vector search</strong> bilkul <strong>database index</strong> hai. Tum bina index ke poori table scan karte ho (slow); index ke saath seedha row par pohanchte ho. Vector search wohi hai, magar &quot;barabar&quot; ke bajaye &quot;milta julta matlab&quot; par. Tum ne Postgres mein full-text search kiya hoga — yeh us ka agla qadam hai.<br><br><strong>RAG</strong> tumhare liye ek <code>SELECT</code> query hai jis ka nateeja tum prompt mein daal dete ho. Model ke paas koi jadoo nahi — usay woh text diya jaata hai jo tumhari query laayi. Is liye RAG ka jawab hamesha &quot;taza data&quot; wale sawal mein sahi hota hai: kyunke query har baar chalti hai.<br><br><strong>Training vs inference</strong> = <code>migrate</code> vs <code>runserver</code>. Ek bhaari, ek baar, deploy ke waqt. Doosra halka, har request par.">AI is new, but the <em>shapes</em> aren't. Try it this way:<br><br><strong>Embeddings + vector search</strong> is a <strong>database index</strong>. Without an index you scan the whole table (slow); with one you jump to the row. Vector search is the same idea, but matching on <em>similar meaning</em> instead of equality. If you've used Postgres full-text search, this is the next step from it.<br><br><strong>RAG</strong> is, to you, a <code>SELECT</code> query whose result you paste into the prompt. There's no magic — the model is handed the text your query found. That's exactly why RAG is the right answer to &quot;fresh data&quot; questions: the query runs every time.<br><br><strong>Training vs inference</strong> = <code>migrate</code> vs <code>runserver</code>. One is heavy, once, at deploy time. The other is light, on every request.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se, bina upar dekhe: Training aur inference ka farq? RAG kab, fine-tuning kab? Hallucination kya hai aur uska ilaaj? Aur labelled data se seekhne ko kya kehte hain?">From memory, without scrolling up: training vs inference? When RAG, when fine-tuning? What is a hallucination and its cure? And what's learning from labelled data called?</div>
+    <div class="answer" data-ur="<strong>Training = seekhna</strong> (mehnga, ek baar); <strong>inference = istemaal</strong> (sasta, baar baar). <strong>RAG = naya maaloomat</strong> (taza data, company ke documents); <strong>fine-tuning = naya andaaz</strong> (style, tone, khaas maidan). <strong>Hallucination = pur-aitmaad jhoot</strong>; ilaaj RAG + human review. <strong>Labelled data = supervised learning.</strong> Chaaron aa gaye? To baaqi AIF lessons ab parhe ja sakte hain — yeh unki buniyad thi."><strong>Training = learning</strong> (expensive, once); <strong>inference = using</strong> (cheap, constant). <strong>RAG = new information</strong> (fresh data, your documents); <strong>fine-tuning = new manner</strong> (style, tone, specialist domain). <strong>Hallucination = a confident falsehood</strong>; cured by RAG + human review. <strong>Labelled data = supervised learning.</strong> All four? Then the rest of the AIF track can be read — this was its foundation.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Aaj tum ne koi AI nahi banai — tum ne uski <strong>zubaan</strong> seekhi, aur is exam mein bas yehi maanga jaata hai. Domain 1 (20%) aur Domain 2 (24%) ka bara hissa isi vocabulary par khara hai — yani takreeban <strong>aadha exam</strong>. Aur RAG vs fine-tuning wala faisla Domain 3 (28%) ka sab se aam sawal hai.<br><br>Sab se aham: ab jab tum koi AIF sawal parhoge, tum us mein phanse nahi — lafz pehchane hue honge.">You didn't build any AI today — you learned its <strong>language</strong>, which is all this exam asks. Domain 1 (20%) and Domain 2 (24%) rest largely on this vocabulary — nearly <strong>half the exam</strong>. And the RAG vs fine-tuning decision is the most common question in Domain 3 (28%).<br><br>Most importantly: when you now read an AIF question, you won't get stuck — the words will be familiar.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html&quot; target=&quot;_blank&quot;>AIF-C01 Exam Guide</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS khud batata hai ke kya poocha jayega. Domain 1 aur 2 ke bullets par nazar daalo; ab tum unmein se zyada tar lafz pehchan loge.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html" target="_blank">AIF-C01 Exam Guide</a><sup class="cite"><a href="#s1">1</a></sup> — AWS stating what's tested. Skim the Domain 1 and 2 bullets; you'll now recognise most of the words in them.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> AI is new for you, so there's no such thing as a silly question here. If a word in this lesson didn't land — &quot;embedding&quot;, &quot;token&quot;, &quot;inference&quot; — tell me which one and I'll come at it from a different angle. Getting these words solid now makes every later AIF lesson easier.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I1 (AI vocabulary).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Next: <a href="0056-aif-aws-ai-services.html">I2 · Which AWS AI service — the service-picking questions</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html" target="_blank">AIF-C01 Exam Guide</a> — 65 questions (50 scored, 15 unscored), 90 minutes, 700/1000 to pass, compensatory scoring, no penalty for guessing. Four question types: multiple choice, multiple response, <strong>ordering</strong> and <strong>matching</strong> (the latter two require every element correct to earn credit). Domains: Fundamentals of AI and ML 20%, Fundamentals of GenAI 24%, Applications of Foundation Models 28%, Guidelines for Responsible AI 14%, Security/Compliance/Governance 14%. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain1.html" target="_blank">AIF-C01 Domain 1</a> — defines the required terminology (AI, ML, deep learning, neural networks, NLP, inference types including batch/real-time/asynchronous/serverless, labelled vs unlabelled data, supervised/unsupervised/reinforcement learning).</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html" target="_blank">AIF-C01 Domain 3</a> — Task 3.1 requires explaining &quot;the cost tradeoffs of various approaches to FM customization (for example, pre-training, fine-tuning, in-context learning, RAG, model distillation)&quot; and defining RAG with Amazon Bedrock Knowledge Bases.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. \"Changes every month\" is the deciding phrase. RAG reads the current documents at question time, so updating a policy file is enough — no retraining. Fine-tuning would mean retraining monthly, which is expensive and slow, and training from scratch costs millions. Temperature only controls randomness, not knowledge."
+                      : "Reconsider. The key phrase is \"change every month\". Fine-tuning bakes knowledge into the model, so you'd retrain every month — expensive and slow. RAG looks up the documents at question time, so you just replace the file. Rule: RAG = new information, fine-tuning = new style. Temperature controls randomness, not facts.",
+          q2: correct ? "Correct. Two clues: they want to predict a category (fraud / not fraud) and they have labelled historical data. Labelled data + predicting a category = supervised classification. This is traditional ML, not GenAI — nothing is being generated, only classified."
+                      : "Reconsider. The words \"predict\" and \"labelled\" decide this. Learning from labelled examples is supervised learning, and predicting a category (fraud / not fraud) is classification. GenAI generates new content, which isn't what's needed. Clustering is for finding groups when you have no labels — but here labels exist.",
+          q3: correct ? "Correct. Both the tokens you send (input/prompt) and the tokens the model returns (output) are billed. That's why prompt length matters to cost, and why concise prompts and techniques like prompt caching reduce spend."
+                      : "Reconsider. You're billed for both directions — the input prompt and the generated output. This is why long prompts cost more and why the exam links prompt length to cost. There is no flat per-request fee, and tokens are counted at inference, not only training."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

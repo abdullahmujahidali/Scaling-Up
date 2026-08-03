@@ -1,10 +1,26 @@
 # Notes & Preferences
 
-## ⚠️ ACTIVE MISSION (as of 2026-08-03): AWS Cloud Practitioner (CLF-C02)
+## ⚠️ ACTIVE MISSION (as of 2026-08-03): TWO exams — CLF-C02 **and** AIF-C01
 
-The system design track below is **paused**. The team lead redirected the plan to
-the Foundational certs first: **CLF-C02 now**, AI Practitioner next, DVA-C02
-later. See [learning record 0009](./learning-records/0009-pivot-to-foundational-certs-and-astro.md).
+The system design track below is **paused**. The team lead asked for **both
+Foundational certs together**: Cloud Practitioner and AI Practitioner, studied
+**in parallel**, DVA-C02 later. See
+[record 0009](./learning-records/0009-pivot-to-foundational-certs-and-astro.md)
+for the pivot and [record 0010](./learning-records/0010-clf-track-built.md) for
+both tracks as built.
+
+**⚠️ The "never teach basics" rule is AWS-only — it does NOT apply to AI.** He
+has hands-on AWS but said of AI: *"barely any — mostly new to me."* So AIF
+lessons build vocabulary from zero and assume nothing. CLF lessons still skip
+fundamentals.
+
+**AIF has two question types CLF lacks:** **Ordering** and **Matching**, with
+**no partial credit** — every element must be right. Teach sequences (the AI/ML
+lifecycle) as sequences, not lists.
+
+**Book CLF first, AIF a few weeks later.** CLF's security/pricing material feeds
+AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
+way.
 
 **Do not tell the learner he has made progress on DVA.** He has not started it.
 The "88% complete" figure in record 0008 refers to a *Udemy course*, and stating

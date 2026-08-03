@@ -1,4 +1,4 @@
-# 0010 — The CLF-C02 track: first three lessons and the support-plan trap
+# 0010 — Two tracks built: CLF-C02 and AIF-C01 (both exams, in parallel)
 
 **Date:** 2026-08-03
 **Status:** Active — continues [0009](./0009-pivot-to-foundational-certs-and-astro.md)
@@ -76,15 +76,73 @@ is exactly how wrong numbers get taught):
   **compensatory scoring** (no per-domain pass needed), **no penalty for
   guessing** — so never leave a blank. Both facts are on the cheat sheet.
 
+## Update, same day: both exams, not one
+
+He corrected the plan: *"team lead said to give both exams combined so we need to
+prepare for both exams"*. **CLF and AIF are now both active and studied in
+parallel** — not CLF-then-AIF. He chose parallel study explicitly when asked.
+
+He also stated his AI background: **"barely any — mostly new to me"**. This
+inverts the standing AWS teaching rule. For CLF the rule is *never teach basics*
+because he has hands-on experience. **For AIF the opposite holds** — AI
+vocabulary must be built from zero, assuming nothing. Lesson I1 exists for
+exactly this and every later AIF lesson depends on it.
+
+### The AIF track as built
+
+| File | Lesson | Domains |
+|---|---|---|
+| `lessons/0055-aif-vocabulary.html` | I1 · The language of AI | 1 + 2 (44%) |
+| `lessons/0056-aif-aws-ai-services.html` | I2 · Which AWS AI service? | 1–3 |
+| `lessons/0057-aif-responsible-ai.html` | I3 · Responsible AI, security, governance | 4 + 5 (28%) |
+| `reference/aif-numbers.html` | Terms & Trigger Words cheat sheet | all |
+| `aif-index.html` | Track hub | — |
+
+**AIF-C01 facts (verified 3 Aug 2026):** 65 questions / 50 scored / 15 unscored ·
+90 min · 100 USD · 700 to pass · compensatory scoring · no guessing penalty.
+Domains: Applications of FMs **28%**, GenAI **24%**, AI/ML fundamentals **20%**,
+Responsible AI **14%**, Security/Compliance/Governance **14%**.
+
+### Two findings that shaped the teaching
+
+**1. AIF has question types CLF does not.** Beyond multiple choice/response it
+adds **Ordering** and **Matching**, and AWS states you must get *every* element
+right to earn credit — **no partial marks**. This is flagged in I1, the hub and
+the cheat sheet. It also argues for drilling the AI/ML lifecycle *as a sequence*,
+not just as a list.
+
+**2. AIF Domain 5 is largely CLF material.** The exam guide names IAM,
+encryption, the shared responsibility model, CloudTrail, Config, Artifact,
+Audit Manager and Trusted Advisor. That is 14% of AIF answered by CLF study —
+the strongest concrete argument for the parallel plan, and it is made explicit
+in I3 and cross-linked from both hubs.
+
+**Sequencing advice given:** study in parallel, but **book CLF first and AIF a
+few weeks later** — the dependency runs CLF → AIF, not the reverse.
+
+### Teaching bridges that worked
+
+Reused the Django bridge on genuinely new material: **prompt injection = SQL
+injection** (same instinct: never trust user input as instructions), **embeddings
+= a database index** but matching on meaning, **RAG = a `SELECT` whose result is
+pasted into the prompt**, **training vs inference = `migrate` vs `runserver`**,
+and **human-in-the-loop = an admin approval workflow**. These let a "mostly new
+to me" subject start from things he already does.
+
 ## Still open
 
-1. **He has not booked.** The plan cannot be scheduled without a date. Ask.
-2. **ESL +30 must be requested before booking** — still the biggest lever, still
-   unconfirmed as done.
-3. **Team lead: does the company pay the 100 USD, or is there a voucher?**
+1. **Neither exam is booked.** The plan cannot be scheduled without dates. Ask.
+2. **ESL +30 must be requested before booking** — one request covers *both*
+   exams. Still the biggest lever, still unconfirmed as done.
+3. **Team lead: does the company pay the fees?** Now **200 USD** for both.
    Still unasked.
-4. **C4 not built** — Cloud Concepts: the 6 benefits, Well-Architected's 6
-   pillars, CapEx vs OpEx, Regions/AZs/Edge. Placeholder card is on the hub.
-5. **No CLF practice exam.** The DVA track has 975 questions; CLF has none.
-   Generated exams come from `exams/questions/*.json` via `npm run exams` —
-   never edit `exams/exam-NN.html` by hand.
+4. **C4 (CLF) not built** — Cloud Concepts: the 6 benefits, Well-Architected's
+   6 pillars, CapEx vs OpEx, Regions/AZs/Edge.
+5. **I4 (AIF) not built** — prompt engineering techniques (zero/few-shot,
+   chain-of-thought), inference parameters (temperature, top-p), and evaluation
+   metrics (ROUGE, BLEU, BERTScore, LLM-as-a-judge).
+6. **No practice exams for either CLF or AIF.** DVA has 975 questions; these
+   have none. Generated exams come from `exams/questions/*.json` via
+   `npm run exams` — never edit `exams/exam-NN.html` by hand. **An AIF question
+   set must include ordering and matching items**, which the current exam builder
+   may not support — check before promising it.

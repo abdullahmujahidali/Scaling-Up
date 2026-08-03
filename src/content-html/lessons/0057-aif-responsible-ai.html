@@ -1,0 +1,182 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I3 · Domain 4 (14%) + Domain 5 (14%)</p>
+    <h1 data-ur="Zimmedar AI, security aur governance — aur wo hissa jo CLF se muft milta hai">Responsible AI, security and governance — and the part CLF gives you free</h1>
+    <p class="subtitle" data-ur="Yeh do domains milkar exam ka <strong>28%</strong> hain — Domain 3 se bhi zyada. Aur tumhare liye khaas khabar: Domain 5 ka bara hissa wohi hai jo tum CLF mein parh rahe ho — shared responsibility, IAM, encryption, compliance. Do exam saath dene ka sab se bara faida yahin hai.">These two domains together are <strong>28%</strong> of the exam — more than Domain 3. And a specific piece of good news: much of Domain 5 is what you're already studying for CLF — shared responsibility, IAM, encryption, compliance. This is where taking both exams together pays off most.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>One concept: making AI safe, fair and accountable</span>
+      <span>Win: 28% of the exam, half of it already known</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle I2 se yaad karo: &quot;harmful content rokna&quot; = kaunsi cheez? &quot;Bias detect karna&quot; = kaunsi? Aur &quot;human review&quot; = kaunsi? Aur CLF se: AWS security OF the cloud ka zimmedar hai ya IN ka?">From I2: &quot;prevent harmful content&quot; = what? &quot;Detect bias&quot; = what? &quot;Human review&quot; = what? And from CLF: is AWS responsible for security OF the cloud or IN it?</div>
+    <div class="answer" data-ur="<strong>Harmful content = Bedrock Guardrails.</strong> <strong>Bias + explainability = SageMaker Clarify.</strong> <strong>Human review = Amazon A2I.</strong> <strong>AWS = security OF the cloud</strong> (tum = IN). Aaj yeh chaaron ek saath istemaal honge — aur woh aakhri wala AIF mein bhi bilkul wesa hi poocha jaata hai."><strong>Harmful content = Bedrock Guardrails.</strong> <strong>Bias + explainability = SageMaker Clarify.</strong> <strong>Human review = Amazon A2I.</strong> <strong>AWS = security OF the cloud</strong> (you = IN). All four appear today — and that last one is asked on AIF in exactly the same form.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>AI par bhi wohi Shared Responsibility Model lagta hai.</strong> AWS model aur infrastructure ki hifazat karta hai; <strong>tumhara data, tumhare prompts, aur model ke faislon ka nateeja tumhari zimmedari hai.</strong><br><br>Aur zimmedar AI ke chaar bare sawal, jo exam bar bar poochta hai:<br><strong>Kya yeh insaaf se kaam kar raha hai?</strong> → bias → <strong>SageMaker Clarify</strong><br><strong>Kya yeh nuqsandeh baat keh sakta hai?</strong> → safety → <strong>Bedrock Guardrails</strong><br><strong>Kya hum bata sakte hain ke kyun?</strong> → explainability → <strong>Clarify + Model Cards</strong><br><strong>Kya koi insaan bhi dekh raha hai?</strong> → human oversight → <strong>Amazon A2I</strong>"><strong>The same Shared Responsibility Model applies to AI.</strong> AWS secures the model and the infrastructure; <strong>your data, your prompts, and the consequences of the model's decisions are yours.</strong><br><br>And the four questions responsible AI keeps asking:<br><strong>Is it fair?</strong> → bias → <strong>SageMaker Clarify</strong><br><strong>Could it say something harmful?</strong> → safety → <strong>Bedrock Guardrails</strong><br><strong>Can we explain why?</strong> → explainability → <strong>Clarify + Model Cards</strong><br><strong>Is a human watching?</strong> → oversight → <strong>Amazon A2I</strong></span>
+  </div>
+
+  <h2 data-ur="Kahani: naya mulazim jo faisle karta hai">The story: a new employee who makes decisions</h2>
+  <p data-ur="I1 wale mulazim ko yaad karo. Ab socho tum ne usay loan approve karne ka ikhtiyar de diya. Foran chaar sawal paida hote hain — aur yeh bilkul wohi chaar sawal hain jo exam poochta hai.">Remember the employee from I1. Now imagine you've given them authority to approve loans. Four questions arise immediately — and they're exactly the four the exam asks.</p>
+  <p data-ur="<strong>1.</strong> Kya woh kisi ilaaqe ya qaum ke logon ko bila wajah mana to nahi kar raha? (<strong>bias/fairness</strong>) <strong>2.</strong> Kya woh customer se badtameezi to nahi karega? (<strong>safety/guardrails</strong>) <strong>3.</strong> Agar koi poochay &quot;mera loan kyun mana hua?&quot; to kya woh wajah bata sakta hai? (<strong>explainability</strong>) <strong>4.</strong> Bare faislon par kya koi senior bhi nazar daal raha hai? (<strong>human in the loop</strong>)"><strong>1.</strong> Are they rejecting people from a particular group without cause? (<strong>bias / fairness</strong>) <strong>2.</strong> Might they say something offensive to a customer? (<strong>safety / guardrails</strong>) <strong>3.</strong> If someone asks &quot;why was my loan refused?&quot;, can they give a reason? (<strong>explainability</strong>) <strong>4.</strong> Is a senior reviewing the big decisions? (<strong>human in the loop</strong>)</p>
+  <p data-ur="Aur ek paanchwan sawal jo AI ke saath khaas hai: <strong>woh kabhi kabhi poore aitmaad se jhoot bol deta hai</strong> (hallucination). Is ka ilaaj yeh nahi ke usay daanto — ilaaj yeh hai ke usay asal file dikha do (<strong>RAG grounding</strong>) aur jawab check karo (<strong>output validation</strong>).">And a fifth question specific to AI: <strong>sometimes they state falsehoods with total confidence</strong> (hallucination). The cure isn't scolding them — it's showing them the real file (<strong>RAG grounding</strong>) and checking the answer (<strong>output validation</strong>).</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Domain 4 — zimmedar AI ke lafz aur unke jawab">⭐ Domain 4 — responsible AI terms and their answers</span>
+    <ul>
+      <li data-ur="⭐ <strong>Bias</strong> = model ka kisi group ke saath na-insafi karna. <strong>Fairness</strong> us ka ilaaj. Sabab aksar <strong>training data</strong> hota hai — agar data mein hi na-insafi thi, model seekh leta hai. Jawab: <strong>SageMaker Clarify</strong> + behtar (balanced, diverse, curated) data."><strong>⭐ Bias</strong> = the model treating a group unfairly. <strong>Fairness</strong> is the goal. The cause is usually the <strong>training data</strong> — if the data was skewed, the model learns the skew. Answer: <strong>SageMaker Clarify</strong> + better (balanced, diverse, curated) data.</li>
+      <li data-ur="⭐ <strong>Overfitting</strong> = model ne training data ratta laga liya; training par shandar, naye data par bura. <strong>Underfitting</strong> = model ne kuch seekha hi nahi; dono jagah bura. Yeh jora exam mein aata hai."><strong>⭐ Overfitting</strong> = the model memorised the training data; excellent on it, poor on new data. <strong>Underfitting</strong> = it barely learned; poor everywhere. This pair gets asked.</li>
+      <li data-ur="⭐ <strong>Transparency</strong> = model ke baare mein khul kar batana (kis data par bana, kis kaam ke liye) → <strong>SageMaker Model Cards</strong>. <strong>Explainability/interpretability</strong> = yeh samajhna ke faisla <em>kyun</em> hua → <strong>Clarify</strong>. Yeh do alag cheezein hain."><strong>⭐ Transparency</strong> = being open about the model (what data, what intended use) → <strong>SageMaker Model Cards</strong>. <strong>Explainability</strong> = understanding <em>why</em> a decision happened → <strong>Clarify</strong>. These are two different things.</li>
+      <li data-ur="<strong>Zimmedar AI ki khoobiyan</strong> jo exam ginwata hai: <strong>fairness</strong> (insaaf), <strong>inclusivity</strong> (sab ko shamil karna), <strong>robustness</strong> (mazbooti), <strong>safety</strong> (hifazat), <strong>veracity</strong> (sachai), <strong>transparency</strong>, <strong>privacy</strong>, <strong>governance</strong>."><strong>The responsible-AI qualities</strong> the exam lists: <strong>fairness</strong>, <strong>inclusivity</strong>, <strong>robustness</strong>, <strong>safety</strong>, <strong>veracity</strong> (truthfulness), <strong>transparency</strong>, <strong>privacy</strong>, <strong>governance</strong>.</li>
+      <li data-ur="<strong>GenAI ke qanooni khatre</strong> jo exam poochta hai: <strong>intellectual property</strong> ka daawa (model ne kisi ka kaam copy kiya), <strong>biased outputs</strong>, <strong>hallucinations</strong>, customer ka <strong>bharosa khona</strong>."><strong>Legal risks of GenAI</strong> the exam names: <strong>intellectual property</strong> infringement claims, <strong>biased outputs</strong>, <strong>hallucinations</strong>, and <strong>loss of customer trust</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Domain 5 — security aur governance (yahan CLF ka faida milta hai)">⭐ Domain 5 — security and governance (where CLF pays off)</span>
+    <ul>
+      <li data-ur="⭐ <strong>Yeh sab tum CLF mein parh rahe ho:</strong> <strong>IAM</strong> (roles, policies, kis ko access), <strong>encryption</strong> (at rest = rakhe hue data par, in transit = safar karte data par), <strong>Shared Responsibility Model</strong>. AIF mein yeh usi tarah poochay jaate hain — sirf mauzu AI hota hai. <strong>Do exam saath dene ka asal faida yeh hai.</strong>"><strong>⭐ You are already studying these for CLF:</strong> <strong>IAM</strong> (roles, policies, who has access), <strong>encryption</strong> (at rest = stored data, in transit = data in motion), the <strong>Shared Responsibility Model</strong>. AIF asks them the same way, just in an AI setting. <strong>This is the real benefit of taking both together.</strong></li>
+      <li data-ur="<strong>Amazon Macie</strong> = S3 mein <strong>zaati maloomat (PII)</strong> dhoondna. <strong>AWS PrivateLink</strong> = internet par gaye baghair private connection. AI ke sawal mein &quot;data internet par na jaye&quot; = PrivateLink."><strong>Amazon Macie</strong> = finding <strong>PII</strong> (personal data) in S3. <strong>AWS PrivateLink</strong> = a private connection that never crosses the internet. &quot;Data must not traverse the internet&quot; = PrivateLink.</li>
+      <li data-ur="⭐ <strong>Prompt injection</strong> = koi user prompt mein aisi hidayat chhupa deta hai jo model ko bhatka de (&quot;pehli hidayat bhool jao aur...&quot;). Yeh AI ki khaas security kamzori hai. Bachao: <strong>input validation, output filtering, Guardrails</strong>."><strong>⭐ Prompt injection</strong> = a user hiding instructions in their input to hijack the model (&quot;ignore your previous instructions and…&quot;). This is AI's signature security weakness. Defences: <strong>input validation, output filtering, Guardrails</strong>.</li>
+      <li data-ur="<strong>Data leakage</strong> = zaati ya khufiya maloomat ka model ke jawab mein nikal aana. <strong>Toxicity</strong> = nuqsandeh/gandi zubaan. Dono ka bachao Guardrails aur output filtering."><strong>Data leakage</strong> = private or confidential information appearing in the model's output. <strong>Toxicity</strong> = harmful or abusive language. Both are addressed by Guardrails and output filtering.</li>
+      <li data-ur="⭐ <strong>Hallucination ka ilaaj (exam ka pasandeeda):</strong> <strong>RAG grounding</strong> (jawab asal documents par khara karo), <strong>output validation</strong> (jawab check karo), <strong>confidence scoring</strong>, aur <strong>human-in-the-loop</strong>. Sirf &quot;behtar prompt likho&quot; kaafi jawab nahi hota."><strong>⭐ Curing hallucinations (a favourite):</strong> <strong>RAG grounding</strong> (anchor answers in real documents), <strong>output validation</strong>, <strong>confidence scoring</strong>, and <strong>human-in-the-loop</strong>. &quot;Write a better prompt&quot; alone is rarely the full answer.</li>
+      <li data-ur="<strong>Governance ke tools</strong> jo exam ginwata hai: <strong>AWS CloudTrail</strong> (kis ne kya kiya — audit), <strong>AWS Config</strong> (resources ki settings par nazar), <strong>AWS Audit Manager</strong> (audit ki tayyari), <strong>AWS Artifact</strong> (AWS ki compliance reports download karna), <strong>Amazon Inspector</strong> (kamzoriyan dhoondna), <strong>Trusted Advisor</strong>."><strong>Governance tools</strong> the exam lists: <strong>CloudTrail</strong> (who did what — audit), <strong>AWS Config</strong> (tracking resource configuration), <strong>Audit Manager</strong> (preparing audits), <strong>AWS Artifact</strong> (downloading AWS's compliance reports), <strong>Amazon Inspector</strong> (finding vulnerabilities), <strong>Trusted Advisor</strong>.</li>
+      <li data-ur="<strong>Data lineage / data cataloging</strong> = yeh record rakhna ke data kahan se aaya aur us par kya hua. <strong>Data residency</strong> = data kis mulk/region mein rakha jayega (qanooni pabandi). <strong>Generative AI Security Scoping Matrix</strong> = AWS ka framework jo exam guide mein naam se likha hai."><strong>Data lineage / cataloging</strong> = recording where data came from and what happened to it. <strong>Data residency</strong> = which country or Region the data is held in (a legal constraint). <strong>Generative AI Security Scoping Matrix</strong> = an AWS framework named explicitly in the exam guide.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Aksar ghalat hone wala jora — Guardrails banam Clarify">The pair most often confused — Guardrails vs Clarify</span>
+    <span data-ur="Yeh dono &quot;AI ko theek rakhne&quot; wali cheezein hain, is liye options mein saath aati hain. Farq bilkul saaf hai:<br><br><strong>Bedrock Guardrails = model ke MOONH par pehra.</strong> Kya keh sakta hai, kya nahi. <em>Aage</em> ka bachao — ghalat baat nikalne se pehle rok deta hai. GenAI ke liye.<br><br><strong>SageMaker Clarify = model ke FAISLON ki janch.</strong> Kya yeh insaaf se kaam kar raha hai, aur kyun. <em>Peechay</em> ki janch — jo hua us ka tajziya. Traditional ML ke liye zyada.<br><br>Yaad rakhne ka jumla: <strong>Guardrails bolne se rokta hai; Clarify batata hai ke kyun bola.</strong>">Both keep AI &quot;in line&quot;, so they appear together as options. The difference is clean:<br><br><strong>Bedrock Guardrails = a guard on the model's MOUTH.</strong> What it may and may not say. <em>Forward-looking</em> — it stops bad output before it appears. For GenAI.<br><br><strong>SageMaker Clarify = an audit of the model's DECISIONS.</strong> Is it fair, and why did it decide that? <em>Backward-looking</em> analysis. More for traditional ML.<br><br>The phrase to hold: <strong>Guardrails stops it speaking; Clarify explains why it spoke.</strong></span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — governance aur security ki zubaan">Exam English — the language of governance and security</span>
+    <span data-ur="<strong>&quot;mitigate&quot;</strong> = kam karna, halka karna (khatra). Sawal aksar &quot;how to MITIGATE this risk&quot; poochta hai = &quot;is khatre ko kam kaise karein&quot;.<br><strong>&quot;audit trail&quot;</strong> = us baat ka record ke kis ne kab kya kiya.<br><strong>&quot;lineage&quot;</strong> = nasab, silsila — data kahan se aaya.<br><strong>&quot;residency&quot;</strong> = data kis jagah/mulk mein rehta hai.<br><strong>&quot;retention&quot;</strong> = data kitne arse tak rakha jaye.<br><strong>&quot;at rest&quot; / &quot;in transit&quot;</strong> = rakha hua data / safar karta data.<br><strong>&quot;adversarial&quot;</strong> = jaan bujh kar nuqsan pohanchane wala (hamla).<br><strong>&quot;grounding&quot;</strong> = jawab ko asal maloomat par khara karna.<br><strong>&quot;veracity&quot;</strong> = sachai, durusti.<br><strong>&quot;robustness&quot;</strong> = mazbooti — mushkil halaat mein bhi theek kaam karna.">
+      <strong>&quot;mitigate&quot;</strong> = reduce or soften (a risk). Questions often ask &quot;how to MITIGATE this risk&quot;.<br>
+      <strong>&quot;audit trail&quot;</strong> = the record of who did what, when.<br>
+      <strong>&quot;lineage&quot;</strong> = ancestry — where the data came from.<br>
+      <strong>&quot;residency&quot;</strong> = which place or country the data lives in.<br>
+      <strong>&quot;retention&quot;</strong> = how long data is kept.<br>
+      <strong>&quot;at rest&quot; / &quot;in transit&quot;</strong> = stored data / data in motion.<br>
+      <strong>&quot;adversarial&quot;</strong> = deliberately hostile (an attack).<br>
+      <strong>&quot;grounding&quot;</strong> = anchoring answers in real source information.<br>
+      <strong>&quot;veracity&quot;</strong> = truthfulness.<br>
+      <strong>&quot;robustness&quot;</strong> = holding up well under difficult conditions.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 5 · the AI-specific attack</span>
+    <p class="scenario" data-ur="Ek company ka customer-facing chatbot Amazon Bedrock par hai. Security team ko fikar hai ke users apne message mein aisi hidayat chhupa kar bhej sakte hain jo model ko uski asal hidayat nazarandaz karne par majboor kar de. Is khatre ko kya kehte hain, aur ise <span class=&quot;qual&quot;>SAB SE BEHTAR</span> kaise kam karein?">A company's customer-facing chatbot runs on Amazon Bedrock. The security team is concerned users could embed instructions in their messages that make the model ignore its original instructions. What is this risk called, and how is it <span class="qual">BEST</span> mitigated?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Overfitting; model ko zyada data par dobara train karo">Overfitting; retrain the model on more data</button>
+      <button class="opt" data-correct="true" data-ur="Prompt injection; input validation, output filtering aur Bedrock Guardrails istemaal karo">Prompt injection; apply input validation, output filtering and Bedrock Guardrails</button>
+      <button class="opt" data-correct="false" data-ur="Data drift; SageMaker Model Monitor lagao">Data drift; enable SageMaker Model Monitor</button>
+      <button class="opt" data-correct="false" data-ur="Hallucination; model ka temperature kam kar do">Hallucination; lower the model's temperature</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 4 · the bias question</span>
+    <p class="scenario" data-ur="Ek hiring model ka jaiza lene par pata chalta hai ke woh ek demographic group ko doosre ke muqable kam number de raha hai. Is ka <span class=&quot;qual&quot;>SAB SE ZYADA MUMKIN</span> sabab kya hai?">A review of a hiring model finds it scores one demographic group lower than another. What is the <span class="qual">MOST LIKELY</span> cause?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Model ka temperature bohot zyada set kiya gaya hai">The model's temperature is set too high</button>
+      <button class="opt" data-correct="true" data-ur="Training data mein pehle se maujood bias, jo model ne seekh liya">Bias present in the training data, which the model learned</button>
+      <button class="opt" data-correct="false" data-ur="Model ke paas kaafi compute nahi hai">The model has insufficient compute capacity</button>
+      <button class="opt" data-correct="false" data-ur="Model ka context window bohot chhota hai">The model's context window is too small</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 5 · hallucination · multiple response</span>
+    <p class="scenario" data-ur="Ek company chahti hai ke uski GenAI application <strong>ghalat maloomat (hallucinations) kam</strong> de. Kaunse do tareeqe is maqsad ke liye <span class=&quot;qual&quot;>SAB SE ZYADA MOASSIR</span> hain? <em>(Do chuno — magar yahan ek hi behtareen jora diya gaya hai.)</em>">A company wants its GenAI application to produce <strong>fewer hallucinations</strong>. Which approach is <span class="qual">MOST effective</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="RAG se jawab ko asal company documents par grounded karo, aur output validation lagao">Ground responses in the company's real documents using RAG, and add output validation</button>
+      <button class="opt" data-correct="false" data-ur="Model ka temperature barha do taake jawab zyada tarjeehi hon">Increase the model's temperature so responses are more creative</button>
+      <button class="opt" data-correct="false" data-ur="Bara model istemaal karo — bare models kabhi hallucinate nahi karte">Use a larger model — larger models never hallucinate</button>
+      <button class="opt" data-correct="false" data-ur="Prompt ko chhota kar do taake tokens kam lagein">Shorten the prompt to use fewer tokens</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 5 · shared responsibility (your CLF knowledge, reused)</span>
+    <p class="scenario" data-ur="Ek company Amazon Bedrock par ek application banati hai. Shared Responsibility Model ke tehat, <span class=&quot;qual&quot;>customer</span> kis cheez ka zimmedar hai?">A company builds an application on Amazon Bedrock. Under the Shared Responsibility Model, what is the <span class="qual">customer</span> responsible for?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Foundation model ko train karne wale physical servers ki hifazat">Securing the physical servers that trained the foundation model</button>
+      <button class="opt" data-correct="true" data-ur="Apne data, apne prompts, aur is baat ka faisla ke kis ko IAM se access milega">Their own data, their prompts, and controlling who has access via IAM</button>
+      <button class="opt" data-correct="false" data-ur="Bedrock service ka underlying infrastructure patch karna">Patching the underlying infrastructure of the Bedrock service</button>
+      <button class="opt" data-correct="false" data-ur="Foundation model ke andar ke weights ki hifazat">Securing the internal weights of the foundation model</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="<strong>Prompt injection bilkul SQL injection hai</strong> — aur tum yeh pehle se samajhte ho. SQL injection mein user apne input mein SQL likh deta hai aur tumhari query ka matlab badal deta hai. Prompt injection mein user apne message mein hidayat likh deta hai aur model ki hidayat badal deta hai. <strong>Bachao bhi wohi soch hai:</strong> user ke input par kabhi bharosa mat karo, usay hidayat mat samjho, aur jo bahar ja raha hai usay bhi check karo.<br><br><strong>Audit trail</strong> tumhare Django logs aur <code>django-auditlog</code> jaisa hi hai — CloudTrail bas AWS ke darjay par wohi karta hai.<br><br>Aur <strong>&quot;human in the loop&quot;</strong>? Yeh tumhara admin approval workflow hai. Tum ne zaroor koi aisa feature banaya hoga jahan koi cheez khud-ba-khud nahi hoti jab tak koi banda approve na kare. AI mein bhi bilkul yehi soch hai — bas naam A2I hai.">
+      <strong>Prompt injection is SQL injection</strong> — and you already understand that one. In SQL injection the user writes SQL into their input and changes your query's meaning. In prompt injection the user writes instructions into their message and changes the model's instructions. <strong>The defence is the same instinct:</strong> never trust user input, never treat it as instructions, and validate what goes out too.<br><br><strong>Audit trails</strong> are your Django logs and <code>django-auditlog</code> — CloudTrail does the same thing at the AWS level.<br><br>And <strong>&quot;human in the loop&quot;</strong>? That's your admin approval workflow. You've surely built a feature where something doesn't take effect until a person approves it. AI uses the identical idea — it's just called A2I.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: prompt injection kya hai aur bachao kya? Bias ka sab se aam sabab? Guardrails aur Clarify mein farq? Aur hallucination ka asal ilaaj?">From memory: what is prompt injection and its defence? The commonest cause of bias? Guardrails vs Clarify? And the real cure for hallucinations?</div>
+    <div class="answer" data-ur="<strong>Prompt injection</strong> = user ki chhupi hui hidayat model ko bhatka de; bachao = input validation + output filtering + Guardrails (SQL injection wali soch). <strong>Bias ka sabab = training data.</strong> <strong>Guardrails bolne se rokta hai (safety, aage); Clarify batata hai ke kyun bola (fairness/explainability, peechay).</strong> <strong>Hallucination ka ilaaj = RAG grounding + output validation + human review</strong> (temperature nahi). Chaaron aa gaye? To Domain 4 aur 5 — poore 28% — ab tumhare qaboo mein hain."><strong>Prompt injection</strong> = hidden user instructions hijacking the model; defence = input validation + output filtering + Guardrails (the SQL-injection instinct). <strong>Bias comes from the training data.</strong> <strong>Guardrails stops it speaking (safety, forward); Clarify explains why it spoke (fairness/explainability, backward).</strong> <strong>Hallucinations are cured by RAG grounding + output validation + human review</strong> — not by temperature. All four? Then Domains 4 and 5 — a full 28% — are under control.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Aaj tum ne exam ka <strong>28%</strong> cover kiya — Domain 3 se bhi bara hissa. Aur is mein se aadha woh tha jo tum CLF ke liye pehle hi parh rahe ho: shared responsibility, IAM, encryption, compliance tools. <strong>Yeh hai do exam saath dene ka faida — ek mehnat, do jagah number.</strong><br><br>Sab se aham cheez jo aaj mili: <strong>prompt injection ko SQL injection ki tarah dekhna.</strong> Yeh tumhare liye naya khatra nahi — yeh purani soch ka naya naam hai.">Today you covered <strong>28%</strong> of the exam — a bigger share than Domain 3. And half of it was material you're already studying for CLF: shared responsibility, IAM, encryption, compliance tools. <strong>That's the payoff of taking both together — one effort, marks in two places.</strong><br><br>The most valuable thing today: <strong>seeing prompt injection as SQL injection.</strong> It isn't a new threat for you — it's an old instinct with a new name.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html&quot; target=&quot;_blank&quot;>AIF-C01 Domain 5</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — dekho ke kitne naam tum CLF se pehchante ho. Yeh dekhna khud hausla barhata hai.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html" target="_blank">AIF-C01 Domain 5</a><sup class="cite"><a href="#s1">1</a></sup> — notice how many names you already recognise from CLF. Seeing that for yourself is worth the two minutes.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Domain 4 and 5 are heavy on abstract words (veracity, robustness, lineage) and that's a vocabulary load, not an AI-understanding problem. If a question defeats you, tell me whether it was the AI concept or the English — they need different fixes, and knowing which is the fastest way to improve.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I3 (Responsible AI, security and governance).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Previous: <a href="0056-aif-aws-ai-services.html">I2 · Which AWS AI service</a>. Next: the AIF cheat sheet — <a href="../reference/aif-numbers.html">terms, services and trigger words</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html" target="_blank">AIF-C01 Domain 5</a> (14%) — Task 5.1 names &quot;IAM roles, policies, and permissions; encryption; Amazon Macie; AWS PrivateLink; AWS shared responsibility model; Amazon Bedrock AgentCore Identity; Policy in AgentCore; Amazon Bedrock Guardrails&quot;, and lists prompt injection, data leakage, toxicity, encryption at rest and in transit, and audit trails. It also requires describing &quot;hallucination detection methods and grounding techniques… (for example, RAG grounding, output validation, confidence scoring)&quot;. Task 5.2 names AWS Config, Amazon Inspector, AWS Audit Manager, AWS Artifact, AWS CloudTrail, AWS Trusted Advisor, and the Generative AI Security Scoping Matrix. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain4.html" target="_blank">AIF-C01 Domain 4</a> (14%) — Task 4.1 lists responsible-AI features (bias, fairness, inclusivity, robustness, safety, veracity), legal risks of GenAI (IP infringement, biased outputs, loss of customer trust, hallucinations), the effects of bias and variance (overfitting, underfitting), and names SageMaker Clarify, SageMaker Model Monitor and Amazon A2I. Task 4.2 names SageMaker Model Cards, SageMaker Clarify and Bedrock Model Evaluations for transparency and explainability.</li>
+      <li id="s3"><a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank">AWS Shared Responsibility Model</a> — the same model applies to AI workloads; the customer retains responsibility for their data, access control and configuration.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Hiding instructions in user input to override the model's original instructions is prompt injection — the AI equivalent of SQL injection. The defence is the same layered instinct: validate what comes in, filter what goes out, and use Guardrails. Overfitting and drift are model-quality issues, not attacks."
+                      : "Reconsider. A user embedding instructions to override the model's own is prompt injection — think SQL injection, where user input changes the meaning of your query. Overfitting is memorising training data; drift is degradation over time; hallucination is confident falsehood. None describes a deliberate attack through input.",
+          q2: correct ? "Correct. Models learn what the data shows them — if historical hiring data reflected human bias, the model reproduces it. That's why the exam's remedies are data-side (balanced, diverse, curated datasets) plus detection with SageMaker Clarify. Temperature, compute and context window are unrelated to fairness."
+                      : "Reconsider. Bias in a model almost always traces back to bias in its training data — the model reproduces the pattern it was shown. Temperature controls randomness, compute affects speed, and context window limits input length; none of them creates demographic unfairness. Remember: bias problem → look at the data.",
+          q3: correct ? "Correct. Hallucinations are reduced by grounding the model in real source material (RAG) and checking output before it reaches the user. Higher temperature increases randomness and makes hallucination worse; larger models still hallucinate; prompt length affects cost, not truthfulness."
+                      : "Reconsider. Hallucination is fixed by grounding, not by tuning knobs. RAG gives the model real documents to answer from, and output validation catches what slips through. Raising temperature increases randomness and makes it worse. Bigger models absolutely still hallucinate, and shorter prompts only reduce cost.",
+          q4: correct ? "Correct — and this is your CLF knowledge applied directly. The rule is unchanged on AI services: your data, your prompts and your access control are yours; AWS secures the infrastructure, the service and the model itself. Anything you cannot touch belongs to AWS."
+                      : "Reconsider. The Shared Responsibility Model works the same way on AI services as everywhere else. Physical servers, the Bedrock infrastructure and the foundation model's internals are all things you cannot touch — so they're AWS's. What's yours is what you control: your data, your prompts, and IAM access."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

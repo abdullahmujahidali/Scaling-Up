@@ -18,8 +18,12 @@
     { file: '0053-clf-support-plans.html',         num: 'C2', title: 'Support plans & cost tools' },
     { file: '0054-clf-pricing-models.html',        num: 'C3', title: 'Pricing models' },
     { ref: 'clf-numbers.html',                     num: '*',  title: 'CLF Numbers & Trigger Words' },
-    { track: 'AIF', label: 'AI Practitioner', header: true, collapsed: true, note: 'next' },
-    { kind: 'aifplaceholder' },
+    { track: 'AIF', label: 'AI Practitioner', header: true, note: 'active' },
+    { kind: 'aifhub' },
+    { file: '0055-aif-vocabulary.html',       num: 'I1', title: 'The language of AI' },
+    { file: '0056-aif-aws-ai-services.html',  num: 'I2', title: 'Which AWS AI service?' },
+    { file: '0057-aif-responsible-ai.html',   num: 'I3', title: 'Responsible AI & governance' },
+    { ref: 'aif-numbers.html',                num: '*',  title: 'AIF Terms & Trigger Words' },
     { track: 'AWS', label: 'Developer Associate', header: true, collapsed: true, note: 'later' },
     { kind: 'awshub' },
     { kind: 'awsexams' },
@@ -161,9 +165,10 @@
       return '<a class="cnav-ref' + ccur + '" href="' + toRoot + 'clf-index.html" ' +
              'style="margin-top:0;border-top:none;padding-top:0.42rem;">Cloud Practitioner hub</a>';
     }
-    if (it.kind === 'aifplaceholder') {
-      // Nothing built yet — say so plainly rather than linking to a dead page.
-      return '<div class="cnav-empty">Not built yet — after CLF</div>';
+    if (it.kind === 'aifhub') {
+      var icur = (here === 'aif-index.html') ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + icur + '" href="' + toRoot + 'aif-index.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">AI Practitioner hub</a>';
     }
     if (it.kind === 'awshub') {
       var acur = (here === 'aws-index.html') ? ' cnav-current' : '';
@@ -186,11 +191,11 @@
       for (var i = COURSE.indexOf(it) + 1; i < COURSE.length; i++) {
         if (COURSE[i].header) break;
         // Count real destinations: lessons, references, and the special
-        // single-link kinds (hubs, exam list). Sub-headings and the
-        // "not built yet" placeholder are not destinations.
+        // single-link kinds (hubs, exam list). Sub-headings are not
+        // destinations and are skipped.
         var k = COURSE[i].kind;
         if (COURSE[i].file || COURSE[i].ref ||
-            k === 'clfhub' || k === 'awshub' || k === 'awsexams') count++;
+            k === 'clfhub' || k === 'aifhub' || k === 'awshub' || k === 'awsexams') count++;
       }
       var open = isOpen(it.track);
       return '<div class="cnav-track cnav-track-toggle' + (open ? ' cnav-open' : '') + '" ' +
