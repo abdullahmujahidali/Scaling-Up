@@ -19,7 +19,7 @@ npm run build   # writes the static site to dist/
 `npm run exams` regenerates the practice exams from their JSON question files
 (see "Editing" below).
 
-> Astro **4.x** is pinned deliberately: Astro 5+ requires Node ≥22.12 and this
+> Astro **5.x** is pinned deliberately: Astro 6+ requires Node ≥22.12 and this
 > machine runs Node 20. Upgrade Node first if you want to move up.
 
 ## How to use this
