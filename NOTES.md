@@ -1,10 +1,21 @@
 # Notes & Preferences
 
-## ⚠️ ACTIVE MISSION (as of 2026-07-31): AWS DVA-C02
+## ⚠️ ACTIVE MISSION (as of 2026-08-03): AWS Cloud Practitioner (CLF-C02)
 
-The system design track below is **paused**. Current priority is passing the
-**AWS Certified Developer – Associate (DVA-C02)** exam, target ~21 Aug 2026.
-See [MISSION-AWS.md](./MISSION-AWS.md) and learning record 0008.
+The system design track below is **paused**. The team lead redirected the plan to
+the Foundational certs first: **CLF-C02 now**, AI Practitioner next, DVA-C02
+later. See [learning record 0009](./learning-records/0009-pivot-to-foundational-certs-and-astro.md).
+
+**Do not tell the learner he has made progress on DVA.** He has not started it.
+The "88% complete" figure in record 0008 refers to a *Udemy course*, and stating
+it as exam progress is a false claim about work he has not done — he corrected
+this directly. What is true: hands-on AWS from his day job, and billing/pricing
+is the domain that work never exposes him to.
+
+**ESL +30 minutes** — AWS gives non-native English speakers 30 extra minutes on
+request, free, requested once, applies to every future exam. Must be requested
+*before* booking. Given the English constraint below, this is the single biggest
+lever in the mission.
 
 ### AWS-track rules (in addition to everything below)
 

@@ -1,3 +1,11 @@
+> **⚠️ SUPERSEDED 2026-08-03.** The team lead redirected the plan to the
+> Foundational certs first: **Cloud Practitioner (CLF-C02) is the active
+> mission**, AI Practitioner next, and this DVA-C02 track later. See
+> [learning record 0009](./learning-records/0009-pivot-to-foundational-certs-and-astro.md).
+> Everything below remains accurate about DVA-C02 itself and is kept for when
+> that track resumes — but the learner has **not started** DVA preparation, and
+> the "88% complete" figure refers to a Udemy course, not exam progress.
+
 # Mission: Pass AWS Certified Developer – Associate (DVA-C02)
 
 > This is a **second, parallel mission** in this workspace. The original
