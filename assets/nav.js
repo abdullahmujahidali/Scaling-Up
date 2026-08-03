@@ -8,10 +8,16 @@
   var COURSE = [
     { kind: 'home' },
     { kind: 'week' },
-    // AWS DVA-C02 track. Deferred 2026-08-03: the team lead redirected to the
-    // Foundational certs (AI Practitioner + Cloud Practitioner) first, so this
-    // track is kept intact and collapsed rather than deleted — it resumes after.
-    { track: 'AWS', label: '☁️ AWS DVA-C02', header: true, collapsed: true, note: 'later' },
+    // ---- AWS certification tracks -------------------------------------
+    // Order = the order they will be taken. Decided 2026-08-03: the team lead
+    // redirected to the Foundational certs first, so CLF is active, AIF is
+    // next, and the (already-built) DVA track waits its turn. Nothing is
+    // deleted — a finished track just becomes 'done' and collapses.
+    { track: 'CLF', label: '☁️ Cloud Practitioner', header: true, note: 'active' },
+    { kind: 'clfhub' },
+    { track: 'AIF', label: '🤖 AI Practitioner', header: true, collapsed: true, note: 'next' },
+    { kind: 'aifplaceholder' },
+    { track: 'AWS', label: '⚙️ Developer Associate', header: true, collapsed: true, note: 'later' },
     { kind: 'awshub' },
     { kind: 'awsexams' },
     { kind: 'subhead', label: 'Lessons' },
@@ -136,6 +142,15 @@
       var gcur = (here === 'glossary.html') ? ' cnav-current' : '';
       return '<a class="cnav-ref' + gcur + '" href="' + toRoot + 'reference/glossary.html">📑 Glossary</a>';
     }
+    if (it.kind === 'clfhub') {
+      var ccur = (here === 'clf-index.html') ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + ccur + '" href="' + toRoot + 'clf-index.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">☁️ Cloud Practitioner hub</a>';
+    }
+    if (it.kind === 'aifplaceholder') {
+      // Nothing built yet — say so plainly rather than linking to a dead page.
+      return '<div class="cnav-empty">Not built yet — after CLF</div>';
+    }
     if (it.kind === 'awshub') {
       var acur = (here === 'aws-index.html') ? ' cnav-current' : '';
       return '<a class="cnav-ref' + acur + '" href="' + toRoot + 'aws-index.html" ' +
@@ -156,7 +171,12 @@
       var count = 0;
       for (var i = COURSE.indexOf(it) + 1; i < COURSE.length; i++) {
         if (COURSE[i].header) break;
-        if (COURSE[i].file || COURSE[i].ref) count++;
+        // Count real destinations: lessons, references, and the special
+        // single-link kinds (hubs, exam list). Sub-headings and the
+        // "not built yet" placeholder are not destinations.
+        var k = COURSE[i].kind;
+        if (COURSE[i].file || COURSE[i].ref ||
+            k === 'clfhub' || k === 'awshub' || k === 'awsexams') count++;
       }
       var open = isOpen(it.track);
       return '<div class="cnav-track cnav-track-toggle' + (open ? ' cnav-open' : '') + '" ' +

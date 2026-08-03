@@ -216,6 +216,11 @@ th { font-family: ui-sans-serif, sans-serif; font-size: 0.78rem; text-transform:
 /* A collapsed track is dimmed; the open one reads as the active place. */
 .cnav-track-toggle:not(.cnav-open) .cnav-track-label { color: #9a8080; }
 .cnav-track-toggle.cnav-open .cnav-track-label { color: #e8a0a0; }
+/* Placeholder for a track with nothing built yet. */
+.cnav-empty {
+  font-size: 0.72rem; color: #6f6f6f; font-style: italic;
+  padding: 0.3rem 0.6rem 0.4rem; line-height: 1.3;
+}
 /* Sub-group label inside a track (e.g. "Lessons", "Notes & tools"). */
 .cnav-subhead {
   font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
