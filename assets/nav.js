@@ -7,17 +7,16 @@
   // Use null `file` for the home link (handled specially).
   var COURSE = [
     { kind: 'home' },
-    { kind: 'week' },
     // ---- AWS certification tracks -------------------------------------
     // Order = the order they will be taken. Decided 2026-08-03: the team lead
     // redirected to the Foundational certs first, so CLF is active, AIF is
     // next, and the (already-built) DVA track waits its turn. Nothing is
     // deleted — a finished track just becomes 'done' and collapses.
-    { track: 'CLF', label: '☁️ Cloud Practitioner', header: true, note: 'active' },
+    { track: 'CLF', label: 'Cloud Practitioner', header: true, note: 'active' },
     { kind: 'clfhub' },
-    { track: 'AIF', label: '🤖 AI Practitioner', header: true, collapsed: true, note: 'next' },
+    { track: 'AIF', label: 'AI Practitioner', header: true, collapsed: true, note: 'next' },
     { kind: 'aifplaceholder' },
-    { track: 'AWS', label: '⚙️ Developer Associate', header: true, collapsed: true, note: 'later' },
+    { track: 'AWS', label: 'Developer Associate', header: true, collapsed: true, note: 'later' },
     { kind: 'awshub' },
     { kind: 'awsexams' },
     { kind: 'subhead', label: 'Lessons' },
@@ -30,15 +29,16 @@
     { file: '0051-aws-observability.html',          num: 'A7', title: 'CloudWatch, X-Ray, CloudTrail' },
     // Domain notes live in /reference/, so they use `ref` rather than `file`.
     { kind: 'subhead', label: 'Notes & tools' },
-    { ref: 'dva-study-notes.html',            num: '★',  title: 'Master Study Notes' },
+    { ref: 'dva-study-notes.html',            num: '*',  title: 'Master Study Notes' },
     { ref: 'dva-domain1-development.html',    num: 'D1', title: 'Domain 1 · Development (32%)' },
     { ref: 'dva-domain2-security.html',       num: 'D2', title: 'Domain 2 · Security (26%)' },
     { ref: 'dva-domain3-deployment.html',     num: 'D3', title: 'Domain 3 · Deployment (24%)' },
     { ref: 'dva-domain4-troubleshooting.html', num: 'D4', title: 'Domain 4 · Troubleshooting (18%)' },
-    { ref: 'dva-numbers.html',                num: '★',  title: 'Numbers Cheat Sheet' },
-    { ref: 'dva-resources.html',              num: '📚', title: 'Resources (bilingual)' },
-    { ref: 'dva-booking-guide.html',          num: '🎫', title: 'How to book the exam' },
+    { ref: 'dva-numbers.html',                num: '*',  title: 'Numbers Cheat Sheet' },
+    { ref: 'dva-resources.html',              num: 'res', title: 'Resources (bilingual)' },
+    { ref: 'dva-booking-guide.html',          num: 'bk', title: 'How to book the exam' },
     { track: 'A', label: 'System Design', header: true, collapsed: true, note: 'paused' },
+    { kind: 'week' },
     { file: '0001-the-design-framework.html', num: '1',  title: 'The Design Framework' },
     { file: '0002-consistency-and-availability.html', num: '2a', title: 'Consistency' },
     { file: '0003-failover.html', num: '2b', title: 'Failover' },
@@ -127,25 +127,35 @@
   // Build the sidebar markup.
   var items = COURSE.map(function (it) {
     if (it.kind === 'home') {
-      return '<a class="cnav-home" href="' + toRoot + 'index.html">🏠 Scaling Up — Home</a>' +
-             '<a class="cnav-ref" href="' + toRoot + 'how-to-use.html" style="margin-top:0.4rem;border-top:none;padding-top:0.42rem;">📖 How to use</a>';
+      var hcur = (here === 'index.html' || here === '') ? ' cnav-current' : '';
+      return '<a class="cnav-home' + hcur + '" href="' + toRoot + 'index.html">Scaling Up</a>';
     }
     if (it.kind === 'week') {
+      // The weekly plans belong to the paused system-design mission. They used
+      // to sit at the top of the sidebar, above the active work; they now live
+      // inside that track's own section so the top of the rail stays clear.
       var w1cur = (here === 'this-week.html') ? ' cnav-current' : '';
       var w2cur = (here === 'this-week-2.html') ? ' cnav-current' : '';
-      return '<a class="cnav-ref' + w1cur + '" href="' + toRoot + 'this-week.html" style="margin-top:0;border-top:none;padding-top:0.42rem;">🗓️ Week 1 plan</a>' +
-             '<a class="cnav-ref' + w2cur + '" href="' + toRoot + 'this-week-2.html" style="margin-top:0;border-top:none;padding-top:0.42rem;">🗓️ Week 2 plan</a>';
+      return '<a class="cnav-item' + w1cur + '" href="' + toRoot + 'this-week.html">' +
+               '<span class="cnav-num">wk1</span><span class="cnav-title">Week 1 plan</span></a>' +
+             '<a class="cnav-item' + w2cur + '" href="' + toRoot + 'this-week-2.html">' +
+               '<span class="cnav-num">wk2</span><span class="cnav-title">Week 2 plan</span></a>';
     }
     if (it.kind === 'glossary') {
-      // Match the glossary file itself, not merely "we're in /reference/" —
-      // the AWS domain notes also live there and must not steal the highlight.
+      // Utility links, pinned at the bottom of the rail. Match the glossary
+      // file itself, not merely "we're in /reference/" — the AWS notes also
+      // live there and must not steal the highlight.
       var gcur = (here === 'glossary.html') ? ' cnav-current' : '';
-      return '<a class="cnav-ref' + gcur + '" href="' + toRoot + 'reference/glossary.html">📑 Glossary</a>';
+      var ucur = (here === 'how-to-use.html') ? ' cnav-current' : '';
+      return '<div class="cnav-foot">' +
+               '<a class="cnav-util' + gcur + '" href="' + toRoot + 'reference/glossary.html">Glossary</a>' +
+               '<a class="cnav-util' + ucur + '" href="' + toRoot + 'how-to-use.html">How to use this site</a>' +
+             '</div>';
     }
     if (it.kind === 'clfhub') {
       var ccur = (here === 'clf-index.html') ? ' cnav-current' : '';
       return '<a class="cnav-ref' + ccur + '" href="' + toRoot + 'clf-index.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">☁️ Cloud Practitioner hub</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">Cloud Practitioner hub</a>';
     }
     if (it.kind === 'aifplaceholder') {
       // Nothing built yet — say so plainly rather than linking to a dead page.
@@ -154,13 +164,13 @@
     if (it.kind === 'awshub') {
       var acur = (here === 'aws-index.html') ? ' cnav-current' : '';
       return '<a class="cnav-ref' + acur + '" href="' + toRoot + 'aws-index.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">☁️ AWS exam hub</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">Developer Associate hub</a>';
     }
     if (it.kind === 'awsexams') {
       // Highlight on the hub itself and on any individual exam page (/exams/*).
       var ecur = (here === 'exams.html' || /\/exams\//.test(location.pathname)) ? ' cnav-current' : '';
       return '<a class="cnav-ref' + ecur + '" href="' + toRoot + 'exams.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">📝 15 practice exams</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">15 practice exams</a>';
     }
     if (it.kind === 'subhead') {
       return '<div class="cnav-subhead">' + it.label + '</div>';

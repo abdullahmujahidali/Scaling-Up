@@ -1,226 +1,99 @@
-<div class="wrap">
+<div class="wrap wrap-wide">
 
   <header class="masthead hero">
-    <p class="eyebrow">A System Design Course · Built for one engineer</p>
+    <p class="eyebrow" data-ur="Abdullah ka study workspace">Abdullah's study workspace</p>
     <h1>Scaling Up</h1>
-    <p class="subtitle" data-ur="Systems ko scale karna — aur khud ko bhi. Django backend se le kar design room wale banda tak.">Scaling systems — and scaling myself. From Django backend to the person in the design room.</p>
+    <p class="subtitle" data-ur="Ek waqt mein ek cheez. Abhi jo karna hai woh sab se ooper hai — baaki sab intezaar kar sakta hai.">One thing at a time. What to do right now is at the top — everything else can wait.</p>
   </header>
 
-  <!-- ACTIVE MISSION: AWS DVA-C02 exam, target ~21 Aug 2026. Sits above the
-       system design CTA because the exam is the current priority. -->
-  <a href="aws-index.html" style="display:block;text-align:center;background:#1a3d6b;color:#fff;border-radius:12px;padding:1.4rem;margin:1rem 0 0.5rem;text-decoration:none;box-shadow:0 4px 14px rgba(26,61,107,0.3);">
-    <div style="font-family:ui-sans-serif,sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.85;" data-ur="Abhi ka target — exam prep">Current focus — exam prep</div>
-    <div style="font-size:1.5rem;font-weight:700;margin-top:0.2rem;color:#fff;">☁️ AWS Developer Associate (DVA-C02)</div>
-    <div style="font-size:0.9rem;opacity:0.9;margin-top:0.3rem;" data-ur="Chaaron domains ke detailed notes, numbers cheat sheet, aur 3-hafte ka plan. Target: ~21 August 2026.">Detailed notes for all four domains, the numbers cheat sheet, and a 3-week plan. Target: ~21 August 2026.</div>
+  <!-- THE ONE THING THAT MATTERS TODAY.
+       Everything below is deliberately quieter. The old home page failed by
+       showing ~45 identical cards with no answer to "what do I do now?". -->
+  <a class="now" href="clf-index.html">
+    <span class="now-tag" data-ur="Abhi yeh karo">Do this now</span>
+    <span class="now-title">Cloud Practitioner (CLF-C02)</span>
+    <span class="now-body" data-ur="Tumhara pehla certification. Booking ka tareeqa, chaar domains, aur plan — sab yahan hai.">Your first certification. How to book it, the four domains, and the plan — all here.</span>
+    <span class="now-go" aria-hidden="true">&rarr;</span>
   </a>
 
-  <a href="lessons/0001-the-design-framework.html" style="display:block;text-align:center;background:var(--accent);color:#fff;border-radius:12px;padding:1.1rem;margin:0.6rem 0 0.5rem;text-decoration:none;box-shadow:0 4px 14px rgba(155,28,28,0.3);">
-    <div style="font-family:ui-sans-serif,sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.85;" data-ur="System design course — abhi rukka hua hai">System design course — paused</div>
-    <div style="font-size:1.25rem;font-weight:700;margin-top:0.2rem;color:#fff;">▶ Lesson 1 — The Design Framework</div>
-    <div style="font-size:0.9rem;opacity:0.9;margin-top:0.3rem;" data-ur="44 lessons — exam ke baad yahan wapas aana.">44 lessons — come back to these after the exam.</div>
-  </a>
-
-  <p style="text-align:center;margin:0.5rem 0 1rem;"><a href="how-to-use.html" style="font-family:ui-sans-serif,sans-serif;font-size:0.95rem;font-weight:600;" data-ur="📖 Ise kaise use karein? — aasan guide">📖 New here? Read the simple How-To-Use guide</a></p>
-
-  <div class="key">
-    <span class="callout-label" data-ur="Isay kaise use karein — 3 baatein">How to use this — 3 things</span>
-    <span data-ur="<strong>1.</strong> Neeche ki list ya bayein taraf ke sidebar se koi bhi lesson khol lo. <strong>2.</strong> Har lesson ke neeche <strong>← Prev / Next →</strong> buttons se aage barho. <strong>3.</strong> Roman Urdu ke liye neeche daayein kone mein <strong>🌐 Roman Urdu</strong> button dabao (dobara dabao to English wapas). Har lesson ke quiz aur recall cards zaroor karo — <strong>memory se jawab nikalna hi cheezon ko yaad rakhta hai</strong>."><strong>1.</strong> Open any lesson from the list below or the left sidebar. <strong>2.</strong> Move forward with the <strong>← Prev / Next →</strong> buttons at the bottom of each lesson. <strong>3.</strong> For Roman Urdu, press the <strong>🌐 Roman Urdu</strong> button in the bottom-right corner (press again for English). Do every quiz and recall card — <strong>pulling answers from memory is what makes them stick</strong>.</span>
+  <div class="next-up">
+    <span class="nu-label" data-ur="Aaj ke teen kaam">Today's three jobs</span>
+    <ol class="nu-list">
+      <li data-ur="<strong>ESL +30 minutes</strong> maango — exam 90 ki jagah 120 minute ka ho jayega. Booking se <em>pehle</em> karna zaroori hai."><strong>Request ESL +30 minutes</strong> — turns the exam from 90 minutes into 120. Must be done <em>before</em> booking.</li>
+      <li data-ur="Team lead se poocho: kya company 100 USD deti hai, ya voucher hai?">Ask your team lead: does the company cover the 100 USD, or is there a voucher?</li>
+      <li data-ur="Exam book karo, phir mujhe date batao — main us hisaab se plan bana doonga.">Book the exam, then tell me the date — I'll build the plan around it.</li>
+    </ol>
   </div>
 
-  <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
-    <a class="lesson-card" href="this-week.html" style="flex:1;min-width:230px;border-left:3px solid var(--good);background:var(--good-soft);">
-      <span class="num" style="color:var(--good);">🗓️ Start here</span>
-      <div class="title">Week 1 plan</div>
-      <p class="blurb">Framework, consistency, availability, load balancing, caching, CAP, databases, indexes, N+1, queues.</p>
+  <hr>
+
+  <h2 data-ur="Certifications">Certifications</h2>
+  <p class="sec-note" data-ur="Tarteeb wohi hai jo team lead ne kahi: pehle foundational, phir associate.">The order your team lead asked for: foundational first, then the associate.</p>
+
+  <div class="grid grid-3">
+    <a class="tile tile-active" href="clf-index.html">
+      <span class="tile-state" data-ur="Chal raha hai">In progress</span>
+      <span class="tile-name">Cloud Practitioner</span>
+      <span class="tile-meta">CLF-C02 &middot; 90 min &middot; $100</span>
     </a>
-    <a class="lesson-card" href="this-week-2.html" style="flex:1;min-width:230px;border-left:3px solid var(--good);background:var(--good-soft);">
-      <span class="num" style="color:var(--good);">🗓️ Then</span>
-      <div class="title">Week 2 plan</div>
-      <p class="blurb">DNS/CDN, transactions &amp; locking, microservices, API design, async, and a full design capstone.</p>
+    <div class="tile tile-soon">
+      <span class="tile-state" data-ur="Iske baad">Next</span>
+      <span class="tile-name">AI Practitioner</span>
+      <span class="tile-meta" data-ur="CLF ke baad banega">Built after CLF</span>
+    </div>
+    <a class="tile" href="aws-index.html">
+      <span class="tile-state" data-ur="Baad mein">Later</span>
+      <span class="tile-name">Developer Associate</span>
+      <span class="tile-meta" data-ur="Tayyar hai: 7 lessons, 975 sawal">Ready: 7 lessons, 975 questions</span>
     </a>
   </div>
 
-  <p style="font-family:ui-sans-serif,sans-serif;font-size:0.9rem;color:var(--muted);">Two tracks that alternate: <strong style="color:var(--accent);">System Design</strong> (how big systems are built) and <strong style="color:var(--link);">Backend Depth</strong> (why the code &amp; database behave as they do).</p>
+  <hr>
 
-  <h2>Track A · System Design</h2>
+  <h2 data-ur="Jab atak jao">When you get stuck</h2>
 
-  <a class="lesson-card" href="lessons/0001-the-design-framework.html">
-    <span class="num">Lesson 01</span>
-    <div class="title">The Design Framework</div>
-    <p class="blurb">The 5-step script — Scope → Estimate → Draw → Deep-dive → Trade off — for any "Design X" question or architecture review.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0002-consistency-and-availability.html">
-    <span class="num">Lesson 02a</span>
-    <div class="title">Consistency</div>
-    <p class="blurb">The freshness of reads — weak / eventual / strong — told with a whiteboard story. A Django read replica is "eventual."</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0003-failover.html">
-    <span class="num">Lesson 02b</span>
-    <div class="title">Failover</div>
-    <p class="blurb">Staying up when a server dies — active-passive vs active-active, told as a shop with a spare cashier.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0004-the-nines.html">
-    <span class="num">Lesson 02c</span>
-    <div class="title">The "Nines"</div>
-    <p class="blurb">Measuring uptime, and why chaining services multiplies availability down but backups multiply it up — with a live calculator.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0005-load-balancers.html">
-    <span class="num">Lesson 03</span>
-    <div class="title">Load Balancers</div>
-    <p class="blurb">The host at the door — spreading traffic across many servers, horizontal scaling, and the stateless-servers gotcha.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0006-caching.html">
-    <span class="num">Lesson 04</span>
-    <div class="title">Caching</div>
-    <p class="blurb">Keep the hot data close — desk vs archive, cache-aside vs write-through, and the eternal staleness tradeoff.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0008-cap-theorem.html">
-    <span class="num">Lesson 05</span>
-    <div class="title">CAP Theorem</div>
-    <p class="blurb">Pick two when the network breaks — CP vs AP. Ties consistency and availability together.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0010-sql-vs-nosql.html">
-    <span class="num">Lesson 06</span>
-    <div class="title">SQL vs NoSQL</div>
-    <p class="blurb">Picking the right database type — filing cabinet vs labeled boxes, ACID vs BASE, and when to choose which.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0012-replication-and-sharding.html">
-    <span class="num">Lesson 07</span>
-    <div class="title">Replication &amp; Sharding</div>
-    <p class="blurb">How databases scale — copy the data for reads vs split the data for size. The scaling ladder.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0013-message-queues.html">
-    <span class="num">Lesson 08</span>
-    <div class="title">Message Queues &amp; Async</div>
-    <p class="blurb">Do slow work later — queues + background workers (Celery), plus back pressure.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0014-dns-and-cdn.html">
-    <span class="num">Lesson 09</span>
-    <div class="title">DNS &amp; CDN</div>
-    <p class="blurb">How a request finds you — the phone book (DNS) and global file warehouses (CDN).</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0016-monolith-vs-microservices.html">
-    <span class="num">Lesson 10</span>
-    <div class="title">Monolith vs Microservices</div>
-    <p class="blurb">One big app or many small — restaurant vs food court, and the honest tradeoff.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0017-api-design-rest.html">
-    <span class="num">Lesson 11</span>
-    <div class="title">API Design (REST)</div>
-    <p class="blurb">How systems talk — nouns, verbs, status codes. The why under Django REST Framework.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0019-design-walkthrough-url-shortener.html">
-    <span class="num">Lesson 12 · Capstone</span>
-    <div class="title">Design a URL Shortener</div>
-    <p class="blurb">A full "Design X" run using every tool from both weeks. What interviews feel like.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0020-rate-limiting.html">
-    <span class="num">Lesson 13 · Offline Pack</span>
-    <div class="title">Rate Limiting</div>
-    <p class="blurb">Capping requests per client — the token bucket, and HTTP 429.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0021-websockets.html">
-    <span class="num">Lesson 14 · Offline Pack</span>
-    <div class="title">WebSockets</div>
-    <p class="blurb">Real-time two-way connections — a phone call vs mailing letters.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0025-event-streaming-kafka.html">
-    <span class="num">Lesson 15 · Offline Pack</span>
-    <div class="title">Event Streaming (Kafka)</div>
-    <p class="blurb">An append-only log many consumers read — vs a one-worker queue.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0027-circuit-breaker.html">
-    <span class="num">Lesson 16 · Offline Pack</span>
-    <div class="title">Circuit Breakers</div>
-    <p class="blurb">Fail fast when a dependency is down — the electrical fuse for your app.</p>
-  </a>
-
-  <h2>Track B · Backend Depth</h2>
-
-  <a class="lesson-card" href="lessons/0007-the-gil.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B1 · Python internals</span>
-    <div class="title">The GIL</div>
-    <p class="blurb">Why Python threads don't split CPU work — one talking stick — and when threads vs processes vs async actually help.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0009-database-indexes.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B2 · Databases</span>
-    <div class="title">Database Indexes</div>
-    <p class="blurb">Why one query is instant and another crawls — the back-of-book index, and reading EXPLAIN.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0011-n-plus-1-queries.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B3 · Django ORM</span>
-    <div class="title">The N+1 Query Trap</div>
-    <p class="blurb">The invisible bug killing Django apps — spot it, fix it with select_related / prefetch_related.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0015-transactions-and-locking.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B4 · Databases</span>
-    <div class="title">Transactions &amp; Locking</div>
-    <p class="blurb">Why money doesn't double-spend — atomic transactions and the race-condition fix.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0018-async-await.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B5 · Python</span>
-    <div class="title">async / await</div>
-    <p class="blurb">One cook, many pots — overlapping I/O waits, and when async beats threads.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0022-idempotency.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B6 · Offline Pack</span>
-    <div class="title">Idempotency</div>
-    <p class="blurb">Doing it twice = doing it once — the elevator button, and idempotency keys.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0023-connection-pooling.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B7 · Offline Pack</span>
-    <div class="title">Connection Pooling</div>
-    <p class="blurb">Reuse database connections — borrow a desk, don't build a new one each time.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0024-denormalization.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B8 · Offline Pack</span>
-    <div class="title">Denormalization</div>
-    <p class="blurb">Duplicate data for fast reads — the tradeoff against keeping copies in sync.</p>
-  </a>
-
-  <a class="lesson-card" href="lessons/0026-search-inverted-index.html" style="border-left:3px solid var(--link);">
-    <span class="num" style="color:var(--link);">Lesson B9 · Offline Pack</span>
-    <div class="title">Search &amp; the Inverted Index</div>
-    <p class="blurb">How real search works — word → documents, like a book's back index.</p>
-  </a>
-
-  <h2>Reference</h2>
-  <p>Keep these open in a tab and skim them often.</p>
-  <div class="ref-row">
-    <a href="reference/glossary.html">📑 Glossary</a>
-    <a href="https://github.com/donnemartin/system-design-primer" target="_blank">📖 System Design Primer</a>
+  <div class="grid grid-2">
+    <a class="tile" href="reference/dva-booking-guide.html">
+      <span class="tile-name" data-ur="Exam kaise book karein">How to book an exam</span>
+      <span class="tile-meta" data-ur="ESL +30, naam ka trap, 24-ghante ka qanoon">ESL +30, the name trap, the 24-hour rule</span>
+    </a>
+    <a class="tile" href="how-to-use.html">
+      <span class="tile-name" data-ur="Yeh site kaise chalti hai">How this site works</span>
+      <span class="tile-meta" data-ur="Roman Urdu toggle, quizzes, navigation">The Roman Urdu toggle, quizzes, navigation</span>
+    </a>
+    <a class="tile" href="exams.html">
+      <span class="tile-name" data-ur="Practice exams">Practice exams</span>
+      <span class="tile-meta" data-ur="975 sawal — abhi sirf Developer Associate ke. CLF ke apne alag banenge.">975 questions — Developer Associate only. CLF gets its own.</span>
+    </a>
+    <a class="tile" href="reference/glossary.html">
+      <span class="tile-name" data-ur="Lughat">Glossary</span>
+      <span class="tile-meta" data-ur="Har istilah ek jagah">Every term in one place</span>
+    </a>
   </div>
 
-  <div class="ask-teacher">
-    <strong>This is a living course.</strong> It's built lesson-by-lesson with an AI teacher, following the System Design Primer in order. New lessons get added as I work through it — each one a single tangible win, pitched at where I am right now.
+  <hr>
+
+  <h2 data-ur="Rok diya gaya — certification ke baad">Paused — after the certifications</h2>
+  <p class="sec-note" data-ur="Yeh 42 lessons khatam nahi hue, sirf rok diye gaye hain. Sidebar mein bhi collapsed hain taake dhyaan na batein.">These 42 lessons aren't finished with, just paused. They're collapsed in the sidebar too, so they don't compete for attention.</p>
+
+  <div class="grid grid-3">
+    <a class="tile tile-quiet" href="lessons/0001-the-design-framework.html">
+      <span class="tile-name">System Design</span>
+      <span class="tile-meta" data-ur="22 lessons">22 lessons</span>
+    </a>
+    <a class="tile tile-quiet" href="lessons/0007-the-gil.html">
+      <span class="tile-name">Backend Depth</span>
+      <span class="tile-meta" data-ur="13 lessons">13 lessons</span>
+    </a>
+    <a class="tile tile-quiet" href="lessons/0038-big-o.html">
+      <span class="tile-name">Fundamentals (DSA)</span>
+      <span class="tile-meta" data-ur="7 lessons">7 lessons</span>
+    </a>
   </div>
 
-  <footer class="lesson-foot">
-    <p>Built with the <code>/teach</code> workflow. Source on <a href="https://github.com/abdullahmujahidali/Scaling-Up" target="_blank">GitHub</a>.</p>
-  </footer>
+  <div class="key" style="margin-top:2.6rem;">
+    <span class="callout-label" data-ur="Ek baat yaad rakho">One thing to remember</span>
+    <span data-ur="Har sabaq mein quiz aur recall cards hain. <strong>Unhein zaroor karo.</strong> Sirf parhne se &quot;samajh aa gaya&quot; ka dhoka hota hai — jab tak tum khud yaad se jawab na nikaal sako, woh yaad nahi hua. Aur kisi bhi page par neeche daayen kone wale button se Roman Urdu on ho jata hai.">Every lesson has quizzes and recall cards. <strong>Do them.</strong> Reading alone creates the illusion of understanding — until you can produce the answer from memory, you don't know it. And the button in the bottom-right corner switches any page to Roman Urdu.</span>
+  </div>
 
 </div>

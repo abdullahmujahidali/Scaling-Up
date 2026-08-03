@@ -185,6 +185,88 @@ code {
 .good .callout-label, .win .callout-label { color: var(--pass); }
 .warn .callout-label { color: var(--flag); }
 
+/* --- Home page: "what do I do now?" ------------------------------------
+   The old home page listed ~45 identical cards, so every lesson looked as
+   important as every other and there was no answer to "what now?". These
+   components exist to make a single next action unmissable and to let
+   everything else recede into scannable groups. */
+
+/* A hub or index page needs more width than a reading column. */
+.wrap-wide { max-width: 52rem; }
+
+/* The one primary action. Deliberately the only filled, saturated block on
+   the page — if a second one appears, the design has failed. */
+.now {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "tag go" "title go" "body go";
+  gap: 0.15rem 1rem;
+  align-items: center;
+  background: var(--accent); color: #fff;
+  border-radius: 8px; padding: 1.4rem 1.5rem;
+  margin: 1.6rem 0 0.9rem; border: none;
+  text-decoration: none;
+  transition: transform .12s ease, box-shadow .12s ease;
+  box-shadow: 0 2px 12px rgba(26,86,184,0.25);
+}
+.now:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,86,184,0.32); border: none; }
+.now:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.now-tag {
+  grid-area: tag; font-family: var(--body); font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+  opacity: 0.85;
+}
+.now-title {
+  grid-area: title; font-family: var(--display); font-size: 1.65rem;
+  font-weight: 600; line-height: 1.15; letter-spacing: -0.01em;
+}
+.now-body { grid-area: body; font-size: 0.88rem; opacity: 0.92; line-height: 1.45; }
+.now-go { grid-area: go; font-size: 1.8rem; opacity: 0.75; }
+
+/* The concrete next steps, as a numbered list because they ARE a sequence. */
+.next-up {
+  border: 1px solid var(--rule); border-left: 3px solid var(--flag);
+  border-radius: 0 5px 5px 0; padding: 1rem 1.2rem; margin: 0 0 2rem;
+  background: var(--card);
+}
+.nu-label {
+  font-family: var(--body); font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; font-weight: 700; color: var(--flag);
+  display: block; margin-bottom: 0.5rem;
+}
+.nu-list { margin: 0; padding-left: 1.15rem; font-size: 0.88rem; line-height: 1.5; }
+.nu-list li { margin: 0.35rem 0; }
+
+/* Scannable groups. A tile says one thing; the eye can skip the whole row. */
+.grid { display: grid; gap: 0.7rem; margin: 1rem 0 0; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.tile {
+  display: flex; flex-direction: column; gap: 0.15rem;
+  border: 1px solid var(--rule); border-radius: 5px;
+  padding: 0.85rem 1rem; background: var(--card);
+  text-decoration: none; color: var(--ink);
+  font-family: var(--body); transition: border-color .12s, background .12s;
+}
+a.tile:hover { border-color: var(--accent); background: #fff; }
+a.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tile-state {
+  font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 700; color: var(--muted);
+}
+.tile-name { font-weight: 700; font-size: 0.94rem; line-height: 1.25; }
+.tile-meta { font-size: 0.76rem; color: var(--muted); line-height: 1.35; }
+/* The active cert is marked, but quietly — the .now block above is the shout. */
+.tile-active { border-color: var(--accent); border-left: 3px solid var(--accent); }
+.tile-active .tile-state { color: var(--accent); }
+/* Not built yet: visibly inert, so it never reads as a broken link. */
+.tile-soon { opacity: 0.55; }
+/* Paused tracks: present, reachable, and clearly not the current job. */
+.tile-quiet { background: transparent; }
+.tile-quiet .tile-name { font-weight: 600; color: var(--muted); }
+
+.sec-note { font-size: 0.84rem; color: var(--muted); margin: -0.2rem 0 0.2rem; }
+
 /* --- Cards (hub pages) ---
    Defined here rather than inline per page so every hub inherits the theme.
    The page-level <style> blocks still win where a page needs a variant. */
@@ -287,12 +369,30 @@ th { font-family: ui-sans-serif, sans-serif; font-size: 0.78rem; text-transform:
   font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--muted); font-weight: 700; margin: 0.2rem 0.4rem 0.9rem;
 }
+/* The workspace name, set as a wordmark rather than a button — it is an
+   identity, not the primary action. */
 .cnav-home {
-  display: block; color: var(--ink); font-weight: 700; font-size: 0.85rem;
-  padding: 0.5rem 0.6rem; border: none; border-radius: 5px; margin-bottom: 0.7rem;
-  background: var(--card); border: 1px solid var(--rule);
+  display: block; color: var(--ink); font-weight: 700; font-size: 1rem;
+  font-family: var(--display); letter-spacing: -0.01em;
+  padding: 0.15rem 0.5rem 0.9rem; border: none; border-radius: 0;
+  margin-bottom: 0.5rem; background: transparent;
+  border-bottom: 1px solid var(--rule);
 }
-.cnav-home:hover { background: #fff; border: 1px solid var(--accent); }
+.cnav-home:hover { color: var(--accent); border: none; border-bottom: 1px solid var(--rule); background: transparent; }
+.cnav-home.cnav-current { background: transparent !important; color: var(--accent) !important; }
+
+/* Utility links pinned at the foot of the rail: always available, never
+   competing with the course itself. */
+.cnav-foot {
+  margin-top: 1.6rem; padding-top: 0.7rem;
+  border-top: 1px solid var(--rule); display: flex; flex-direction: column; gap: 0.1rem;
+}
+.cnav-util {
+  display: block; font-size: 0.75rem; color: var(--muted);
+  padding: 0.3rem 0.5rem; border: none; border-radius: 5px;
+}
+.cnav-util:hover { background: rgba(26,86,184,0.09); color: var(--ink); border: none; }
+.cnav-util.cnav-current { background: var(--accent) !important; color: #fff !important; }
 .cnav-track {
   font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); font-weight: 700; margin: 1.1rem 0.5rem 0.4rem;

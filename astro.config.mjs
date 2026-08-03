@@ -39,9 +39,15 @@ function copyStaticDirs() {
   };
 }
 
+// GitHub Pages serves a project site from https://<user>.github.io/<repo>/, not
+// the domain root, so every absolute asset path needs that prefix. The deploy
+// workflow sets BASE_PATH; locally it is empty so `npm run dev` still works at /.
+const base = process.env.BASE_PATH || '/';
+
 export default defineConfig({
   output: 'static',
   outDir: './dist',
+  base,
   // No publicDir: the static folders above are copied by the hook instead, so
   // nothing needs to be duplicated into a public/ directory.
   publicDir: './public',

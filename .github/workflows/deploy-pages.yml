@@ -1,14 +1,17 @@
 name: Deploy to GitHub Pages
 
-# Deploys the static site (plain HTML/CSS/JS at repo root) to GitHub Pages.
-# Replaces the flaky auto "legacy" Pages deploy with an explicit, controllable workflow.
+# Builds the Astro site and deploys it to GitHub Pages.
+#
+# Before the Astro migration the site was plain HTML at the repo root and this
+# workflow uploaded `path: '.'`. Those root-level HTML files no longer exist —
+# pages are generated from src/ into dist/ — so the build step below is
+# required and the artifact path must be ./dist.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:        # lets you re-run manually from the Actions tab
 
-# Permissions the deploy needs.
 permissions:
   contents: read
   pages: write
@@ -20,14 +23,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # Astro 4 supports Node 20. Keep in step with the pin in package.json;
+          # Astro 5+ would require Node >= 22.12.
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        # Project Pages sites are served from /<repo>/, so asset URLs need that
+        # prefix. Without it every stylesheet and script 404s in production.
+        run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -35,8 +53,15 @@ jobs:
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'          # the whole repo root is the site
+          path: ./dist
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

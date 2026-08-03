@@ -23,7 +23,12 @@ const { title, nav = true, headExtra = '' } = Astro.props;
 // Assets live in /public and are served from the site root, so the same
 // absolute path works from /lessons/, /reference/ and the root alike. This is
 // what page.js used to compute by hand from the URL depth.
-const v = '12'; // cache-buster: bump when CSS or JS changes
+const v = '13'; // cache-buster: bump when CSS or JS changes
+
+// On GitHub Pages the site is served from /<repo>/, so asset URLs need that
+// prefix. import.meta.env.BASE_URL is '/' locally and '/Scaling-Up/' in CI.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const asset = (f) => `${base}/assets/${f}?v=${v}`;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -31,13 +36,13 @@ const v = '12'; // cache-buster: bump when CSS or JS changes
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
-  <link rel="stylesheet" href={`/assets/lesson.css?v=${v}`} />
-  <link rel="stylesheet" href={`/assets/exam.css?v=${v}`} />
+  <link rel="stylesheet" href={asset('lesson.css')} />
+  <link rel="stylesheet" href={asset('exam.css')} />
   <Fragment set:html={headExtra} />
 </head>
 <body>
   <slot />
-  <script src={`/assets/i18n.js?v=${v}`} is:inline></script>
-  {nav && <script src={`/assets/nav.js?v=${v}`} is:inline></script>}
+  <script src={asset('i18n.js')} is:inline></script>
+  {nav && <script src={asset('nav.js')} is:inline></script>}
 </body>
 </html>
