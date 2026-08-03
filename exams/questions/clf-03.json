@@ -1,0 +1,337 @@
+{
+ "meta": {
+  "id": "clf-03",
+  "cert": "clf",
+  "title": "CLF Quiz 3",
+  "minutes": 30,
+  "focus": "balanced — all four domains",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "clf-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which service is used to store and retrieve any amount of data as objects, accessible over the internet?",
+   "options": [
+    "Amazon EBS",
+    "Amazon S3",
+    "Amazon EFS",
+    "Instance store"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "S3 is object storage for files, images, backups and static content, reachable over the internet and extremely durable. EBS is a disk for one instance, EFS is a shared file system, and instance store is temporary local disk."
+  },
+  {
+   "id": 2,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which storage option is a virtual hard disk attached to a single EC2 instance in one Availability Zone?",
+   "options": [
+    "Amazon S3",
+    "Amazon EBS",
+    "Amazon EFS",
+    "Amazon FSx"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "EBS provides block storage — a disk for one EC2 instance, living within a single AZ. EFS is a shared file system across instances and AZs, S3 is object storage, and FSx serves Windows or specialist file systems."
+  },
+  {
+   "id": 3,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which service securely stores database credentials and can rotate them automatically?",
+   "options": [
+    "AWS Secrets Manager",
+    "Amazon S3",
+    "AWS CloudTrail",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Secrets Manager stores passwords and API keys securely and supports automatic rotation. Storing secrets in S3 or in code is exactly the practice it exists to replace."
+  },
+  {
+   "id": 4,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company must enforce multi-factor authentication for console sign-in. What does MFA provide?",
+   "options": [
+    "A second form of verification in addition to a password",
+    "Automatic encryption of all data at rest",
+    "A private network connection to AWS",
+    "A record of all API calls"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "MFA adds a second factor — typically a device-generated code — on top of the password, so a stolen password alone is not enough. Encryption, private connectivity and API logging are provided by other services."
+  },
+  {
+   "id": 5,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which of the following is a benefit of the AWS Cloud described as 'stop guessing capacity'?",
+   "options": [
+    "You must forecast server needs a year ahead",
+    "You can scale capacity up or down as demand changes",
+    "You must buy hardware before launching",
+    "Capacity is fixed once provisioned"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "'Stop guessing capacity' means you no longer have to predict hardware needs in advance — you scale with actual demand. The other options describe the on-premises model cloud replaces."
+  },
+  {
+   "id": 6,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which pillar of the Well-Architected Framework covers running workloads effectively and continuously improving processes?",
+   "options": [
+    "Operational Excellence",
+    "Security",
+    "Reliability",
+    "Cost Optimization"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Operational Excellence covers running systems, monitoring them and improving processes through automation and small frequent changes. Reliability concerns recovering from failure, a distinct pillar."
+  },
+  {
+   "id": 7,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which AWS Support plan includes access to the full set of AWS Trusted Advisor checks at the LOWEST cost?",
+   "options": [
+    "Basic",
+    "Developer",
+    "Business",
+    "Enterprise"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "The full set of Trusted Advisor checks begins at Business. Basic and Developer receive only the core checks. Enterprise also includes them but costs far more, and the question asks for the lowest cost."
+  },
+  {
+   "id": 8,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which tool estimates the cost of an AWS architecture BEFORE it is built?",
+   "options": [
+    "AWS Cost Explorer",
+    "AWS Pricing Calculator",
+    "AWS Budgets",
+    "AWS Cost and Usage Report"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "The Pricing Calculator produces estimates before anything exists. Cost Explorer analyses spend that already happened, Budgets alerts on thresholds, and the Cost and Usage Report details actual charges."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which service distributes incoming application traffic across multiple targets?",
+   "options": [
+    "Amazon Route 53",
+    "Elastic Load Balancing",
+    "AWS Auto Scaling",
+    "Amazon CloudFront"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Elastic Load Balancing spreads traffic across multiple targets, supporting both high availability and scaling. Auto Scaling changes how many instances exist; ELB decides where each request goes."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which service automatically adjusts the number of EC2 instances to match demand?",
+   "options": [
+    "Elastic Load Balancing",
+    "AWS Auto Scaling",
+    "Amazon CloudWatch",
+    "AWS Config"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Auto Scaling adds and removes instances as demand changes, providing elasticity. ELB distributes traffic to whatever instances exist, and CloudWatch supplies the metrics that can trigger scaling."
+  },
+  {
+   "id": 11,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which service continuously monitors for malicious activity and unauthorised behaviour using AWS logs?",
+   "options": [
+    "Amazon Inspector",
+    "Amazon GuardDuty",
+    "AWS Artifact",
+    "AWS Config"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "GuardDuty is the threat detection service, analysing logs for suspicious activity. Inspector scans for vulnerabilities in instances and images — weakness versus active threat is the distinction the exam tests."
+  },
+  {
+   "id": 12,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which service discovers and protects sensitive data such as personally identifiable information stored in Amazon S3?",
+   "options": [
+    "Amazon Macie",
+    "Amazon GuardDuty",
+    "AWS WAF",
+    "AWS Shield"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Macie discovers sensitive data such as PII in S3. GuardDuty detects threats, WAF filters web requests, and Shield defends against DDoS."
+  },
+  {
+   "id": 13,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which term describes the ability of a system to remain operational even when a component fails?",
+   "options": [
+    "Elasticity",
+    "High availability",
+    "Agility",
+    "Economies of scale"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "High availability means staying operational despite component failure, achieved by spreading across Availability Zones. Elasticity is scaling with demand, and agility is moving quickly."
+  },
+  {
+   "id": 14,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which service allows you to define and provision AWS infrastructure using code templates?",
+   "options": [
+    "AWS CloudFormation",
+    "AWS Systems Manager",
+    "AWS Config",
+    "AWS Control Tower"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "CloudFormation is AWS's infrastructure-as-code service, building resources from a template repeatably. Config records configuration history, Systems Manager manages servers, and Control Tower sets up multi-account environments."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which purchasing option should be used for a short-term, unpredictable workload with no commitment?",
+   "options": [
+    "Reserved Instances",
+    "On-Demand Instances",
+    "Spot Instances",
+    "Savings Plans"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "On-Demand suits short-term and unpredictable workloads because it requires no commitment. Reserved and Savings Plans require one or three-year commitments, and Spot risks interruption."
+  },
+  {
+   "id": 16,
+   "domain": 3,
+   "multi": true,
+   "scenario": "Which TWO services can be used to send messages or notifications between application components?",
+   "options": [
+    "Amazon SQS",
+    "Amazon SNS",
+    "Amazon EBS",
+    "Amazon Route 53",
+    "AWS Artifact"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "SQS is a message queue where each message is processed by one consumer, and SNS publishes one message to many subscribers. EBS is storage, Route 53 is DNS, and Artifact provides compliance documents."
+  },
+  {
+   "id": 17,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which encryption term describes protecting data while it is stored on disk?",
+   "options": [
+    "Encryption in transit",
+    "Encryption at rest",
+    "Federation",
+    "Tokenisation"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Encryption at rest protects stored data; encryption in transit protects data moving over a network. The exam frequently expects both to be enabled, and both are customer responsibilities."
+  },
+  {
+   "id": 18,
+   "domain": 1,
+   "multi": false,
+   "scenario": "What does the AWS Cloud Adoption Framework (CAF) help an organisation do?",
+   "options": [
+    "Plan and structure its migration to the AWS Cloud",
+    "Encrypt data automatically",
+    "Monitor EC2 performance",
+    "Detect DDoS attacks"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The AWS CAF provides guidance for planning a cloud migration, covering business risk, ESG performance, revenue and operational efficiency. The other options describe unrelated technical services."
+  },
+  {
+   "id": 19,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company must transfer petabytes of data to AWS but has limited network bandwidth. Which service?",
+   "options": [
+    "AWS Snow Family",
+    "AWS Direct Connect",
+    "Amazon S3 Transfer Acceleration",
+    "AWS DataSync"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The Snow Family ships physical devices for very large transfers that would take too long over a network. Direct Connect and Transfer Acceleration still depend on network capacity the company lacks."
+  },
+  {
+   "id": 20,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which service enables single sign-on access across multiple AWS accounts?",
+   "options": [
+    "AWS IAM Identity Center",
+    "Amazon Cognito",
+    "AWS Directory Service",
+    "AWS Secrets Manager"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "IAM Identity Center (formerly AWS SSO) provides single sign-on across multiple AWS accounts and applications. Cognito handles identity for your own applications' end users, a different purpose."
+  }
+ ]
+}

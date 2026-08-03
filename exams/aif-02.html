@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Quiz 2</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Quiz 2</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question revision quiz · balanced — all five domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Quiz 2</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-02","title":"AIF Quiz 2","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which AWS service provides access to foundation models through an API without managing infrastructure?",
+  "options": [
+   "Amazon Bedrock",
+   "Amazon SageMaker AI",
+   "Amazon EC2",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Bedrock provides serverless API access to foundation models from multiple providers. SageMaker AI is for building and training your own models, which requires far more expertise and management."
+ },
+ {
+  "id": 2,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A startup with no data scientists wants to build an application using an existing foundation model and manage no infrastructure. Which service?",
+  "options": [
+   "Amazon Bedrock",
+   "Train a custom model on Amazon SageMaker",
+   "Self-host a model on Amazon EC2",
+   "Amazon Lex"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "No data scientists, no infrastructure, and using an existing foundation model all describe Bedrock. SageMaker and EC2 self-hosting require exactly the expertise they lack, and Lex builds intent-based chatbots rather than general content generation."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which service extracts text and data from scanned documents and forms?",
+  "options": [
+   "Amazon Textract",
+   "Amazon Comprehend",
+   "Amazon Rekognition",
+   "Amazon Transcribe"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Textract extracts text, forms and tables from scanned documents — 'text' plus 'extract'. Comprehend analyses meaning in text that already exists, and Rekognition analyses images and video."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which service converts recorded speech into written text?",
+  "options": [
+   "Amazon Polly",
+   "Amazon Transcribe",
+   "Amazon Translate",
+   "Amazon Lex"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Transcribe converts speech to text; Polly does the reverse, generating speech from text. Remember Polly as the parrot that speaks."
+ },
+ {
+  "id": 5,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which AWS feature implements Retrieval Augmented Generation without building the retrieval pipeline yourself?",
+  "options": [
+   "Amazon Bedrock Knowledge Bases",
+   "Amazon Bedrock Guardrails",
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Prompt Management"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Knowledge Bases is AWS's managed RAG implementation, handling chunking, embedding and retrieval. Guardrails handles safety, Clarify handles bias, and Prompt Management stores and versions prompts."
+ },
+ {
+  "id": 6,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which storage option is commonly used to hold embeddings for a RAG application on AWS?",
+  "options": [
+   "Amazon OpenSearch Service",
+   "Amazon S3 Glacier",
+   "AWS CloudTrail",
+   "Amazon Polly"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "OpenSearch Service is a vector store for embeddings, as are Aurora, Neptune and RDS for PostgreSQL. Glacier is archival storage, CloudTrail is auditing, and Polly generates speech."
+ },
+ {
+  "id": 7,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which term describes a model that performs excellently on training data but poorly on new, unseen data?",
+  "options": [
+   "Underfitting",
+   "Overfitting",
+   "Hallucination",
+   "Drift"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Overfitting means the model memorised the training data rather than learning generalisable patterns. Underfitting means it learned too little and performs poorly everywhere."
+ },
+ {
+  "id": 8,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which AWS service provides documentation about a model's intended use, training data and limitations?",
+  "options": [
+   "Amazon SageMaker Model Cards",
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Guardrails",
+   "Amazon A2I"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Model Cards document a model's purpose, data and limitations, supporting transparency. Clarify explains why decisions were made (explainability) — a related but distinct concept."
+ },
+ {
+  "id": 9,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Which service discovers personally identifiable information stored in Amazon S3?",
+  "options": [
+   "Amazon Macie",
+   "Amazon GuardDuty",
+   "Amazon Inspector",
+   "AWS Artifact"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Macie discovers and classifies sensitive data such as PII in S3. GuardDuty detects threats, Inspector scans for vulnerabilities, and Artifact provides compliance reports."
+ },
+ {
+  "id": 10,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Which service records who called which API and when, providing an audit trail for AI workloads?",
+  "options": [
+   "AWS CloudTrail",
+   "Amazon CloudWatch",
+   "AWS Config",
+   "AWS Artifact"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CloudTrail is the audit trail of API activity, answering 'who did what'. CloudWatch monitors performance metrics, and Config tracks resource configuration state."
+ },
+ {
+  "id": 11,
+  "domain": 2,
+  "multi": false,
+  "scenario": "What is a token in the context of large language models?",
+  "options": [
+   "A small piece of text, roughly three-quarters of a word",
+   "A security credential",
+   "A type of neural network",
+   "A unit of GPU memory"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Tokens are the chunks of text models read and generate, roughly three-quarters of a word each, and they are the unit you are billed on. The security meaning of 'token' is unrelated here."
+ },
+ {
+  "id": 12,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which of these is a widely cited DISADVANTAGE of generative AI?",
+  "options": [
+   "It can produce confident but factually incorrect output",
+   "It cannot process text",
+   "It requires no data",
+   "It always produces identical output"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Hallucination — confident but false output — is generative AI's best-known weakness, alongside limited interpretability and nondeterminism. The other options are simply untrue of GenAI."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which prompting technique provides several worked examples inside the prompt to guide the model?",
+  "options": [
+   "Zero-shot prompting",
+   "Few-shot prompting",
+   "Chain-of-thought prompting",
+   "Negative prompting"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Few-shot prompting includes several examples, improving consistency and format adherence. Zero-shot provides none, one-shot provides exactly one, and chain-of-thought asks for step-by-step reasoning."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants to reduce inference cost while keeping most of a large model's quality. Which technique applies?",
+  "options": [
+   "Model distillation",
+   "Increasing temperature",
+   "Expanding the context window",
+   "Adding more few-shot examples"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Distillation produces a smaller, cheaper model that approximates a larger one's behaviour, directly reducing inference cost. More examples and a bigger context window increase token usage and therefore cost."
+ },
+ {
+  "id": 15,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which of these is an appropriate use case for traditional machine learning rather than generative AI?",
+  "options": [
+   "Predicting next month's product demand from historical sales",
+   "Writing a marketing email",
+   "Generating a product image",
+   "Summarising a long document"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Forecasting a numeric value from historical data is traditional ML (regression). Writing, image generation and summarisation all create new content, which is generative AI's domain."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which service inserts human review into an AI workflow for low-confidence or high-risk predictions?",
+  "options": [
+   "Amazon Augmented AI (A2I)",
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Guardrails",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A2I builds human review into workflows, routing uncertain or sensitive predictions to people. Clarify measures bias and explainability, and Guardrails filters content."
+ },
+ {
+  "id": 17,
+  "domain": 5,
+  "multi": true,
+  "scenario": "Which TWO AWS services help demonstrate regulatory compliance for AI workloads?",
+  "options": [
+   "AWS Artifact",
+   "AWS Audit Manager",
+   "Amazon Polly",
+   "Amazon Rekognition",
+   "Amazon Lex"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Artifact supplies AWS's compliance reports and Audit Manager collects evidence for your own audits. Polly, Rekognition and Lex are AI capabilities with no compliance-reporting function."
+ },
+ {
+  "id": 18,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which factor should be considered when selecting a foundation model for a latency-sensitive application?",
+  "options": [
+   "Model size and inference speed",
+   "The colour of the console interface",
+   "The number of AWS Regions in total",
+   "The account's support plan"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Model size, latency, modality, cost, customisability and input/output length are the selection criteria named by the exam guide. Larger models are generally slower, which matters for latency-sensitive use."
+ },
+ {
+  "id": 19,
+  "domain": 2,
+  "multi": false,
+  "scenario": "What does 'multi-modal' mean when describing a foundation model?",
+  "options": [
+   "It can process more than one type of data, such as text and images",
+   "It runs in multiple AWS Regions",
+   "It supports multiple users at once",
+   "It has multiple pricing tiers"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Multi-modal means handling several data types — commonly text plus images. Modality refers to the kind of data, not deployment or pricing."
+ },
+ {
+  "id": 20,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which metric measures, of all the genuinely positive cases, how many the model correctly identified?",
+  "options": [
+   "Precision",
+   "Recall",
+   "Accuracy",
+   "F1 score"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Recall measures how many true positives were caught, so it matters when missing a case is costly — disease screening or fraud detection. Precision measures how many flagged cases were genuine."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

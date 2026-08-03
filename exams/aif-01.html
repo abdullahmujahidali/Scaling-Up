@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Quiz 1</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Quiz 1</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question revision quiz · balanced — all five domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Quiz 1</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-01","title":"AIF Quiz 1","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants a chatbot that answers from internal HR policies that change monthly. Answers must always reflect current policy. Which approach is MOST appropriate?",
+  "options": [
+   "Fine-tune the model on the policies each month",
+   "Use Retrieval Augmented Generation (RAG) over the policy documents",
+   "Pre-train a foundation model from scratch",
+   "Increase the model's temperature"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "'Change every month' is the deciding phrase. RAG reads the current documents at question time, so updating a file is enough. Fine-tuning bakes knowledge in and would require monthly retraining. Temperature controls randomness, not knowledge."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A bank has five years of transactions each labelled 'fraud' or 'not fraud' and wants to predict whether new transactions are fraudulent. Which approach fits?",
+  "options": [
+   "A supervised learning classification model",
+   "A generative AI model that writes fraud reports",
+   "Unsupervised clustering",
+   "Prompt engineering on an LLM"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Labelled historical data plus predicting a category equals supervised classification. This is traditional ML, not generative AI — nothing is being created, only classified. Clustering applies when you have no labels."
+ },
+ {
+  "id": 3,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about token-based pricing on Amazon Bedrock is TRUE?",
+  "options": [
+   "You are charged only for output tokens",
+   "You are charged for both input and output tokens, so shorter prompts reduce cost",
+   "Each request costs a flat fee regardless of length",
+   "Tokens are counted only during training"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Both the prompt you send and the response generated are billed. This is why prompt length affects cost and why techniques such as prompt caching and concise prompts reduce spend."
+ },
+ {
+  "id": 4,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company runs a customer-facing chatbot on Amazon Bedrock and wants to prevent harmful content and block certain topics. What provides this?",
+  "options": [
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Guardrails",
+   "Amazon Comprehend",
+   "Lowering the model's temperature"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Guardrails is Bedrock's safety layer, blocking harmful content, denying topics and masking PII. Clarify handles bias and explainability in SageMaker. Temperature affects randomness, never safety."
+ },
+ {
+  "id": 5,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A hiring model scores one demographic group lower than another. What is the MOST likely cause?",
+  "options": [
+   "The temperature is set too high",
+   "Bias present in the training data that the model learned",
+   "Insufficient compute capacity",
+   "The context window is too small"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Models reproduce the patterns in their training data, so demographic unfairness almost always traces back to biased data. Temperature, compute and context window have no bearing on fairness."
+ },
+ {
+  "id": 6,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A security team is concerned that users could embed instructions in chatbot messages to override the model's original instructions. What is this called?",
+  "options": [
+   "Overfitting",
+   "Prompt injection",
+   "Data drift",
+   "Hallucination"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Hiding instructions in user input to hijack the model is prompt injection — the AI equivalent of SQL injection. Defences are input validation, output filtering and Guardrails. Overfitting and drift are model-quality issues, not attacks."
+ },
+ {
+  "id": 7,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants a foundation model to write product descriptions in a specific format and has 20 good examples. They want the LOWEST cost approach. What should they do?",
+  "options": [
+   "Include examples in the prompt (few-shot prompting)",
+   "Fine-tune the model on the 20 examples",
+   "Pre-train a model from scratch",
+   "Set the temperature to 1"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Work down the cost order: prompt engineering first. Few-shot prompting costs nothing beyond tokens, and 20 examples is far too few to fine-tune well anyway. Pre-training costs millions and temperature does not control format."
+ },
+ {
+  "id": 8,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A financial assistant answers numerical questions and the team wants consistent, repeatable responses. Which inference setting should change?",
+  "options": [
+   "Lower the temperature close to 0",
+   "Raise the temperature close to 1",
+   "Increase max tokens",
+   "Reduce the context window"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Temperature controls randomness: near 0 produces consistent, repeatable output suited to factual and numerical work. Raising it increases variation. Max tokens affects length and the context window affects input size."
+ },
+ {
+  "id": 9,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which best describes the relationship between AI, machine learning and generative AI?",
+  "options": [
+   "They are unrelated fields",
+   "AI is the broadest field, ML is a subset of AI, and generative AI is a subset of deep learning within ML",
+   "Generative AI is broader than AI",
+   "ML is broader than AI"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "AI is the outermost circle, ML sits inside it, deep learning inside ML, and generative AI inside deep learning. Each narrower term is a specialised kind of the wider one."
+ },
+ {
+  "id": 10,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which type of learning finds patterns and groupings in data that has NO labels?",
+  "options": [
+   "Supervised learning",
+   "Unsupervised learning",
+   "Reinforcement learning",
+   "Transfer learning"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Unsupervised learning finds structure such as clusters in unlabelled data. Supervised learning requires labels, and reinforcement learning learns from trial and reward."
+ },
+ {
+  "id": 11,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Under the shared responsibility model, what is the customer responsible for when building on Amazon Bedrock?",
+  "options": [
+   "Securing the physical servers that trained the model",
+   "Their own data, their prompts, and controlling access via IAM",
+   "Patching the Bedrock service infrastructure",
+   "Securing the foundation model's internal weights"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "The model applies unchanged to AI services: your data, prompts and access control are yours, while AWS secures the infrastructure, the service and the model itself. Anything you cannot touch belongs to AWS."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which metric is MOST appropriate for evaluating a model that produces summaries?",
+  "options": [
+   "ROUGE",
+   "BLEU",
+   "F1 score",
+   "Latency"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "ROUGE evaluates summarisation and BLEU evaluates translation — memorise that pair. F1 is a classification metric and latency measures speed rather than quality."
+ },
+ {
+  "id": 13,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A team wants to reduce hallucinations in a GenAI application. Which approach is MOST effective?",
+  "options": [
+   "Ground responses in real documents using RAG and add output validation",
+   "Increase the temperature for more creative responses",
+   "Use a larger model because larger models never hallucinate",
+   "Shorten the prompt to use fewer tokens"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Hallucination is addressed by grounding, not by tuning knobs. RAG supplies real source material and output validation catches errors. Higher temperature makes it worse, larger models still hallucinate, and prompt length affects only cost."
+ },
+ {
+  "id": 14,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A bank must show regulators whether its loan model is unfair to any demographic group and explain individual decisions. Which service addresses both?",
+  "options": [
+   "Amazon Bedrock Guardrails",
+   "Amazon SageMaker Clarify",
+   "Amazon SageMaker JumpStart",
+   "Amazon Textract"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Clarify covers both bias detection across groups and explainability of individual predictions — that pairing is its signature. Guardrails is Bedrock's content-safety feature, and JumpStart provides pre-built models."
+ },
+ {
+  "id": 15,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which prompting technique instructs the model to reason step by step to improve accuracy on complex problems?",
+  "options": [
+   "Zero-shot prompting",
+   "Chain-of-thought prompting",
+   "Negative prompting",
+   "Prompt caching"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Chain-of-thought asks the model to work through intermediate reasoning steps, markedly improving maths and logic tasks. Zero-shot supplies no examples, and negative prompting states what to avoid."
+ },
+ {
+  "id": 16,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company wants to determine the sentiment of customer reviews, has no ML expertise, and wants the LEAST development effort. Which service?",
+  "options": [
+   "Amazon Comprehend",
+   "Train a custom model in Amazon SageMaker",
+   "Amazon Rekognition",
+   "Amazon Polly"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Comprehend performs sentiment analysis out of the box with no ML expertise required. The custom SageMaker option is the classic distractor: it works but is the most effort, which the qualifier rules out."
+ },
+ {
+  "id": 17,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which term describes converting text into numerical vectors so that similar meanings are numerically close?",
+  "options": [
+   "Embeddings",
+   "Tokenisation",
+   "Fine-tuning",
+   "Distillation"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Embeddings map text to vectors where semantic similarity becomes numerical proximity, which is what makes meaning-based search and RAG possible. Tokenisation splits text into tokens, a different step."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "multi": true,
+  "scenario": "Which TWO techniques help reduce the risk of a model exposing sensitive data in its responses?",
+  "options": [
+   "Using Amazon Bedrock Guardrails to mask PII",
+   "Applying output filtering and validation",
+   "Raising the model temperature",
+   "Increasing max token limits",
+   "Removing all system prompts"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Guardrails can detect and mask PII, and output filtering validates responses before they reach users. Temperature and token limits do not affect data leakage, and removing system prompts would weaken safety instructions."
+ },
+ {
+  "id": 19,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which customisation approach is MOST appropriate when a model must adopt a specific writing style and tone permanently?",
+  "options": [
+   "Retrieval Augmented Generation",
+   "Fine-tuning",
+   "Increasing the context window",
+   "Prompt caching"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Fine-tuning changes the model's manner — its style, tone and format — by retraining it. RAG supplies information rather than changing style. Remember: RAG = what it knows, fine-tuning = how it speaks."
+ },
+ {
+  "id": 20,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which inference type processes a large volume of data at once, with results available later rather than immediately?",
+  "options": [
+   "Real-time inference",
+   "Batch inference",
+   "Serverless inference",
+   "Asynchronous inference"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Batch inference processes large datasets in bulk with results delivered afterwards, and is cheaper than keeping an endpoint live. Real-time inference returns answers immediately for individual requests."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+{
+ "meta": {
+  "id": "aif-03",
+  "cert": "aif",
+  "title": "AIF Quiz 3",
+  "minutes": 30,
+  "focus": "balanced — all five domains",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 3,
+   "multi": false,
+   "scenario": "An organisation needs a model to answer questions using internal engineering documents, with citations to the source. Which approach?",
+   "options": [
+    "Retrieval Augmented Generation with Amazon Bedrock Knowledge Bases",
+    "Fine-tuning on the documents",
+    "Raising the temperature",
+    "Pre-training a new model"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "RAG retrieves the relevant documents at query time, which both grounds the answer and makes source citation possible. Fine-tuning absorbs knowledge into weights and cannot cite sources."
+  },
+  {
+   "id": 2,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which sequence correctly orders FM customisation approaches from LOWEST to HIGHEST cost?",
+   "options": [
+    "Prompt engineering, RAG, fine-tuning, pre-training",
+    "Pre-training, fine-tuning, RAG, prompt engineering",
+    "RAG, prompt engineering, pre-training, fine-tuning",
+    "Fine-tuning, prompt engineering, RAG, pre-training"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Prompt engineering is free beyond tokens, RAG adds retrieval infrastructure, fine-tuning requires training compute, and pre-training from scratch costs millions. Start at the top and move down only when necessary."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which AWS service identifies objects, faces and unsafe content in images and video?",
+   "options": [
+    "Amazon Rekognition",
+    "Amazon Textract",
+    "Amazon Comprehend",
+    "Amazon Kendra"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Rekognition analyses images and video. Textract extracts text from documents, Comprehend analyses text meaning, and Kendra provides enterprise search."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which term describes the process of using a trained model to generate predictions on new data?",
+   "options": [
+    "Training",
+    "Inference",
+    "Labelling",
+    "Chunking"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Inference is using the trained model to produce results — cheap and constant. Training is the expensive one-off learning phase. Think of it as migrate versus runserver."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which AWS service would be used to build a conversational chatbot with defined intents and slots?",
+   "options": [
+    "Amazon Lex",
+    "Amazon Polly",
+    "Amazon Translate",
+    "Amazon Textract"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Lex builds conversational interfaces using intents and slots, and is the technology behind Alexa. Polly generates speech, Translate converts languages, and Textract reads documents."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "What is the role of Model Context Protocol (MCP) in agentic AI applications?",
+   "options": [
+    "It provides a standard way for agents to connect to external systems and tools",
+    "It compresses model weights",
+    "It encrypts data at rest",
+    "It measures model accuracy"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "MCP is a standard for connecting agents to external systems and tools, and is named explicitly in the AIF-C01 exam guide. It is about connectivity, not compression, encryption or evaluation."
+  },
+  {
+   "id": 7,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which responsible AI characteristic refers to a model's outputs being truthful and factually accurate?",
+   "options": [
+    "Veracity",
+    "Elasticity",
+    "Latency",
+    "Modality"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Veracity means truthfulness and is one of the responsible AI features the exam lists alongside fairness, inclusivity, robustness and safety. Elasticity, latency and modality are unrelated technical properties."
+  },
+  {
+   "id": 8,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which legal risk is specifically associated with generative AI producing content resembling copyrighted works?",
+   "options": [
+    "Intellectual property infringement claims",
+    "Data residency violations",
+    "Instance overprovisioning",
+    "Network latency"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "IP infringement is one of the GenAI legal risks the exam guide names, alongside biased outputs, hallucinations and loss of customer trust. The others are operational rather than legal concerns."
+  },
+  {
+   "id": 9,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which service provides a private network connection so that traffic to AWS AI services does not traverse the public internet?",
+   "options": [
+    "AWS PrivateLink",
+    "Amazon CloudFront",
+    "AWS Artifact",
+    "Amazon Macie"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "PrivateLink keeps traffic on the AWS network rather than the public internet. CloudFront is a CDN, Artifact provides compliance reports, and Macie discovers sensitive data."
+  },
+  {
+   "id": 10,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which practice helps ensure the origin and history of training data is documented and traceable?",
+   "options": [
+    "Data lineage and cataloging",
+    "Increasing model temperature",
+    "Using larger instance types",
+    "Disabling logging"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Data lineage and cataloging record where data came from and what happened to it, supporting governance and auditability. The other options have no bearing on data provenance."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which inference parameter primarily controls the randomness and creativity of generated output?",
+   "options": [
+    "Temperature",
+    "Max tokens",
+    "Context window",
+    "Batch size"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Temperature governs randomness: low values produce consistent output, high values more varied and creative results. Max tokens limits length and the context window limits how much input the model sees."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which metric is used to evaluate machine translation quality?",
+   "options": [
+    "BLEU",
+    "ROUGE",
+    "Recall",
+    "Accuracy"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "BLEU evaluates translation and ROUGE evaluates summarisation. Recall and accuracy are classification metrics rather than generation metrics."
+  },
+  {
+   "id": 13,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which is a genuine business benefit of using AWS managed GenAI services rather than self-hosting models?",
+   "options": [
+    "Lower barrier to entry and faster time to market",
+    "Guaranteed elimination of hallucinations",
+    "No need for any data governance",
+    "Unlimited free usage"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Managed services lower the barrier to entry and accelerate delivery. Hallucinations are not eliminated by any provider, governance remains a customer responsibility, and usage is billed."
+  },
+  {
+   "id": 14,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A retailer wants to recommend products based on customers' past behaviour. Which AWS service is purpose-built for this?",
+   "options": [
+    "Amazon Personalize",
+    "Amazon Forecast",
+    "Amazon Comprehend",
+    "Amazon Polly"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Personalize is the managed recommendation service. Forecast predicts future time-series values, Comprehend analyses text, and Polly generates speech."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which service monitors a deployed model for degradation in quality over time?",
+   "options": [
+    "Amazon SageMaker Model Monitor",
+    "Amazon SageMaker JumpStart",
+    "Amazon Bedrock Guardrails",
+    "Amazon Textract"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Model Monitor watches production models for drift and quality degradation. JumpStart provides pre-built models to start with, and Guardrails filters content in Bedrock."
+  },
+  {
+   "id": 16,
+   "domain": 5,
+   "multi": true,
+   "scenario": "Which TWO measures directly reduce the risk of prompt injection in a customer-facing GenAI application?",
+   "options": [
+    "Validating and sanitising user input before it reaches the model",
+    "Filtering and validating model output before returning it to users",
+    "Increasing the temperature setting",
+    "Using a larger context window",
+    "Removing all logging"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Prompt injection is mitigated the way SQL injection is: never trust user input as instructions, and validate what goes out. Temperature and context window do not affect it, and removing logging would worsen the security posture."
+  },
+  {
+   "id": 17,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A model must learn the specialised vocabulary of medical records. Which approach is MOST appropriate?",
+   "options": [
+    "Fine-tuning with domain adaptation",
+    "Raising the temperature",
+    "Prompt caching",
+    "Reducing max tokens"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Domain adaptation through fine-tuning teaches a model a specialist field's language and conventions. Temperature, caching and token limits do not add domain knowledge."
+  },
+  {
+   "id": 18,
+   "domain": 2,
+   "multi": false,
+   "scenario": "What does 'context engineering' refer to in foundation model applications?",
+   "options": [
+    "Deliberately assembling the information supplied to the model to improve responses",
+    "Physically cooling the data centre",
+    "Selecting an EC2 instance family",
+    "Compressing training data"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Context engineering means curating what information the model receives — a concept the exam guide names explicitly. The other options describe unrelated infrastructure concerns."
+  },
+  {
+   "id": 19,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which describes the correct order of stages in a typical AI/ML lifecycle?",
+   "options": [
+    "Data preparation, model training, evaluation, deployment, monitoring",
+    "Deployment, monitoring, training, data preparation",
+    "Evaluation, deployment, data preparation, training",
+    "Monitoring, deployment, evaluation, training"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Data comes first, then training, then evaluation, then deployment, then ongoing monitoring and retraining. AIF includes ordering questions with no partial credit, so this sequence is worth knowing exactly."
+  },
+  {
+   "id": 20,
+   "domain": 4,
+   "multi": false,
+   "scenario": "What is the primary purpose of reinforcement learning from human feedback (RLHF)?",
+   "options": [
+    "Aligning model behaviour with human preferences",
+    "Compressing the model to run faster",
+    "Encrypting the training data",
+    "Reducing the number of Regions used"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "RLHF uses human preference judgements to make model behaviour more helpful and aligned. Compression is distillation, and encryption and Region choice are unrelated."
+  }
+ ]
+}

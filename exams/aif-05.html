@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Quiz 5</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Quiz 5</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question revision quiz · balanced — all five domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Quiz 5</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-05","title":"AIF Quiz 5","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which situation MOST clearly justifies fine-tuning rather than RAG?",
+  "options": [
+   "The model must consistently produce output in a specialised tone and format",
+   "The underlying facts change weekly",
+   "Answers must cite source documents",
+   "The team wants the lowest possible cost"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Fine-tuning changes style, tone and format durably. Frequently changing facts and source citation both point to RAG, and lowest cost points to prompt engineering."
+ },
+ {
+  "id": 2,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which technique reduces cost when the same lengthy instructions are sent with every request?",
+  "options": [
+   "Prompt caching",
+   "Increasing temperature",
+   "Adding more few-shot examples",
+   "Expanding the context window"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Prompt caching reuses the repeated portion of prompts, cutting both cost and latency. Adding examples and expanding the context window both increase token usage and therefore cost."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which best describes deep learning?",
+  "options": [
+   "A subset of machine learning using multi-layered neural networks",
+   "A method of encrypting data",
+   "A type of relational database",
+   "A billing model for AWS services"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deep learning is a subset of ML built on multi-layered neural networks, and is what modern foundation models are built from. The other options are unrelated concepts."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which data type is described as unstructured?",
+  "options": [
+   "Free-text customer emails",
+   "A relational database table",
+   "A CSV of numeric sales figures",
+   "A spreadsheet with defined columns"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Free text has no predefined schema and is therefore unstructured. Tables, CSVs and spreadsheets all impose structure through defined columns and types."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "What distinguishes a foundation model from a traditional ML model?",
+  "options": [
+   "It is pre-trained on broad data and can be adapted to many tasks",
+   "It can only perform one narrowly defined task",
+   "It requires no compute to run",
+   "It cannot be customised"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Foundation models are pre-trained on broad data and adapt to many downstream tasks. Traditional ML models are typically trained for one specific task."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which service would you use to run a pre-built open-source model quickly without building from scratch?",
+  "options": [
+   "Amazon SageMaker JumpStart",
+   "Amazon Macie",
+   "AWS CloudTrail",
+   "Amazon Route 53"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "JumpStart provides pre-built models and solution templates for a fast start. Macie, CloudTrail and Route 53 serve security, auditing and DNS respectively."
+ },
+ {
+  "id": 7,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which dataset characteristic MOST directly reduces the risk of biased model outputs?",
+  "options": [
+   "A balanced, diverse and representative dataset",
+   "The largest possible dataset regardless of content",
+   "A dataset drawn from a single demographic",
+   "A dataset with no labels"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Balance, diversity and representativeness reduce bias. Sheer size does not help if the data is skewed, and single-demographic data actively creates bias."
+ },
+ {
+  "id": 8,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which statement about model safety and transparency trade-offs is accurate?",
+  "options": [
+   "More interpretable models are sometimes less accurate than complex ones",
+   "Transparency always improves accuracy",
+   "Explainable models cannot be deployed in production",
+   "Safety measures have no cost"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Simpler, more interpretable models can be less accurate than complex ones, which is the trade-off the exam guide asks candidates to recognise. The other statements are false."
+ },
+ {
+  "id": 9,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Which encryption practice should be applied to data used with AI services?",
+  "options": [
+   "Encrypt data both at rest and in transit",
+   "Encrypt only at rest",
+   "Encrypt only in transit",
+   "Encryption is unnecessary for AI workloads"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Both states should be encrypted — stored data and data moving across networks. Partial encryption leaves a gap, and AI workloads carry the same obligations as any other."
+ },
+ {
+  "id": 10,
+  "domain": 5,
+  "multi": false,
+  "scenario": "What is the primary security concern described as 'data leakage' in GenAI applications?",
+  "options": [
+   "Sensitive or confidential information appearing in model output",
+   "Network packets being dropped",
+   "Storage volumes filling up",
+   "Instances failing health checks"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Data leakage means confidential information surfacing in responses, mitigated by Guardrails, output filtering and careful prompt design. The other options describe unrelated operational issues."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which prompting concept explicitly tells the model what NOT to include in its response?",
+  "options": [
+   "Negative prompting",
+   "Few-shot prompting",
+   "Chain-of-thought prompting",
+   "Zero-shot prompting"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Negative prompting states what to avoid. Few-shot supplies examples, chain-of-thought requests step-by-step reasoning, and zero-shot gives no examples at all."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which metric measures semantic similarity between generated and reference text rather than exact word overlap?",
+  "options": [
+   "BERTScore",
+   "BLEU",
+   "Accuracy",
+   "Latency"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "BERTScore compares meaning using embeddings rather than exact word matches. BLEU and ROUGE rely more on overlap, and accuracy and latency measure different things entirely."
+ },
+ {
+  "id": 13,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which business metric would BEST indicate that a customer-service AI assistant is delivering value?",
+  "options": [
+   "Task completion rate and user satisfaction",
+   "The number of GPUs used",
+   "The size of the model in gigabytes",
+   "The number of tokens in the system prompt"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Task completion rate, user satisfaction, cost per interaction and ROI are the business alignment metrics the exam guide names. GPU count, model size and prompt length are technical inputs, not outcomes."
+ },
+ {
+  "id": 14,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company needs to forecast electricity demand for the next twelve months from historical data. Which service is purpose-built?",
+  "options": [
+   "Amazon Forecast",
+   "Amazon Personalize",
+   "Amazon Lex",
+   "Amazon Polly"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Forecast is the managed time-series forecasting service. Personalize generates recommendations, Lex builds chatbots, and Polly synthesises speech."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which describes 'human-in-the-loop' in a responsible AI context?",
+  "options": [
+   "People review or approve model outputs before they take effect",
+   "The model operates with no oversight",
+   "Humans write all responses manually",
+   "The model trains itself continuously"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Human-in-the-loop inserts human judgement into the workflow, typically for low-confidence or high-risk decisions, implemented on AWS with Amazon A2I."
+ },
+ {
+  "id": 16,
+  "domain": 5,
+  "multi": true,
+  "scenario": "Which TWO controls limit who can invoke a foundation model in Amazon Bedrock?",
+  "options": [
+   "IAM policies restricting Bedrock API actions",
+   "IAM roles granting scoped, temporary access",
+   "Increasing the model's temperature",
+   "Reducing the max token limit",
+   "Enabling S3 versioning"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Access control is enforced by IAM policies and roles, exactly as with any other AWS service. Temperature and token limits shape output, and S3 versioning protects objects from deletion."
+ },
+ {
+  "id": 17,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which model selection criterion matters MOST when an application must support users writing in several languages?",
+  "options": [
+   "Multi-lingual capability",
+   "Maximum output tokens",
+   "Prompt caching support",
+   "Instance storage type"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Multi-lingual capability is one of the selection criteria named in the exam guide and is decisive when users write in several languages. The other factors matter for cost and length, not language coverage."
+ },
+ {
+  "id": 18,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which describes the FM lifecycle stage that follows evaluation?",
+  "options": [
+   "Deployment",
+   "Data selection",
+   "Pre-training",
+   "Chunking"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The lifecycle runs data selection, model selection, pre-training, fine-tuning, evaluation, deployment, then feedback. Deployment follows evaluation, and AIF's ordering questions test exactly this."
+ },
+ {
+  "id": 19,
+  "domain": 1,
+  "multi": false,
+  "scenario": "What is the key difference between accuracy and precision as evaluation metrics?",
+  "options": [
+   "Accuracy measures overall correctness; precision measures how many positive predictions were genuinely positive",
+   "They are identical",
+   "Precision applies only to images",
+   "Accuracy applies only to generative models"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Accuracy is overall correctness across all predictions. Precision focuses on positive predictions specifically — of those flagged, how many were right — and pairs with recall."
+ },
+ {
+  "id": 20,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A model's performance degrades months after deployment as real-world data changes. What is this called, and which service detects it?",
+  "options": [
+   "Drift, detected by Amazon SageMaker Model Monitor",
+   "Overfitting, detected by Amazon Textract",
+   "Hallucination, detected by Amazon Polly",
+   "Prompt injection, detected by AWS Config"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Drift is degradation as production data diverges from training data, and Model Monitor detects it. Overfitting is a training-time problem, and the other pairings are unrelated."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLF-C02 CLF Quiz 7</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>CLF Quiz 7</h1>
+      <p class="sub">AWS Certified Cloud Practitioner (CLF-C02) · 20-question revision quiz · balanced — all four domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../clf-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">CLF Quiz 7</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"clf-07","title":"CLF Quiz 7","minutes":30,"pass":700,"domainNames":{"1":"Cloud Concepts","2":"Security & Compliance","3":"Cloud Technology & Services","4":"Billing, Pricing & Support"},"domainWeights":{"1":24,"2":30,"3":34,"4":12},"backTo":"clf-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which of the following BEST describes the AWS shared responsibility model?",
+  "options": [
+   "AWS is responsible for security OF the cloud; the customer is responsible for security IN the cloud",
+   "AWS is responsible for all security",
+   "The customer is responsible for all security",
+   "Responsibility is split evenly on every service"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS secures the infrastructure — hardware, software, networking and facilities — while customers secure what they put in it: their data, access control, and configuration. The split shifts by service but never becomes an even divide."
+ },
+ {
+  "id": 2,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which service would you use to investigate the root cause of a security finding by analysing related events?",
+  "options": [
+   "Amazon Detective",
+   "Amazon GuardDuty",
+   "AWS Shield",
+   "AWS Artifact"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Detective analyses and visualises related events to determine the root cause of a finding. GuardDuty raises the finding in the first place; Detective is the follow-up investigation tool."
+ },
+ {
+  "id": 3,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company needs a graph database to model highly connected data such as social relationships. Which service?",
+  "options": [
+   "Amazon Neptune",
+   "Amazon DynamoDB",
+   "Amazon Aurora",
+   "Amazon Redshift"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Neptune is AWS's managed graph database, built for highly connected data and relationship queries. DynamoDB is key-value NoSQL, Aurora is relational, and Redshift is a data warehouse."
+ },
+ {
+  "id": 4,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service processes real-time streaming data such as clickstreams or IoT telemetry?",
+  "options": [
+   "Amazon Kinesis",
+   "AWS Glue",
+   "Amazon Athena",
+   "Amazon QuickSight"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Kinesis ingests and processes streaming data in real time. Glue performs batch ETL, Athena queries stored data in S3, and QuickSight visualises results."
+ },
+ {
+  "id": 5,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which of these is a benefit of using AWS global infrastructure for a worldwide user base?",
+  "options": [
+   "Deploying close to users to reduce latency",
+   "Eliminating the need for security controls",
+   "Removing all data transfer charges",
+   "Guaranteeing zero downtime"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deploying into Regions and edge locations near users reduces latency. The other options are absolutes: security remains a customer responsibility, transfer out is charged, and no provider guarantees zero downtime."
+ },
+ {
+  "id": 6,
+  "domain": 1,
+  "multi": true,
+  "scenario": "A startup wants to avoid large upfront hardware purchases while its user numbers are unpredictable. Which TWO cloud benefits apply MOST directly?",
+  "options": [
+   "Trade capital expense for variable expense",
+   "Stop guessing capacity",
+   "Data sovereignty compliance",
+   "Dedicated physical hardware",
+   "Fixed annual pricing"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Avoiding upfront hardware is trading capital expense for variable expense, and unpredictable user numbers is precisely the 'stop guessing capacity' benefit. Data sovereignty is a legal concern, and dedicated hardware and fixed pricing run counter to what the startup wants."
+ },
+ {
+  "id": 7,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which AWS Support plan is appropriate for a development and test environment requiring business-hours email support only?",
+  "options": [
+   "Basic",
+   "Developer",
+   "Business",
+   "Enterprise"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Developer Support provides business-hours email access to a single contact, intended for development and test environments. Basic offers no technical support, and Business and Enterprise are for production workloads."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which AWS service provides recommendations to reduce cost, improve performance, and increase security and fault tolerance?",
+  "options": [
+   "AWS Trusted Advisor",
+   "AWS Cost Explorer",
+   "AWS Config",
+   "AWS Artifact"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Trusted Advisor inspects an account across cost optimisation, performance, security, fault tolerance and service limits. Cost Explorer analyses spending only, and Config records configuration state."
+ },
+ {
+  "id": 9,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service allows an organisation to centrally create and manage multiple AWS accounts with consolidated billing?",
+  "options": [
+   "AWS Organizations",
+   "AWS IAM Identity Center",
+   "AWS Control Tower",
+   "AWS Systems Manager"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Organizations creates and manages multiple accounts and provides consolidated billing. Control Tower builds on it to set up a governed multi-account environment, and IAM Identity Center handles sign-on."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service connects an on-premises data centre to AWS over an encrypted tunnel across the public internet?",
+  "options": [
+   "AWS Site-to-Site VPN",
+   "AWS Direct Connect",
+   "AWS Transit Gateway",
+   "Amazon CloudFront"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Site-to-Site VPN creates an encrypted tunnel over the public internet — quick and inexpensive but with variable performance. Direct Connect is the dedicated private line alternative."
+ },
+ {
+  "id": 11,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which action helps protect against accidental deletion of objects in an Amazon S3 bucket?",
+  "options": [
+   "Enable S3 Versioning",
+   "Enable S3 Transfer Acceleration",
+   "Use S3 Intelligent-Tiering",
+   "Disable encryption"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Versioning retains previous versions so a deleted or overwritten object can be recovered. Transfer Acceleration affects upload speed and Intelligent-Tiering affects cost, neither protecting against deletion."
+ },
+ {
+  "id": 12,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which service provides dedicated hardware security modules for regulatory compliance requiring exclusive key control?",
+  "options": [
+   "AWS CloudHSM",
+   "AWS KMS",
+   "AWS Certificate Manager",
+   "AWS Secrets Manager"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CloudHSM provides single-tenant hardware security modules where you retain exclusive control of keys, required by certain regulations. KMS is the shared managed alternative that suits most use cases."
+ },
+ {
+  "id": 13,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which statement about Availability Zones is correct?",
+  "options": [
+   "They are physically separate locations within a Region with independent power and networking",
+   "They are the same as edge locations",
+   "Each Region contains exactly one",
+   "They exist only in the United States"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Availability Zones are physically separate facilities within a Region with independent power, cooling and networking, so they do not share single points of failure. Edge locations are CloudFront caches, a different concept."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service delivers intelligent enterprise search across an organisation's internal documents?",
+  "options": [
+   "Amazon Kendra",
+   "Amazon Athena",
+   "Amazon OpenSearch Service",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Kendra provides intelligent, natural-language enterprise search across internal content. OpenSearch is a general search and log analytics engine, Athena queries structured data in S3, and Comprehend analyses text."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An organisation wants to prevent a single account from exceeding a spending limit and be notified before it does. Which combination is appropriate?",
+  "options": [
+   "AWS Budgets with notifications",
+   "AWS Cost Explorer with forecasting only",
+   "AWS Artifact reports",
+   "AWS Trusted Advisor checks alone"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Budgets sets thresholds and sends notifications as spending approaches or exceeds them. Cost Explorer analyses and forecasts but does not alert, and Artifact provides compliance documents."
+ },
+ {
+  "id": 16,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service should be used to build and deploy a continuous integration and delivery pipeline on AWS?",
+  "options": [
+   "AWS CodePipeline",
+   "AWS CloudFormation",
+   "AWS Systems Manager",
+   "Amazon EventBridge"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CodePipeline orchestrates the CI/CD stages of build, test and deploy, typically alongside CodeBuild. CloudFormation provisions infrastructure and Systems Manager manages servers."
+ },
+ {
+  "id": 17,
+  "domain": 2,
+  "multi": true,
+  "scenario": "Which TWO practices improve the security of an AWS account?",
+  "options": [
+   "Enabling MFA on the root user",
+   "Applying the principle of least privilege",
+   "Sharing IAM user credentials across the team",
+   "Using the root user for daily administration",
+   "Making S3 buckets public by default"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Enabling MFA on root and applying least privilege are both core AWS security practices. Sharing credentials, using root daily and defaulting buckets to public are all explicitly discouraged and appear as distractors."
+ },
+ {
+  "id": 18,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which describes the relationship between Regions, Availability Zones and edge locations?",
+  "options": [
+   "A Region contains multiple Availability Zones; edge locations are separate caching sites, typically far more numerous",
+   "Edge locations contain Availability Zones",
+   "Availability Zones contain Regions",
+   "All three terms mean the same thing"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Regions contain multiple Availability Zones, while edge locations are a separate and much larger network of CloudFront caching sites positioned close to users."
+ },
+ {
+  "id": 19,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service provides a managed Kubernetes-compatible container registry for storing container images?",
+  "options": [
+   "Amazon ECR",
+   "Amazon ECS",
+   "Amazon EKS",
+   "AWS Fargate"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "ECR stores and manages container images. ECS and EKS orchestrate running containers, and Fargate provides the serverless compute for them to run on."
+ },
+ {
+  "id": 20,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which pricing characteristic applies to AWS Lambda?",
+  "options": [
+   "You pay per request and for compute duration, with no charge when idle",
+   "You pay a fixed monthly fee",
+   "You must purchase Reserved capacity",
+   "You pay only for storage"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Lambda charges per request and for the duration code actually runs, with nothing charged while idle. This pay-per-execution model is why it suits infrequent, event-driven workloads."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

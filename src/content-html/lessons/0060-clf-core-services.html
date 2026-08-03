@@ -1,0 +1,205 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C6 · Domain 3 (34%) — the biggest domain</p>
+    <h1 data-ur="Core services: kaunsi cheez kis kaam ki hai">The core services: what each one is for</h1>
+    <p class="subtitle" data-ur="Yeh exam ka sab se bara domain hai (34%, takreeban 17 sawal) — magar sab se aasaan bhi, kyunke gehrai nahi maangi jati. Sirf yeh poocha jata hai: &quot;yeh service kya karti hai&quot;. Aur tumhare AWS tajurbe ki wajah se is ka bara hissa tum pehle se jaante ho.">This is the exam's biggest domain (34%, about 17 questions) — and its easiest, because no depth is required. It only asks &quot;what does this service do&quot;. Thanks to your AWS experience you already know much of it.</p>
+    <div class="meta">
+      <span>~15 min</span>
+      <span>One concept: one service, one sentence</span>
+      <span>Win: the largest domain on the exam</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C5 se yaad karo: EC2 ko S3 access dene ka sahi tareeqa? DDoS = kaunsi service? Aur Inspector kya karta hai?">From C5: the right way to give EC2 access to S3? DDoS = which service? And what does Inspector do?</div>
+    <div class="answer" data-ur="<strong>IAM role</strong> (kabhi access keys nahi). <strong>DDoS = AWS Shield.</strong> <strong>Inspector = kamzoriyan (vulnerabilities) dhoondta hai</strong> — GuardDuty hamla pakarta hai. Aaj hum un services par aate hain jin par yeh sab chalta hai."><strong>An IAM role</strong> (never access keys). <strong>DDoS = AWS Shield.</strong> <strong>Inspector finds vulnerabilities</strong> — GuardDuty catches attacks. Today: the services all of that runs on.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Yeh domain yaad karne ka nahi, pehchanne ka hai.</strong> Har service ka ek jumla kaafi hai — exam kabhi nahi poochta ke &quot;EBS ka maximum IOPS kya hai&quot;. Woh poochta hai: &quot;company ko yeh masla hai, kaunsi service?&quot;<br><br>⭐ <strong>Global infrastructure ke teen lafz</strong> — yeh zaroor aate hain:<br><strong>Region</strong> = duniya mein ek jagah (jaise Mumbai). Kai AZ se milkar banta hai.<br><strong>Availability Zone (AZ)</strong> = us Region ke andar alag data centre. <strong>High availability = kai AZ istemaal karo.</strong><br><strong>Edge location</strong> = CloudFront ka cache point, users ke qareeb, taake content jaldi mile.<br><br>Aur: <strong>kai AZ = high availability. Kai Region = disaster recovery, latency, ya data sovereignty.</strong>"><strong>This domain is about recognition, not memorisation.</strong> One sentence per service is enough — the exam never asks &quot;what is EBS's maximum IOPS&quot;. It asks: &quot;the company has this problem, which service?&quot;<br><br>⭐ <strong>The three global-infrastructure words</strong> — these always appear:<br><strong>Region</strong> = a geographic location (e.g. Mumbai), made of multiple AZs.<br><strong>Availability Zone (AZ)</strong> = a separate data centre within that Region. <strong>High availability = use multiple AZs.</strong><br><strong>Edge location</strong> = a CloudFront cache point near users, so content arrives fast.<br><br>And: <strong>multiple AZs = high availability. Multiple Regions = disaster recovery, latency, or data sovereignty.</strong></span>
+  </div>
+
+  <h2 data-ur="Kahani: shehar, mohalle aur corner shops">The story: cities, neighbourhoods and corner shops</h2>
+  <p data-ur="Socho ek company ke godown (warehouse) hain. <strong>Region</strong> ek shehar hai — Karachi, Dubai, London. <strong>Availability Zones</strong> us shehar ke alag alag mohallon mein alag godown hain: agar ek mohalle mein bijli chali jaye ya aag lag jaye, doosra mohalla chalta rehta hai. Isi liye <strong>kai AZ = high availability</strong>.">Imagine a company's warehouses. A <strong>Region</strong> is a city — Karachi, Dubai, London. <strong>Availability Zones</strong> are separate warehouses in different neighbourhoods of that city: if one loses power or floods, the other keeps running. Hence <strong>multiple AZs = high availability</strong>.</p>
+  <p data-ur="<strong>Edge locations</strong> woh chhoti corner shops hain jo har gali mein hain — wahan poora stock nahi, sirf woh cheezein jo log aksar maangte hain, taake grahak ko shehar ke godown tak na jana pare. <strong>Yeh CloudFront hai</strong> — content users ke qareeb rakhna."><strong>Edge locations</strong> are small corner shops on every street — they don't hold full stock, just the popular items, so customers needn't travel to the city warehouse. <strong>That's CloudFront</strong> — keeping content near users.</p>
+  <p data-ur="Aur doosre shehar mein godown kholna? Woh <strong>kai Region</strong> hai — mehnga, magar zaroori agar poora shehar doob jaye (disaster recovery), ya agar doosre mulk ke grahak ko tez service chahiye, ya qanoon kehta ho ke data usi mulk mein rahe (data sovereignty).">And opening a warehouse in another city? That's <strong>multiple Regions</strong> — expensive, but necessary if a whole city floods (disaster recovery), if customers abroad need speed, or if the law requires data to stay in-country (data sovereignty).</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Compute — cheezein chalane wali services">⭐ Compute — services that run things</span>
+    <ul>
+      <li data-ur="⭐ <strong>Amazon EC2</strong> = cloud mein virtual server. Poora control, tum OS sambhalte ho. Instance ki qismein: <strong>compute optimized</strong> (zyada CPU), <strong>memory optimized</strong> (zyada RAM), <strong>storage optimized</strong> (zyada disk), <strong>general purpose</strong>."><strong>⭐ Amazon EC2</strong> = a virtual server in the cloud. Full control; you manage the OS. Instance families: <strong>compute optimized</strong> (more CPU), <strong>memory optimized</strong> (more RAM), <strong>storage optimized</strong> (more disk), <strong>general purpose</strong>.</li>
+      <li data-ur="⭐ <strong>AWS Lambda</strong> = code chalao bina server ke. Sirf chalne ke waqt ka paisa. <strong>Max 15 minute.</strong> Sawal mein &quot;run code without managing servers&quot; = Lambda."><strong>⭐ AWS Lambda</strong> = run code with no servers. Pay only while it runs. <strong>Max 15 minutes.</strong> &quot;Run code without managing servers&quot; = Lambda.</li>
+      <li data-ur="⭐ <strong>AWS Fargate</strong> = containers bina server ke chalana. <strong>Amazon ECS</strong> = AWS ka apna container system. <strong>Amazon EKS</strong> = Kubernetes. <strong>Amazon ECR</strong> = container images rakhne ki jagah. Sawal mein &quot;Kubernetes&quot; = EKS, hamesha."><strong>⭐ AWS Fargate</strong> = running containers with no servers. <strong>Amazon ECS</strong> = AWS's own container orchestration. <strong>Amazon EKS</strong> = Kubernetes. <strong>Amazon ECR</strong> = the container image registry. &quot;Kubernetes&quot; = EKS, always.</li>
+      <li data-ur="<strong>AWS Elastic Beanstalk</strong> = apna code do, AWS khud EC2/load balancer/scaling laga deta hai. Sawal mein &quot;deploy an application without managing infrastructure, but keep control&quot; = Beanstalk. <strong>Amazon Lightsail</strong> = sab se aasaan, chhoti website ke liye ek fix qeemat par. <strong>AWS Batch</strong> = bare batch jobs. <strong>AWS Outposts</strong> = AWS ka hardware tumhare apne data centre mein (hybrid)."><strong>AWS Elastic Beanstalk</strong> = give it your code and AWS provisions EC2, load balancing and scaling for you. &quot;Deploy an app without managing infrastructure, but keep control&quot; = Beanstalk. <strong>Amazon Lightsail</strong> = the simplest option, small sites at a fixed price. <strong>AWS Batch</strong> = large batch jobs. <strong>AWS Outposts</strong> = AWS hardware in your own data centre (hybrid).</li>
+      <li data-ur="⭐ <strong>Auto Scaling</strong> = zaroorat ke mutabiq servers khud barhana/ghatana (= elasticity). <strong>Elastic Load Balancer (ELB)</strong> = traffic ko kai servers mein baantna. Yeh dono milkar high availability aur elasticity dete hain."><strong>⭐ Auto Scaling</strong> = automatically adding/removing servers with demand (= elasticity). <strong>Elastic Load Balancer (ELB)</strong> = spreading traffic across servers. Together they provide high availability and elasticity.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Storage — data rakhne ki jagahein">⭐ Storage — where data lives</span>
+    <ul>
+      <li data-ur="⭐ <strong>Amazon S3</strong> = <strong>object storage</strong> — files, tasveerein, backups, website ka static content. Internet se pohanch. Bohot sasta, bohot mehfooz (11 nines durability). Sawal mein &quot;store files/objects&quot; = S3."><strong>⭐ Amazon S3</strong> = <strong>object storage</strong> — files, images, backups, static website content. Reachable over the internet. Cheap and extremely durable (11 nines). &quot;Store files/objects&quot; = S3.</li>
+      <li data-ur="⭐ <strong>Amazon EBS</strong> = <strong>block storage</strong> — ek EC2 instance ki hard disk. <strong>Sirf ek AZ mein rehti hai</strong>, aur aam tor par ek hi instance se juri hoti hai. Sawal mein &quot;disk/volume for an EC2 instance&quot; = EBS."><strong>⭐ Amazon EBS</strong> = <strong>block storage</strong> — a hard disk for one EC2 instance. <strong>Lives in a single AZ</strong> and normally attaches to one instance. &quot;A disk/volume for an EC2 instance&quot; = EBS.</li>
+      <li data-ur="⭐ <strong>Amazon EFS</strong> = <strong>file storage</strong> — ek hi file system jise <strong>kai EC2 instances ek saath</strong> istemaal kar sakein, aur kai AZ mein chalta hai. Sawal mein &quot;shared file system across multiple instances&quot; = EFS. (<strong>Amazon FSx</strong> = Windows ya khaas file systems ke liye.)"><strong>⭐ Amazon EFS</strong> = <strong>file storage</strong> — one file system <strong>many EC2 instances share simultaneously</strong>, spanning AZs. &quot;A shared file system across multiple instances&quot; = EFS. (<strong>Amazon FSx</strong> = for Windows or specialist file systems.)</li>
+      <li data-ur="<strong>Instance store</strong> = EC2 ki apni local disk — <strong>bohot tez magar aarzi</strong> (instance band hote hi data khatam). Sawal mein &quot;temporary/scratch data&quot; = instance store; &quot;data must survive&quot; = EBS."><strong>Instance store</strong> = EC2's local disk — <strong>very fast but ephemeral</strong> (data is lost when the instance stops). &quot;Temporary/scratch data&quot; = instance store; &quot;data must persist&quot; = EBS.</li>
+      <li data-ur="<strong>S3 lifecycle policy</strong> = purane objects khud sasti tier (Glacier) mein chale jaayein. <strong>AWS Backup</strong> = kai services ka backup ek jagah se. <strong>AWS Storage Gateway</strong> = apne data centre ko AWS storage se jorna (hybrid)."><strong>S3 lifecycle policy</strong> = automatically moving older objects to cheaper tiers (Glacier). <strong>AWS Backup</strong> = centralised backup across services. <strong>AWS Storage Gateway</strong> = connecting your data centre to AWS storage (hybrid).</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Database — kaunsa database kab">⭐ Databases — which one, when</span>
+    <ul>
+      <li data-ur="⭐ <strong>Amazon RDS</strong> = managed <strong>relational</strong> database (PostgreSQL, MySQL, etc.) — tumhara Django jis se baat karta hai. AWS patching, backup, replication sambhalta hai. <strong>Amazon Aurora</strong> = AWS ka apna, tez tar MySQL/PostgreSQL-compatible database."><strong>⭐ Amazon RDS</strong> = managed <strong>relational</strong> database (PostgreSQL, MySQL, etc.) — what your Django talks to. AWS handles patching, backups, replication. <strong>Amazon Aurora</strong> = AWS's own faster MySQL/PostgreSQL-compatible engine.</li>
+      <li data-ur="⭐ <strong>Amazon DynamoDB</strong> = <strong>NoSQL</strong>, serverless, bohot tez, kisi bhi paimane par. Sawal mein &quot;NoSQL&quot;, &quot;key-value&quot;, ya &quot;single-digit millisecond&quot; = DynamoDB."><strong>⭐ Amazon DynamoDB</strong> = <strong>NoSQL</strong>, serverless, extremely fast at any scale. &quot;NoSQL&quot;, &quot;key-value&quot; or &quot;single-digit millisecond&quot; = DynamoDB.</li>
+      <li data-ur="⭐ <strong>Amazon ElastiCache</strong> = <strong>memory</strong> mein cache (Redis/Memcached) — database ka bojh kam karne aur raftaar barhane ke liye. Sawal mein &quot;in-memory caching&quot; = ElastiCache."><strong>⭐ Amazon ElastiCache</strong> = <strong>in-memory</strong> cache (Redis/Memcached) — reducing database load and improving speed.</li>
+      <li data-ur="<strong>Amazon Redshift</strong> = data warehouse (bara analytics). <strong>Amazon DocumentDB</strong> = MongoDB jaisa. <strong>Amazon Neptune</strong> = graph database (rishte/connections)."><strong>Amazon Redshift</strong> = data warehouse (large-scale analytics). <strong>Amazon DocumentDB</strong> = MongoDB-compatible. <strong>Amazon Neptune</strong> = graph database (relationships).</li>
+      <li data-ur="<strong>AWS DMS</strong> = database ko AWS par migrate karna. <strong>AWS SCT</strong> = schema convert karna jab database engine badal raha ho (Oracle → PostgreSQL)."><strong>AWS DMS</strong> = migrating databases to AWS. <strong>AWS SCT</strong> = converting the schema when changing engine (Oracle → PostgreSQL).</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Networking aur content delivery">⭐ Networking and content delivery</span>
+    <ul>
+      <li data-ur="⭐ <strong>Amazon VPC</strong> = AWS mein tumhara apna alag network. Andar: <strong>subnets</strong> (public = internet se pohanch, private = nahi), <strong>internet gateway</strong>, <strong>NAT gateway</strong>."><strong>⭐ Amazon VPC</strong> = your own isolated network in AWS. Inside it: <strong>subnets</strong> (public = internet-reachable, private = not), an <strong>internet gateway</strong>, a <strong>NAT gateway</strong>.</li>
+      <li data-ur="⭐ <strong>Security group</strong> banam <strong>network ACL (NACL)</strong> — yeh jora poocha jata hai. <strong>Security group = instance ke gird pehra, stateful</strong> (jo aane diya us ka jawab khud chala jata hai), sirf <em>allow</em> rules. <strong>NACL = subnet ke gird pehra, stateless</strong>, allow <em>aur</em> deny dono."><strong>⭐ Security group</strong> vs <strong>network ACL (NACL)</strong> — a tested pair. <strong>Security group = guards the instance, stateful</strong> (return traffic is automatically allowed), <strong>allow</strong> rules only. <strong>NACL = guards the subnet, stateless</strong>, supports both allow <em>and</em> deny.</li>
+      <li data-ur="⭐ <strong>Amazon CloudFront</strong> = <strong>CDN</strong> — content edge locations par cache karke users ke qareeb pohanchana. Sawal mein &quot;reduce latency for global users&quot; = CloudFront."><strong>⭐ Amazon CloudFront</strong> = the <strong>CDN</strong> — caching content at edge locations near users. &quot;Reduce latency for global users&quot; = CloudFront.</li>
+      <li data-ur="⭐ <strong>Amazon Route 53</strong> = <strong>DNS</strong> (domain names) + health checks + traffic routing. Sawal mein &quot;register a domain&quot; ya &quot;DNS&quot; = Route 53."><strong>⭐ Amazon Route 53</strong> = <strong>DNS</strong> (domain names) + health checks + traffic routing. &quot;Register a domain&quot; or &quot;DNS&quot; = Route 53.</li>
+      <li data-ur="⭐ <strong>AWS Direct Connect</strong> = tumhare data centre se AWS tak <strong>zaati physical line</strong> — internet se nahi. Mehnga, magar tez aur mustaqil. <strong>AWS VPN</strong> = internet ke oopar mehfooz tunnel — sasta aur foran. Sawal mein &quot;dedicated private connection&quot; = Direct Connect."><strong>⭐ AWS Direct Connect</strong> = a <strong>dedicated physical line</strong> from your data centre to AWS, bypassing the internet. Expensive but fast and consistent. <strong>AWS VPN</strong> = an encrypted tunnel over the internet — cheap and immediate. &quot;Dedicated private connection&quot; = Direct Connect.</li>
+      <li data-ur="<strong>AWS Global Accelerator</strong> = AWS ke network se traffic tez pohanchana. <strong>AWS Transit Gateway</strong> = kai VPC aur networks ko ek jagah se jorna. <strong>Amazon API Gateway</strong> = APIs banana aur sambhalna."><strong>AWS Global Accelerator</strong> = routing traffic over AWS's network for speed. <strong>AWS Transit Gateway</strong> = connecting many VPCs and networks centrally. <strong>Amazon API Gateway</strong> = creating and managing APIs.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Baaqi services jo exam guide mein naam se hain">The remaining named services</span>
+    <ul>
+      <li data-ur="<strong>Messaging:</strong> <strong>Amazon SQS</strong> = queue (messages line mein, ek consumer uthata hai). <strong>Amazon SNS</strong> = notifications, ek message kai logon ko. <strong>Amazon EventBridge</strong> = events par kaam chalana. <strong>AWS Step Functions</strong> = kai qadmon wala workflow."><strong>Messaging:</strong> <strong>Amazon SQS</strong> = a queue (messages wait; one consumer takes each). <strong>Amazon SNS</strong> = notifications, one message to many subscribers. <strong>Amazon EventBridge</strong> = triggering work from events. <strong>AWS Step Functions</strong> = multi-step workflows.</li>
+      <li data-ur="<strong>Analytics:</strong> <strong>Amazon Athena</strong> = S3 par seedha SQL chalana. <strong>Amazon Kinesis</strong> = real-time streaming data. <strong>AWS Glue</strong> = ETL (data saaf kar ke transform karna). <strong>Amazon QuickSight</strong> = dashboards aur charts. <strong>Amazon EMR</strong> = bara data processing (Hadoop/Spark). <strong>Amazon OpenSearch</strong> = search aur log analysis."><strong>Analytics:</strong> <strong>Amazon Athena</strong> = SQL directly over S3. <strong>Amazon Kinesis</strong> = real-time streaming data. <strong>AWS Glue</strong> = ETL (cleaning and transforming data). <strong>Amazon QuickSight</strong> = dashboards and charts. <strong>Amazon EMR</strong> = big-data processing (Hadoop/Spark). <strong>Amazon OpenSearch</strong> = search and log analytics.</li>
+      <li data-ur="<strong>Management:</strong> <strong>AWS CloudFormation</strong> = infrastructure as code (template se poora setup banana). <strong>AWS Organizations</strong> = kai accounts sambhalna. <strong>AWS Control Tower</strong> = kai accounts ka mehfooz setup. <strong>AWS Systems Manager</strong> = servers ka intezam. <strong>Service Quotas</strong> = hadd barhane ki darkhwast. <strong>AWS Compute Optimizer</strong> = rightsizing ki tajweez."><strong>Management:</strong> <strong>AWS CloudFormation</strong> = infrastructure as code (build everything from a template). <strong>AWS Organizations</strong> = managing many accounts. <strong>AWS Control Tower</strong> = securely setting up many accounts. <strong>AWS Systems Manager</strong> = managing servers. <strong>Service Quotas</strong> = requesting limit increases. <strong>AWS Compute Optimizer</strong> = rightsizing recommendations.</li>
+      <li data-ur="<strong>Developer tools:</strong> <strong>CodeBuild</strong> (build), <strong>CodePipeline</strong> (CI/CD pipeline), <strong>X-Ray</strong> (request ka safar tracing). <strong>End-user computing:</strong> <strong>WorkSpaces</strong> (cloud mein desktop), <strong>AppStream 2.0</strong> (application stream karna). <strong>Frontend:</strong> <strong>Amplify</strong>, <strong>AppSync</strong>. <strong>IoT:</strong> <strong>AWS IoT Core</strong>. <strong>Business:</strong> <strong>Amazon Connect</strong> (call centre), <strong>Amazon SES</strong> (email bhejna)."><strong>Developer tools:</strong> <strong>CodeBuild</strong> (build), <strong>CodePipeline</strong> (CI/CD), <strong>X-Ray</strong> (tracing a request's journey). <strong>End-user computing:</strong> <strong>WorkSpaces</strong> (desktops in the cloud), <strong>AppStream 2.0</strong> (streaming an application). <strong>Frontend:</strong> <strong>Amplify</strong>, <strong>AppSync</strong>. <strong>IoT:</strong> <strong>AWS IoT Core</strong>. <strong>Business:</strong> <strong>Amazon Connect</strong> (call centre), <strong>Amazon SES</strong> (sending email).</li>
+      <li data-ur="<strong>AI/ML (CLF par bhi aate hain):</strong> <strong>SageMaker AI</strong>, <strong>Amazon Lex</strong> (chatbot), <strong>Amazon Kendra</strong> (intelligent search), <strong>Comprehend</strong>, <strong>Rekognition</strong>, <strong>Polly</strong>, <strong>Transcribe</strong>, <strong>Translate</strong>, <strong>Textract</strong>, <strong>Amazon Q</strong>. <em>Yeh sab tumhare AIF track mein tafseel se hain — dono exam ka overlap.</em>"><strong>AI/ML (these appear on CLF too):</strong> <strong>SageMaker AI</strong>, <strong>Amazon Lex</strong> (chatbots), <strong>Amazon Kendra</strong> (intelligent search), <strong>Comprehend</strong>, <strong>Rekognition</strong>, <strong>Polly</strong>, <strong>Transcribe</strong>, <strong>Translate</strong>, <strong>Textract</strong>, <strong>Amazon Q</strong>. <em>All covered in depth in your AIF track — this is the overlap between the two exams.</em></li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — Domain 3 ke lafz">Exam English — Domain 3 vocabulary</span>
+    <span data-ur="<strong>&quot;provision&quot;</strong> = resource banana. <strong>&quot;deploy&quot;</strong> = chalana/pohanchana.<br><strong>&quot;infrastructure as code (IaC)&quot;</strong> = infrastructure ko code/template se banana (CloudFormation).<br><strong>&quot;programmatic access&quot;</strong> = code/CLI/SDK se pohanch (console se nahi).<br><strong>&quot;single point of failure&quot;</strong> = woh ek cheez jis ke kharab hone se sab ruk jaye. AZ isi liye alag hoti hain.<br><strong>&quot;durability&quot;</strong> = data kho na jane ki zamanat. <strong>&quot;availability&quot;</strong> = us tak pohanch mumkin hone ki zamanat. <em>Yeh do alag cheezein hain.</em><br><strong>&quot;stateful&quot; / &quot;stateless&quot;</strong> = pichhli baat yaad rakhta hai / nahi rakhta (security group / NACL).<br><strong>&quot;latency&quot;</strong> = jawab aane mein lagne wala waqt.<br><strong>&quot;ephemeral&quot;</strong> = aarzi, mit jane wala (instance store).">
+      <strong>&quot;provision&quot;</strong> = create a resource. <strong>&quot;deploy&quot;</strong> = put into service.<br>
+      <strong>&quot;infrastructure as code (IaC)&quot;</strong> = building infrastructure from templates (CloudFormation).<br>
+      <strong>&quot;programmatic access&quot;</strong> = via code/CLI/SDK rather than the console.<br>
+      <strong>&quot;single point of failure&quot;</strong> = the one thing whose failure stops everything. Why AZs are separate.<br>
+      <strong>&quot;durability&quot;</strong> = the guarantee data won't be lost. <strong>&quot;availability&quot;</strong> = the guarantee you can reach it. <em>Two different things.</em><br>
+      <strong>&quot;stateful&quot; / &quot;stateless&quot;</strong> = remembers previous traffic / doesn't (security group / NACL).<br>
+      <strong>&quot;latency&quot;</strong> = the delay before a response.<br>
+      <strong>&quot;ephemeral&quot;</strong> = temporary, disappears (instance store).</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3 · global infrastructure · guaranteed question</span>
+    <p class="scenario" data-ur="Ek company chahti hai ke uski application <span class=&quot;qual&quot;>HIGHLY AVAILABLE</span> ho aur kisi ek data centre ke kharab hone se na ruke. Usay kya karna chahiye?">A company wants its application to be <span class="qual">HIGHLY AVAILABLE</span> and to survive the failure of a single data centre. What should it do?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek hi Availability Zone mein bara instance chalao">Run a larger instance in a single Availability Zone</button>
+      <button class="opt" data-correct="true" data-ur="Ek hi Region ki kai Availability Zones mein deploy karo">Deploy across multiple Availability Zones within a Region</button>
+      <button class="opt" data-correct="false" data-ur="Kai edge locations mein deploy karo">Deploy across multiple edge locations</button>
+      <button class="opt" data-correct="false" data-ur="Instance ka backup rozana lo">Take daily backups of the instance</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3 · storage · the EBS/EFS/S3 decision</span>
+    <p class="scenario" data-ur="Kai EC2 instances ko <strong>ek hi file system</strong> ek saath istemaal karna hai (sab parhein aur likhein). Kaunsi storage service?">Multiple EC2 instances need to access <strong>the same file system</strong> simultaneously (all reading and writing). Which storage service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Amazon EBS">Amazon EBS</button>
+      <button class="opt" data-correct="true" data-ur="Amazon EFS">Amazon EFS</button>
+      <button class="opt" data-correct="false" data-ur="Instance store">Instance store</button>
+      <button class="opt" data-correct="false" data-ur="Amazon S3 Glacier">Amazon S3 Glacier</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 3 · networking · the connectivity pair</span>
+    <p class="scenario" data-ur="Ek company apne data centre aur AWS ke darmiyan <strong>zaati, mustaqil raftaar wala connection</strong> chahti hai jo internet se na guzre. Kaunsi service?">A company wants a <strong>dedicated, consistent-performance connection</strong> between its data centre and AWS that does not traverse the internet. Which service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AWS Site-to-Site VPN">AWS Site-to-Site VPN</button>
+      <button class="opt" data-correct="true" data-ur="AWS Direct Connect">AWS Direct Connect</button>
+      <button class="opt" data-correct="false" data-ur="Amazon CloudFront">Amazon CloudFront</button>
+      <button class="opt" data-correct="false" data-ur="AWS Transit Gateway">AWS Transit Gateway</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 3 · compute · serverless</span>
+    <p class="scenario" data-ur="Ek company ek chhota function chalana chahti hai jo har baar image upload hone par chalta hai. Woh <strong>koi server manage nahi karna chahti</strong> aur sirf chalne ka paisa dena chahti hai. Kaunsi service?">A company wants to run a small function each time an image is uploaded. They want <strong>no servers to manage</strong> and to pay only while it runs. Which service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="AWS Lambda">AWS Lambda</button>
+      <button class="opt" data-correct="false" data-ur="Amazon EC2">Amazon EC2</button>
+      <button class="opt" data-correct="false" data-ur="Amazon EKS">Amazon EKS</button>
+      <button class="opt" data-correct="false" data-ur="Amazon Lightsail">Amazon Lightsail</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="Yeh domain tumhare liye sab se qudrati hai, kyunke tum yeh cheezein rozana chhoote ho. Tumhari Django app ka naqsha AWS ke naamon mein:<br><br><strong>gunicorn/Django</strong> → EC2 ya Fargate. <strong>PostgreSQL</strong> → RDS. <strong>Redis</strong> → ElastiCache. <strong>Celery ki queue</strong> → SQS. <strong>Media/static files</strong> → S3. <strong>nginx ka load balancing</strong> → ELB. <strong>Cloudflare</strong> → CloudFront. <strong>Domain ka DNS</strong> → Route 53.<br><br>Yani tum ne yeh poora architecture pehle bana rakha hai — exam sirf AWS ke naam poochta hai. <strong>Jo tumhare liye waqai naya hai woh sirf teen lafz hain:</strong> Region, Availability Zone, edge location. Un teen par waqt lagao, baaqi pehchan lo.">This domain is the most natural for you, because you touch these things daily. Your Django stack in AWS names:<br><br><strong>gunicorn/Django</strong> → EC2 or Fargate. <strong>PostgreSQL</strong> → RDS. <strong>Redis</strong> → ElastiCache. <strong>Celery's queue</strong> → SQS. <strong>Media/static files</strong> → S3. <strong>nginx load balancing</strong> → ELB. <strong>Cloudflare</strong> → CloudFront. <strong>Domain DNS</strong> → Route 53.<br><br>So you've already built this architecture — the exam is asking for AWS's names for it. <strong>What's genuinely new is three words:</strong> Region, Availability Zone, edge location. Spend your time there and simply recognise the rest.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: high availability kaise? EBS aur EFS ka farq? Security group aur NACL ka farq? Direct Connect aur VPN? Aur CloudFront kis liye?">From memory: how do you get high availability? EBS vs EFS? Security group vs NACL? Direct Connect vs VPN? And what is CloudFront for?</div>
+    <div class="answer" data-ur="<strong>High availability = kai Availability Zones.</strong> <strong>EBS = ek instance ki disk, ek AZ; EFS = kai instances ka shared file system.</strong> <strong>Security group = instance par, stateful, sirf allow; NACL = subnet par, stateless, allow aur deny.</strong> <strong>Direct Connect = zaati physical line; VPN = internet par mehfooz tunnel.</strong> <strong>CloudFront = CDN, content users ke qareeb.</strong> Paanchon aa gaye? To exam ka sab se bara domain (34%) ab tumhare paas hai."><strong>High availability = multiple Availability Zones.</strong> <strong>EBS = one instance's disk in one AZ; EFS = a shared file system for many instances.</strong> <strong>Security group = on the instance, stateful, allow-only; NACL = on the subnet, stateless, allow and deny.</strong> <strong>Direct Connect = a dedicated physical line; VPN = an encrypted tunnel over the internet.</strong> <strong>CloudFront = the CDN, content near users.</strong> All five? Then the exam's largest domain (34%) is yours.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Yeh exam ka sab se bara domain hai — <strong>34%</strong>, takreeban 17 scored sawal — aur ab tumhare paas har aham service ka ek jumla hai. Yaad rakho: yeh domain gehrai nahi maangta, sirf pehchan.<br><br>Aur tumhare liye khaas baat: is domain ka bara hissa tumhare rozana ke kaam ka doosra naam hai. Jo waqai naya hai — Region, AZ, edge location — woh sirf teen lafz hain, aur woh ab tum jaante ho.">This is the exam's largest domain — <strong>34%</strong>, about 17 scored questions — and you now have one sentence for every important service. Remember: it asks for recognition, not depth.<br><br>And the specific good news: most of this domain is your daily work under different names. What's genuinely new — Region, AZ, edge location — is three words, and you now know them.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html&quot; target=&quot;_blank&quot;>CLF-C02 In-Scope Services</a><sup class=&quot;cite&quot;><a href=&quot;#s2&quot;>2</a></sup> — AWS ki apni list ke kaunsi services exam mein aa sakti hain. Ek nazar daal lo: agar koi naam bilkul ajnabi lage to mujhe batao, main us par ek jumla de doonga.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank">CLF-C02 In-Scope Services</a><sup class="cite"><a href="#s2">2</a></sup> — AWS's own list of what can appear. Skim it: if any name looks completely foreign, tell me and I'll give you a sentence for it.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> This lesson has many names in it. Don't try to hold them all at once — the ⭐ ones carry most of the marks. If a service name won't stick, tell me and I'll tie it to something in your Django stack, which is what made the rest of them stick.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C6 (Core services).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0059-clf-security-services.html">C5 · IAM and security services</a>. Next: the <a href="../reference/clf-numbers.html">CLF numbers &amp; trigger words sheet</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html" target="_blank">CLF-C02 Exam Guide — Domain 3: Cloud Technology and Services</a> (34%). Eight task statements covering deployment methods and IaC (3.1); Regions, AZs and edge locations, including that &quot;Availability Zones do not share single points of failure&quot; and when to use multiple Regions for disaster recovery, business continuity, low latency and data sovereignty (3.2); compute including EC2 instance types, ECS/EKS, Fargate/Lambda, auto scaling and load balancers (3.3); databases including RDS, Aurora, DynamoDB, ElastiCache, DMS and SCT (3.4); networking including VPC components, security groups, NACLs, Route 53, VPN and Direct Connect (3.5); storage including S3 classes, EBS, instance store, EFS, FSx, Storage Gateway, lifecycle policies and AWS Backup (3.6); AI/ML and analytics including SageMaker AI, Lex, Kendra, Athena, Kinesis, Glue and QuickSight (3.7); and other categories including EventBridge, SNS, SQS, Connect, SES, CodeBuild, CodePipeline, X-Ray, AppStream 2.0, WorkSpaces, Amplify, AppSync and IoT Core (3.8). Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank">CLF-C02 In-Scope AWS Services</a> — the complete list of services that can appear on the exam, grouped by category.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Availability Zones are separate data centres that share no single point of failure, so spreading across them is how you achieve high availability. A bigger instance in one AZ still dies with that AZ. Edge locations are CloudFront caches, not places to run applications. Backups help you recover later, but don't keep you running."
+                      : "Reconsider. High availability comes from using multiple Availability Zones — separate data centres within a Region that share no single point of failure. A larger instance in one AZ fails with that AZ. Edge locations cache CloudFront content and don't run applications. Backups aid recovery but don't prevent downtime.",
+          q2: correct ? "Correct. EFS is the shared file system many instances can mount at once, across AZs. EBS is the trap: it's a disk for a single instance in a single AZ. Instance store is temporary local disk that vanishes when the instance stops, and Glacier is archival storage, not a live file system."
+                      : "Reconsider. The key phrase is \"the same file system simultaneously\" from multiple instances — that's Amazon EFS. EBS attaches to one instance in one AZ. Instance store is ephemeral local disk. Glacier is for archives. Hook: EBS = one instance's disk, EFS = a shared file system.",
+          q3: correct ? "Correct. \"Dedicated\" and \"does not traverse the internet\" both point to Direct Connect — a physical private line offering consistent performance. Site-to-Site VPN is encrypted but still travels over the public internet, so performance varies. CloudFront is a CDN, and Transit Gateway connects networks to each other."
+                      : "Reconsider. Two clues decide it: \"dedicated\" and \"does not traverse the internet\". That is AWS Direct Connect, a private physical connection with consistent performance. A VPN is encrypted but still runs over the public internet, so its performance varies. CloudFront is a CDN; Transit Gateway interconnects networks.",
+          q4: correct ? "Correct. Short, event-triggered code with no servers to manage and pay-per-execution billing is exactly Lambda. EC2 and EKS both mean managing infrastructure, and Lightsail is a fixed-price virtual server — you'd pay whether or not any image was uploaded."
+                      : "Reconsider. \"No servers to manage\" plus \"pay only while it runs\" plus event-triggered describes AWS Lambda. EC2 and EKS both require you to manage infrastructure. Lightsail is a simple fixed-price server, so you'd pay continuously regardless of uploads."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,98 @@
+<div class="exam-shell">
+
+  <header class="masthead" style="padding-bottom:0.5rem;">
+    <p class="eyebrow">AWS AIF-C01 · Practice Quizzes</p>
+    <h1 data-ur="AIF practice quizzes — chhote, tez, roz ke liye">AIF practice quizzes — short, fast, daily</h1>
+    <p class="subtitle" data-ur="Har quiz: 20 sawal, 30 minute, timer ke saath. Domain weighting asli exam jaisi hai (Applications of FMs 28%, GenAI 24%, AI/ML 20%, Responsible AI 14%, Security 14%).">Each quiz: 20 questions, 30 minutes, timed. Domain weighting matches the real exam (Applications of FMs 28%, GenAI 24%, AI/ML fundamentals 20%, Responsible AI 14%, Security 14%).</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b id="s-taken">0</b><span>quizzes taken</span></div>
+    <div class="stat"><b id="s-best">—</b><span>best score</span></div>
+    <div class="stat"><b id="s-avg">—</b><span>average</span></div>
+    <div class="stat"><b id="s-passed">0</b><span>passed</span></div>
+  </div>
+
+  <div class="readiness none" id="readiness">
+    Take your first quiz to see where you stand. Do not worry about the score — the first
+    one is a diagnostic, not a verdict.
+  </div>
+
+  <div class="exam-grid" id="exam-grid"></div>
+
+  <div class="key" style="margin-top:1.5rem;">
+    <span class="callout-label" data-ur="Inhein kaise use karo">How to use these</span>
+    <span data-ur="<strong>1. Roz ek quiz.</strong> 20 sawal, 30 minute — yeh rozana ke liye bana hai, poore exam ki tarah thakane wala nahi.<br><strong>2. Koi sawal khali mat chhoro.</strong> Ghalat jawab par koi extra nuksan nahi — guess hamesha behtar hai.<br><strong>3. Sab se zaroori hissa submit ke baad hai.</strong> Har ghalat jawab ki wajah parho aur khud se poocho: mujhe pata nahi tha, ya maine sawal ghalat parha? Yeh do cheezein alag hain aur unka ilaaj bhi alag hai.<br><strong>4. 700 pass mark hai.</strong> Jab lagataar 800+ aane lage, tab exam book karo."><strong>1. One quiz a day.</strong> 20 questions in 30 minutes — built for daily practice rather than the exhaustion of a full mock.<br><strong>2. Never leave a question blank.</strong> There is no penalty for a wrong answer, so a guess always beats nothing.<br><strong>3. The most valuable part comes after you submit.</strong> Read the explanation for every wrong answer and ask: did I not know it, or did I misread the question? Those are different problems with different fixes.<br><strong>4. The pass mark is 700.</strong> Book the real exam once you consistently score 800+.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Paste me any question you got wrong and I'll show you which word decided it. If a question's English is what confused you, say so — I'll rewrite it simply first, then explain the AWS part.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><a href="aif-index.html">← Back to the AI Practitioner hub</a> · <a href="reference/aif-numbers.html">Cheat sheet</a> · <a href="index.html">Home</a></p>
+  </footer>
+
+</div>
+
+<script>
+/* Reads the same localStorage record the exam engine writes, so scores appear
+   here automatically after each attempt. */
+var EXAMS = [
+  { id:'aif-01', n:1, focus:'Balanced — all domains' },
+  { id:'aif-02', n:2, focus:'Balanced — all domains' },
+  { id:'aif-03', n:3, focus:'Balanced — all domains' },
+  { id:'aif-04', n:4, focus:'Balanced — all domains' },
+  { id:'aif-05', n:5, focus:'Balanced — all domains' },
+  { id:'aif-06', n:6, focus:'Balanced — all domains' },
+  { id:'aif-07', n:7, focus:'Balanced — all domains' }
+];
+
+(function () {
+  var results = {};
+  try { results = JSON.parse(localStorage.getItem('dva-exam-results') || '{}'); } catch (e) {}
+
+  var grid = document.getElementById('exam-grid');
+  var scores = [], passed = 0;
+
+  grid.innerHTML = EXAMS.map(function (e) {
+    var r = results[e.id];
+    var badge, sub;
+    if (r) {
+      scores.push(r.best);
+      if (r.passed) passed++;
+      badge = '<span class="badge ' + (r.passed ? 'pass' : 'fail') + '">' + r.best + '</span>';
+      sub = ' best · ' + r.attempts + ' attempt' + (r.attempts > 1 ? 's' : '');
+    } else {
+      badge = '<span class="badge none">not taken</span>';
+      sub = '';
+    }
+    return '<a class="exam-card" href="exams/' + e.id + '.html">' +
+             '<span class="en">Quiz ' + e.n + ' · 20 questions</span>' +
+             '<div class="et">' + e.focus + '</div>' +
+             '<div class="escore">' + badge + sub + '</div>' +
+           '</a>';
+  }).join('');
+
+  document.getElementById('s-taken').textContent = scores.length;
+  document.getElementById('s-passed').textContent = passed;
+  if (scores.length) {
+    var best = Math.max.apply(null, scores);
+    var avg = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+    document.getElementById('s-best').textContent = best;
+    document.getElementById('s-avg').textContent = avg;
+
+    var el = document.getElementById('readiness');
+    if (avg >= 800) {
+      el.className = 'readiness ready';
+      el.textContent = 'Averaging ' + avg + '. That is comfortably above the 700 pass mark — you are in good shape.';
+    } else if (avg >= 700) {
+      el.className = 'readiness close';
+      el.textContent = 'Averaging ' + avg + '. Above the line, but not by much. Aim for 800+ consistently before booking.';
+    } else {
+      el.className = 'readiness work';
+      el.textContent = 'Averaging ' + avg + '. Keep going — read every explanation, and revisit the lesson for whichever domain scores lowest.';
+    }
+  }
+})();
+</script>

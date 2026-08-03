@@ -1,0 +1,184 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C5 · Domain 2 (30%)</p>
+    <h1 data-ur="IAM aur security services: kaun andar aa sakta hai, aur kaun pehra de raha hai">IAM and the security services: who gets in, and who is standing guard</h1>
+    <p class="subtitle" data-ur="C1 mein hum ne lakeer seekhi (kaun zimmedar hai). Ab us lakeer ke <em>tumhare</em> taraf ke auzaar: IAM (kis ko access), aur woh services jo hifazat karti hain. Domain 2 exam ka 30% hai — Technology ke baad sab se bara.">In C1 you learned the line (who is responsible). Now the tools on <em>your</em> side of it: IAM (who gets access) and the services that stand guard. Domain 2 is 30% of the exam — the second-largest.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>One concept: identity, then protection</span>
+      <span>Win: the other half of a 30% domain</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C1 se yaad karo: AWS security OF the cloud ka zimmedar hai ya IN ka? EC2 par guest OS kis ka? Aur data kis ka — hamesha?">From C1: is AWS responsible for security OF or IN the cloud? Who patches EC2's guest OS? And whose is the data, always?</div>
+    <div class="answer" data-ur="<strong>AWS = OF the cloud</strong> (jo tum haath nahi laga sakte). <strong>EC2 ka guest OS tumhara</strong> (RDS ka AWS ka). <strong>Data hamesha customer ka.</strong> Aaj hum dekhenge ke apni taraf ki zimmedari nibhane ke liye kaunse auzaar milte hain."><strong>AWS = OF the cloud</strong> (what you cannot touch). <strong>EC2's guest OS is yours</strong> (RDS's is AWS's). <strong>Data is always the customer's.</strong> Today: the tools you're given to meet your side of that.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Root user woh maalik hai jo sab kuch kar sakta hai — is liye usay rozana istemaal NAHI karte.</strong><br><br>Exam ka pasandeeda jawab hamesha yeh hota hai:<br><strong>1.</strong> Root user par <strong>MFA</strong> lagao.<br><strong>2.</strong> Root ki <strong>access keys mita do</strong>.<br><strong>3.</strong> Rozana ke kaam ke liye <strong>IAM user/role</strong> banao.<br><strong>4.</strong> Har kisi ko sirf utna access do jitna zaroori hai — is ka naam <strong>least privilege</strong> hai.<br><br>⭐ Aur ek qaida jo bohot poocha jata hai: <strong>EC2 ya kisi AWS service ko access dena ho to hamesha ROLE istemaal karo, access keys code mein kabhi nahi.</strong>"><strong>The root user is the owner who can do everything — which is exactly why you don't use it day to day.</strong><br><br>The exam's favourite answer is always:<br><strong>1.</strong> Enable <strong>MFA</strong> on the root user.<br><strong>2.</strong> <strong>Delete root's access keys</strong>.<br><strong>3.</strong> Create an <strong>IAM user/role</strong> for everyday work.<br><strong>4.</strong> Give everyone only the access they need — this is called <strong>least privilege</strong>.<br><br>⭐ And a heavily tested rule: <strong>to give EC2 or any AWS service access, always use a ROLE — never access keys in code.</strong></span>
+  </div>
+
+  <h2 data-ur="Kahani: daftar ki chaabiyan">The story: office keys</h2>
+  <p data-ur="Socho tum ek daftar ke maalik ho. <strong>Root user</strong> woh master chaabi hai jo har taala kholti hai — tijori bhi. Tum woh chaabi jeb mein rakh kar rozana istemaal nahi karte; usay tijori mein rakhte ho aur us par extra taala (MFA) lagate ho.">Imagine you own an office. The <strong>root user</strong> is the master key that opens every lock, including the safe. You don't carry it around daily — you lock it away and put an extra lock on it (MFA).</p>
+  <p data-ur="<strong>IAM users</strong> tumhare mulazim hain, har ek ki apni chaabi. <strong>IAM groups</strong> department hain — &quot;accounts wale&quot; sab ko ek jaisi chaabi milti hai, alag alag banane ki zaroorat nahi. <strong>IAM policies</strong> woh likhi hui ijazat hai ke kaunsi chaabi kaunsa darwaza kholti hai."><strong>IAM users</strong> are your employees, each with their own key. <strong>IAM groups</strong> are departments — everyone in &quot;accounts&quot; gets the same key, rather than issuing each separately. <strong>IAM policies</strong> are the written rules of which key opens which door.</p>
+  <p data-ur="Aur <strong>IAM role</strong>? Yeh woh <em>visitor badge</em> hai jo waqti tor par pehna jata hai. Koi mulazim nahi, koi permanent chaabi nahi — jab tak badge laga hai, us ka access hai. <strong>EC2 instance ko badge dete ho, chaabi nahi</strong> — kyunke chaabi kho sakti hai (code mein leak ho sakti hai), badge khud khatam ho jata hai.">And an <strong>IAM role</strong>? That's a <em>visitor badge</em> worn temporarily. No employee, no permanent key — access lasts while the badge is worn. <strong>You give an EC2 instance a badge, not a key</strong> — because keys get lost (leaked in code), while badges expire on their own.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ IAM — woh cheezein jo zaroor poochi jati hain">⭐ IAM — what definitely gets asked</span>
+    <ul>
+      <li data-ur="⭐ <strong>Root user sirf yeh kaam kar sakta hai</strong> (aur koi nahi): account band karna, account ki settings/email badalna, support plan badalna, AWS account ka billing access on/off karna. Sawal mein &quot;only the root user can…&quot; = yeh cheezein."><strong>⭐ Only the root user can</strong>: close the account, change account settings/email, change the support plan, and control billing access. &quot;Only the root user can…&quot; refers to these.</li>
+      <li data-ur="⭐ <strong>IAM Role</strong> = waqti ijazat, khud khatam hone wali. <strong>EC2, Lambda, ya kisi service ko access dena = role.</strong> <strong>User</strong> = insaan ke liye. <strong>Group</strong> = users ka majmua (policies group par lagao, har user par alag nahi)."><strong>⭐ IAM Role</strong> = temporary, self-expiring permission. <strong>Giving EC2, Lambda or any service access = a role.</strong> <strong>User</strong> = for a person. <strong>Group</strong> = a collection of users (attach policies to the group, not to each user).</li>
+      <li data-ur="⭐ <strong>MFA (multi-factor authentication)</strong> = password ke saath doosri cheez (phone ka code). Sawal mein &quot;extra layer of security for login&quot; = MFA."><strong>⭐ MFA (multi-factor authentication)</strong> = password plus a second factor (a phone code). &quot;An extra layer of security for sign-in&quot; = MFA.</li>
+      <li data-ur="⭐ <strong>Least privilege</strong> = sirf utni ijazat jitni kaam ke liye chahiye, ek zarra zyada nahi. Yeh AWS ka sab se aham security usool hai aur aksar sahi jawab hota hai."><strong>⭐ Least privilege</strong> = grant only the permissions required, nothing more. AWS's central security principle and frequently the correct answer.</li>
+      <li data-ur="<strong>IAM Identity Center</strong> (purana naam AWS SSO) = ek hi jagah se kai AWS accounts mein login. <strong>Federation</strong> = pehle se maujood identity (jaise company ka Active Directory ya Google) se AWS mein aana — naye IAM users banaye baghair."><strong>IAM Identity Center</strong> (formerly AWS SSO) = single sign-on across many AWS accounts. <strong>Federation</strong> = signing in with an existing identity (company Active Directory, Google) without creating new IAM users.</li>
+      <li data-ur="<strong>Secrets Manager</strong> = passwords aur API keys mehfooz rakhna (khud-ba-khud badalne ki soolat ke saath). <strong>Systems Manager Parameter Store</strong> = configuration aur secrets rakhna, sasta option."><strong>Secrets Manager</strong> = storing passwords and API keys securely (with automatic rotation). <strong>Systems Manager Parameter Store</strong> = storing configuration and secrets, the cheaper option.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Security services — har ek ka ek kaam">⭐ The security services — one job each</span>
+    <ul>
+      <li data-ur="⭐ <strong>AWS WAF</strong> (Web Application Firewall) = web par hone wale hamlon se bachao — SQL injection, cross-site scripting. Sawal mein &quot;protect a web application from common exploits&quot; = WAF."><strong>⭐ AWS WAF</strong> (Web Application Firewall) = protection from web attacks — SQL injection, cross-site scripting. &quot;Protect a web application from common exploits&quot; = WAF.</li>
+      <li data-ur="⭐ <strong>AWS Shield</strong> = <strong>DDoS</strong> hamlon se bachao (jab hazaron requests bhej kar site girayi jati hai). <strong>Shield Standard muft aur khud-ba-khud</strong> hai; <strong>Shield Advanced</strong> paid hai. Sawal mein &quot;DDoS&quot; = Shield, hamesha."><strong>⭐ AWS Shield</strong> = <strong>DDoS</strong> protection (floods of traffic trying to take a site down). <strong>Shield Standard is free and automatic</strong>; <strong>Shield Advanced</strong> is paid. &quot;DDoS&quot; in a question = Shield, always.</li>
+      <li data-ur="⭐ <strong>Amazon GuardDuty</strong> = khatre ki nishandahi (threat detection) — mushtaba harkat pakarta hai, khud logs parh kar. Sawal mein &quot;detect malicious or unusual activity&quot; = GuardDuty."><strong>⭐ Amazon GuardDuty</strong> = threat detection — spots suspicious activity by analysing logs automatically. &quot;Detect malicious or unusual activity&quot; = GuardDuty.</li>
+      <li data-ur="⭐ <strong>Amazon Inspector</strong> = <strong>kamzoriyan (vulnerabilities)</strong> dhoondna — EC2 aur container images mein purane/kharab software. Sawal mein &quot;scan for vulnerabilities&quot; = Inspector."><strong>⭐ Amazon Inspector</strong> = finding <strong>vulnerabilities</strong> — outdated or flawed software in EC2 instances and container images. &quot;Scan for vulnerabilities&quot; = Inspector.</li>
+      <li data-ur="⭐ <strong>Amazon Macie</strong> = S3 mein <strong>zaati maloomat (PII)</strong> dhoondna. Sawal mein &quot;discover sensitive data in S3&quot; = Macie."><strong>⭐ Amazon Macie</strong> = discovering <strong>PII / sensitive data</strong> in S3.</li>
+      <li data-ur="<strong>AWS Security Hub</strong> = saari security findings ek jagah dikhana (dashboard). <strong>Amazon Detective</strong> = kisi masle ki tehqeeq karna (kyun hua). <strong>AWS Firewall Manager</strong> = kai accounts par firewall rules ek saath lagana."><strong>AWS Security Hub</strong> = one dashboard for all security findings. <strong>Amazon Detective</strong> = investigating an issue (why it happened). <strong>AWS Firewall Manager</strong> = managing firewall rules across many accounts.</li>
+      <li data-ur="⭐ <strong>AWS KMS</strong> (Key Management Service) = encryption ki chaabiyan banana aur sambhalna. <strong>CloudHSM</strong> = wohi magar tumhare apne hardware par (sakht compliance ke liye). <strong>ACM</strong> (Certificate Manager) = SSL/TLS certificates (HTTPS ke liye), muft."><strong>⭐ AWS KMS</strong> (Key Management Service) = creating and managing encryption keys. <strong>CloudHSM</strong> = the same on dedicated hardware (for strict compliance). <strong>ACM</strong> = SSL/TLS certificates for HTTPS, free.</li>
+      <li data-ur="⭐ <strong>AWS Artifact</strong> = AWS ki <strong>compliance reports</strong> download karne ki jagah (SOC, ISO, PCI). Sawal mein &quot;where do I get AWS's compliance reports&quot; = Artifact, hamesha."><strong>⭐ AWS Artifact</strong> = where you download AWS's <strong>compliance reports</strong> (SOC, ISO, PCI). &quot;Where do I obtain AWS's compliance documentation&quot; = Artifact, always.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Aksar gaddmadd hone wale jorey">The pairs that get confused</span>
+    <span data-ur="<strong>Inspector banam GuardDuty:</strong> <strong>Inspector = kamzori dhoondta hai</strong> (purana software, khuli setting) — yani &quot;darwaza kamzor hai&quot;. <strong>GuardDuty = hamla pakarta hai</strong> (mushtaba harkat abhi ho rahi hai) — yani &quot;koi darwaze par khara hai&quot;.<br><br><strong>WAF banam Shield:</strong> <strong>WAF = chalaak hamle</strong> (SQL injection — ek request jo nuqsandeh hai). <strong>Shield = bhaari hamle</strong> (DDoS — lakhon requests jo site gira dein).<br><br><strong>CloudTrail banam CloudWatch:</strong> <strong>CloudTrail = kis ne kya kiya</strong> (audit, API calls). <strong>CloudWatch = system ka kya haal hai</strong> (metrics, logs, alarms). Yeh jora har exam mein aata hai.<br><br><strong>Config banam CloudTrail:</strong> <strong>Config = cheez ki halat kya hai aur kab badli</strong> (settings ka record). <strong>CloudTrail = kis ne badli</strong> (kaun, kab).">
+      <strong>Inspector vs GuardDuty:</strong> <strong>Inspector finds weaknesses</strong> (outdated software, open settings) — &quot;the door is weak&quot;. <strong>GuardDuty catches attacks</strong> (suspicious activity happening now) — &quot;someone is at the door&quot;.<br><br><strong>WAF vs Shield:</strong> <strong>WAF = clever attacks</strong> (SQL injection — one malicious request). <strong>Shield = brute-force attacks</strong> (DDoS — millions of requests to knock you over).<br><br><strong>CloudTrail vs CloudWatch:</strong> <strong>CloudTrail = who did what</strong> (audit, API calls). <strong>CloudWatch = how the system is doing</strong> (metrics, logs, alarms). This pair appears on every exam.<br><br><strong>Config vs CloudTrail:</strong> <strong>Config = what state is it in and when did that change</strong> (configuration history). <strong>CloudTrail = who changed it</strong>.</span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — security ke lafz">Exam English — security vocabulary</span>
+    <span data-ur="<strong>&quot;least privilege&quot;</strong> = kam se kam zaroori ijazat.<br><strong>&quot;credentials&quot;</strong> = login ki cheezein (username/password, access keys).<br><strong>&quot;federated&quot;</strong> = bahar ki identity se login (company ka apna login system).<br><strong>&quot;at rest&quot; / &quot;in transit&quot;</strong> = rakha hua data / safar karta data. Dono ko encrypt karna chahiye — yeh aksar sahi jawab hota hai.<br><strong>&quot;exploit&quot;</strong> = kamzori ka najaiz faida uthana.<br><strong>&quot;malicious&quot;</strong> = badniyati par mabni, nuqsan pohanchane wala.<br><strong>&quot;audit&quot;</strong> = janch parhtal ka record.<br><strong>&quot;compliance&quot;</strong> = qanooni/industry usoolon par poora utarna.<br><strong>&quot;mitigate&quot;</strong> = khatra kam karna.<br><strong>&quot;rotate&quot;</strong> (keys/secrets) = chaabiyan waqfe waqfe se badalna.">
+      <strong>&quot;least privilege&quot;</strong> = the minimum permission necessary.<br>
+      <strong>&quot;credentials&quot;</strong> = sign-in items (username/password, access keys).<br>
+      <strong>&quot;federated&quot;</strong> = signing in via an external identity system.<br>
+      <strong>&quot;at rest&quot; / &quot;in transit&quot;</strong> = stored data / moving data. Both should be encrypted — often the correct answer.<br>
+      <strong>&quot;exploit&quot;</strong> = to take advantage of a weakness.<br>
+      <strong>&quot;malicious&quot;</strong> = intentionally harmful.<br>
+      <strong>&quot;audit&quot;</strong> = an inspection record.<br>
+      <strong>&quot;compliance&quot;</strong> = meeting legal or industry rules.<br>
+      <strong>&quot;mitigate&quot;</strong> = reduce a risk.<br>
+      <strong>&quot;rotate&quot;</strong> (keys/secrets) = replace them periodically.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 2 · the root user question</span>
+    <p class="scenario" data-ur="Ek company ne naya AWS account banaya hai. Root user account ki hifazat ke liye <span class=&quot;qual&quot;>SAB SE ACHA</span> tareeqa kya hai?">A company has created a new AWS account. What is the <span class="qual">BEST</span> practice for protecting the root user account?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Root user ka password har hafte badlo aur usay rozana istemaal karo">Change the root password weekly and use it for daily work</button>
+      <button class="opt" data-correct="true" data-ur="Root par MFA lagao, uski access keys mita do, aur rozana ke kaam ke liye IAM users/roles banao">Enable MFA on root, delete its access keys, and create IAM users/roles for daily work</button>
+      <button class="opt" data-correct="false" data-ur="Root ke credentials poori team ko de do taake sab kaam kar sakein">Share the root credentials with the whole team so everyone can work</button>
+      <button class="opt" data-correct="false" data-ur="Root user ko delete kar do">Delete the root user</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 2 · roles vs keys — heavily tested</span>
+    <p class="scenario" data-ur="Ek EC2 instance par chalne wali application ko S3 bucket se files parhni hain. Access dene ka <span class=&quot;qual&quot;>SAB SE MEHFOOZ</span> tareeqa kya hai?">An application running on an EC2 instance needs to read files from an S3 bucket. What is the <span class="qual">MOST SECURE</span> way to grant access?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Access keys application ke code mein likh do">Embed access keys in the application's code</button>
+      <button class="opt" data-correct="true" data-ur="EC2 instance par ek IAM role lagao">Attach an IAM role to the EC2 instance</button>
+      <button class="opt" data-correct="false" data-ur="Bucket ko public kar do">Make the bucket public</button>
+      <button class="opt" data-correct="false" data-ur="Root user ki access keys istemaal karo">Use the root user's access keys</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 2 · Inspector vs GuardDuty</span>
+    <p class="scenario" data-ur="Ek security team apne EC2 instances ko <strong>purane software aur maloom kamzoriyon (vulnerabilities)</strong> ke liye scan karna chahti hai. Kaunsi service?">A security team wants to scan its EC2 instances for <strong>outdated software and known vulnerabilities</strong>. Which service?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Amazon GuardDuty">Amazon GuardDuty</button>
+      <button class="opt" data-correct="true" data-ur="Amazon Inspector">Amazon Inspector</button>
+      <button class="opt" data-correct="false" data-ur="AWS Shield">AWS Shield</button>
+      <button class="opt" data-correct="false" data-ur="AWS Artifact">AWS Artifact</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 2 · compliance documents</span>
+    <p class="scenario" data-ur="Ek company ke auditor AWS ki <strong>SOC aur ISO compliance reports</strong> maang rahe hain. Yeh kahan se milti hain?">A company's auditors request AWS's <strong>SOC and ISO compliance reports</strong>. Where are these obtained?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="AWS Artifact">AWS Artifact</button>
+      <button class="opt" data-correct="false" data-ur="AWS Trusted Advisor">AWS Trusted Advisor</button>
+      <button class="opt" data-correct="false" data-ur="AWS CloudTrail">AWS CloudTrail</button>
+      <button class="opt" data-correct="false" data-ur="AWS Support par case kholo">Open a case with AWS Support</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="<strong>Least privilege</strong> tumhare Django permissions ka hi usool hai. Tum har user ko superuser nahi banate — tum groups banate ho aur sirf zaroori permissions dete ho. IAM bilkul wohi hai, bas AWS resources par: <strong>IAM group = Django group, IAM policy = permissions.</strong><br><br><strong>Role banam access keys</strong> ka faisla tum pehle se jaante ho: tum apne <code>settings.py</code> mein database ka password hard-code nahi karte — woh environment se aata hai, ya secrets manager se. Access keys code mein likhna bilkul wohi ghalti hai. Role us se ek qadam aage hai: koi key hoti hi nahi, is liye leak bhi nahi ho sakti.<br><br>Aur <strong>root user</strong>? Woh tumhara <code>postgres</code> superuser hai. Tum app ko us se connect nahi karte — tum ek alag user banate ho jis ke paas sirf apni database ka access ho.">
+      <strong>Least privilege</strong> is the principle behind your Django permissions. You don't make every user a superuser — you create groups and grant only what's needed. IAM is the same idea over AWS resources: <strong>IAM group = Django group, IAM policy = permissions.</strong><br><br>The <strong>role vs access keys</strong> decision you already know: you don't hard-code the database password in <code>settings.py</code> — it comes from the environment or a secrets manager. Keys in code is that same mistake. A role goes one better: there's no key at all, so nothing can leak.<br><br>And the <strong>root user</strong>? That's your <code>postgres</code> superuser. You don't connect the app with it — you create a dedicated user scoped to one database.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: root user ki hifazat ke 2 qadam? EC2 ko S3 access dene ka sahi tareeqa? Inspector aur GuardDuty ka farq? DDoS = kaunsi service? Compliance reports kahan se?">From memory: two steps to protect root? The right way to give EC2 access to S3? Inspector vs GuardDuty? DDoS = which service? Where do compliance reports come from?</div>
+    <div class="answer" data-ur="<strong>Root: MFA lagao + access keys mita do</strong> (aur rozana IAM user istemaal karo). <strong>EC2 → S3 = IAM role</strong> (kabhi keys nahi). <strong>Inspector = kamzori dhoondta hai; GuardDuty = hamla pakarta hai.</strong> <strong>DDoS = AWS Shield.</strong> <strong>Compliance reports = AWS Artifact.</strong> Paanchon aa gaye? To Domain 2 ka 30% — exam ka sab se bara security hissa — ab tumhare paas hai."><strong>Root: enable MFA + delete access keys</strong> (and use an IAM user daily). <strong>EC2 → S3 = an IAM role</strong> (never keys). <strong>Inspector finds weaknesses; GuardDuty catches attacks.</strong> <strong>DDoS = AWS Shield.</strong> <strong>Compliance reports = AWS Artifact.</strong> All five? Then Domain 2's 30% is in hand.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="C1 ke saath mila kar, ab tumhare paas poora Domain 2 hai — exam ka <strong>30%</strong>, takreeban 15 scored sawal. Aur is domain ka bara hissa tumhare liye qudrati hai: tum pehle se permissions, secrets aur least privilege ke usool par kaam karte ho.<br><br>Sab se zyada faida dene wale do jorey aaj mile: <strong>Inspector (kamzori) banam GuardDuty (hamla)</strong>, aur <strong>CloudTrail (kis ne kya kiya) banam CloudWatch (kya haal hai)</strong>. Yeh dono har exam mein aate hain.">With C1, you now hold all of Domain 2 — <strong>30%</strong> of the exam, roughly 15 scored questions. And much of it is natural for you: you already work with permissions, secrets and least privilege.<br><br>The two highest-value pairs from today: <strong>Inspector (weakness) vs GuardDuty (attack)</strong>, and <strong>CloudTrail (who did what) vs CloudWatch (how it's doing)</strong>. Both appear on every exam.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html&quot; target=&quot;_blank&quot;>IAM security best practices</a><sup class=&quot;cite&quot;><a href=&quot;#s2&quot;>2</a></sup> — AWS ke apne lafzon mein woh usool jo exam poochta hai (MFA, least privilege, roles, root ka istemaal na karna).">📖 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank">IAM security best practices</a><sup class="cite"><a href="#s2">2</a></sup> — in AWS's own words, the practices the exam tests (MFA, least privilege, roles, not using root).</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> The security service names are the hardest part of this domain because there are many and they sound similar. If two keep swapping in your head, tell me which two — a single sentence contrasting them usually fixes it for good.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C5 (IAM and security services).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0058-clf-cloud-concepts.html">C4 · Cloud Concepts</a>. Next: <a href="0060-clf-core-services.html">C6 · The core services — compute, storage, database, network</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html" target="_blank">CLF-C02 Exam Guide — Domain 2: Security and Compliance</a> (30%). Task 2.3 names IAM, root user protection, the principle of least privilege, IAM Identity Center, MFA, cross-account roles, Secrets Manager and Systems Manager, and requires identifying &quot;tasks that only the account root user can perform&quot;. Task 2.2 names AWS Artifact for compliance information and Inspector, Security Hub, GuardDuty and Shield for securing resources. Task 2.4 names AWS WAF, Firewall Manager, Shield and GuardDuty. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank">Security best practices in IAM</a> — require MFA, apply least privilege, use roles rather than long-term access keys, and avoid using the root user for everyday tasks.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. This is AWS's standard advice and a near-guaranteed exam question: MFA on root, delete root's access keys, and do everyday work as an IAM user or role. Note that the root user cannot be deleted — it exists for the life of the account, which is exactly why it must be locked down rather than removed."
+                      : "Reconsider. The root user should be protected and set aside, not used daily or shared. AWS's guidance is: enable MFA, delete root's access keys, and create IAM users/roles for normal work. The root user also cannot be deleted — it exists as long as the account does.",
+          q2: correct ? "Correct. An IAM role gives the instance temporary, automatically rotating credentials — nothing is stored, so nothing can leak. Access keys in code is the classic mistake (they end up in Git). Making the bucket public exposes it to the world, and root keys should not exist at all."
+                      : "Reconsider. Always use an IAM role to give an AWS service access to another AWS service. Roles supply temporary auto-rotating credentials with no key to leak. Keys in code get committed to Git; a public bucket exposes data to everyone; root access keys should have been deleted already.",
+          q3: correct ? "Correct. Inspector scans for vulnerabilities — outdated packages and known CVEs in EC2 instances and container images. GuardDuty is the trap here: it detects active malicious behaviour, not latent weaknesses. Memory hook: Inspector = the door is weak; GuardDuty = someone is at the door."
+                      : "Reconsider. \"Scan for known vulnerabilities\" is Amazon Inspector — it looks for weaknesses like outdated software. GuardDuty detects active threats and suspicious behaviour, which is a different job. Shield handles DDoS, and Artifact provides compliance documents. Hook: Inspector = weak door, GuardDuty = intruder at the door.",
+          q4: correct ? "Correct. AWS Artifact is the self-service portal for AWS's compliance reports — SOC, ISO, PCI and others. You download them directly; no support case is needed. Trusted Advisor gives optimisation recommendations, and CloudTrail records API activity in your own account."
+                      : "Reconsider. AWS Artifact is the on-demand portal for AWS's own compliance reports (SOC, ISO, PCI). Trusted Advisor makes recommendations about your account, CloudTrail logs who did what in your account, and opening a support case is unnecessary because Artifact is self-service."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

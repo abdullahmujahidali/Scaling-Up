@@ -17,13 +17,19 @@
     { file: '0052-clf-shared-responsibility.html', num: 'C1', title: 'Shared Responsibility Model' },
     { file: '0053-clf-support-plans.html',         num: 'C2', title: 'Support plans & cost tools' },
     { file: '0054-clf-pricing-models.html',        num: 'C3', title: 'Pricing models' },
+    { file: '0058-clf-cloud-concepts.html',        num: 'C4', title: 'Cloud Concepts & Well-Architected' },
+    { file: '0059-clf-security-services.html',     num: 'C5', title: 'IAM & security services' },
+    { file: '0060-clf-core-services.html',         num: 'C6', title: 'The core AWS services' },
     { ref: 'clf-numbers.html',                     num: '*',  title: 'CLF Numbers & Trigger Words' },
+    { kind: 'clfquizzes' },
     { track: 'AIF', label: 'AI Practitioner', header: true, note: 'active' },
     { kind: 'aifhub' },
     { file: '0055-aif-vocabulary.html',       num: 'I1', title: 'The language of AI' },
     { file: '0056-aif-aws-ai-services.html',  num: 'I2', title: 'Which AWS AI service?' },
     { file: '0057-aif-responsible-ai.html',   num: 'I3', title: 'Responsible AI & governance' },
+    { file: '0061-aif-prompt-and-evaluation.html', num: 'I4', title: 'Prompting & evaluation' },
     { ref: 'aif-numbers.html',                num: '*',  title: 'AIF Terms & Trigger Words' },
+    { kind: 'aifquizzes' },
     { track: 'AWS', label: 'Developer Associate', header: true, collapsed: true, note: 'later' },
     { kind: 'awshub' },
     { kind: 'awsexams' },
@@ -177,9 +183,19 @@
     }
     if (it.kind === 'awsexams') {
       // Highlight on the hub itself and on any individual exam page (/exams/*).
-      var ecur = (here === 'exams.html' || /\/exams\//.test(location.pathname)) ? ' cnav-current' : '';
+      var ecur = (here === 'exams.html' || /\/exams\/exam-/.test(location.pathname)) ? ' cnav-current' : '';
       return '<a class="cnav-ref' + ecur + '" href="' + toRoot + 'exams.html" ' +
              'style="margin-top:0;border-top:none;padding-top:0.42rem;">15 practice exams</a>';
+    }
+    if (it.kind === 'clfquizzes') {
+      var qcur = (here === 'clf-quizzes.html' || /\/exams\/clf-/.test(location.pathname)) ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + qcur + '" href="' + toRoot + 'clf-quizzes.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">7 practice quizzes</a>';
+    }
+    if (it.kind === 'aifquizzes') {
+      var acur2 = (here === 'aif-quizzes.html' || /\/exams\/aif-/.test(location.pathname)) ? ' cnav-current' : '';
+      return '<a class="cnav-ref' + acur2 + '" href="' + toRoot + 'aif-quizzes.html" ' +
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">7 practice quizzes</a>';
     }
     if (it.kind === 'subhead') {
       return '<div class="cnav-subhead">' + it.label + '</div>';
@@ -195,7 +211,8 @@
         // destinations and are skipped.
         var k = COURSE[i].kind;
         if (COURSE[i].file || COURSE[i].ref ||
-            k === 'clfhub' || k === 'aifhub' || k === 'awshub' || k === 'awsexams') count++;
+            k === 'clfhub' || k === 'aifhub' || k === 'awshub' || k === 'awsexams' ||
+            k === 'clfquizzes' || k === 'aifquizzes') count++;
       }
       var open = isOpen(it.track);
       return '<div class="cnav-track cnav-track-toggle' + (open ? ' cnav-open' : '') + '" ' +

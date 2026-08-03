@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLF-C02 CLF Quiz 6</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>CLF Quiz 6</h1>
+      <p class="sub">AWS Certified Cloud Practitioner (CLF-C02) · 20-question revision quiz · balanced — all four domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../clf-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">CLF Quiz 6</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"clf-06","title":"CLF Quiz 6","minutes":30,"pass":700,"domainNames":{"1":"Cloud Concepts","2":"Security & Compliance","3":"Cloud Technology & Services","4":"Billing, Pricing & Support"},"domainWeights":{"1":24,"2":30,"3":34,"4":12},"backTo":"clf-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which AWS service provides machine learning capabilities for building, training and deploying custom models?",
+  "options": [
+   "Amazon SageMaker AI",
+   "Amazon Rekognition",
+   "Amazon Polly",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "SageMaker AI is the platform for building, training and deploying your own models. Rekognition, Polly and Comprehend are pre-trained services for images, speech synthesis and text analysis respectively."
+ },
+ {
+  "id": 2,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service converts text into lifelike speech?",
+  "options": [
+   "Amazon Transcribe",
+   "Amazon Polly",
+   "Amazon Translate",
+   "Amazon Comprehend"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Polly turns text into speech; Transcribe does the reverse, turning speech into text. Translate converts between languages and Comprehend analyses meaning in text."
+ },
+ {
+  "id": 3,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service analyses text to determine sentiment and extract entities?",
+  "options": [
+   "Amazon Comprehend",
+   "Amazon Textract",
+   "Amazon Kendra",
+   "Amazon Lex"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Comprehend performs natural language processing including sentiment analysis, entity extraction and PII detection. Textract extracts text from scanned documents, and Kendra provides intelligent search."
+ },
+ {
+  "id": 4,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about IAM groups is correct?",
+  "options": [
+   "Policies attached to a group apply to all users in that group",
+   "Groups can be nested inside other groups",
+   "A user can belong to only one group",
+   "Groups can be assigned to EC2 instances"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Attaching a policy to a group applies it to every user in it, which is why groups are the recommended way to manage permissions. Groups cannot be nested, users may belong to several, and instances use roles rather than groups."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An application running on-premises needs temporary AWS credentials. What is the recommended approach?",
+  "options": [
+   "Use an IAM role with federation or AWS STS",
+   "Embed root access keys in the application",
+   "Create a permanent IAM user and share the keys",
+   "Make the resources publicly accessible"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Temporary credentials via roles and STS avoid long-lived secrets that can leak. Root keys should not exist, shared permanent keys violate least privilege, and public access exposes data to everyone."
+ },
+ {
+  "id": 6,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which of these is NOT one of the six pillars of the AWS Well-Architected Framework?",
+  "options": [
+   "Operational Excellence",
+   "Scalability",
+   "Reliability",
+   "Sustainability"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "The six pillars are Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization and Sustainability. Scalability is an important property but is not itself a pillar."
+ },
+ {
+  "id": 7,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company wants to reduce the time taken to provision new environments from weeks to minutes. Which cloud benefit is this?",
+  "options": [
+   "Increased speed and agility",
+   "Data sovereignty",
+   "Consolidated billing",
+   "Fault tolerance"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Provisioning in minutes rather than weeks is the speed and agility benefit. Data sovereignty concerns jurisdiction, consolidated billing concerns account structure, and fault tolerance concerns surviving failure."
+ },
+ {
+  "id": 8,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which statement about the AWS Free Tier is correct?",
+  "options": [
+   "It offers limited free usage of certain services, after which standard charges apply",
+   "All AWS services are free indefinitely",
+   "It requires an Enterprise Support plan",
+   "It applies only to Amazon S3"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The Free Tier provides limited free usage of selected services, with normal charges once limits are exceeded. It is not unlimited, not restricted to one service, and requires no support plan."
+ },
+ {
+  "id": 9,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which feature of AWS Organizations allows costs to be tracked per department or project?",
+  "options": [
+   "Cost allocation tags",
+   "Service control policies",
+   "IAM roles",
+   "Security groups"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Cost allocation tags label resources so billing reports can attribute spend to a team or project. They must be activated before appearing in billing reports. SCPs control permissions, not cost visibility."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which compute option is best suited to a workload requiring a dedicated physical server for software licensing compliance?",
+  "options": [
+   "Dedicated Hosts",
+   "Spot Instances",
+   "AWS Lambda",
+   "Amazon Lightsail"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Dedicated Hosts provide an entire physical server with visibility of sockets and cores, which is what BYOL licensing tied to physical cores and strict compliance require. Without those requirements they are rarely the answer."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which storage option offers the fastest performance but loses all data when the instance stops?",
+  "options": [
+   "Instance store",
+   "Amazon EBS",
+   "Amazon EFS",
+   "Amazon S3"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Instance store is physically attached local disk — very fast but ephemeral, losing data when the instance stops. EBS, EFS and S3 all persist data independently of the instance lifecycle."
+ },
+ {
+  "id": 12,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which service should be used to centrally manage firewall rules across many AWS accounts?",
+  "options": [
+   "AWS Firewall Manager",
+   "AWS WAF",
+   "Amazon GuardDuty",
+   "AWS Config"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Firewall Manager applies and enforces firewall rules across accounts in an organisation. WAF protects an individual application, and GuardDuty detects threats rather than enforcing rules."
+ },
+ {
+  "id": 13,
+  "domain": 2,
+  "multi": false,
+  "scenario": "What is the FIRST thing a company should do after creating a new AWS account?",
+  "options": [
+   "Enable MFA on the root user and create IAM users for daily work",
+   "Delete the default VPC",
+   "Purchase Reserved Instances",
+   "Enable AWS Shield Advanced"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Securing the root user with MFA and moving daily work to IAM identities is AWS's first recommended step. Purchasing commitments and advanced protections come later, once usage is understood."
+ },
+ {
+  "id": 14,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which term describes the practice of running workloads in both an on-premises data centre and AWS?",
+  "options": [
+   "Hybrid cloud",
+   "Multi-tenancy",
+   "Serverless",
+   "Edge computing"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A hybrid deployment spans your own data centre and the cloud, often connected via Direct Connect or VPN. Services such as AWS Outposts and Storage Gateway specifically support this model."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company's monthly bill unexpectedly increases. Which service best helps identify which service caused the increase?",
+  "options": [
+   "AWS Cost Explorer",
+   "AWS Budgets",
+   "AWS Pricing Calculator",
+   "AWS Artifact"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Cost Explorer visualises and analyses historical spend, letting you break costs down by service to find the cause. Budgets alerts on thresholds but does not analyse the breakdown."
+ },
+ {
+  "id": 16,
+  "domain": 3,
+  "multi": true,
+  "scenario": "Which TWO of the following are serverless AWS services?",
+  "options": [
+   "AWS Lambda",
+   "AWS Fargate",
+   "Amazon EC2",
+   "Amazon Lightsail",
+   "Amazon EMR"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Lambda runs code and Fargate runs containers, both without servers to provision or manage. EC2 and Lightsail are virtual servers you manage, and EMR runs on a managed cluster of instances."
+ },
+ {
+  "id": 17,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which AWS resource provides on-demand access to AWS compliance reports such as SOC 2 and PCI DSS?",
+  "options": [
+   "AWS Artifact",
+   "AWS Audit Manager",
+   "AWS Config",
+   "AWS Trusted Advisor"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Artifact is the self-service portal for downloading AWS's compliance reports. Audit Manager helps you prepare your own audits by collecting evidence, which is a related but distinct purpose."
+ },
+ {
+  "id": 18,
+  "domain": 1,
+  "multi": false,
+  "scenario": "What does 'undifferentiated heavy lifting' refer to in AWS terminology?",
+  "options": [
+   "Routine infrastructure work that provides no competitive advantage",
+   "Migrating large datasets to the cloud",
+   "Training machine learning models",
+   "Encrypting data at rest"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "It refers to necessary but non-differentiating work such as racking servers and managing power — tasks AWS takes on so customers can focus on their applications."
+ },
+ {
+  "id": 19,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service provides a fully managed extract, transform and load (ETL) capability?",
+  "options": [
+   "AWS Glue",
+   "Amazon Athena",
+   "Amazon Kinesis",
+   "Amazon QuickSight"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Glue is the managed ETL service for preparing and transforming data. Athena queries data in S3, Kinesis handles real-time streaming, and QuickSight builds dashboards."
+ },
+ {
+  "id": 20,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which service detects unusual account activity such as cryptocurrency mining or communication with known malicious IP addresses?",
+  "options": [
+   "Amazon GuardDuty",
+   "Amazon Inspector",
+   "AWS Shield",
+   "AWS WAF"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "GuardDuty continuously analyses account and network logs to detect threats including crypto mining and malicious IP communication. Inspector looks for software vulnerabilities instead."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

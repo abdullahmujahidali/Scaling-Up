@@ -1,0 +1,337 @@
+{
+ "meta": {
+  "id": "aif-04",
+  "cert": "aif",
+  "title": "AIF Quiz 4",
+  "minutes": 30,
+  "focus": "balanced — all five domains",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team's RAG application returns irrelevant passages. Which change is MOST likely to improve retrieval quality?",
+   "options": [
+    "Improving how documents are chunked and embedded",
+    "Raising the temperature",
+    "Increasing max output tokens",
+    "Switching to a smaller model"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Retrieval quality depends on how documents are split into chunks and embedded — poor chunking retrieves the wrong passages. Temperature and token limits affect generation, not what is retrieved."
+  },
+  {
+   "id": 2,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which Bedrock capability stores, versions and manages prompts used across an application?",
+   "options": [
+    "Amazon Bedrock Prompt Management",
+    "Amazon Bedrock Guardrails",
+    "Amazon Bedrock Knowledge Bases",
+    "Amazon Bedrock Model Evaluation"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Prompt Management stores and versions prompts. Guardrails enforces safety, Knowledge Bases implements RAG, and Model Evaluation compares model performance."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which AWS service translates text between languages?",
+   "options": [
+    "Amazon Translate",
+    "Amazon Transcribe",
+    "Amazon Comprehend",
+    "Amazon Polly"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Translate converts text between languages. Transcribe turns speech into text, Comprehend analyses meaning, and Polly generates speech from text."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which of these problems is NOT well suited to a machine learning solution?",
+   "options": [
+    "A task requiring a guaranteed exact outcome every time, defined by fixed rules",
+    "Predicting customer churn from historical behaviour",
+    "Classifying images of products",
+    "Forecasting seasonal demand"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "ML produces predictions, not guarantees. When a fixed, exact outcome defined by clear rules is required, conventional deterministic logic is the right tool — a point the exam guide makes explicitly."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which describes an AI agent as opposed to a plain language model?",
+   "options": [
+    "It can take actions and use tools across multiple steps, not just return text",
+    "It only generates images",
+    "It cannot process natural language",
+    "It runs exclusively on-premises"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Agents plan and act — invoking tools, making multiple calls and orchestrating workflows — rather than simply returning text. Amazon Bedrock Agents and AgentCore provide this capability."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which AWS service is an AI-powered assistant designed to answer business questions and help developers?",
+   "options": [
+    "Amazon Q",
+    "Amazon Polly",
+    "Amazon Macie",
+    "Amazon Neptune"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon Q is AWS's AI assistant for business and development use. Polly generates speech, Macie discovers sensitive data, and Neptune is a graph database."
+  },
+  {
+   "id": 7,
+   "domain": 4,
+   "multi": false,
+   "scenario": "An organisation wants to compare several foundation models against its own criteria before choosing one. Which capability?",
+   "options": [
+    "Amazon Bedrock Model Evaluation",
+    "Amazon SageMaker Ground Truth",
+    "Amazon Bedrock Guardrails",
+    "AWS Config"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Model Evaluation compares models using automatic metrics and human review. Ground Truth labels data, Guardrails filters content, and Config tracks resource configuration."
+  },
+  {
+   "id": 8,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which practice BEST supports transparency for a deployed machine learning model?",
+   "options": [
+    "Publishing model cards describing intended use, data and limitations",
+    "Raising the temperature",
+    "Hiding the training data sources",
+    "Disabling monitoring"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Model cards document intended use, training data and limitations, which is exactly what transparency requires. Concealing data sources and disabling monitoring undermine it."
+  },
+  {
+   "id": 9,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which AWS service continuously assesses resource configurations against desired governance rules?",
+   "options": [
+    "AWS Config",
+    "Amazon Macie",
+    "Amazon Polly",
+    "Amazon Personalize"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Config records and evaluates resource configuration against rules, supporting governance. Macie discovers sensitive data, while Polly and Personalize are AI capabilities."
+  },
+  {
+   "id": 10,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which framework does the AIF-C01 exam guide name for scoping generative AI security?",
+   "options": [
+    "The Generative AI Security Scoping Matrix",
+    "The Well-Architected Sustainability Pillar",
+    "The Cloud Adoption Framework",
+    "The Shared Controls Matrix"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The Generative AI Security Scoping Matrix is named explicitly in Task 5.2 as a governance framework for GenAI. The Cloud Adoption Framework concerns migration and is a CLF topic."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which approach adds knowledge to a model's responses WITHOUT changing the model itself?",
+   "options": [
+    "Retrieval Augmented Generation",
+    "Fine-tuning",
+    "Continuous pre-training",
+    "Instruction tuning"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "RAG supplies information at query time while leaving the model unchanged. Fine-tuning, continuous pre-training and instruction tuning all modify the model's weights."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which evaluation approach uses one language model to assess the quality of another's output?",
+   "options": [
+    "LLM-as-a-judge",
+    "BLEU",
+    "Human-in-the-loop review",
+    "Benchmark datasets"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "LLM-as-a-judge uses a model to grade another model's responses, scaling evaluation beyond manual review. Human-in-the-loop uses people, and BLEU is a translation metric."
+  },
+  {
+   "id": 13,
+   "domain": 2,
+   "multi": false,
+   "scenario": "What is a practical consequence of a foundation model's context window limit?",
+   "options": [
+    "Very long documents may need chunking or summarising before processing",
+    "The model cannot be deployed in multiple Regions",
+    "Billing switches to a flat monthly fee",
+    "Encryption is disabled"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The context window caps how much text the model can consider at once, so long documents must be chunked or summarised. It has no bearing on Regions, billing model or encryption."
+  },
+  {
+   "id": 14,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which AWS service helps label training data using human annotators?",
+   "options": [
+    "Amazon SageMaker Ground Truth",
+    "Amazon SageMaker Clarify",
+    "Amazon Comprehend",
+    "Amazon Bedrock"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Ground Truth manages data labelling workflows with human annotators. Clarify measures bias, Comprehend analyses text, and Bedrock provides foundation models."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which describes the difference between transparency and explainability?",
+   "options": [
+    "Transparency discloses information about the model; explainability shows why a specific decision was made",
+    "They are identical",
+    "Transparency applies only to images",
+    "Explainability means the model is open source"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Transparency is disclosure about the model — its data, purpose and limits (Model Cards). Explainability is understanding why a particular prediction occurred (Clarify). The exam treats them as distinct."
+  },
+  {
+   "id": 16,
+   "domain": 5,
+   "multi": true,
+   "scenario": "Which TWO practices support responsible data handling when fine-tuning a model on company data?",
+   "options": [
+    "Curating and governing the dataset with documented provenance",
+    "Applying encryption at rest and in transit",
+    "Making the training data publicly accessible",
+    "Disabling IAM permissions checks",
+    "Removing all human oversight"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Curated, governed data with known provenance plus encryption in both states are sound practices. Public data exposure, disabling permission checks and removing oversight are all clear violations."
+  },
+  {
+   "id": 17,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A model consistently produces responses that are too long and costly. Which setting directly addresses this?",
+   "options": [
+    "Reducing the maximum output token limit",
+    "Lowering the temperature",
+    "Enabling Guardrails",
+    "Switching Regions"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Maximum output tokens caps response length and therefore cost. Temperature affects randomness rather than length, and Guardrails governs safety."
+  },
+  {
+   "id": 18,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which of these is an appropriate use case for generative AI?",
+   "options": [
+    "Summarising long customer support transcripts",
+    "Calculating an exact payroll total",
+    "Enforcing a fixed business rule",
+    "Storing transactional records"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Summarisation creates new content and suits generative AI. Exact calculations, fixed rules and record storage all require deterministic systems, where a probabilistic model is the wrong tool."
+  },
+  {
+   "id": 19,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which learning approach improves through trial and error guided by rewards?",
+   "options": [
+    "Reinforcement learning",
+    "Supervised learning",
+    "Unsupervised learning",
+    "Transfer learning"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Reinforcement learning learns by taking actions and receiving rewards or penalties. Supervised learning uses labelled examples and unsupervised learning finds structure in unlabelled data."
+  },
+  {
+   "id": 20,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company must ensure a generative AI assistant never discusses competitor products. Which capability enforces this?",
+   "options": [
+    "Amazon Bedrock Guardrails denied topics",
+    "Amazon SageMaker Clarify",
+    "Increasing temperature",
+    "Amazon Textract"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Guardrails supports denied topics, blocking specified subjects entirely. Clarify measures bias and explainability, and Textract extracts document text."
+  }
+ ]
+}

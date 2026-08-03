@@ -1,0 +1,183 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C4 · Domain 1 (24%)</p>
+    <h1 data-ur="Cloud Concepts: cloud kyun, aur AWS ki soch">Cloud Concepts: why cloud, and how AWS thinks</h1>
+    <p class="subtitle" data-ur="Yeh domain technical se zyada <em>soch</em> ka hai — cloud ke faide, Well-Architected ke 6 pillars, aur paise ka hisaab (CapEx banam OpEx). Yeh woh hissa hai jahan sawal seedhe hote hain agar tumhein lafz maloom hon, aur namumkin agar na hon.">This domain is more <em>philosophy</em> than technology — the benefits of cloud, the 6 Well-Architected pillars, and the money argument (CapEx vs OpEx). The questions are easy if you know the words and impossible if you don't.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>One concept: why anyone moves to cloud</span>
+      <span>Win: 24% of the exam</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C3 se yaad karo: &quot;fault-tolerant&quot; = kaunsa pricing option? Reserved ke term kitne saal ke hote hain? Aur data IN muft ya OUT?">From C3: &quot;fault-tolerant&quot; = which pricing option? What Reserved terms exist? Is data IN free or OUT?</div>
+    <div class="answer" data-ur="<strong>Fault-tolerant = Spot</strong> (90% tak sasta, 2 minute notice). <strong>Reserved = sirf 1 ya 3 saal.</strong> <strong>Data IN muft, OUT ka paisa.</strong> Aaj hum us buniyadi sawal par aate hain: koi cloud par jata hi kyun hai?"><strong>Fault-tolerant = Spot</strong> (up to 90% off, 2-minute notice). <strong>Reserved = 1 or 3 years only.</strong> <strong>Data IN is free, OUT is charged.</strong> Today: the underlying question — why does anyone move to cloud at all?</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Cloud ka pura dalail ek jumle mein: pehle se bara paisa laga kar andaza lagane ke bajaye, jitna istemaal karo utna do.</strong><br><br>English mein yeh <strong>CapEx → OpEx</strong> kehlata hai:<br><strong>CapEx (capital expenditure)</strong> = pehle se bara kharcha (server khareedna). Data centre ka tareeqa.<br><strong>OpEx (operational expenditure)</strong> = chalte rehne ka kharcha (jitna istemaal, utna bill). Cloud ka tareeqa.<br><br>⭐ Sawal mein <strong>&quot;trade capital expense for variable expense&quot;</strong> ka jumla aata hai — yeh AWS ka apna jumla hai aur seedha yehi matlab rakhta hai."><strong>The whole cloud argument in one sentence: instead of paying a large sum up front and guessing, pay for what you use.</strong><br><br>In English this is <strong>CapEx → OpEx</strong>:<br><strong>CapEx (capital expenditure)</strong> = a big payment up front (buying servers). The data-centre way.<br><strong>OpEx (operational expenditure)</strong> = ongoing running cost (billed by usage). The cloud way.<br><br>⭐ The exam uses AWS's own phrase <strong>&quot;trade capital expense for variable expense&quot;</strong> — it means exactly this.</span>
+  </div>
+
+  <h2 data-ur="Kahani: apni gaari banam Careem">The story: owning a car vs Careem</h2>
+  <p data-ur="Apni gaari khareedna: pehle 30 lakh do, phir insurance, maintenance, parking — chahe gaari khari rahe. Tumhein andaza lagana parta hai: &quot;shayad mujhe bari gaari chahiye hogi kabhi kabhi&quot; — to tum bari khareed lete ho aur zyada tar waqt woh khali khari rehti hai.">Buying a car: pay a large sum up front, then insurance, maintenance, parking — even when it sits idle. You must guess in advance: &quot;I might occasionally need a big car&quot; — so you buy big, and most of the time it sits unused.</p>
+  <p data-ur="Careem: koi pehle ka kharcha nahi. Chhota safar hai to chhoti gaari, saamaan zyada hai to bari. Nahi chahiye to kuch nahi dete. <strong>Yeh cloud hai.</strong> Aur yeh farq exam ke har &quot;benefit&quot; wale sawal ki jarr hai.">Careem: nothing up front. A short trip takes a small car, a big load takes a big one. Need nothing? Pay nothing. <strong>That is cloud.</strong> And this difference is the root of every &quot;benefit&quot; question on the exam.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Cloud ke faide — AWS ke apne lafzon mein">⭐ The benefits of cloud — in AWS's own words</span>
+    <ul>
+      <li data-ur="⭐ <strong>Trade capital expense for variable expense</strong> = pehle ka bara kharcha nahi, sirf istemaal ka paisa."><strong>⭐ Trade capital expense for variable expense</strong> = no big up-front payment, only pay for use.</li>
+      <li data-ur="⭐ <strong>Benefit from massive economies of scale</strong> = AWS lakhon customers ka saamaan ek saath khareedta hai, is liye sasta parta hai — woh bachat tum tak pohanchti hai. Sawal mein &quot;economies of scale&quot; = yehi."><strong>⭐ Benefit from massive economies of scale</strong> = AWS buys for millions of customers at once, so it costs less, and that saving reaches you.</li>
+      <li data-ur="⭐ <strong>Stop guessing capacity</strong> = pehle andaza lagane ki zaroorat nahi ke kitne server chahiye. Zaroorat par barha lo, kam kar lo."><strong>⭐ Stop guessing capacity</strong> = no need to predict how many servers you'll need. Scale up or down on demand.</li>
+      <li data-ur="⭐ <strong>Increase speed and agility</strong> = naye resources minton mein milte hain, hafton mein nahi. <strong>Agility</strong> = tezi se badal sakne ki salahiyat."><strong>⭐ Increase speed and agility</strong> = new resources in minutes, not weeks. <strong>Agility</strong> = the ability to change quickly.</li>
+      <li data-ur="<strong>Stop spending money running and maintaining data centers</strong> = server room, bijli, cooling, guards — yeh sab AWS ka masla ban jata hai."><strong>Stop spending money running and maintaining data centers</strong> = the server room, power, cooling and guards become AWS's problem.</li>
+      <li data-ur="<strong>Go global in minutes</strong> = doosre mulk mein apni app chand click mein pohancha do."><strong>Go global in minutes</strong> = deploy to another country in a few clicks.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Woh teen lafz jo log gaddmadd karte hain">⭐ The three words people confuse</span>
+    <ul>
+      <li data-ur="⭐ <strong>Scalability</strong> = zaroorat parne par <em>barh</em> sakna (bara ho jana)."><strong>⭐ Scalability</strong> = the ability to <em>grow</em> when needed.</li>
+      <li data-ur="⭐ <strong>Elasticity</strong> = zaroorat ke mutabiq <em>khud-ba-khud barhna aur ghatna</em> dono. Sirf barhna nahi — ghatna bhi. Auto Scaling yehi deta hai. Sawal mein &quot;automatically scale up and down&quot; = elasticity."><strong>⭐ Elasticity</strong> = automatically growing <em>and shrinking</em> with demand. Not just up — down too. Auto Scaling provides this. &quot;Automatically scales up and down&quot; = elasticity.</li>
+      <li data-ur="⭐ <strong>High availability</strong> = kharabi ke bawajood chalte rehna → <strong>kai Availability Zones</strong> istemaal karo. <strong>Fault tolerance</strong> = kharabi hone par bhi bilkul asar na parna. <strong>Agility</strong> = tezi se naya kuch try kar sakna."><strong>⭐ High availability</strong> = staying up despite failure → use <strong>multiple Availability Zones</strong>. <strong>Fault tolerance</strong> = no impact at all when something fails. <strong>Agility</strong> = being able to try new things quickly.</li>
+    </ul>
+  </div>
+
+  <h2 data-ur="⭐ Well-Architected Framework — 6 pillars">⭐ The Well-Architected Framework — 6 pillars</h2>
+  <p data-ur="AWS ka apna &quot;acha design kya hota hai&quot; ka framework. Exam poochta hai ke <strong>kaunsa pillar kis cheez ka zimmedar hai</strong>. Chhe naam yaad karo aur har ek ka ek jumla:">AWS's own framework for &quot;what good design looks like&quot;. The exam asks <strong>which pillar covers what</strong>. Learn the six names and one line each:</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Pillar">Pillar</th><th data-ur="Ek jumle mein">In one line</th><th data-ur="Sawal mein ishara">The clue in a question</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Operational Excellence</strong></td><td data-ur="System ko chalana aur behtar banate rehna. Automation, monitoring, chhote chhote badlaav.">Running and improving the system. Automation, monitoring, small frequent changes.</td><td data-ur="&quot;processes&quot;, &quot;automation&quot;, &quot;run and monitor&quot;">&quot;processes&quot;, &quot;automation&quot;, &quot;run and monitor&quot;</td></tr>
+      <tr><td><strong>Security</strong></td><td data-ur="Data aur systems ki hifazat. IAM, encryption, least privilege.">Protecting data and systems. IAM, encryption, least privilege.</td><td data-ur="&quot;protect&quot;, &quot;permissions&quot;, &quot;encryption&quot;">&quot;protect&quot;, &quot;permissions&quot;, &quot;encryption&quot;</td></tr>
+      <tr><td><strong>Reliability</strong></td><td data-ur="Kharabi se sambhal jana aur chalte rehna. Backup, multi-AZ, recovery.">Recovering from failure and continuing to work. Backups, multi-AZ, recovery.</td><td data-ur="⭐ &quot;recover from failure&quot;, &quot;backup&quot;, &quot;availability&quot;">⭐ &quot;recover from failure&quot;, &quot;backup&quot;, &quot;availability&quot;</td></tr>
+      <tr><td><strong>Performance Efficiency</strong></td><td data-ur="Resources ka theek istemaal — sahi cheez sahi kaam ke liye.">Using resources efficiently — the right tool for the job.</td><td data-ur="&quot;right instance type&quot;, &quot;efficient use of resources&quot;">&quot;right instance type&quot;, &quot;efficient use of resources&quot;</td></tr>
+      <tr><td><strong>Cost Optimization</strong></td><td data-ur="Ghair zaroori kharcha khatam karna. Rightsizing, Reserved/Spot, faltu resources band karna.">Removing unnecessary spend. Rightsizing, Reserved/Spot, shutting off waste.</td><td data-ur="⭐ &quot;reduce cost&quot;, &quot;avoid unnecessary&quot;, &quot;rightsizing&quot;">⭐ &quot;reduce cost&quot;, &quot;avoid unnecessary spend&quot;</td></tr>
+      <tr><td><strong>Sustainability</strong></td><td data-ur="Mahol par asar kam karna (bijli, carbon). Sab se naya pillar — isi liye poocha jata hai.">Reducing environmental impact (energy, carbon). The newest pillar — hence asked.</td><td data-ur="&quot;environmental impact&quot;, &quot;carbon footprint&quot;">&quot;environmental impact&quot;, &quot;carbon footprint&quot;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Migration aur cloud economics ke lafz">Migration and cloud economics terms</span>
+    <ul>
+      <li data-ur="⭐ <strong>Rightsizing</strong> = resource ko us ke asal kaam ke barabar karna — bara server chhota kar dena taake paisa bache. Cost Optimization pillar ka aham lafz."><strong>⭐ Rightsizing</strong> = matching resource size to actual need — shrinking an oversized server to save money. A key Cost Optimization term.</li>
+      <li data-ur="<strong>BYOL (Bring Your Own License)</strong> = apna pehle se khareeda hua software licence AWS par le aana. Uska ulta: <strong>included licence</strong> (qeemat mein shamil)."><strong>BYOL (Bring Your Own License)</strong> = bringing a licence you already own to AWS. The opposite: an <strong>included licence</strong> (bundled in the price).</li>
+      <li data-ur="<strong>Deployment models:</strong> <strong>Cloud</strong> (sab kuch cloud mein), <strong>Hybrid</strong> (kuch cloud, kuch apne data centre mein), <strong>On-premises</strong> (sab apna). Sawal mein &quot;keep some systems in our own data centre&quot; = hybrid."><strong>Deployment models:</strong> <strong>Cloud</strong> (all in cloud), <strong>Hybrid</strong> (part cloud, part your own data centre), <strong>On-premises</strong> (all yours). &quot;Keep some systems in our own data centre&quot; = hybrid.</li>
+      <li data-ur="<strong>AWS Cloud Adoption Framework (CAF)</strong> = cloud par jane ka AWS ka mansooba. Faide jo exam ginwata hai: business ka khatra kam, ESG behtar, revenue barhna, operational efficiency."><strong>AWS Cloud Adoption Framework (CAF)</strong> = AWS's plan for moving to cloud. Benefits the exam lists: reduced business risk, improved ESG performance, increased revenue, increased operational efficiency.</li>
+      <li data-ur="<strong>AWS Snow Family</strong> = bohot bara data (terabytes) physical device mein bhar kar AWS ko bhejna, kyunke internet par bhejna bohot lamba hoga. Sawal mein &quot;petabytes&quot; ya &quot;slow internet connection&quot; = Snow."><strong>AWS Snow Family</strong> = shipping very large data (terabytes+) on a physical device because uploading would take too long. &quot;Petabytes&quot; or &quot;limited bandwidth&quot; = Snow.</li>
+      <li data-ur="<strong>Migration ke tools:</strong> <strong>AWS DMS</strong> (database migrate karna), <strong>AWS SCT</strong> (database ka schema badalna jab engine badal raha ho), <strong>Application Migration Service</strong>, <strong>Migration Hub</strong> (sab par nazar)."><strong>Migration tools:</strong> <strong>AWS DMS</strong> (migrating databases), <strong>AWS SCT</strong> (converting the schema when changing engine), <strong>Application Migration Service</strong>, <strong>Migration Hub</strong> (tracking it all).</li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — Domain 1 ke lafz">Exam English — Domain 1 vocabulary</span>
+    <span data-ur="<strong>&quot;provision&quot;</strong> = resource banana/taiyaar karna.<br><strong>&quot;elasticity&quot;</strong> = lachak — barhna aur ghatna dono.<br><strong>&quot;agility&quot;</strong> = phurti — tezi se badal sakna.<br><strong>&quot;capital expense (CapEx)&quot;</strong> = pehle se bara kharcha. <strong>&quot;variable/operational expense (OpEx)&quot;</strong> = istemaal ke hisaab se kharcha.<br><strong>&quot;economies of scale&quot;</strong> = bari miqdar mein khareedne se sasta parna.<br><strong>&quot;rightsizing&quot;</strong> = sahi naap par lana.<br><strong>&quot;undifferentiated heavy lifting&quot;</strong> = woh bhaari kaam jo har koi karta hai magar us se koi faida/farq nahi (server rack karna) — AWS kehta hai yeh hum karenge.<br><strong>&quot;data sovereignty&quot;</strong> = data kis mulk ke qanoon ke tehat hai.">
+      <strong>&quot;provision&quot;</strong> = to create or set up a resource.<br>
+      <strong>&quot;elasticity&quot;</strong> = expanding and contracting with demand.<br>
+      <strong>&quot;agility&quot;</strong> = the ability to move and change fast.<br>
+      <strong>&quot;capital expense (CapEx)&quot;</strong> = a large up-front cost. <strong>&quot;variable/operational expense (OpEx)&quot;</strong> = cost by usage.<br>
+      <strong>&quot;economies of scale&quot;</strong> = buying in bulk makes it cheaper.<br>
+      <strong>&quot;rightsizing&quot;</strong> = adjusting to the correct size.<br>
+      <strong>&quot;undifferentiated heavy lifting&quot;</strong> = hard work everyone must do that gives no competitive advantage (racking servers) — AWS's pitch is that they'll do it.<br>
+      <strong>&quot;data sovereignty&quot;</strong> = which country's laws govern the data.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 1 · the economics question</span>
+    <p class="scenario" data-ur="Ek company apne data centre se AWS par ja rahi hai. Maali lehaaz se is ka <span class=&quot;qual&quot;>SAB SE BARA</span> faida kya hai?">A company is moving from its own data centre to AWS. What is the <span class="qual">PRIMARY</span> financial benefit?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Capital expense ko variable expense mein badalna — server pehle khareedne ke bajaye istemaal ka paisa dena">Trading capital expense for variable expense — paying for usage instead of buying servers up front</button>
+      <button class="opt" data-correct="false" data-ur="AWS saara kharcha khatam kar deta hai">AWS eliminates all costs</button>
+      <button class="opt" data-correct="false" data-ur="Cloud hamesha on-premises se sasta hota hai, har haal mein">Cloud is always cheaper than on-premises in every case</button>
+      <button class="opt" data-correct="false" data-ur="Company ko ab security ki zaroorat nahi rehti">The company no longer needs to think about security</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 1 · Well-Architected pillars</span>
+    <p class="scenario" data-ur="Ek team apne system ko is tarah design kar rahi hai ke woh kharabi se khud sambhal jaye aur backup se bahaal ho sake. Yeh Well-Architected Framework ke <span class=&quot;qual&quot;>KIS</span> pillar se sab se zyada mutalliq hai?">A team is designing a system to recover automatically from failure and restore from backups. This relates <span class="qual">MOST</span> to which Well-Architected pillar?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Performance Efficiency">Performance Efficiency</button>
+      <button class="opt" data-correct="true" data-ur="Reliability">Reliability</button>
+      <button class="opt" data-correct="false" data-ur="Cost Optimization">Cost Optimization</button>
+      <button class="opt" data-correct="false" data-ur="Sustainability">Sustainability</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 1 · elasticity vs scalability</span>
+    <p class="scenario" data-ur="Ek website par din mein traffic bohot zyada aur raat ko bohot kam hota hai. Company chahti hai ke servers <strong>khud-ba-khud barhein aur ghatein</strong>. Yeh kis cheez ki misaal hai?">A website has heavy daytime traffic and light night-time traffic. The company wants servers to <strong>automatically increase and decrease</strong>. This is an example of what?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="High availability">High availability</button>
+      <button class="opt" data-correct="true" data-ur="Elasticity">Elasticity</button>
+      <button class="opt" data-correct="false" data-ur="Fault tolerance">Fault tolerance</button>
+      <button class="opt" data-correct="false" data-ur="Data sovereignty">Data sovereignty</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="<strong>Rightsizing</strong> tumhare liye naya lafz hai magar naya kaam nahi. Jab tum dekhte ho ke koi Celery worker 4 GB RAM le raha hai magar sirf 500 MB istemaal karta hai, aur usay chhota kar dete ho — yeh rightsizing hai.<br><br><strong>Elasticity</strong> woh cheez hai jo tum tab chahte the jab tumhari app par achanak load aaya ho aur tum ne haath se instance barhaya ho. Auto Scaling yeh khud karta hai — aur exam ka lafz &quot;elasticity&quot; hai, &quot;scalability&quot; nahi (kyunke usmein ghatna bhi shamil hai).<br><br>Aur <strong>Well-Architected pillars</strong>? Yeh code review ki checklist hai, bas infrastructure ke liye. Tum PR review mein poochte ho: kya yeh mehfooz hai? kya yeh tez hai? kya yeh test hua? AWS ne wohi sawal 6 khanon mein likh diye hain.">
+      <strong>Rightsizing</strong> is a new word for something you already do. When you notice a Celery worker allocated 4 GB but using 500 MB, and shrink it — that's rightsizing.<br><br><strong>Elasticity</strong> is what you wanted the time traffic spiked and you scaled instances by hand. Auto Scaling does it for you — and the exam's word is &quot;elasticity&quot;, not &quot;scalability&quot;, because it includes scaling *down*.<br><br>And the <strong>Well-Architected pillars</strong>? They're a code-review checklist for infrastructure. In a PR you ask: is it secure? is it fast? is it tested? AWS wrote the same questions into six boxes.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: CapEx aur OpEx ka farq? 6 pillars ke naam? Elasticity aur scalability mein farq? Aur high availability kaise milti hai?">From memory: CapEx vs OpEx? The 6 pillars? Elasticity vs scalability? And how do you achieve high availability?</div>
+    <div class="answer" data-ur="<strong>CapEx = pehle bara kharcha (server khareedna); OpEx = istemaal ka kharcha (cloud).</strong> <strong>6 pillars: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability.</strong> <strong>Scalability = barhna; elasticity = barhna AUR ghatna, khud-ba-khud.</strong> <strong>High availability = kai Availability Zones.</strong> Chaaron aa gaye? To Domain 1 ka 24% ab tumhara hai."><strong>CapEx = big up-front cost (buying servers); OpEx = pay for usage (cloud).</strong> <strong>Six pillars: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability.</strong> <strong>Scalability = growing; elasticity = growing AND shrinking automatically.</strong> <strong>High availability = multiple Availability Zones.</strong> All four? Then Domain 1's 24% is yours.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Domain 1 exam ka <strong>24%</strong> hai — takreeban 12 scored sawal — aur is mein koi technical gehrai nahi maangi jati. Yeh sirf lafzon ka imtihan hai: CapEx/OpEx, 6 pillars, elasticity banam scalability. Yeh sab se aasaan 24% hai jo tum kama sakte ho, aur ab tumhare paas har lafz ka ek jumla hai.">Domain 1 is <strong>24%</strong> of the exam — roughly 12 scored questions — and it asks for no technical depth at all. It's a vocabulary test: CapEx/OpEx, the six pillars, elasticity vs scalability. This is the easiest 24% available to you, and you now have one line for every term.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://aws.amazon.com/architecture/well-architected/&quot; target=&quot;_blank&quot;>AWS Well-Architected Framework</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — 6 pillars AWS ke apne lafzon mein. Sirf pillars ke naam aur unki ek satar parho; poora whitepaper is exam ke liye zaroori nahi.">📖 <a href="https://aws.amazon.com/architecture/well-architected/" target="_blank">AWS Well-Architected Framework</a><sup class="cite"><a href="#s1">1</a></sup> — the six pillars in AWS's words. Read just the pillar names and their one-line summaries; the full whitepaper is beyond this exam.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> This domain is abstract, and abstract English is harder than technical English. If a pillar question feels like a coin flip, paste it here — usually one word in the scenario maps cleanly to one pillar, and I'll show you which.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C4 (Cloud Concepts).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0054-clf-pricing-models.html">C3 · Pricing models</a>. Next: <a href="0059-clf-security-services.html">C5 · Security services, IAM and compliance</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html" target="_blank">CLF-C02 Exam Guide — Domain 1: Cloud Concepts</a> (24%). Task 1.2 lists the Well-Architected pillars verbatim: &quot;operational excellence, security, reliability, performance efficiency, cost optimization, sustainability&quot;. Task 1.4 requires understanding fixed vs variable costs, BYOL vs included licences, rightsizing, benefits of automation and economies of scale. Task 1.3 covers the AWS Cloud Adoption Framework and migration strategies including AWS Snowball. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://aws.amazon.com/architecture/well-architected/" target="_blank">AWS Well-Architected Framework</a> — the six pillars and their definitions.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. This is AWS's own phrase for the core economic argument: no large up-front purchase, just pay for what you use. Note the absolute words in the wrong options — \"eliminates all costs\", \"always cheaper\", \"no longer needs security\". Absolutes are almost always wrong on this exam, and the security one contradicts the shared responsibility model."
+                      : "Reconsider. The cloud's central financial argument is trading capital expense (buying servers up front) for variable expense (paying for usage). The other options all contain absolutes — \"eliminates all costs\", \"always cheaper\", \"no longer needs security\" — and absolutes are nearly always wrong here. Security in particular remains yours.",
+          q2: correct ? "Correct. Recovering from failure and restoring from backups is the definition of the Reliability pillar. Performance Efficiency is about using the right resources well, Cost Optimization about removing waste, and Sustainability about environmental impact."
+                      : "Reconsider. Map the keywords: \"recover from failure\" and \"backups\" belong to Reliability. Performance Efficiency concerns using resources efficiently, Cost Optimization concerns spend, Sustainability concerns environmental impact. Each pillar owns a distinct vocabulary — matching the keyword is usually enough.",
+          q3: correct ? "Correct. The phrase \"automatically increase and decrease\" is elasticity — scaling both directions with demand. Scalability alone only means the ability to grow. High availability is about surviving failure, and fault tolerance about continuing with no impact; neither is about matching demand."
+                      : "Reconsider. The deciding words are \"automatically\" and \"increase and decrease\". Growing *and* shrinking with demand is elasticity. High availability and fault tolerance are about surviving failures, not tracking traffic. If the question had only said \"handle growth\", scalability would fit — but shrinking makes it elasticity."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -3,7 +3,7 @@
    The HTML shell is identical for every exam (it is just a host for the engine),
    so it lives here once rather than being copy-pasted into 15 files.
 
-   Run:  node exams/build.js
+   Run:  node exams/build.cjs  (or npm run exams)
    Also validates each question bank and refuses to emit a broken exam. */
 
 const fs = require('fs');
@@ -12,15 +12,40 @@ const path = require('path');
 const DIR = __dirname;
 const QDIR = path.join(DIR, 'questions');
 
+// Per-certification labels. `meta.cert` selects one; DVA stays the default so
+// the 15 existing DVA exams keep building unchanged with no edits to their JSON.
+const CERTS = {
+  dva: {
+    code: 'DVA-C02', name: 'AWS Certified Developer – Associate (DVA-C02)', pass: 720,
+    domains: { 1: 'Development with AWS Services', 2: 'Security', 3: 'Deployment', 4: 'Troubleshooting & Optimization' },
+    weights: { 1: 32, 2: 26, 3: 24, 4: 18 },
+  },
+  clf: {
+    code: 'CLF-C02', name: 'AWS Certified Cloud Practitioner (CLF-C02)', pass: 700,
+    domains: { 1: 'Cloud Concepts', 2: 'Security & Compliance', 3: 'Cloud Technology & Services', 4: 'Billing, Pricing & Support' },
+    weights: { 1: 24, 2: 30, 3: 34, 4: 12 },
+  },
+  aif: {
+    code: 'AIF-C01', name: 'AWS Certified AI Practitioner (AIF-C01)', pass: 700,
+    domains: { 1: 'Fundamentals of AI & ML', 2: 'Fundamentals of GenAI', 3: 'Applications of Foundation Models', 4: 'Guidelines for Responsible AI', 5: 'Security, Compliance & Governance' },
+    weights: { 1: 20, 2: 24, 3: 28, 4: 14, 5: 14 },
+  },
+};
+
 function page(meta, questions) {
+  const cert = CERTS[meta.cert || 'dva'];
+  if (!cert) throw new Error(`unknown cert "${meta.cert}" — expected one of ${Object.keys(CERTS)}`);
+  // Scaled scores are not a linear % of raw score, so this is the rough guide
+  // AWS candidates actually use: pass mark as a fraction of the questions.
+  const toPass = Math.round(questions.length * (cert.pass / 1000));
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DVA-C02 ${meta.title}</title>
-<link rel="stylesheet" href="../assets/lesson.css?v=7">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=7">
+<title>${cert.code} ${meta.title}</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
 </head>
 <body>
 <div class="exam-shell">
@@ -28,13 +53,13 @@ function page(meta, questions) {
   <div id="exam-intro">
     <div class="exam-intro-card">
       <h1>${meta.title}</h1>
-      <p class="sub">AWS Certified Developer – Associate (DVA-C02) · full-length mock${meta.focus ? ' · ' + meta.focus : ''}</p>
+      <p class="sub">${cert.name} · ${meta.kind || 'full-length mock'}${meta.focus ? ' · ' + meta.focus : ''}</p>
 
       <div class="exam-facts">
         <div class="exam-fact"><b>${questions.length}</b><span>questions</span></div>
         <div class="exam-fact"><b>${meta.minutes}</b><span>minutes</span></div>
-        <div class="exam-fact"><b>720</b><span>pass mark / 1000</span></div>
-        <div class="exam-fact"><b>~47</b><span>correct to pass</span></div>
+        <div class="exam-fact"><b>${cert.pass}</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~${toPass}</b><span>correct to pass</span></div>
       </div>
 
       <p style="font-size:0.88rem;line-height:1.6;">
@@ -54,9 +79,9 @@ function page(meta, questions) {
       </p>
 
       <div style="margin-top:1.3rem;">
-        <button class="btn-primary" id="start-btn">Start exam</button>
+        <button class="btn-primary" id="start-btn">Start ${meta.noun || 'exam'}</button>
         <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
-        <a class="btn-secondary" href="../exams.html">Back to all exams</a>
+        <a class="btn-secondary" href="../${meta.backTo || 'exams.html'}">${meta.backLabel || 'Back to all exams'}</a>
       </div>
     </div>
   </div>
@@ -73,7 +98,7 @@ function page(meta, questions) {
     <div class="exam-nav">
       <button class="btn-secondary" id="prev-btn">← Previous</button>
       <button class="btn-secondary" id="next-btn">Next →</button>
-      <button class="btn-primary btn-submit" id="submit-btn">Submit exam</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit ${meta.noun || 'exam'}</button>
     </div>
 
     <div class="palette-wrap">
@@ -87,17 +112,33 @@ function page(meta, questions) {
 </div>
 
 <script>
-var EXAM_META = ${JSON.stringify({ id: meta.id, title: meta.title, minutes: meta.minutes })};
+var EXAM_META = ${JSON.stringify({
+  id: meta.id, title: meta.title, minutes: meta.minutes,
+  pass: cert.pass, domainNames: cert.domains, domainWeights: cert.weights,
+  backTo: meta.backTo, backLabel: meta.backLabel,
+})};
 var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 </script>
-<script src="../assets/exam-engine.js?v=7"></script>
-<script src="../assets/i18n.js?v=7"></script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
 </body>
 </html>
 `;
 }
 
-function validate(file, qs) {
+// Question-bank shape per certification. DVA mocks are full-length and must
+// reproduce the real paper exactly; CLF/AIF quizzes are short revision sets, so
+// they are checked proportionally against the real domain weightings instead.
+const SHAPES = {
+  dva: { total: 65, exact: { 1: 21, 2: 17, 3: 15, 4: 12 } },
+  clf: { total: 20, tolerance: 1.5, weights: { 1: 0.24, 2: 0.30, 3: 0.34, 4: 0.12 } },
+  aif: { total: 20, tolerance: 1.5, weights: { 1: 0.20, 2: 0.24, 3: 0.28, 4: 0.14, 5: 0.14 } },
+};
+
+function validate(file, qs, cert) {
+  const shape = SHAPES[cert];
+  if (!shape) throw new Error(`${file}: unknown cert "${cert}"`);
+  const validDomains = Object.keys(shape.exact || shape.weights).map(Number);
   const errs = [];
   const ids = new Set();
   const byDomain = {};
@@ -115,16 +156,32 @@ function validate(file, qs) {
     if (q.multi && (q.correct || []).length < 2) errs.push(`q${q.id} multi needs >=2 correct`);
     if (!q.multi && (q.correct || []).length !== 1) errs.push(`q${q.id} single needs exactly 1 correct`);
     if (new Set(q.options || []).size !== (q.options || []).length) errs.push(`q${q.id} duplicate option text`);
-    if (![1, 2, 3, 4].includes(q.domain)) errs.push(`q${q.id} bad domain ${q.domain}`);
+    if (!validDomains.includes(q.domain)) errs.push(`q${q.id} bad domain ${q.domain}`);
   });
-  // Enforce real-exam shape: 65 questions weighted 21/17/15/12 across the four
-  // domains. A drifting distribution would make scores stop predicting exam day.
-  const EXPECTED = { 1: 21, 2: 17, 3: 15, 4: 12 };
-  if (qs.length !== 65) errs.push(`expected 65 questions, found ${qs.length}`);
-  Object.keys(EXPECTED).forEach(d => {
-    const got = byDomain[d] || 0;
-    if (got !== EXPECTED[d]) errs.push(`domain ${d}: expected ${EXPECTED[d]}, found ${got}`);
-  });
+
+  if (shape.exact) {
+    // Full-length DVA mocks reproduce the real paper exactly: 65 questions
+    // weighted 21/17/15/12. A drifting distribution would make scores stop
+    // predicting exam day, so this stays a hard equality check.
+    if (qs.length !== shape.total) errs.push(`expected ${shape.total} questions, found ${qs.length}`);
+    Object.keys(shape.exact).forEach(d => {
+      const got = byDomain[d] || 0;
+      if (got !== shape.exact[d]) errs.push(`domain ${d}: expected ${shape.exact[d]}, found ${got}`);
+    });
+  } else {
+    // Short revision quizzes cannot hit the real paper's exact counts, so the
+    // rule is proportional instead: every domain must appear, and none may run
+    // more than `tolerance` questions away from its share of the real weighting.
+    if (qs.length !== shape.total) errs.push(`expected ${shape.total} questions, found ${qs.length}`);
+    validDomains.forEach(d => {
+      const got = byDomain[d] || 0;
+      const want = shape.weights[d] * qs.length;
+      if (got === 0) errs.push(`domain ${d}: no questions (every domain must be represented)`);
+      else if (Math.abs(got - want) > shape.tolerance) {
+        errs.push(`domain ${d}: ${got} questions, expected ~${want.toFixed(1)} (±${shape.tolerance})`);
+      }
+    });
+  }
   return { errs, byDomain };
 }
 
@@ -135,7 +192,7 @@ const seenScenarios = new Map();
 let built = 0, failed = 0;
 fs.readdirSync(QDIR).filter(f => f.endsWith('.json')).sort().forEach(f => {
   const data = JSON.parse(fs.readFileSync(path.join(QDIR, f), 'utf8'));
-  const { errs, byDomain } = validate(f, data.questions);
+  const { errs, byDomain } = validate(f, data.questions, data.meta.cert || 'dva');
 
   data.questions.forEach(q => {
     // Normalise so trivial whitespace/markup differences still count as duplicates.
@@ -146,7 +203,9 @@ fs.readdirSync(QDIR).filter(f => f.endsWith('.json')).sort().forEach(f => {
       seenScenarios.set(key, data.meta.id);
     }
   });
-  const dist = [1, 2, 3, 4].map(d => byDomain[d] || 0).join('/');
+  // AIF has five domains, DVA and CLF four — report whichever the bank uses.
+  const dist = Object.keys(byDomain).map(Number).sort((a, b) => a - b)
+    .map(d => byDomain[d]).join('/');
   if (errs.length) {
     failed++;
     console.error(`✘ ${f}: ${errs.length} problem(s)\n   ` + errs.slice(0, 8).join('\n   '));

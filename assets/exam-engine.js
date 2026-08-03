@@ -1,16 +1,18 @@
-/* exam-engine.js — full mock-exam runner for the AWS DVA-C02 track.
+/* exam-engine.js — mock-exam and quiz runner for every AWS track (DVA, CLF, AIF).
    Every exam page is just a data file (QUESTIONS array + EXAM_META) plus this script.
 
    WHAT IT DOES
-   - Real exam conditions: one question at a time, 130-minute countdown, flag for review.
+   - Real exam conditions: one question at a time, a countdown, flag for review.
    - No feedback during the exam. Feedback is the whole point of the REVIEW screen after.
-   - Scores on the AWS scale (100–1000, pass = 720) and per-domain, so weak areas surface.
+   - Scores on the AWS scale (100-1000) and per-domain, so weak areas surface. The pass
+     mark, domain names and weightings come from EXAM_META (DVA 720; CLF/AIF 700),
+     defaulting to the DVA values when absent.
    - Saves progress to localStorage, so closing the tab mid-exam doesn't lose the attempt.
    - Records the best score per exam so the hub page can show progress.
 
    QUESTION FORMAT (in each exam file):
      { id: 1,
-       domain: 1,                       // 1..4, used for per-domain scoring
+       domain: 1,                       // 1..4 (DVA/CLF) or 1..5 (AIF); per-domain scoring
        multi: false,                    // true => "choose TWO/THREE", checkboxes not radios
        scenario: 'HTML string',
        scenarioUr: 'Roman Urdu',        // optional; shown when Urdu mode is on
@@ -27,15 +29,19 @@
 
   if (typeof QUESTIONS === 'undefined' || typeof EXAM_META === 'undefined') return;
 
-  var PASS_SCORE = 720;
+  // Pass mark and domain labels differ per certification: DVA passes at 720,
+  // CLF and AIF at 700, and each has its own domain names and weightings. The
+  // build writes these into EXAM_META; the DVA values remain the fallback so
+  // any older page without them keeps behaving exactly as before.
+  var PASS_SCORE = EXAM_META.pass || 720;
   var SCALE_MIN = 100, SCALE_MAX = 1000;
-  var DOMAIN_NAMES = {
+  var DOMAIN_NAMES = EXAM_META.domainNames || {
     1: 'Development with AWS Services',
     2: 'Security',
     3: 'Deployment',
     4: 'Troubleshooting & Optimization'
   };
-  var DOMAIN_WEIGHTS = { 1: 32, 2: 26, 3: 24, 4: 18 };
+  var DOMAIN_WEIGHTS = EXAM_META.domainWeights || { 1: 32, 2: 26, 3: 24, 4: 18 };
 
   var STORE_PROGRESS = 'dva-exam-progress-' + EXAM_META.id;
   var STORE_RESULTS  = 'dva-exam-results';
@@ -94,7 +100,9 @@
 
   function computeResult() {
     var correct = 0, byDomain = {};
-    for (var d = 1; d <= 4; d++) byDomain[d] = { correct: 0, total: 0 };
+    // Seed from DOMAIN_NAMES rather than a fixed 1..4 range — AIF has five
+    // domains, so a hardcoded loop would silently drop Domain 5 from scoring.
+    Object.keys(DOMAIN_NAMES).forEach(function (d) { byDomain[d] = { correct: 0, total: 0 }; });
 
     QUESTIONS.forEach(function (q, i) {
       var d = q.domain || 1;
@@ -249,7 +257,10 @@
 
     var timeUsed = Math.round((Date.now() - state.startedAt) / 60000);
 
-    var domainRows = [1, 2, 3, 4].map(function (d) {
+    // Iterate the cert's own domain list, not a fixed 1..4 — AIF has five.
+    var DOMAIN_IDS = Object.keys(DOMAIN_NAMES).map(Number).sort(function (a, b) { return a - b; });
+
+    var domainRows = DOMAIN_IDS.map(function (d) {
       var b = res.byDomain[d];
       if (!b.total) return '';
       var p = Math.round((b.correct / b.total) * 100);
@@ -264,20 +275,20 @@
 
     // Name the weakest domain explicitly — that's the actionable output of a mock exam.
     var weakest = null, weakestPct = 2;
-    [1, 2, 3, 4].forEach(function (d) {
+    DOMAIN_IDS.forEach(function (d) {
       var b = res.byDomain[d];
       if (b.total && (b.correct / b.total) < weakestPct) { weakestPct = b.correct / b.total; weakest = d; }
     });
 
     var advice;
     if (res.scaled >= 800) {
-      advice = 'Strong pass. You are comfortably above the 720 line. Keep doing exams to hold this level, ' +
+      advice = 'Strong pass. You are comfortably above the ' + PASS_SCORE + ' line. Keep doing exams to hold this level, ' +
                'and read every explanation below — even for questions you got right by guessing.';
     } else if (res.passed) {
-      advice = 'You passed — but ' + res.scaled + ' is close enough to 720 that a slightly harder exam form ' +
+      advice = 'You passed — but ' + res.scaled + ' is close enough to ' + PASS_SCORE + ' that a slightly harder exam form ' +
                'could push you under. Aim for 800+ consistently before booking.';
-    } else if (res.scaled >= 620) {
-      advice = 'Close. You are within reach of 720. Focus on your weakest domain below rather than ' +
+    } else if (res.scaled >= PASS_SCORE - 100) {
+      advice = 'Close. You are within reach of ' + PASS_SCORE + '. Focus on your weakest domain below rather than ' +
                'studying everything again — that is where the fastest points are.';
     } else {
       advice = 'More study needed before booking. Do not treat this as failure — this is exactly what a ' +
@@ -293,7 +304,7 @@
         '<div class="result-verdict">' + (res.passed ? 'PASS' : 'NOT YET') + '</div>' +
         '<div class="result-score">' + res.scaled + '<span>/1000</span></div>' +
         '<div class="result-sub">' + res.correct + ' of ' + res.total + ' correct · ' +
-          Math.round(res.pct * 100) + '% · pass mark is 720 · ' + timeUsed + ' min used</div>' +
+          Math.round(res.pct * 100) + '% · pass mark is ' + PASS_SCORE + ' · ' + timeUsed + ' min used</div>' +
       '</div>' +
       '<div class="result-advice">' + advice + '</div>' +
       '<h2>Score by domain</h2>' +
@@ -311,7 +322,8 @@
       '<div id="review-list"></div>' +
       '<div class="result-actions">' +
         '<button class="btn-primary" id="retake-btn">Retake this exam</button> ' +
-        '<a class="btn-secondary" href="../exams.html">All exams</a>' +
+        '<a class="btn-secondary" href="../' + (EXAM_META.backTo || 'exams.html') + '">' +
+          (EXAM_META.backLabel || 'All exams') + '</a>' +
       '</div>';
 
     root.querySelectorAll('.rf').forEach(function (b) {

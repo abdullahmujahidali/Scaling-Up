@@ -1,0 +1,192 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I4 · Domain 3 (28%) — the biggest domain</p>
+    <h1 data-ur="Prompt engineering, customisation aur model ki janch">Prompt engineering, customisation and evaluating models</h1>
+    <p class="subtitle" data-ur="Yeh AIF ka sab se bara domain hai. I1 mein tum ne RAG aur fine-tuning ka farq seekha — ab us ki tafseel: prompt likhne ke tareeqe, model ko apna banane ke saare raste (aur unka kharcha), aur yeh kaise maloom karna ke model theek kaam kar raha hai.">This is AIF's largest domain. In I1 you learned RAG vs fine-tuning — now the detail: prompting techniques, every route to customising a model (and what each costs), and how to tell whether a model is actually working.</p>
+    <div class="meta">
+      <span>~14 min</span>
+      <span>One concept: cheapest method that meets the need</span>
+      <span>Win: the largest AIF domain</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle I3 se yaad karo: prompt injection kya hai? Bias ka sab se aam sabab? Aur hallucination ka asal ilaaj?">From I3: what is prompt injection? The commonest cause of bias? And the real cure for hallucinations?</div>
+    <div class="answer" data-ur="<strong>Prompt injection</strong> = user ki chhupi hidayat model ko bhatka de (= SQL injection wali soch). <strong>Bias ka sabab = training data.</strong> <strong>Hallucination ka ilaaj = RAG grounding + output validation + human review.</strong> Aaj hum us se aage jaate hain: prompt likhne ka hunar aur model parkhne ka tareeqa."><strong>Prompt injection</strong> = hidden user instructions hijacking the model (the SQL-injection instinct). <strong>Bias comes from the training data.</strong> <strong>Hallucinations are cured by RAG grounding + output validation + human review.</strong> Today we go further: the craft of prompting, and how to judge a model.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Model ko apna banane ke chaar raste hain — aur exam hamesha SAB SE SASTA raasta poochta hai jo kaam kar de.</strong> Kharche ki tarteeb (sasta se mehnga):<br><br><strong>1. Prompt engineering</strong> — sirf behtar sawal. Koi training nahi. Sab se sasta.<br><strong>2. RAG</strong> — apne documents dikhao. Model nahi badalta.<br><strong>3. Fine-tuning</strong> — model ko apne data par dobara train karo. Mehnga.<br><strong>4. Pre-training (shuru se apna model)</strong> — lakhon dollar. <strong>CLF/AIF ke sawal mein yeh takreeban hamesha ghalat jawab hai.</strong><br><br>⭐ Qaida: <strong>upar se shuru karo, jab tak zaroorat na ho neeche mat jao.</strong> Agar sawal &quot;lowest cost&quot; ya &quot;least effort&quot; kahe to jawab list mein jitna ooper ho utna behtar."><strong>There are four routes to customising a model — and the exam always asks for the CHEAPEST one that meets the need.</strong> In cost order (cheapest first):<br><br><strong>1. Prompt engineering</strong> — just ask better. No training. Cheapest.<br><strong>2. RAG</strong> — show it your documents. The model is unchanged.<br><strong>3. Fine-tuning</strong> — retrain the model on your data. Expensive.<br><strong>4. Pre-training from scratch</strong> — millions of dollars. <strong>Almost always the wrong answer on this exam.</strong><br><br>⭐ The rule: <strong>start at the top and only move down when you must.</strong> If a question says &quot;lowest cost&quot; or &quot;least effort&quot;, the answer is as high up that list as will work.</span>
+  </div>
+
+  <h2 data-ur="Kahani: naye mulazim ko kaam samjhana">The story: briefing a new employee</h2>
+  <p data-ur="Wohi mulazim jo I1 mein aaya tha. Usay kaam samjhane ke chaar tareeqe hain, aur tum hamesha sab se sasta chunte ho:">The same employee from I1. There are four ways to get them doing your work, and you always pick the cheapest that suffices:</p>
+  <p data-ur="<strong>1.</strong> Behtar hidayat do: &quot;yeh report likho, teen paragraph, formal andaaz&quot; — yeh <strong>prompt engineering</strong> hai. Muft, foran. <strong>2.</strong> Usay company ki files de do taake wahan se dekh kar likhe — <strong>RAG</strong>. <strong>3.</strong> Usay hafton ki training par bhejo taake woh tumhare andaaz mein likhna seekh jaye — <strong>fine-tuning</strong>. Mehnga, magar andaaz pakka badal jata hai. <strong>4.</strong> Ya bachpan se apna banda taiyaar karo — <strong>pre-training</strong>. Koi aqal-mand yeh nahi karta jab tak bohot khaas wajah na ho."><strong>1.</strong> Give clearer instructions: &quot;write this report, three paragraphs, formal tone&quot; — that's <strong>prompt engineering</strong>. Free and instant. <strong>2.</strong> Hand them the company files to work from — <strong>RAG</strong>. <strong>3.</strong> Send them on weeks of training so they write in your house style — <strong>fine-tuning</strong>. Expensive, but the manner genuinely changes. <strong>4.</strong> Or raise a person from childhood — <strong>pre-training</strong>. Nobody sensible does this without an extraordinary reason.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Prompt engineering ke tareeqe — yeh naam poochay jaate hain">⭐ Prompting techniques — these names get asked</span>
+    <ul>
+      <li data-ur="⭐ <strong>Zero-shot</strong> = koi misaal nahi di, sirf kaam bata diya. (&quot;Is review ka sentiment batao.&quot;)"><strong>⭐ Zero-shot</strong> = no examples given, just the instruction. (&quot;Classify the sentiment of this review.&quot;)</li>
+      <li data-ur="⭐ <strong>Single-shot / one-shot</strong> = <strong>ek</strong> misaal di. <strong>Few-shot</strong> = <strong>chand</strong> misaalein di. Misaalein dene se model ka jawab behtar aur zyada mustaqil hota hai. Sawal mein &quot;provide a few examples in the prompt&quot; = few-shot."><strong>⭐ Single-shot / one-shot</strong> = <strong>one</strong> example given. <strong>Few-shot</strong> = <strong>several</strong> examples given. Examples make responses better and more consistent. &quot;Provide a few examples in the prompt&quot; = few-shot.</li>
+      <li data-ur="⭐ <strong>Chain-of-thought</strong> = model ko kaho ke <strong>qadam ba qadam soch kar</strong> jawab de. Hisaab aur mantiq wale kaam mein bohot behtar nateeja deta hai. Sawal mein &quot;complex reasoning&quot; ya &quot;step by step&quot; = chain-of-thought."><strong>⭐ Chain-of-thought</strong> = telling the model to <strong>reason step by step</strong>. Markedly better on maths and logic tasks. &quot;Complex reasoning&quot; or &quot;step by step&quot; = chain-of-thought.</li>
+      <li data-ur="<strong>Prompt ke hissay:</strong> <strong>instruction</strong> (kya karna hai), <strong>context</strong> (pas manzar), <strong>input</strong> (asal data), <strong>output format</strong> (jawab kis shakal mein). <strong>Negative prompt</strong> = kya <em>nahi</em> karna. <strong>Prompt template</strong> = tayyar shuda dhaancha jismein sirf data badalta hai."><strong>Parts of a prompt:</strong> <strong>instruction</strong> (what to do), <strong>context</strong> (background), <strong>input</strong> (the data), <strong>output format</strong> (the shape of the answer). A <strong>negative prompt</strong> says what <em>not</em> to do. A <strong>prompt template</strong> is a reusable structure with the data swapped in.</li>
+      <li data-ur="<strong>Prompt engineering ke khatre</strong> (exam guide mein naam se): <strong>exposure</strong> (khufiya maloomat prompt se nikal aana), <strong>poisoning</strong> (kharab data daalna), <strong>hijacking</strong> aur <strong>jailbreaking</strong> (model ko uski hadd se bahar nikalna). <strong>Bedrock Prompt Management</strong> = prompts ko sambhalna aur version rakhna."><strong>Risks of prompt engineering</strong> (named in the exam guide): <strong>exposure</strong> (secrets leaking via prompts), <strong>poisoning</strong> (feeding corrupt data), <strong>hijacking</strong> and <strong>jailbreaking</strong> (pushing the model past its limits). <strong>Bedrock Prompt Management</strong> = storing and versioning prompts.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Inference parameters — jawab ka andaaz badalne wale knobs">⭐ Inference parameters — the knobs that change output</span>
+    <ul>
+      <li data-ur="⭐ <strong>Temperature</strong> = jawab kitna <strong>be-tarteeb/tarjeehi (random/creative)</strong> ho. <strong>Kam temperature (0 ke qareeb)</strong> = mustaqil, ek jaisa, mahfooz jawab — hisaab aur facts ke liye. <strong>Zyada temperature</strong> = zyada mukhtalif aur takhleeqi — kahani likhne ke liye. ⚠️ <strong>Temperature se hallucination theek NAHI hota</strong> — yeh exam ka aam trap hai."><strong>⭐ Temperature</strong> = how <strong>random or creative</strong> the output is. <strong>Low temperature (near 0)</strong> = consistent, predictable, safe — for facts and calculations. <strong>High temperature</strong> = more varied and creative — for story writing. ⚠️ <strong>Temperature does NOT fix hallucinations</strong> — a common exam trap.</li>
+      <li data-ur="<strong>Top-p (nucleus sampling)</strong> aur <strong>Top-k</strong> = yeh bhi jawab ki variety control karte hain, temperature ki tarah. <strong>Max tokens / output length</strong> = jawab kitna lamba ho — <strong>seedha kharche par asar dalta hai</strong>."><strong>Top-p (nucleus sampling)</strong> and <strong>Top-k</strong> = also control variety, like temperature. <strong>Max tokens / output length</strong> = how long the response may be — and it <strong>directly affects cost</strong>.</li>
+      <li data-ur="<strong>Context window</strong> = model ek waqt mein kitna text dekh sakta hai (prompt + jawab). Bari document ke liye yeh matter karta hai. <strong>Prompt caching</strong> = baar baar bheja jane wala hissa cache karna, taake kharcha aur waqt bache."><strong>Context window</strong> = how much text the model can consider at once (prompt + response). It matters for large documents. <strong>Prompt caching</strong> = caching the repeated portion of prompts to save cost and latency.</li>
+      <li data-ur="⭐ <strong>Model chunne ke maayar</strong> (exam guide se): kharcha, <strong>modality</strong> (tehreer/tasveer/awaz), <strong>latency</strong> (raftaar), kitni zubanein, model ka size, kitna customise ho sakta hai, input/output ki lambai."><strong>⭐ Criteria for choosing a model</strong> (from the exam guide): cost, <strong>modality</strong> (text/image/audio), <strong>latency</strong>, multilingual support, model size, how customisable it is, and input/output length.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Model ko parkhna — metrics ke naam">⭐ Evaluating a model — the metric names</span>
+    <ul>
+      <li data-ur="⭐ <strong>ROUGE</strong> = <strong>summarisation</strong> parkhne ke liye (kitna asal matn se mel khata hai). <strong>BLEU</strong> = <strong>translation</strong> parkhne ke liye. Yeh jora poocha jata hai — ROUGE = summary, BLEU = tarjuma."><strong>⭐ ROUGE</strong> = evaluating <strong>summarisation</strong>. <strong>BLEU</strong> = evaluating <strong>translation</strong>. This pair gets asked — ROUGE = summaries, BLEU = translation.</li>
+      <li data-ur="<strong>BERTScore</strong> = matlab ke lehaaz se mel (sirf lafzon ka nahi). <strong>LLM-as-a-judge</strong> = ek model se doosre ka jawab parkhwana. <strong>Human-in-the-loop / human evaluation</strong> = insaan khud parkhe — sab se bharosemand, magar mehnga aur slow."><strong>BERTScore</strong> = similarity by meaning, not just words. <strong>LLM-as-a-judge</strong> = using one model to grade another's output. <strong>Human evaluation</strong> = people judging directly — most trustworthy, but slow and costly.</li>
+      <li data-ur="⭐ <strong>Traditional ML ke metrics</strong> (Domain 1 se, magar yahan bhi aate hain): <strong>Accuracy</strong> = kitne jawab sahi. <strong>Precision</strong> = jinhein &quot;haan&quot; kaha un mein se kitne waqai haan the (jhooti alarm se bachna). <strong>Recall</strong> = jitne waqai haan the un mein se kitne pakre gaye (chhoot jane se bachna). <strong>F1</strong> = dono ka tawazun.<br>Yaad rakhne ka tareeqa: <strong>bimari ya fraud pakarna ho to Recall aham</strong> (koi case chhootna nahi chahiye); <strong>spam filter mein Precision aham</strong> (asli email spam mein na jaye)."><strong>⭐ Traditional ML metrics</strong> (from Domain 1, but they appear here too): <strong>Accuracy</strong> = how many predictions were right. <strong>Precision</strong> = of those flagged &quot;yes&quot;, how many truly were (avoiding false alarms). <strong>Recall</strong> = of those that truly were, how many we caught (avoiding misses). <strong>F1</strong> = the balance of the two.<br>Memory hook: <strong>detecting disease or fraud → Recall matters</strong> (missing a case is unacceptable); <strong>a spam filter → Precision matters</strong> (real mail must not be binned).</li>
+      <li data-ur="<strong>Amazon Bedrock Model Evaluation</strong> = AWS ka apna auzaar models parkhne ke liye (automatic aur human dono). <strong>Benchmark datasets</strong> = tayyar shuda imtihani data.<br><strong>Karobari metrics</strong> jo exam ginwata hai: task completion rate, user satisfaction, cost per interaction, ROI."><strong>Amazon Bedrock Model Evaluation</strong> = AWS's tool for evaluating models (automatic and human). <strong>Benchmark datasets</strong> = standard test sets.<br><strong>Business metrics</strong> the exam lists: task completion rate, user satisfaction, cost per interaction, ROI.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Fine-tuning ki tafseel — jab woh waqai jawab ho">Fine-tuning detail — when it genuinely is the answer</span>
+    <ul>
+      <li data-ur="<strong>Instruction tuning</strong> = model ko hidayat manne ki training. <strong>Domain adaptation</strong> = kisi khaas maidan (tibbi, qanooni) ki zubaan sikhana. <strong>Continuous pre-training</strong> = bina label ke apne data par aur training. <strong>Transfer learning</strong> = ek kaam ka seekha hua doosre kaam mein istemaal."><strong>Instruction tuning</strong> = training the model to follow instructions. <strong>Domain adaptation</strong> = teaching a specialist field's language (medical, legal). <strong>Continuous pre-training</strong> = further training on your unlabelled data. <strong>Transfer learning</strong> = reusing what was learned for one task on another.</li>
+      <li data-ur="<strong>RLHF (Reinforcement Learning from Human Feedback)</strong> = insanon ki pasand-napasand se model ko behtar banana. Yeh woh tareeqa hai jis se models &quot;madadgaar&quot; bante hain."><strong>RLHF (Reinforcement Learning from Human Feedback)</strong> = improving a model using human preference judgements. This is how models are made &quot;helpful&quot;.</li>
+      <li data-ur="<strong>Fine-tuning ke liye data kaisa ho:</strong> <strong>curated</strong> (chun kar saaf kiya), <strong>labelled</strong>, <strong>representative</strong> (asal duniya jaisa), kaafi miqdar mein, aur <strong>governed</strong> (kahan se aaya maloom ho). Kharab data se fine-tuning nuqsan karti hai."><strong>Data required for fine-tuning:</strong> <strong>curated</strong> (selected and cleaned), <strong>labelled</strong>, <strong>representative</strong> of the real world, sufficient in size, and <strong>governed</strong> (known provenance). Fine-tuning on poor data makes things worse.</li>
+      <li data-ur="<strong>Model distillation</strong> = bare model se chhota, sasta model banana jo takreeban wohi kaam kare. Sawal mein &quot;reduce inference cost while keeping quality&quot; = distillation."><strong>Model distillation</strong> = producing a smaller, cheaper model from a large one that performs nearly as well. &quot;Reduce inference cost while keeping quality&quot; = distillation.</li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — Domain 3 ke lafz">Exam English — Domain 3 vocabulary</span>
+    <span data-ur="<strong>&quot;shot&quot;</strong> (zero-shot, few-shot) = misaal. &quot;Few-shot&quot; = chand misaalon wala.<br><strong>&quot;inference parameters&quot;</strong> = jawab lete waqt ki settings (temperature waghera).<br><strong>&quot;deterministic&quot;</strong> = hamesha ek jaisa nateeja (kam temperature). <strong>&quot;nondeterministic&quot;</strong> = har baar thora alag.<br><strong>&quot;concise&quot;</strong> = mukhtasar aur jame hue.<br><strong>&quot;curated&quot;</strong> = chun kar tayyar kiya gaya.<br><strong>&quot;benchmark&quot;</strong> = miyar/paimana jis se mawazna ho.<br><strong>&quot;latency&quot;</strong> = jawab aane mein waqt.<br><strong>&quot;throughput&quot;</strong> = ek waqt mein kitna kaam.<br><strong>&quot;distillation&quot;</strong> = nichor kar chhota banana.<br><strong>&quot;grounding&quot;</strong> = jawab ko asal maloomat par khara karna.">
+      <strong>&quot;shot&quot;</strong> (zero-shot, few-shot) = an example. &quot;Few-shot&quot; = with a few examples.<br>
+      <strong>&quot;inference parameters&quot;</strong> = settings applied when generating (temperature and so on).<br>
+      <strong>&quot;deterministic&quot;</strong> = the same result every time (low temperature). <strong>&quot;nondeterministic&quot;</strong> = varies each time.<br>
+      <strong>&quot;concise&quot;</strong> = short and to the point.<br>
+      <strong>&quot;curated&quot;</strong> = deliberately selected and prepared.<br>
+      <strong>&quot;benchmark&quot;</strong> = a standard to measure against.<br>
+      <strong>&quot;latency&quot;</strong> = delay before a response.<br>
+      <strong>&quot;throughput&quot;</strong> = how much work per unit time.<br>
+      <strong>&quot;distillation&quot;</strong> = condensing into something smaller.<br>
+      <strong>&quot;grounding&quot;</strong> = anchoring answers in real source material.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3 · the cost-order rule</span>
+    <p class="scenario" data-ur="Ek company chahti hai ke ek foundation model uske product descriptions ko ek khaas format mein likhe. Un ke paas 20 achi misaalein hain. Woh <span class=&quot;qual&quot;>SAB SE KAM KHARCHE</span> wala tareeqa chahte hain. Kya karein?">A company wants a foundation model to write product descriptions in a specific format. They have 20 good examples. They want the <span class="qual">LOWEST COST</span> approach. What should they do?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Prompt mein chand misaalein shamil karo (few-shot prompting)">Include a few examples in the prompt (few-shot prompting)</button>
+      <button class="opt" data-correct="false" data-ur="Model ko 20 misaalon par fine-tune karo">Fine-tune the model on the 20 examples</button>
+      <button class="opt" data-correct="false" data-ur="Apna foundation model shuru se train karo">Pre-train a foundation model from scratch</button>
+      <button class="opt" data-correct="false" data-ur="Temperature 1 par set kar do">Set the temperature to 1</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3 · the temperature trap</span>
+    <p class="scenario" data-ur="Ek financial company ka assistant hisaab-kitaab ke sawalon ke jawab deta hai. Team chahti hai ke jawab <strong>mustaqil aur ek jaise</strong> hon, har baar badlein nahi. Kaunsi inference setting badalni chahiye?">A financial company's assistant answers numerical questions. The team wants responses to be <strong>consistent and repeatable</strong> rather than varying. Which inference setting should change?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Temperature kam karo (0 ke qareeb)">Lower the temperature (close to 0)</button>
+      <button class="opt" data-correct="false" data-ur="Temperature barha do (1 ke qareeb)">Raise the temperature (close to 1)</button>
+      <button class="opt" data-correct="false" data-ur="Max tokens barha do">Increase max tokens</button>
+      <button class="opt" data-correct="false" data-ur="Context window chhota kar do">Reduce the context window</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 3 · evaluation metrics</span>
+    <p class="scenario" data-ur="Ek team us model ko parkhna chahti hai jo lambi reports ka <strong>khulasa (summary)</strong> banata hai. Kaunsa metric <span class=&quot;qual&quot;>SAB SE MUNASIB</span> hai?">A team wants to evaluate a model that produces <strong>summaries</strong> of long reports. Which metric is <span class="qual">MOST appropriate</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="ROUGE">ROUGE</button>
+      <button class="opt" data-correct="false" data-ur="BLEU">BLEU</button>
+      <button class="opt" data-correct="false" data-ur="F1 score">F1 score</button>
+      <button class="opt" data-correct="false" data-ur="Latency">Latency</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 3 · precision vs recall</span>
+    <p class="scenario" data-ur="Ek hospital ka model bimari ki nishandahi karta hai. Sab se bari fikar yeh hai ke <strong>koi bhi asli marz ka case chhoot na jaye</strong>. Kaunsa metric sab se aham hai?">A hospital's model screens for a disease. The overriding concern is that <strong>no genuine case is missed</strong>. Which metric matters most?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Precision">Precision</button>
+      <button class="opt" data-correct="true" data-ur="Recall">Recall</button>
+      <button class="opt" data-correct="false" data-ur="Latency">Latency</button>
+      <button class="opt" data-correct="false" data-ur="BLEU">BLEU</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="<strong>Temperature</strong> ko aise socho jaise database query ka <code>ORDER BY RANDOM()</code>. Report banani ho to tum kabhi random nahi chahte — tum chahte ho ke har baar wohi nateeja aaye. Financial assistant bhi wohi chahta hai: temperature 0.<br><br><strong>Few-shot prompting</strong> bilkul woh cheez hai jo tum tab karte ho jab kisi naye developer ko PR ka format samjhate ho: tum usay rules ki kitaab nahi dete, tum kehte ho &quot;in do purane PRs ki tarah likho&quot;. Do misaalein pooray document se zyada asar karti hain.<br><br>Aur <strong>precision banam recall</strong>? Yeh tumhare test suite ka faisla hai. <strong>False positive</strong> = test bina wajah fail hua (pareshan kun). <strong>False negative</strong> = bug nikal gaya aur test pass ho gaya (khatarnak). Kis se zyada darte ho, yeh is baat par hai ke system kya kar raha hai — bilkul wesa hi jaise hospital aur spam filter mein farq hai.">
+      Think of <strong>temperature</strong> as <code>ORDER BY RANDOM()</code> in a query. For a report you never want randomness — you want the same result every run. The financial assistant wants the same: temperature 0.<br><br><strong>Few-shot prompting</strong> is what you do when explaining your PR format to a new developer: you don't hand them a rulebook, you say &quot;write it like these two past PRs&quot;. Two examples land better than a whole document.<br><br>And <strong>precision vs recall</strong>? That's your test suite trade-off. A <strong>false positive</strong> is a test failing for no reason (annoying). A <strong>false negative</strong> is a bug slipping through a passing test (dangerous). Which you fear more depends on what the system does — exactly the difference between the hospital and the spam filter.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: customisation ke chaar raste kharche ki tarteeb mein? Chain-of-thought kab? Temperature kam matlab kya? ROUGE aur BLEU ka farq? Aur recall kab aham hota hai?">From memory: the four customisation routes in cost order? When chain-of-thought? What does low temperature mean? ROUGE vs BLEU? And when does recall matter most?</div>
+    <div class="answer" data-ur="<strong>Prompt engineering → RAG → fine-tuning → pre-training</strong> (sasta se mehnga). <strong>Chain-of-thought = mushkil mantiq/hisaab ke liye</strong> (&quot;step by step soch&quot;). <strong>Kam temperature = mustaqil, ek jaisa jawab</strong> (facts ke liye). <strong>ROUGE = summary, BLEU = tarjuma.</strong> <strong>Recall tab aham jab case chhootna khatarnak ho</strong> (bimari, fraud). Paanchon aa gaye? To AIF ka sab se bara domain (28%) ab tumhare paas hai."><strong>Prompt engineering → RAG → fine-tuning → pre-training</strong> (cheapest to dearest). <strong>Chain-of-thought = for hard reasoning or maths</strong> (&quot;think step by step&quot;). <strong>Low temperature = consistent, repeatable output</strong> (for facts). <strong>ROUGE = summaries, BLEU = translation.</strong> <strong>Recall matters when missing a case is dangerous</strong> (disease, fraud). All five? Then AIF's largest domain (28%) is yours.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Domain 3 AIF ka sab se bara hissa hai — <strong>28%</strong>, takreeban 14 scored sawal — aur ab tumhare paas is ka sab se aham qaida hai: <strong>kharche ki tarteeb</strong>. Zyada tar sawal isi se hal ho jaate hain, kyunke &quot;lowest cost&quot; ya &quot;least effort&quot; ka lafz aksar likha hota hai.<br><br>Aur ek trap se bach gaye: <strong>temperature hallucination theek nahi karta</strong>. Yeh option bar bar aata hai aur bar bar ghalat hota hai.<br><br>Is lesson ke saath, <strong>AIF ke paanchon domains ab cover ho chuke hain.</strong>">Domain 3 is AIF's largest — <strong>28%</strong>, about 14 scored questions — and you now hold its key rule: <strong>the cost order</strong>. Most questions resolve through it, because &quot;lowest cost&quot; or &quot;least effort&quot; is usually written somewhere in them.<br><br>And you've sidestepped a trap: <strong>temperature does not fix hallucinations</strong>. That option appears repeatedly and is wrong every time.<br><br>With this lesson, <strong>all five AIF domains are now covered.</strong></span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html&quot; target=&quot;_blank&quot;>AIF-C01 Domain 3</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS khud ginwata hai ke is domain mein kya poocha jayega. Ab tum is ke takreeban saare lafz pehchan loge.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html" target="_blank">AIF-C01 Domain 3</a><sup class="cite"><a href="#s1">1</a></sup> — AWS listing exactly what this domain tests. You should now recognise nearly every term in it.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> The metric names (ROUGE, BLEU, BERTScore, F1) are pure memorisation and they slide out of memory easily — that's normal, not a failing. Ask me to drill you on them a few days from now; spacing them out is what makes them stick.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I4 (Prompt engineering, customisation and evaluation).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Previous: <a href="0057-aif-responsible-ai.html">I3 · Responsible AI &amp; governance</a>. Next: the <a href="../reference/aif-numbers.html">AIF terms &amp; trigger words sheet</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain3.html" target="_blank">AIF-C01 Exam Guide — Domain 3: Applications of Foundation Models</a> (28%). Task 3.1 names model selection criteria (cost, modality, latency, multi-lingual, model size, complexity, customisation, input/output length, prompt caching), inference parameters (temperature, input/output length), RAG with Bedrock Knowledge Bases, vector stores (OpenSearch, Aurora, Neptune, RDS for PostgreSQL) and the cost trade-offs of pre-training, fine-tuning, in-context learning, RAG and model distillation. Task 3.2 names chain-of-thought, zero-shot, single-shot, few-shot, prompt templates, negative prompts, and the risks of exposure, poisoning, hijacking and jailbreaking, plus Bedrock Prompt Management. Task 3.3 names instruction tuning, domain adaptation, transfer learning, continuous pre-training and RLHF. Task 3.4 names ROUGE, BLEU, BERTScore, LLM-as-a-judge, human-in-the-loop evaluation, benchmark datasets and Bedrock Model Evaluation. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain1.html" target="_blank">AIF-C01 Domain 1</a> — Task 1.3 names the model performance metrics tested: accuracy, precision, recall and F1 score, alongside business metrics.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Twenty examples is exactly the situation few-shot prompting handles — put a handful in the prompt, no training, no cost beyond tokens. Fine-tuning on 20 examples is both expensive and too little data to work well. Pre-training costs millions. Temperature controls randomness, not format."
+                      : "Reconsider. Work down the cost order: prompt engineering first. With 20 examples, few-shot prompting is the natural fit and costs nothing beyond tokens. Fine-tuning is expensive and 20 examples is far too few to fine-tune well. Pre-training from scratch is never the answer at this level, and temperature doesn't control format.",
+          q2: correct ? "Correct. Temperature controls randomness: near 0 makes output consistent and repeatable, which is what financial and factual work needs. Raising it does the opposite. Max tokens only controls length, and the context window controls how much input the model can see."
+                      : "Reconsider. \"Consistent and repeatable\" means reducing randomness, which is exactly what a low temperature does. Raising temperature increases variation — the opposite of what's wanted. Max tokens affects response length, and the context window affects how much input fits. Hook: facts and figures = low temperature.",
+          q3: correct ? "Correct. ROUGE is the summarisation metric; BLEU is for translation. That pairing is the whole question. F1 belongs to classification, and latency measures speed rather than quality."
+                      : "Reconsider. ROUGE evaluates summarisation; BLEU evaluates translation. Memorise that pair — the exam tests it directly. F1 is a classification metric, and latency measures response time, not summary quality.",
+          q4: correct ? "Correct. Recall measures how many genuine cases were caught, so it's the metric when a miss is the worst outcome — disease screening, fraud detection. Precision matters more when false alarms are the bigger problem, as with a spam filter binning real mail."
+                      : "Reconsider. \"No genuine case is missed\" is the definition of recall — of all the real cases, how many did we catch. Precision concerns the opposite risk: of those we flagged, how many were genuine. Disease and fraud favour recall; spam filtering favours precision. Latency and BLEU are unrelated here."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

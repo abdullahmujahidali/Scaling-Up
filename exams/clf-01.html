@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLF-C02 CLF Quiz 1</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=16">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=16">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>CLF Quiz 1</h1>
+      <p class="sub">AWS Certified Cloud Practitioner (CLF-C02) · 20-question revision quiz · balanced — all four domains</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../clf-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">CLF Quiz 1</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"clf-01","title":"CLF Quiz 1","minutes":30,"pass":700,"domainNames":{"1":"Cloud Concepts","2":"Security & Compliance","3":"Cloud Technology & Services","4":"Billing, Pricing & Support"},"domainWeights":{"1":24,"2":30,"3":34,"4":12},"backTo":"clf-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 2,
+  "multi": false,
+  "scenario": "According to the AWS shared responsibility model, who is responsible for patching the guest operating system on an Amazon EC2 instance?",
+  "options": [
+   "AWS",
+   "The customer",
+   "AWS and the customer equally",
+   "The AWS Partner that opened the account"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "On EC2 you control the instance, so everything inside it — including the guest OS — is yours to patch. AWS patches the host OS and hypervisor beneath, which you cannot access. Test: if you can log in and run the update, it is your responsibility."
+ },
+ {
+  "id": 2,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Under the shared responsibility model, who patches the database engine on Amazon RDS?",
+  "options": [
+   "AWS",
+   "The customer",
+   "Only in Multi-AZ deployments, the customer",
+   "The database vendor"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "RDS is managed, so the line moves: AWS patches the OS and the database engine and handles backups. What stays yours is inside the database — users, permissions, your data, and enabling encryption. Contrast with EC2, where the OS is yours."
+ },
+ {
+  "id": 3,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An employee makes an S3 bucket public and customer data is exposed. Under the shared responsibility model, who was responsible?",
+  "options": [
+   "AWS, because S3 is an AWS service",
+   "The customer, because access control and data protection are the customer's responsibility",
+   "AWS, because it should block public buckets",
+   "Both, as a shared control"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Data and access control are always the customer's side, on every service. Buckets are private by default and AWS provides Block Public Access; making it public was a customer configuration choice. AWS supplied the lock — using it is your job."
+ },
+ {
+  "id": 4,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants its application to remain available if a single data centre fails. What should it do?",
+  "options": [
+   "Run a larger instance in one Availability Zone",
+   "Deploy across multiple Availability Zones in a Region",
+   "Deploy to multiple edge locations",
+   "Take daily backups"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Availability Zones are separate data centres sharing no single point of failure, so spreading across them delivers high availability. A bigger instance in one AZ dies with that AZ. Edge locations cache CloudFront content and do not run applications; backups aid recovery but do not prevent downtime."
+ },
+ {
+  "id": 5,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Multiple EC2 instances must read and write the same file system at the same time. Which service?",
+  "options": [
+   "Amazon EBS",
+   "Amazon EFS",
+   "Instance store",
+   "Amazon S3 Glacier"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "EFS is the shared file system many instances mount simultaneously, across AZs. EBS attaches to one instance in one AZ. Instance store is ephemeral local disk lost when the instance stops. Glacier is archival storage, not a live file system."
+ },
+ {
+  "id": 6,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which service provides a dedicated private network connection from an on-premises data centre to AWS that does not use the public internet?",
+  "options": [
+   "AWS Site-to-Site VPN",
+   "AWS Direct Connect",
+   "Amazon CloudFront",
+   "AWS Transit Gateway"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Direct Connect is a dedicated physical line with consistent performance. A VPN is encrypted but still travels the public internet, so performance varies. CloudFront is a CDN and Transit Gateway interconnects networks."
+ },
+ {
+  "id": 7,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company runs a production workload and needs 24/7 phone, email and chat support at the LOWEST cost. Which AWS Support plan?",
+  "options": [
+   "Basic",
+   "Developer",
+   "Business",
+   "Enterprise"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Business is the cheapest plan with 24/7 phone, email and chat. Basic has no technical support; Developer is business-hours email only. Enterprise also qualifies but costs far more, and the question asks for the lowest cost."
+ },
+ {
+  "id": 8,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An enterprise requires a designated Technical Account Manager and a 15-minute response for business-critical cases. Which plan?",
+  "options": [
+   "Business",
+   "Enterprise On-Ramp",
+   "Enterprise",
+   "Developer"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "The word 'designated' and the 15-minute response both point to Enterprise. Enterprise On-Ramp is the deliberate distractor: it provides a pool of TAMs and a 30-minute response, not a designated TAM."
+ },
+ {
+  "id": 9,
+  "domain": 1,
+  "multi": false,
+  "scenario": "What is the primary financial benefit of moving from an on-premises data centre to AWS?",
+  "options": [
+   "Trading capital expense for variable expense",
+   "AWS eliminates all costs",
+   "Cloud is always cheaper in every case",
+   "Security is no longer a concern"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The core economic argument is paying for usage instead of buying servers up front. The other options contain absolutes — 'all costs', 'always cheaper', 'no longer a concern' — and absolutes are nearly always wrong. Security in particular remains a customer responsibility."
+ },
+ {
+  "id": 10,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A team designs a system to recover automatically from failure and restore from backups. Which Well-Architected pillar does this relate to MOST?",
+  "options": [
+   "Performance Efficiency",
+   "Reliability",
+   "Cost Optimization",
+   "Sustainability"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Recovering from failure and restoring from backups defines the Reliability pillar. Performance Efficiency concerns using resources well, Cost Optimization concerns spend, and Sustainability concerns environmental impact."
+ },
+ {
+  "id": 11,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A website's traffic is heavy by day and light at night, and the company wants capacity to increase and decrease automatically. This describes which concept?",
+  "options": [
+   "High availability",
+   "Elasticity",
+   "Fault tolerance",
+   "Data sovereignty"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Growing AND shrinking automatically with demand is elasticity. Scalability alone means only the ability to grow. High availability and fault tolerance concern surviving failure, not tracking demand."
+ },
+ {
+  "id": 12,
+  "domain": 2,
+  "multi": false,
+  "scenario": "What is the BEST practice for protecting the AWS account root user?",
+  "options": [
+   "Change its password weekly and use it daily",
+   "Enable MFA, delete its access keys, and use IAM users/roles for daily work",
+   "Share the credentials with the team",
+   "Delete the root user"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "AWS's standard guidance: enable MFA on root, delete root access keys, and perform everyday work as an IAM user or role. The root user cannot be deleted — it exists for the life of the account, which is why it must be locked down instead."
+ },
+ {
+  "id": 13,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An application on EC2 needs to read from an S3 bucket. What is the MOST secure way to grant access?",
+  "options": [
+   "Embed access keys in the application code",
+   "Attach an IAM role to the EC2 instance",
+   "Make the bucket public",
+   "Use the root user's access keys"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "An IAM role supplies temporary, automatically rotated credentials with no key to leak. Keys in code end up committed to source control, a public bucket exposes data to everyone, and root access keys should not exist at all."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants to run code in response to image uploads without managing servers, paying only while the code runs. Which service?",
+  "options": [
+   "AWS Lambda",
+   "Amazon EC2",
+   "Amazon EKS",
+   "Amazon Lightsail"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Event-triggered code with no servers and pay-per-execution billing is Lambda. EC2 and EKS both require managing infrastructure, and Lightsail is a fixed-price server you pay for continuously."
+ },
+ {
+  "id": 15,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which AWS service is a content delivery network that caches content close to users?",
+  "options": [
+   "Amazon Route 53",
+   "Amazon CloudFront",
+   "AWS Global Accelerator",
+   "Amazon VPC"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "CloudFront is the CDN, caching content at edge locations near users to reduce latency. Route 53 is DNS, Global Accelerator routes traffic over the AWS network, and VPC is your isolated network."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A team wants to be alerted when monthly AWS spending exceeds a set threshold. Which service?",
+  "options": [
+   "AWS Cost Explorer",
+   "AWS Budgets",
+   "AWS Pricing Calculator",
+   "AWS Cost and Usage Report"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Budgets looks forward: set a limit and get notified. Cost Explorer analyses past spend and raises no alerts, Pricing Calculator estimates before you build, and the Cost and Usage Report is raw billing detail."
+ },
+ {
+  "id": 17,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A security team wants to scan EC2 instances for known software vulnerabilities. Which service?",
+  "options": [
+   "Amazon GuardDuty",
+   "Amazon Inspector",
+   "AWS Shield",
+   "AWS Artifact"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Inspector scans for vulnerabilities such as outdated packages and known CVEs. GuardDuty detects active malicious behaviour, Shield handles DDoS, and Artifact supplies compliance reports. Hook: Inspector = weak door, GuardDuty = intruder at the door."
+ },
+ {
+  "id": 18,
+  "domain": 3,
+  "multi": true,
+  "scenario": "Which TWO statements about AWS Regions and Availability Zones are correct?",
+  "options": [
+   "A Region contains multiple Availability Zones",
+   "Availability Zones within a Region share a single power source",
+   "Availability Zones are physically separate and do not share single points of failure",
+   "An edge location is the same as an Availability Zone",
+   "Each Region contains exactly one Availability Zone"
+  ],
+  "correct": [
+   0,
+   2
+  ],
+  "explain": "A Region is made of multiple Availability Zones, which are physically separate facilities sharing no single points of failure — that separation is what makes multi-AZ deployments highly available. Edge locations are CloudFront caches, a different thing entirely."
+ },
+ {
+  "id": 19,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company must keep some systems in its own data centre while running others on AWS. Which deployment model is this?",
+  "options": [
+   "Cloud",
+   "Hybrid",
+   "On-premises",
+   "Multi-tenant"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Running partly on AWS and partly in your own data centre is a hybrid deployment. 'Cloud' means everything runs in the cloud; 'on-premises' means everything stays in your own facility."
+ },
+ {
+  "id": 20,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Where can a company download AWS's SOC and ISO compliance reports?",
+  "options": [
+   "AWS Artifact",
+   "AWS Trusted Advisor",
+   "AWS CloudTrail",
+   "By opening an AWS Support case"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Artifact is the self-service portal for AWS compliance reports. Trusted Advisor makes recommendations about your account, CloudTrail records API activity, and no support case is needed because Artifact is self-service."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=16"></script>
+<script src="../assets/i18n.js?v=16"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+{
+ "meta": {
+  "id": "aif-06",
+  "cert": "aif",
+  "title": "AIF Quiz 6",
+  "minutes": 30,
+  "focus": "balanced — all five domains",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 3,
+   "multi": false,
+   "scenario": "An application must answer from a knowledge base that is updated daily and must never state outdated information. Which design is BEST?",
+   "options": [
+    "RAG that retrieves from the current knowledge base at query time",
+    "Fine-tuning nightly on the updated content",
+    "Caching yesterday's answers",
+    "Raising the temperature"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "RAG retrieves live content at query time, so daily updates are reflected immediately. Nightly fine-tuning is expensive and always lags, and caching would serve stale answers."
+  },
+  {
+   "id": 2,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which technique would MOST improve a model's performance on multi-step arithmetic word problems?",
+   "options": [
+    "Chain-of-thought prompting",
+    "Raising temperature",
+    "Reducing max tokens",
+    "Disabling guardrails"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Chain-of-thought elicits intermediate reasoning steps and substantially improves multi-step arithmetic and logic. Higher temperature adds randomness, and lower token limits truncate the reasoning."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which is an example of a classification task?",
+   "options": [
+    "Determining whether an email is spam or not spam",
+    "Predicting tomorrow's exact temperature",
+    "Generating a poem",
+    "Grouping customers with no predefined labels"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Classification assigns a category, such as spam or not spam. Predicting a continuous value is regression, generating text is GenAI, and grouping unlabelled data is clustering."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which is an example of a regression task?",
+   "options": [
+    "Predicting a house's sale price from its features",
+    "Deciding whether a transaction is fraudulent",
+    "Grouping similar documents",
+    "Generating an image"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Regression predicts a continuous numeric value such as price. Fraud detection assigns a category (classification), grouping is clustering, and image generation is GenAI."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which statement about foundation model pricing on Amazon Bedrock is accurate?",
+   "options": [
+    "Cost depends on the number of input and output tokens processed",
+    "Cost is a fixed monthly subscription per model",
+    "Only training incurs cost",
+    "Cost depends on the number of IAM users"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Bedrock bills on tokens processed in both directions, which is why prompt and response length drive cost. There is no per-model subscription or per-user pricing."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which capability allows a foundation model to call external tools and complete multi-step tasks autonomously?",
+   "options": [
+    "Amazon Bedrock Agents",
+    "Amazon Bedrock Guardrails",
+    "Amazon Textract",
+    "Amazon Macie"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Agents let a model plan and invoke tools across multiple steps. Guardrails enforces safety, Textract extracts document text, and Macie discovers sensitive data."
+  },
+  {
+   "id": 7,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which action BEST addresses a model that performs well overall but poorly for one underrepresented group?",
+   "options": [
+    "Rebalance the training data and evaluate subgroup performance with SageMaker Clarify",
+    "Increase the temperature",
+    "Reduce max output tokens",
+    "Switch to a larger context window"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Underperformance for an underrepresented group is a data representation problem, addressed by rebalancing data and measuring subgroup performance with Clarify. Inference settings cannot fix a training-data gap."
+  },
+  {
+   "id": 8,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which is a recognised limitation of generative AI that responsible deployment must account for?",
+   "options": [
+    "Nondeterminism — the same prompt can produce different responses",
+    "It cannot process natural language",
+    "It requires no evaluation",
+    "It is always factually correct"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Nondeterminism means identical prompts can yield different outputs, which complicates testing and is listed alongside hallucination and limited interpretability as a GenAI disadvantage."
+  },
+  {
+   "id": 9,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which service would detect a compromised set of credentials being used to call AI services unexpectedly?",
+   "options": [
+    "Amazon GuardDuty",
+    "Amazon Polly",
+    "Amazon Personalize",
+    "AWS Artifact"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "GuardDuty detects anomalous and malicious activity including suspicious credential use. Polly and Personalize are AI capabilities, and Artifact provides compliance documents."
+  },
+  {
+   "id": 10,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Which governance consideration determines the geographic location where training data may be stored?",
+   "options": [
+    "Data residency requirements",
+    "Model temperature",
+    "Token limits",
+    "Instance family selection"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Data residency dictates which country or Region data may reside in, often for legal reasons. It is a governance constraint, unrelated to inference settings or instance types."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which approach uses examples supplied at inference time without changing model weights?",
+   "options": [
+    "In-context learning",
+    "Fine-tuning",
+    "Continuous pre-training",
+    "Distillation"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "In-context learning (zero-, one- and few-shot prompting) supplies examples in the prompt without altering weights. Fine-tuning, continuous pre-training and distillation all modify the model."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which evaluation method provides the most reliable judgement of subjective response quality but scales poorly?",
+   "options": [
+    "Human evaluation",
+    "BLEU scoring",
+    "Latency measurement",
+    "Token counting"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Human evaluation is the most trustworthy for subjective quality but is slow and costly, which is why automated metrics and LLM-as-a-judge are used to scale."
+  },
+  {
+   "id": 13,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company wants to summarise thousands of support tickets nightly, with results needed the next morning. Which inference type is MOST cost-effective?",
+   "options": [
+    "Batch inference",
+    "Real-time inference",
+    "Provisioned throughput for peak load",
+    "Interactive streaming inference"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Results are not needed immediately, so batch inference processes the volume at lower cost than maintaining a live real-time endpoint."
+  },
+  {
+   "id": 14,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which service would extract key phrases and detect the language of incoming multilingual text?",
+   "options": [
+    "Amazon Comprehend",
+    "Amazon Rekognition",
+    "Amazon Forecast",
+    "Amazon Neptune"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Comprehend performs NLP tasks including key phrase extraction, language detection, sentiment and PII identification. Rekognition handles images, Forecast handles time series, and Neptune is a graph database."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which combination BEST supports accountable use of a high-risk AI decision system?",
+   "options": [
+    "Explainability with Clarify, documentation with Model Cards, and human review with A2I",
+    "Raising temperature and removing logging",
+    "Disabling monitoring to reduce cost",
+    "Using the largest available model only"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Accountability comes from explaining decisions (Clarify), documenting the model (Model Cards) and keeping humans in the loop (A2I). Removing logging and monitoring reduces accountability."
+  },
+  {
+   "id": 16,
+   "domain": 5,
+   "multi": true,
+   "scenario": "Which TWO statements about the shared responsibility model applied to AI services are correct?",
+   "options": [
+    "The customer is responsible for the data they supply to the model",
+    "The customer controls who can access the model through IAM",
+    "AWS is responsible for the accuracy of every generated response",
+    "The customer must patch the Bedrock service infrastructure",
+    "AWS classifies the customer's data automatically"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Your data and your access control remain yours on every service. AWS does not guarantee output accuracy, does not require you to patch its managed infrastructure, and does not classify your data for you."
+  },
+  {
+   "id": 17,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Which factor makes a smaller foundation model preferable to a larger one in some applications?",
+   "options": [
+    "Lower latency and lower cost per request",
+    "Guaranteed elimination of bias",
+    "Unlimited context window",
+    "No need for evaluation"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Smaller models generally respond faster and cost less, which matters for latency-sensitive or high-volume applications. They do not eliminate bias or remove the need for evaluation."
+  },
+  {
+   "id": 18,
+   "domain": 2,
+   "multi": false,
+   "scenario": "What does 'chunking' mean when preparing documents for a RAG application?",
+   "options": [
+    "Splitting large documents into smaller pieces that can be embedded and retrieved",
+    "Encrypting documents before storage",
+    "Compressing model weights",
+    "Deleting duplicate records"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Chunking splits documents into retrievable pieces before embedding. Chunk size directly affects retrieval quality — too large returns noise, too small loses context."
+  },
+  {
+   "id": 19,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Which AWS service detects fraudulent online activity using machine learning without requiring ML expertise?",
+   "options": [
+    "Amazon Fraud Detector",
+    "Amazon Macie",
+    "Amazon Comprehend",
+    "Amazon Translate"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Fraud Detector is the purpose-built managed service for identifying fraudulent activity. Macie finds sensitive data, Comprehend analyses text, and Translate converts languages."
+  },
+  {
+   "id": 20,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which responsible AI principle concerns a model performing reliably under unexpected or adversarial inputs?",
+   "options": [
+    "Robustness",
+    "Modality",
+    "Latency",
+    "Elasticity"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Robustness means holding up under difficult, unexpected or adversarial conditions, and is one of the responsible AI features the exam lists. Modality is data type, and latency and elasticity are performance properties."
+  }
+ ]
+}

@@ -129,6 +129,72 @@ pasted into the prompt**, **training vs inference = `migrate` vs `runserver`**,
 and **human-in-the-loop = an admin approval workflow**. These let a "mostly new
 to me" subject start from things he already does.
 
+## Update 3: full domain coverage + 14 quizzes
+
+He asked for complete coverage — *"make sure you have covered everything for both
+so I have sufficient just by going through your notes"* — plus **14 quizzes with
+solutions**. Both tracks now cover **every domain of both exam guides**.
+
+### Lessons added
+
+| File | Lesson | Domain |
+|---|---|---|
+| `lessons/0058-clf-cloud-concepts.html` | C4 · Cloud Concepts | CLF D1 (24%) |
+| `lessons/0059-clf-security-services.html` | C5 · IAM & security services | CLF D2 (30%) |
+| `lessons/0060-clf-core-services.html` | C6 · Core services | CLF D3 (34%) |
+| `lessons/0061-aif-prompt-and-evaluation.html` | I4 · Prompting & evaluation | AIF D3 (28%) |
+
+Coverage is now **CLF 100% (all 4 domains)** and **AIF 100% (all 5 domains)**.
+
+### The quizzes
+
+**14 quizzes × 20 questions = 280 new questions**, every one with a written
+explanation covering why the right answer is right *and* why the distractors are
+wrong. Banks live in `exams/questions/{clf,aif}-0N.json`; pages are generated —
+never hand-edit `exams/*.html`.
+
+Index pages: `clf-quizzes.html`, `aif-quizzes.html` (score tracking, readiness
+banner, both linked from their hubs and the sidebar).
+
+### Exam builder work — read this before touching it
+
+1. **`exams/build.js` was silently broken** and had been since the Astro
+   migration: `package.json` gained `"type": "module"`, which makes Node treat
+   `.js` as ESM, but the script is CommonJS. The 15 DVA exam HTML files only
+   still existed because they were generated *before* that change — any
+   `npm run exams` would have failed. **Renamed to `exams/build.cjs`** and the
+   npm script updated. This was pre-existing, not caused by this session.
+
+2. **The builder is now multi-cert.** A `CERTS` table keys off `meta.cert`
+   (`dva` | `clf` | `aif`) supplying exam name, pass mark (DVA 720, CLF/AIF 700),
+   domain names and weightings. **`dva` is the default**, so the existing 15 DVA
+   banks build unchanged with no JSON edits.
+
+3. **Validation was made cert-aware, not weaker.** DVA keeps its hard equality
+   check (exactly 65 questions, 21/17/15/12). Short quizzes are checked
+   *proportionally*: every domain must appear and none may deviate more than
+   ±1.5 from its share of the real weighting. This caught two genuinely
+   miscategorised questions, which were re-domained rather than the check being
+   relaxed.
+
+4. **`assets/exam-engine.js` had three hardcoded `[1,2,3,4]` domain loops** which
+   silently dropped **AIF's Domain 5** from scoring and from the results table.
+   Now driven by `DOMAIN_NAMES` from `EXAM_META`. The pass mark, domain labels
+   and back-link are also passed through, all defaulting to the DVA values so
+   older pages behave identically.
+
+**Verified no DVA regression:** `exam-01.html` differs only by the intended new
+`EXAM_META` fields (whose values equal the previous hardcoded defaults) and the
+asset cache-buster. Confirmed in-browser: DVA still shows 720, "~47 correct",
+"full-length mock", "Start exam".
+
+**End-to-end browser tests run:** an AIF quiz answered fully correct (1000 PASS),
+one with two deliberate errors (910, all five domain rows, weakest domain named),
+and a CLF quiz deliberately failed (460, NOT YET, correct CLF domain names and
+back-link). Explanations render under "Why:" in the review section, and the
+"Wrong N" filter works. All test attempts were cleared from localStorage
+afterwards; his language preference was left untouched.
+
 ## Still open
 
 1. **Neither exam is booked.** The plan cannot be scheduled without dates. Ask.
@@ -136,13 +202,16 @@ to me" subject start from things he already does.
    exams. Still the biggest lever, still unconfirmed as done.
 3. **Team lead: does the company pay the fees?** Now **200 USD** for both.
    Still unasked.
-4. **C4 (CLF) not built** — Cloud Concepts: the 6 benefits, Well-Architected's
-   6 pillars, CapEx vs OpEx, Regions/AZs/Edge.
-5. **I4 (AIF) not built** — prompt engineering techniques (zero/few-shot,
-   chain-of-thought), inference parameters (temperature, top-p), and evaluation
-   metrics (ROUGE, BLEU, BERTScore, LLM-as-a-judge).
-6. **No practice exams for either CLF or AIF.** DVA has 975 questions; these
-   have none. Generated exams come from `exams/questions/*.json` via
-   `npm run exams` — never edit `exams/exam-NN.html` by hand. **An AIF question
-   set must include ordering and matching items**, which the current exam builder
-   may not support — check before promising it.
+4. ~~C4/I4 not built~~ — **done** (see Update 3). Both tracks now cover every
+   domain of both exam guides.
+5. ~~No practice questions~~ — **done**: 14 quizzes, 280 questions with
+   explanations.
+6. **Ordering and matching questions are still not supported.** AIF uses both
+   and awards **no partial credit** for them, but the exam engine only renders
+   single- and multi-select. The quizzes therefore drill the *content* of those
+   questions but not their *format*. Worth building if he finds them hard —
+   it needs new question types in `exam-engine.js` plus validation in
+   `build.cjs`. Flagged in the lessons and cheat sheet so he is not surprised.
+7. **No full-length 65-question mocks for CLF/AIF.** The quizzes are 20-question
+   revision sets. Closer to exam day he will want at least one timed
+   65-question/90-minute paper per certification to build stamina.

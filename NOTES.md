@@ -22,6 +22,20 @@ lifecycle) as sequences, not lists.
 AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
 way.
 
+**Coverage is complete:** CLF C1–C6 covers all 4 domains, AIF I1–I4 covers all 5,
+plus 14 quizzes (280 questions, every one explained) at `clf-quizzes.html` and
+`aif-quizzes.html`.
+
+**⚠️ `exams/build.js` is now `exams/build.cjs`** — `package.json` has
+`"type": "module"`, which breaks CommonJS `.js`. The builder is multi-cert
+(`meta.cert` = `dva`|`clf`|`aif`, DVA is the default); DVA keeps its exact
+65-question 21/17/15/12 validation while quizzes are checked proportionally.
+Regenerate with `npm run exams`; never hand-edit `exams/*.html`.
+
+**Not supported: ordering and matching questions.** AIF uses both with no partial
+credit, but the engine only renders single/multi-select. Quizzes drill their
+content, not their format.
+
 **Do not tell the learner he has made progress on DVA.** He has not started it.
 The "88% complete" figure in record 0008 refers to a *Udemy course*, and stating
 it as exam progress is a false claim about work he has not done — he corrected
