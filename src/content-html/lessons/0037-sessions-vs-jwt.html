@@ -1,0 +1,154 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B13 · Offline Pack</p>
+    <h1 data-ur="Sessions vs JWT: login state kaise yaad rakhi jaati hai">Sessions vs JWT: how login state is remembered</h1>
+    <p class="subtitle" data-ur="HTTP tumhein bhool jaata hai har request ke baad. Toh server yaad kaise rakhta hai ke tum logged in ho? Do tareeqe.">HTTP forgets you after every request. So how does the server remember you're logged in? Two approaches.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: sessions vs tokens</span>
+      <span>Win: explain how login is remembered</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (stateless servers yaad karo)">30-second warm-up (recall stateless servers)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: load balancers wale lesson (03) mein hum ne kaha tha servers ko <strong>stateless</strong> hona chahiye. Iska matlab kya tha?">From memory: in the load balancers lesson (03) we said servers should be <strong>stateless</strong>. What did that mean?</div>
+    <div class="answer" data-ur="<strong>Stateless</strong> = koi bhi server koi bhi request handle kar sakta hai, kyunke server apni local memory mein tumhara data nahi rakhta. Login state kisi <em>shared</em> jagah rehta hai (jaise Redis/DB) ya khud client ke paas hota hai. Aaj hum theek yehi dekhte hain: login state kahan rakhi jaaye."><strong>Stateless</strong> = any server can handle any request, because a server doesn't keep your data in its own local memory. Login state lives somewhere <em>shared</em> (like Redis/DB) or on the client itself. Today we look at exactly that: where login state should live.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Session = server tumhari login state apne paas rakhta hai aur tumhein ek ID cookie deta hai (har request par woh ID look up karni parti hai). JWT = poori login info ek signed token mein client ke paas hoti hai (server sirf signature verify karta hai — koi look up nahi).</strong> Ek check-karo-list rakhta hai; doosra sab kuch band par likh deta hai."><strong>Session = the server keeps your login state and gives you an ID cookie (it must look that ID up on every request). JWT = the whole login info lives with the client in a signed token (the server just verifies the signature — no lookup).</strong> One keeps a list to check; the other writes everything on the band.</span>
+  </div>
+
+  <h2 data-ur="Masla: HTTP tumhein bhool jaata hai">The problem: HTTP forgets you</h2>
+  <p data-ur="HTTP <strong>stateless</strong> hai. Har request apne aap mein akeli hoti hai — server ko yaad nahi rehta ke ek second pehle kisne login kiya tha. Toh do requests ke darmiyan &quot;yeh wahi banda hai jo abhi login hua tha&quot; kaise pata chale? Yahi masla dono tareeqe hal karte hain.">HTTP is <strong>stateless</strong>. Every request stands alone — the server doesn't remember who logged in a second ago. So how does it know across two requests that "this is the same person who just logged in"? Both approaches solve exactly this.</p>
+
+  <h2 data-ur="Kahani: coat-check ticket vs concert wristband">The story: a coat-check ticket vs a concert wristband</h2>
+  <p data-ur="Tum ek fancy restaurant mein jaate ho aur apna coat cloakroom counter par de dete ho. Woh tumhein ek chhota <strong>numbered ticket</strong> dete hain — us par kuch nahi likha siwaye ek number ke. Jab tum wapas aate ho, tum ticket dikhate ho, staff <em>apni list mein woh number dhoondte hain</em>, aur tumhara coat le aate hain. Ticket khud khaali hai — asli maloomat counter par rakhi hai.">You walk into a fancy restaurant and hand your coat to the cloakroom counter. They give you a small <strong>numbered ticket</strong> — nothing written on it except a number. When you come back, you show the ticket, the staff <em>look that number up in their list</em>, and fetch your coat. The ticket itself is empty — the real info is held at the counter.</p>
+  <p data-ur="Ab ek concert socho. Entrance par woh tumhare haath par ek <strong>signed, tamper-proof wristband</strong> baandh dete hain jis par sab kuch likha hai: tumhara zone, VIP ho ya nahi, kab tak valid hai. Andar koi bhi staff sirf dekhta hai ke band <em>asli</em> hai (hologram/signature) aur tumhein aage jaane deta hai — kisi list mein kuch look up nahi karna parta. Saari info band par hai.">Now picture a concert. At the entrance they fasten a <strong>signed, tamper-proof wristband</strong> on you with everything written on it: your zone, whether you're VIP, how long it's valid. Inside, any staff member just checks the band is <em>genuine</em> (hologram/signature) and lets you through — no list to look anything up in. All the info is on the band.</p>
+  <ul>
+    <li data-ur="<strong>Coat-check ticket = session cookie.</strong> Ek khaali ID; asli data server ke counter (DB/Redis) par rakha hai. Server ko har baar look up karna parta hai."><strong>Coat-check ticket = session cookie.</strong> An empty ID; the real data sits at the server's counter (DB/Redis). The server must look it up every time.</li>
+    <li data-ur="<strong>Concert wristband = JWT.</strong> Info band par hi hai, cryptographically signed. Staff sirf verify karta hai ke asli hai — koi lookup nahi."><strong>Concert wristband = JWT.</strong> The info is on the band itself, cryptographically signed. Staff just verify it's genuine — no lookup.</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="Session lookup vs JWT signature verify">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="160" y="20" font-weight="700" fill="#2a4d8f">SESSION (coat-check)</text>
+        <rect x="30" y="35" width="110" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="85" y="55" font-weight="700" fill="#2a4d8f">Browser</text>
+        <text x="85" y="72" fill="#6b6b6b" font-size="10">cookie: id=abc</text>
+        <rect x="180" y="35" width="110" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="235" y="55" font-weight="700" fill="#2a4d8f">Server</text>
+        <text x="235" y="72" fill="#6b6b6b" font-size="10">gets id=abc</text>
+        <rect x="180" y="120" width="110" height="45" rx="8" fill="#fdf1e7" stroke="#9b6a1c"/>
+        <text x="235" y="140" font-weight="700" fill="#9b6a1c">DB / Redis</text>
+        <text x="235" y="157" fill="#6b6b6b" font-size="10">abc → user 7</text>
+        <line x1="140" y1="57" x2="180" y2="57" stroke="#2a4d8f" stroke-width="2"/>
+        <line x1="235" y1="80" x2="235" y2="120" stroke="#9b6a1c" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="330" y="145" fill="#9b1c1c" font-size="10" text-anchor="start">↑ lookup needed</text>
+
+        <text x="490" y="20" font-weight="700" fill="#1c6b3a">JWT (wristband)</text>
+        <rect x="420" y="35" width="110" height="45" rx="8" fill="#eaf6ee" stroke="#1c6b3a"/>
+        <text x="475" y="53" font-weight="700" fill="#1c6b3a">Browser</text>
+        <text x="475" y="70" fill="#6b6b6b" font-size="10">token: {user:7}✓sig</text>
+        <rect x="560" y="35" width="70" height="45" rx="8" fill="#eaf6ee" stroke="#1c6b3a"/>
+        <text x="595" y="53" font-weight="700" fill="#1c6b3a">Server</text>
+        <text x="595" y="70" fill="#6b6b6b" font-size="10">verify sig</text>
+        <line x1="530" y1="57" x2="560" y2="57" stroke="#1c6b3a" stroke-width="2"/>
+        <text x="525" y="135" fill="#1c6b3a" font-size="11" text-anchor="middle">no DB lookup —</text>
+        <text x="525" y="150" fill="#1c6b3a" font-size="11" text-anchor="middle">info is in the token</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Session: server ID ko DB/Redis mein look up karta hai. JWT: server sirf signature check karta hai, info token ke andar hoti hai.">Session: the server looks the ID up in DB/Redis. JWT: the server just checks the signature, the info is inside the token.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django ka default <strong>session framework</strong> theek coat-check tareeqa hai: <code>request.session</code> data server par rakha jaata hai (<code>SESSION_ENGINE</code> decide karta hai kahan — default DB table, ya <code>cache</code> engine ke saath Redis), aur browser ko sirf ek <code>sessionid</code> cookie milti hai. Har request par middleware us ID ko look up karta hai. API side par, <strong>djangorestframework-simplejwt</strong> tumhein JWT deta hai: client <code>Authorization: Bearer &lt;token&gt;</code> bhejta hai, server signature verify karta hai — DRF views ke liye koi session table hit nahi. Isliye mobile apps aur SPAs aksar JWT use karte hain: koi cookie/CSRF dance nahi, koi shared session store nahi chahiye, aur kai stateless API servers ke aar-paar aasani se scale karta hai (bilkul lesson 03 wali stateless soch).">Django's default <strong>session framework</strong> is exactly the coat-check way: <code>request.session</code> data is stored on the server (<code>SESSION_ENGINE</code> decides where — a DB table by default, or Redis with the <code>cache</code> engine), and the browser only gets a <code>sessionid</code> cookie. On every request the middleware looks that ID up. On the API side, <strong>djangorestframework-simplejwt</strong> gives you JWTs: the client sends <code>Authorization: Bearer &lt;token&gt;</code>, the server verifies the signature — no session table hit for DRF views. That's why mobile apps and SPAs often use JWT: no cookie/CSRF dance, no shared session store needed, and it scales easily across many stateless API servers (exactly the stateless thinking from lesson 03).</span>
+  </div>
+
+  <h2 data-ur="Side by side">Side by side</h2>
+  <table>
+    <tr><th>&nbsp;</th><th>Session (coat-check)</th><th>JWT (wristband)</th></tr>
+    <tr><td><strong>Where info lives</strong></td><td>Server (DB/Redis)</td><td>In the token, on the client</td></tr>
+    <tr><td><strong>Per-request cost</strong></td><td>A lookup</td><td>Just verify a signature</td></tr>
+    <tr><td><strong>Revoke / log out</strong></td><td>Easy — delete it server-side</td><td>Hard — valid until it expires</td></tr>
+    <tr><td><strong>Scaling many servers</strong></td><td>Needs shared storage</td><td>No shared storage — great for microservices</td></tr>
+  </table>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: JWT ke saath server ko har request par DB kyun hit nahi karni parti?">Quick check: with a JWT, why doesn't the server have to hit the DB on every request?</div>
+    <div class="answer" data-ur="Kyunke user ki info token ke <em>andar</em> hai aur token <strong>signed</strong> hai. Server sirf signature verify karta hai (apni secret key se) taake yaqeen ho ke token ke saath cheher-chaar nahi hui — phir woh andar ki info par bharosa kar leta hai. Koi lookup nahi.">Because the user's info is <em>inside</em> the token and the token is <strong>signed</strong>. The server only verifies the signature (with its secret key) to be sure the token wasn't tampered with — then it trusts the info inside. No lookup.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="<strong>Sessions revoke karna aasan hai par har request par storage + lookup maangte hain (aur kai servers ho toh shared storage).</strong> <strong>JWTs bina lookup ke acha scale karte hain par expire hone se pehle revoke karna mushkil hai</strong> — chura hua token expiry tak chalta rahega. Isliye JWTs ko <em>chhota</em> rakho, unki <em>expiry choti</em> rakho, aur un mein <em>kabhi secrets na daalo</em> (payload sirf signed hota hai, encrypted nahi — koi bhi parh sakta hai). Instant logout chahiye? Ya toh sessions use karo, ya JWT ke saath ek short expiry + refresh tokens (ya ek chhoti server-side blocklist) rakho."><strong>Sessions are easy to revoke but need storage + a lookup on every request (and shared storage when you have many servers).</strong> <strong>JWTs scale nicely without a lookup but are hard to revoke before they expire</strong> — a stolen token keeps working until expiry. So keep JWTs <em>small</em>, keep their <em>expiry short</em>, and <em>never put secrets in them</em> (the payload is only signed, not encrypted — anyone can read it). Need instant logout? Either use sessions, or pair JWTs with a short expiry + refresh tokens (or a small server-side blocklist).</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek team ne apni API JWT par shift ki. Ab ek admin ki taraf se kisi user ko foran log out karna surprisingly mushkil hai. Iski bunyadi wajah kya hai?">A team moved their API to JWTs. Now logging a user out immediately from the admin side is surprisingly hard. What's the root reason?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="JWT ki info client ke paas hoti hai aur expire hone tak valid rehti hai — server ke paas delete karne ke liye koi entry nahi">A JWT's info lives on the client and stays valid until it expires — there's no server-side entry to delete</button>
+      <button class="opt" data-correct="false" data-ur="JWTs har request par DB look up karte hain, jo dheema hai">JWTs do a DB lookup on every request, which is slow</button>
+      <button class="opt" data-correct="false" data-ur="JWTs sirf mobile apps ke saath kaam karte hain">JWTs only work with mobile apps</button>
+      <button class="opt" data-correct="false" data-ur="JWTs client par encrypted hote hain, toh server unhein parh nahi sakta">JWTs are encrypted on the client, so the server can't read them</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumhare paas ek dozen stateless API servers ek load balancer ke peeche hain aur tum kisi bhi request par DB lookup se bachna chahte ho. Login state ke liye kya zyada fit hai?">You have a dozen stateless API servers behind a load balancer and want to avoid a DB lookup on every request. What fits better for login state?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Server-side sessions har server ki local memory mein rakhi hui">Server-side sessions kept in each server's local memory</button>
+      <button class="opt" data-correct="true" data-ur="JWTs — har server sirf signature verify karta hai, koi shared store nahi chahiye">JWTs — each server just verifies the signature, no shared store needed</button>
+      <button class="opt" data-correct="false" data-ur="Har server par ek alag session DB">A separate session DB per server</button>
+      <button class="opt" data-correct="false" data-ur="Login ki koi zaroorat nahi kyunke HTTP stateful hai">No login needed because HTTP is stateful</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="HTTP tumhein bhool jaata hai, toh login state ya toh <strong>server par</strong> rehti hai (session = coat-check ticket + har request par lookup, revoke karna aasan) ya <strong>client par ek signed token</strong> mein (JWT = wristband, koi lookup nahi, scale acha, par revoke mushkil aur chhota + secret-free rakho). Django mein: default session framework vs simplejwt for APIs. Interview mein &quot;sessions revoke karna aasan, JWT scale karna aasan&quot; kehna ek saaf senior signal hai.">HTTP forgets you, so login state either lives <strong>on the server</strong> (session = coat-check ticket + a lookup per request, easy to revoke) or <strong>on the client in a signed token</strong> (JWT = wristband, no lookup, scales well, but hard to revoke and must stay small + secret-free). In Django: the default session framework vs simplejwt for APIs. Saying "sessions are easy to revoke, JWTs are easy to scale" in an interview is a clean senior signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.djangoproject.com/en/stable/topics/http/sessions/&quot; target=&quot;_blank&quot;>Django docs — How to use sessions</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://docs.djangoproject.com/en/stable/topics/http/sessions/" target="_blank">Django docs — How to use sessions</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to walk through wiring simplejwt into a DRF project, or how refresh tokens give you "instant-ish" logout with JWTs? Or unsure why you must never put a password in a JWT? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B13 (Sessions vs JWT).</strong> Builds on <a href="0005-load-balancers.html">stateless servers (03)</a>. Backend Depth track — the "why does auth work like this" depth AI can't carry into the room for you.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.djangoproject.com/en/stable/topics/http/sessions/" target="_blank">How to use sessions</a>, Django documentation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. A JWT is self-contained on the client and valid until it expires — there's nothing server-side to delete, so instant revocation is the hard part."
+                      : "Reconsider. The issue is that a JWT lives on the client and stays valid until expiry — no server-side entry to delete.",
+          q2: correct ? "Yes. JWTs are self-verifying, so any stateless server can check them without a shared store or per-request lookup — ideal behind a load balancer."
+                      : "Reconsider. Local-memory or per-server session stores break statelessness. JWTs let each server verify without a shared lookup."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

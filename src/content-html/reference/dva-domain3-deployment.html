@@ -1,0 +1,217 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Reference · Domain 3</p>
+    <h1 data-ur="Domain 3: Deployment — 24%">Domain 3: Deployment — 24%</h1>
+    <p class="subtitle" data-ur="~12 scored sawal. Code ko AWS par kaise pohanchaya jaaye: CloudFormation/SAM, CI/CD pipeline, aur deployment strategies (blue/green, canary, rolling).">~12 scored questions. How code gets onto AWS: CloudFormation/SAM, CI/CD pipelines, and deployment strategies (blue/green, canary, rolling).</p>
+    <div class="meta">
+      <span>Reference — revisit often</span>
+      <span>~12 scored questions</span>
+      <span>Print-friendly</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Is domain ka dil">The heart of this domain</span>
+    <span data-ur="Do cheezein zyada tar sawal cover karti hain: <strong>(1)</strong> Infrastructure as Code — CloudFormation aur uska serverless chhota bhai SAM. <strong>(2)</strong> Deployment strategies — jab naya version nikalte ho to purane users ka kya hota hai. Baaki (CodePipeline, Beanstalk, ECS) inhi ke aas paas ghoomta hai.">Two things cover most of the questions: <strong>(1)</strong> Infrastructure as Code — CloudFormation and its serverless little brother SAM. <strong>(2)</strong> Deployment strategies — what happens to existing users when you ship a new version. Everything else (CodePipeline, Beanstalk, ECS) orbits these two.</span>
+  </div>
+
+  <hr>
+
+  <h2 id="strategies" data-ur="1. Deployment strategies — sab se zyada poocha jaane wala">1. Deployment strategies — the most-asked topic</h2>
+  <p data-ur="Ek restaurant ki misaal: tumhein purana menu badal kar naya menu lagana hai. Tumhare paas chaar tareeqe hain — aur exam poochta hai ke kaunsa kab.">A restaurant analogy: you must replace the old menu with a new one. You have four ways — and the exam asks which one when.</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Strategy">Strategy</th><th data-ur="Kya hota hai">What happens</th><th data-ur="Downtime / cost">Downtime / cost</th><th data-ur="Sawal mein yeh lafz">Trigger words</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>All-at-once</strong></td>
+        <td data-ur="Sab kuch ek saath badal do. Purana menu phenk kar naya laga do.">Replace everything at once. Throw out the old menu, put up the new one.</td>
+        <td class="verdict-out" data-ur="Downtime HOTA hai. Sab se sasta aur tez.">HAS downtime. Cheapest and fastest.</td>
+        <td data-ur="&quot;FASTEST&quot;, &quot;dev environment&quot;, &quot;downtime acceptable&quot;">&quot;FASTEST&quot;, &quot;dev environment&quot;, &quot;downtime acceptable&quot;</td>
+      </tr>
+      <tr>
+        <td><strong>Rolling</strong></td>
+        <td data-ur="Thore thore kar ke badlo — pehle 2 tables, phir agle 2. Kuch der dono menu chalte hain.">Replace in batches — 2 tables, then the next 2. Both menus run for a while.</td>
+        <td data-ur="Koi downtime nahi, magar capacity kam ho jaati hai. Extra server nahi chahiye.">No downtime, but reduced capacity during the roll. No extra servers needed.</td>
+        <td data-ur="&quot;no additional cost&quot;, &quot;gradual&quot;">&quot;no additional cost&quot;, &quot;gradual&quot;</td>
+      </tr>
+      <tr>
+        <td><strong>Blue/Green</strong></td>
+        <td data-ur="Poora naya restaurant taiyar karo (green), test karo, phir sab customers ko ek saath us taraf bhej do. Purana (blue) khara rehta hai.">Build a whole second restaurant (green), test it, then send all customers over at once. The old one (blue) stays standing.</td>
+        <td class="verdict-in" data-ur="Zero downtime. Rollback FORAN (wapas blue par bhej do). Magar kuch der DOUBLE cost.">Zero downtime. Rollback is INSTANT (send traffic back to blue). But DOUBLE cost while both run.</td>
+        <td data-ur="⭐ &quot;zero downtime&quot;, &quot;instant/fast rollback&quot;, &quot;minimize risk&quot;">⭐ &quot;zero downtime&quot;, &quot;instant/fast rollback&quot;, &quot;minimize risk&quot;</td>
+      </tr>
+      <tr>
+        <td><strong>Canary</strong></td>
+        <td data-ur="Naya menu sirf 10% customers ko do. Dekho koi shikayat to nahi. Theek lage to baaki 90% ko do.">Give the new menu to just 10% of customers. Watch for complaints. If fine, roll out to the other 90%.</td>
+        <td data-ur="Zero downtime, sab se kam risk, magar sab se slow.">Zero downtime, lowest risk, but slowest.</td>
+        <td data-ur="⭐ &quot;small percentage of users first&quot;, &quot;test in production&quot;, &quot;gradual shift with monitoring&quot;">⭐ &quot;small percentage of users first&quot;, &quot;test in production&quot;, &quot;gradual traffic shift&quot;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Blue/Green vs Canary — farq yaad rakho">Blue/Green vs Canary — remember the difference</span>
+    <span data-ur="Dono zero-downtime hain, dono exam mein saath aate hain. Farq: <strong>Blue/Green = 100% traffic ek dam switch hota hai</strong> (0% → 100%). <strong>Canary = traffic thora thora shift hota hai</strong> (10% → 50% → 100%). Agar sawal mein &quot;a small percentage of users&quot; ya koi percentage likha hai → <strong>Canary</strong>. Agar &quot;switch all traffic&quot; ya &quot;instant rollback&quot; → <strong>Blue/Green</strong>.">Both are zero-downtime and both appear together as options. The difference: <strong>Blue/Green switches 100% of traffic at once</strong> (0% → 100%). <strong>Canary shifts traffic gradually</strong> (10% → 50% → 100%). If the question mentions &quot;a small percentage of users&quot; or any percentage → <strong>Canary</strong>. If it says &quot;switch all traffic&quot; or &quot;instant rollback&quot; → <strong>Blue/Green</strong>.</span>
+  </div>
+
+  <h3 data-ur="Lambda ke apne deployment options (CodeDeploy ke zariye)">Lambda's own deployment options (via CodeDeploy)</h3>
+  <ul>
+    <li data-ur="<code>Canary10Percent5Minutes</code> — 10% traffic 5 minute ke liye, phir baaki sab."><code>Canary10Percent5Minutes</code> — 10% of traffic for 5 minutes, then the rest.</li>
+    <li data-ur="<code>Linear10PercentEvery1Minute</code> — har minute 10% aur barhao."><code>Linear10PercentEvery1Minute</code> — add another 10% every minute.</li>
+    <li data-ur="<code>AllAtOnce</code> — foran sab."><code>AllAtOnce</code> — everything immediately.</li>
+    <li data-ur="Yeh sab <strong>Lambda aliases</strong> ke zariye chalta hai. Alias ek pointer hai kisi version par (jaise <code>PROD</code> → version 7). Traffic shifting ka matlab: alias do versions ke beech traffic baant deta hai."><strong>These all work via Lambda aliases.</strong> An alias is a pointer to a version (e.g. <code>PROD</code> → version 7). Traffic shifting means the alias splits traffic between two versions.</li>
+  </ul>
+
+  <hr>
+
+  <h2 id="cfn" data-ur="2. CloudFormation aur SAM">2. CloudFormation and SAM</h2>
+  <p data-ur="CloudFormation ek <strong>recipe</strong> hai. Tum likhte ho &quot;mujhe 2 EC2, 1 database, 1 load balancer chahiye&quot; — aur AWS woh bana deta hai. Agar recipe badal do, AWS farq dekh kar sirf zaroori cheezein badalta hai. Agar mita do, sab kuch saaf ho jaata hai.">CloudFormation is a <strong>recipe</strong>. You write &quot;I want 2 EC2 instances, 1 database, 1 load balancer&quot; — and AWS builds it. Change the recipe and AWS works out the difference and changes only what's needed. Delete it and everything is cleaned up.</p>
+
+  <h3 data-ur="Template ke hisse">Template sections</h3>
+  <ul>
+    <li data-ur="<strong>Resources</strong> — ⭐ sirf yeh SECTION zaroori hai. Baaki sab optional."><strong>Resources</strong> — ⭐ the ONLY required section. Everything else is optional.</li>
+    <li data-ur="<strong>Parameters</strong> — deploy karte waqt input (jaise environment ka naam)."><strong>Parameters</strong> — inputs at deploy time (e.g. environment name).</li>
+    <li data-ur="<strong>Mappings</strong> — fixed lookup table (jaise har region ka AMI ID)."><strong>Mappings</strong> — fixed lookup tables (e.g. AMI ID per region).</li>
+    <li data-ur="<strong>Outputs</strong> — natije jo doosre stacks import kar sakte hain."><strong>Outputs</strong> — values other stacks can import.</li>
+    <li data-ur="<strong>Conditions</strong> — kuch resources sirf kuch soorat mein banao (jaise sirf prod mein)."><strong>Conditions</strong> — create some resources only in certain cases (e.g. prod only).</li>
+  </ul>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="CloudFormation ke zaroori concepts">CloudFormation concepts you need</span>
+    <ul>
+      <li data-ur="<strong>Change Sets</strong> — deploy se PEHLE dikhata hai ke kya badlega. &quot;Preview changes before applying&quot; = Change Set."><strong>Change Sets</strong> — show what WILL change before you deploy. &quot;Preview changes before applying&quot; = Change Set.</li>
+      <li data-ur="<strong>Drift detection</strong> — batata hai ke kisi ne console se manually kuch badal diya hai jo template se match nahi karta."><strong>Drift detection</strong> — tells you someone changed something manually in the console that no longer matches the template.</li>
+      <li data-ur="<strong>StackSets</strong> — ek hi template ko KAI accounts aur KAI regions mein deploy karta hai."><strong>StackSets</strong> — deploy one template across MANY accounts and MANY regions.</li>
+      <li data-ur="<strong>Nested stacks</strong> — bare template ko chhote reusable hisson mein torna."><strong>Nested stacks</strong> — break a big template into smaller reusable pieces.</li>
+      <li data-ur="<strong>DeletionPolicy: Retain</strong> — stack delete hone par bhi yeh resource (jaise database) bacha rehta hai. Exam mein &quot;data delete na ho&quot; = DeletionPolicy Retain."><strong>DeletionPolicy: Retain</strong> — keeps a resource (like a database) even when the stack is deleted. &quot;Don't lose the data&quot; = DeletionPolicy Retain.</li>
+      <li data-ur="<strong>Rollback:</strong> agar create/update fail ho to CloudFormation khud purani halat par wapas chala jaata hai."><strong>Rollback:</strong> if a create/update fails, CloudFormation automatically reverts to the previous state.</li>
+    </ul>
+  </div>
+
+  <h3 data-ur="AWS SAM — serverless ke liye chhota CloudFormation">AWS SAM — CloudFormation shorthand for serverless</h3>
+  <ul>
+    <li data-ur="SAM ek <strong>CloudFormation ka extension</strong> hai. Template ke upar <code>Transform: AWS::Serverless-2016-10-31</code> likha hota hai — yeh line SAM ki pehchaan hai, exam ise poochta hai."><strong>SAM extends CloudFormation.</strong> The template begins with <code>Transform: AWS::Serverless-2016-10-31</code> — that line identifies SAM, and the exam asks about it.</li>
+    <li data-ur="Resource types: <code>AWS::Serverless::Function</code>, <code>::Api</code>, <code>::SimpleTable</code>. Yeh 20 line ka CloudFormation 5 line mein likh dete hain.">Resource types: <code>AWS::Serverless::Function</code>, <code>::Api</code>, <code>::SimpleTable</code>. These compress 20 lines of CloudFormation into 5.</li>
+    <li data-ur="<strong>Commands:</strong> <code>sam build</code> → <code>sam package</code> (S3 par artifact chadhao) → <code>sam deploy</code>. <code>sam local invoke</code> / <code>sam local start-api</code> se local par test karte ho (Docker chahiye) — yeh task statement 1.1.7 hai."><strong>Commands:</strong> <code>sam build</code> → <code>sam package</code> (upload artifact to S3) → <code>sam deploy</code>. <code>sam local invoke</code> / <code>sam local start-api</code> test locally (needs Docker) — this is task statement 1.1.7.</li>
+  </ul>
+
+  <hr>
+
+  <h2 id="cicd" data-ur="3. CI/CD services — kaun kya karta hai">3. CI/CD services — who does what</h2>
+  <table class="elim">
+    <thead><tr><th data-ur="Service">Service</th><th data-ur="Kaam">Job</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CodeCommit</strong></td><td data-ur="Git repository (AWS ka apna GitHub). Naye accounts ke liye ab band hai, magar exam mein ab bhi aata hai.">Git repository (AWS's own GitHub). Closed to new accounts now, but still on the exam.</td></tr>
+      <tr><td><strong>CodeBuild</strong></td><td data-ur="Code compile karta hai aur tests chalata hai. Instructions <code>buildspec.yml</code> mein hoti hain (repo ki ROOT mein).">Compiles code and runs tests. Instructions live in <code>buildspec.yml</code> (at the repo ROOT).</td></tr>
+      <tr><td><strong>CodeDeploy</strong></td><td data-ur="Code ko EC2/Lambda/ECS par deploy karta hai. Instructions <code>appspec.yml</code> mein.">Deploys code to EC2/Lambda/ECS. Instructions in <code>appspec.yml</code>.</td></tr>
+      <tr><td><strong>CodePipeline</strong></td><td data-ur="Orchestrator — sab ko ek tarteeb mein jorta hai (source → build → test → deploy).">The orchestrator — chains everything in order (source → build → test → deploy).</td></tr>
+      <tr><td><strong>CodeArtifact</strong></td><td data-ur="Package repository (npm, pip, Maven ke liye private storage).">Package repository (private storage for npm, pip, Maven).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Do file names zaroor yaad rakho">Two filenames you must know</span>
+    <ul>
+      <li data-ur="⭐ <strong><code>buildspec.yml</code></strong> = CodeBuild. Phases: <code>install</code> → <code>pre_build</code> → <code>build</code> → <code>post_build</code>. Repo ki root mein hona chahiye. <code>artifacts</code> section batata hai ke kya aage bhejna hai.">⭐ <strong><code>buildspec.yml</code></strong> = CodeBuild. Phases: <code>install</code> → <code>pre_build</code> → <code>build</code> → <code>post_build</code>. Must be at the repo root. The <code>artifacts</code> section says what to pass on.</li>
+      <li data-ur="⭐ <strong><code>appspec.yml</code></strong> = CodeDeploy. EC2 par lifecycle hooks: <code>BeforeInstall</code>, <code>AfterInstall</code>, <code>ApplicationStart</code>, <code>ValidateService</code>. Lambda par: <code>BeforeAllowTraffic</code>, <code>AfterAllowTraffic</code>.">⭐ <strong><code>appspec.yml</code></strong> = CodeDeploy. EC2 lifecycle hooks: <code>BeforeInstall</code>, <code>AfterInstall</code>, <code>ApplicationStart</code>, <code>ValidateService</code>. Lambda hooks: <code>BeforeAllowTraffic</code>, <code>AfterAllowTraffic</code>.</li>
+      <li data-ur="Yaad rakhne ka tarika: <strong>B</strong>uildspec = <strong>B</strong>uild. <strong>A</strong>ppspec = deploy the <strong>A</strong>pp. Exam dono ko swap kar ke poochta hai.">Memory hook: <strong>B</strong>uildspec = <strong>B</strong>uild. <strong>A</strong>ppspec = deploy the <strong>A</strong>pp. The exam swaps them to trick you.</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <h2 id="beanstalk" data-ur="4. Elastic Beanstalk aur containers">4. Elastic Beanstalk and containers</h2>
+  <p data-ur="<strong>Elastic Beanstalk</strong> — tum sirf code dete ho, AWS EC2, load balancer, auto-scaling sab khud bana deta hai. Sawal mein &quot;developer ko infrastructure manage nahi karna&quot; + &quot;traditional web app&quot; = Beanstalk. Deployment options wahi hain jo upar table mein hain (all-at-once, rolling, rolling with additional batch, immutable, blue/green).">
+    <strong>Elastic Beanstalk</strong> — you supply only code; AWS creates the EC2 instances, load balancer, and auto-scaling. &quot;Developers shouldn't manage infrastructure&quot; + &quot;traditional web app&quot; = Beanstalk. Its deployment options are the ones in the table above (all-at-once, rolling, rolling with additional batch, immutable, blue/green).</p>
+  <ul>
+    <li data-ur="<strong>Immutable</strong> deployment — bilkul naye instances par deploy karta hai, purane tab tak chalte hain. Sab se mehfooz Beanstalk option, magar mehnga."><strong>Immutable</strong> deployment — deploys onto brand-new instances while the old ones keep serving. The safest Beanstalk option, but costly.</li>
+    <li data-ur="<code>.ebextensions/</code> folder mein config files (<code>.config</code>) se environment customise hota hai."><code>.ebextensions/</code> folder holds <code>.config</code> files that customise the environment.</li>
+    <li data-ur="<strong>ECS</strong> — containers chalata hai. <em>EC2 launch type</em> = tum servers manage karte ho. <em>Fargate launch type</em> = serverless, koi server nahi. ⭐ Exam mein &quot;least operational overhead&quot; + containers = <strong>Fargate</strong>, hamesha."><strong>ECS</strong> — runs containers. <em>EC2 launch type</em> = you manage the servers. <em>Fargate launch type</em> = serverless, no servers. ⭐ &quot;Least operational overhead&quot; + containers = <strong>Fargate</strong>, always.</li>
+    <li data-ur="<strong>ECR</strong> — container images ka registry (AWS ka Docker Hub). Login: <code>aws ecr get-login-password</code>."><strong>ECR</strong> — the container image registry (AWS's Docker Hub). Login via <code>aws ecr get-login-password</code>.</li>
+  </ul>
+
+  <hr>
+
+  <h2 data-ur="Apne aap ko test karo">Test yourself</h2>
+
+  <div class="exam-q" id="d3q1">
+    <span class="exam-tag">Domain 3 · Deployment strategy</span>
+    <p class="scenario" data-ur="Ek team production Lambda function ka naya version release karna chahti hai. Woh chahte hain ke naya version pehle sirf thore se users ko mile taake CloudWatch metrics par errors dekhe ja sakein, aur agar error rate barhe to foran wapas purane version par jaya ja sake. Kaunsi deployment strategy yeh requirement poori karti hai?">A team wants to release a new version of a production Lambda function. They want the new version to reach only a small portion of users first so errors can be observed in CloudWatch metrics, and to return to the old version immediately if the error rate rises. Which deployment strategy meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="All-at-once deployment">All-at-once deployment</button>
+      <button class="opt" data-correct="true" data-ur="Canary deployment CodeDeploy aur Lambda alias ke saath">Canary deployment using CodeDeploy with a Lambda alias</button>
+      <button class="opt" data-correct="false" data-ur="Rolling deployment batches ke saath">Rolling deployment with batches</button>
+      <button class="opt" data-correct="false" data-ur="Naya function alag naam se deploy karo">Deploy the new function under a different name</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="d3q2">
+    <span class="exam-tag">Domain 3 · CI/CD files</span>
+    <p class="scenario" data-ur="Ek developer CodeBuild project set up kar raha hai jo unit tests chalaye aur phir artifact banaye. Build instructions kis file mein aur kahan honi chahiye?">A developer is setting up a CodeBuild project that runs unit tests and then produces an artifact. In which file — and where — must the build instructions be placed?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="appspec.yml, repository ki root mein">appspec.yml, at the root of the repository</button>
+      <button class="opt" data-correct="true" data-ur="buildspec.yml, repository ki root mein">buildspec.yml, at the root of the repository</button>
+      <button class="opt" data-correct="false" data-ur="buildspec.yml, ek .ebextensions folder mein">buildspec.yml, inside an .ebextensions folder</button>
+      <button class="opt" data-correct="false" data-ur="template.yaml, repository ki root mein">template.yaml, at the root of the repository</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="d3q3">
+    <span class="exam-tag">Domain 3 · CloudFormation</span>
+    <p class="scenario" data-ur="Ek team CloudFormation stack update karna chahti hai jismein ek production RDS database hai. Woh apply karne se PEHLE dekhna chahte hain ke kaunse resources badlenge ya replace honge, taake ghalti se database na mit jaye. Kaunsa feature use karna chahiye?">A team wants to update a CloudFormation stack that contains a production RDS database. Before applying, they want to see which resources will be modified or replaced, so the database isn't accidentally destroyed. Which feature should they use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Drift detection">Drift detection</button>
+      <button class="opt" data-correct="true" data-ur="Change set banao aur apply karne se pehle review karo">Create a change set and review it before executing</button>
+      <button class="opt" data-correct="false" data-ur="Stack ko delete karke dobara banao">Delete and recreate the stack</button>
+      <button class="opt" data-correct="false" data-ur="Nested stacks use karo">Use nested stacks</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Yeh sab tumhare kaam ka AWS version hai. <strong>CloudFormation = Django migrations, magar infrastructure ke liye.</strong> Tum desired state likhte ho, tool farq nikaal kar apply karta hai — aur <code>DeletionPolicy: Retain</code> wahi ehtiyat hai jo tum <code>RunPython</code> migration mein data bachane ke liye barat-te ho. <strong>buildspec.yml = tumhari CI file</strong> (GitHub Actions ka workflow YAML) — same phases: install deps, run tests, build. Aur <strong>blue/green deployment</strong> woh cheez hai jo tum tab chahte ho jab ek migration ke baad rollback karna paray — isi liye tumne &quot;Safe DB Migrations&quot; lesson mein backward-compatible migrations seekhi thin.">This is all the AWS version of your work. <strong>CloudFormation = Django migrations, but for infrastructure.</strong> You declare desired state, the tool computes the diff and applies it — and <code>DeletionPolicy: Retain</code> is the same caution you use in a <code>RunPython</code> migration to avoid destroying data. <strong>buildspec.yml = your CI file</strong> (a GitHub Actions workflow YAML) — same phases: install deps, run tests, build. And <strong>blue/green deployment</strong> is what you want when you need to roll back after a migration — which is exactly why the &quot;Safe DB Migrations&quot; lesson taught backward-compatible migrations.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> The four deployment strategies are the most commonly confused thing in this domain. If blue/green vs canary still feels blurry, say so and I'll drill you on it with ten questions until it's automatic.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Domain 3 reference.</strong> ← <a href="dva-domain2-security.html">Domain 2</a> · Next: <a href="dva-domain4-troubleshooting.html">Domain 4 — Troubleshooting &amp; Optimization (18%)</a></p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li><a href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain3.html" target="_blank">DVA-C02 Exam Guide — Content Domain 3</a> — task statements and skills.</li>
+      <li><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html" target="_blank">CodeDeploy deployment configurations</a> — canary, linear and all-at-once traffic-shifting options.</li>
+      <li><a href="https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html" target="_blank">CodeBuild buildspec reference</a> — phases and root-of-repo placement.</li>
+      <li><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html" target="_blank">CloudFormation change sets</a> — previewing changes before executing.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          d3q1: correct ? "Correct. \"A small portion of users first\" is the canary trigger phrase. CodeDeploy shifts a percentage of traffic to the new version via the Lambda alias, watches CloudWatch alarms, and rolls back automatically if they trigger."
+                        : "Reconsider. The key phrase is \"only a small portion of users first\" — that is canary by definition. All-at-once sends 100% immediately. Rolling applies to fleets of instances, not Lambda versions. A differently-named function wouldn't receive the existing traffic at all.",
+          d3q2: correct ? "Correct. CodeBuild reads buildspec.yml and it must be at the root of the repository. Remember: Buildspec = Build (CodeBuild), Appspec = deploy the App (CodeDeploy)."
+                        : "Reconsider. appspec.yml belongs to CodeDeploy, not CodeBuild. .ebextensions is Elastic Beanstalk config. template.yaml is a SAM/CloudFormation template. CodeBuild specifically reads buildspec.yml from the repository root.",
+          d3q3: correct ? "Correct. A change set is a preview: it lists every resource that will be added, modified, or replaced — including the dangerous \"Replacement: True\" on an RDS instance — before anything is executed."
+                        : "Reconsider. Drift detection shows changes already made manually — it doesn't predict a future update. Deleting and recreating would destroy the database, the exact outcome being avoided. Nested stacks are about organising templates. A change set is the preview mechanism."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/clf-index.html?raw';
+const headExtra = `<style>
+  .card { border:1px solid var(--rule); border-radius:5px; padding:1rem 1.15rem; margin:0.7rem 0;
+          background:#fff; font-family:ui-sans-serif,-apple-system,sans-serif; }
+  .card h3 { margin:0 0 0.3rem; font-size:1rem; font-family:inherit; }
+  .card h3 a { text-decoration:none; }
+  .card p { margin:0.3rem 0 0; font-size:0.84rem; color:#4a4a4a; }
+  .weight { float:right; font-size:0.72rem; font-weight:700; color:#fff; background:var(--accent);
+            padding:0.15rem 0.5rem; border-radius:10px; }
+  table.plan { width:100%; border-collapse:collapse; font-family:ui-sans-serif,sans-serif;
+               font-size:0.8rem; margin:1rem 0 2rem; }
+  table.plan th, table.plan td { border:1px solid var(--rule); padding:0.45rem 0.6rem; text-align:left; vertical-align:top; }
+  table.plan th { background:var(--code-bg); }
+  table.plan td.wk { font-weight:700; white-space:nowrap; background:#fbfaf7; }
+  .soon { opacity:0.62; }
+  .soon h3 a { pointer-events:none; color:#6a6a6a; }
+</style>`;
+---
+<Base title={"AWS Cloud Practitioner (CLF-C02) — Your Exam Prep Hub"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

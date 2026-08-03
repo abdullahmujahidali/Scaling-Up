@@ -1,0 +1,154 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 16 · Offline Pack</p>
+    <h1 data-ur="Circuit breakers: jaldi fail karo taake poora system na gire">Circuit breakers: fail fast so the whole system doesn't fall</h1>
+    <p class="subtitle" data-ur="Jab ek downstream service marr rahi ho, use retry se maarte raho mat — breaker trip karo aur foran fail karo.">When a downstream service is dying, stop hammering it with retries — trip the breaker and fail fast.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: circuit breaker</span>
+      <span>Win: stop one dead dependency from taking down your app</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (availability chain yaad karo)">30-second warm-up (recall the availability chain)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: agar tumhari app ek payment API par depend karti hai jiska uptime <strong>99%</strong> hai, toh tumhari app us call ke liye kitni available ho sakti hai?">From memory: if your app depends on a payment API with <strong>99%</strong> uptime, how available can your app be for that call?</div>
+    <div class="answer" data-ur="Zyada se zyada <strong>99%</strong> — us dependency se behtar nahi. Availability lesson yaad hai: ek chain apne sab se kamzor part jitni hi available hoti hai. Har extra dependency multiply hoti hai (99% × 99% = ~98%). Aaj hum dekhenge <em>kaise</em> ek marti hui dependency ko apni app ko neeche kheenchne se rokte hain."><strong>At most 99%</strong> — no better than that dependency. Recall the availability lesson: a chain is only as available as its weakest part. Each extra dependency multiplies (99% × 99% = ~98%). Today we'll see <em>how</em> to stop a dying dependency from dragging your app down with it.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Jab ek downstream service repeatedly fail kare, to us par requests bhejna band kar do. Breaker &quot;trip&quot; ho jaata hai (open) aur foran fail kar deta hai — wait nahi karta. Yeh us service ko saans lene ka mauqa deta hai, aur tumhare threads free rehte hain.</strong> Slow fail se fast fail behtar hai."><strong>When a downstream service keeps failing, stop sending it requests. The breaker &quot;trips&quot; (opens) and fails fast — it doesn't wait. That gives the service room to recover, and keeps your threads free.</strong> A fast failure beats a slow one.</span>
+  </div>
+
+  <h2 data-ur="Kahani: ghar ka circuit breaker">The story: the circuit breaker in your house</h2>
+  <p data-ur="Tumhare ghar mein ek electrical <strong>circuit breaker</strong> (ya purane zamane ka fuse) hai. Jab ek wire mein short ho jaati hai aur bahut zyada current behta hai, breaker <strong>trip</strong> kar jaata hai — woh us circuit ki bijli <em>foran</em> kaat deta hai. Bhadda lagta hai, lekin yeh poore ghar ki wiring ko jalne se bachata hai. Agar breaker na hota, to woh ek kharab wire aag laga deti aur puri building le doobti.">Your house has an electrical <strong>circuit breaker</strong> (or an old-school fuse). When a wire shorts out and too much current flows, the breaker <strong>trips</strong> — it cuts power to that circuit <em>immediately</em>. It feels rude, but it stops the whole house's wiring from burning. Without the breaker, one faulty wire would start a fire and take the whole building down.</p>
+  <p data-ur="Software mein bilkul yehi karte hain. Ek marti hui service woh short-circuiting wire hai. Software circuit breaker use dekhta hai: agar bahut zyada calls fail hone lagein, woh <strong>trip</strong> karta hai aur aane wali calls ko foran reject kar deta hai — us dying service ko protect karta hai, aur zyada important, <em>tumhari</em> app ko cascade se bachata hai.">In software we do exactly the same. A dying service is that short-circuiting wire. The software circuit breaker watches it: if too many calls fail, it <strong>trips</strong> and immediately rejects incoming calls — protecting the dying service, and more importantly protecting <em>your</em> app from a cascade.</p>
+
+  <h2 data-ur="Breaker ke bina cascade kaise hota hai">How the cascade happens without a breaker</h2>
+  <ul>
+    <li data-ur="Payment API <strong>slow</strong> ho jaati hai (down nahi — bas har call 30s leti hai)."><strong>The payment API goes slow</strong> (not down — each call just takes 30s now).</li>
+    <li data-ur="Tumhari app har call par 30 second <em>wait</em> karti hai. Har waiting request ek Gunicorn worker/thread ko hold kar leti hai."><strong>Your app waits</strong> 30 seconds per call. Each waiting request holds a Gunicorn worker/thread hostage.</li>
+    <li data-ur="Requests pile up. Naive retry logic har fail hui call ko dobara try karti hai — marti hui service par aur load daal deti hai."><strong>Requests pile up.</strong> Naive retry logic re-tries every failed call — piling more load onto the dying service.</li>
+    <li data-ur="Thora der baad tumhare <em>saare</em> workers busy hain, us ek slow dependency ka intezaar karte hue. Ab <strong>tumhari poori app down</strong> hai — sirf payment page nahi."><strong>Soon all your workers are busy</strong> waiting on that one slow dependency. Now <strong>your entire app is down</strong> — not just the payment page.</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="Circuit breaker three states: closed, open, half-open">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="70" width="150" height="60" rx="8" fill="#eaf5ec" stroke="#1c7a3f"/>
+        <text x="105" y="95" font-weight="700" fill="#1c7a3f">CLOSED</text>
+        <text x="105" y="113" fill="#6b6b6b" font-size="11">normal: calls pass</text>
+
+        <rect x="245" y="70" width="150" height="60" rx="8" fill="#fdeaea" stroke="#9b1c1c"/>
+        <text x="320" y="95" font-weight="700" fill="#9b1c1c">OPEN</text>
+        <text x="320" y="113" fill="#6b6b6b" font-size="11">fail fast, no call</text>
+
+        <rect x="460" y="70" width="150" height="60" rx="8" fill="#fff6e5" stroke="#a86400"/>
+        <text x="535" y="95" font-weight="700" fill="#a86400">HALF-OPEN</text>
+        <text x="535" y="113" fill="#6b6b6b" font-size="11">try one test call</text>
+
+        <line x1="180" y1="90" x2="245" y2="90" stroke="#9b1c1c" stroke-width="2" marker-end="url(#a)"/>
+        <text x="212" y="60" fill="#9b1c1c" font-size="11">too many fails</text>
+
+        <line x1="395" y1="100" x2="460" y2="100" stroke="#a86400" stroke-width="2" marker-end="url(#a)"/>
+        <text x="428" y="150" fill="#a86400" font-size="11">timeout passed</text>
+
+        <path d="M535 130 C535 175, 105 175, 105 130" fill="none" stroke="#1c7a3f" stroke-width="2" marker-end="url(#a)"/>
+        <text x="320" y="192" fill="#1c7a3f" font-size="11">test succeeds → close again</text>
+
+        <path d="M535 130 C560 160, 400 165, 340 130" fill="none" stroke="#9b1c1c" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/>
+        <text x="470" y="150" fill="#9b1c1c" font-size="11">test fails → open</text>
+
+        <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#555"/></marker></defs>
+      </g>
+    </svg>
+    <figcaption data-ur="Teen states: closed (normal), open (fail fast), half-open (recovery test karo).">Three states: closed (normal), open (fail fast), half-open (test recovery).</figcaption>
+  </figure>
+
+  <h2 data-ur="Teen states">The three states</h2>
+  <ul>
+    <li data-ur="<strong>Closed — normal.</strong> Calls seedhi downstream ko jaati hain. Breaker chupchaap failures ginta rehta hai."><strong>Closed — normal.</strong> Calls flow straight through to downstream. The breaker quietly counts failures.</li>
+    <li data-ur="<strong>Open — fail fast.</strong> Failures ne threshold cross kar liya, breaker trip ho gaya. Ab har call <em>foran</em> reject ya fallback return karti hai — koi wait nahi, marti hui service ko koi load nahi."><strong>Open — fail fast.</strong> Failures crossed the threshold, so the breaker tripped. Every call now <em>immediately</em> rejects or returns a fallback — no waiting, no load on the dying service.</li>
+    <li data-ur="<strong>Half-open — recovery test.</strong> Ek timeout ke baad breaker <em>ek</em> test call jaane deta hai. Kaamyab ho gayi → wapas <strong>closed</strong>. Fail ho gayi → wapas <strong>open</strong> aur phir intezaar."><strong>Half-open — testing recovery.</strong> After a timeout, the breaker lets <em>one</em> test call through. Succeeds → back to <strong>closed</strong>. Fails → back to <strong>open</strong> and wait again.</li>
+  </ul>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Farz karo tumhari Django app checkout par ek flaky external payment API ko call karti hai. Do cheezein karo. <strong>Pehle: timeout lagao.</strong> <code>requests.post(url, timeout=3)</code> — kabhi bhi bina timeout ke bahar call mat karo, warna ek slow dependency tumhare saare Gunicorn workers ko 30s ke liye khaa jaayegi. <strong>Doosra: us call ko circuit breaker mein wrap karo.</strong> Khud likhne ke bajaye ek library use karo — Python mein <code>pybreaker</code> mashhoor hai. Jab payment API 5 baar lagataar fail kare, breaker open ho jaata hai aur agli 60 second tak calls foran fail karti hain — tumhare workers free rehte hain baaki site (browsing, cart) serve karne ke liye. Users ko ek saaf &quot;payments abhi down hain, thori der baad try karo&quot; message do (yeh tumhara <strong>fallback</strong> hai) na ke ek hanging spinner. Order-status page zinda rehta hai chahe payments giri ho.">Say your Django app calls a flaky external payment API at checkout. Do two things. <strong>First: add a timeout.</strong> <code>requests.post(url, timeout=3)</code> — never make an outbound call without a timeout, or one slow dependency will eat all your Gunicorn workers for 30s each. <strong>Second: wrap that call in a circuit breaker.</strong> Don't roll your own — use a library; <code>pybreaker</code> is a popular one in Python. When the payment API fails 5 times in a row, the breaker opens and calls fail fast for the next 60 seconds — keeping your workers free to serve the rest of the site (browsing, cart). Give users a clean &quot;payments are down, try again shortly&quot; message (that's your <strong>fallback</strong>) instead of a hanging spinner. The order-status page stays alive even when payments are down.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: breaker ke <strong>open</strong> state ka poore system ke liye asli faida kya hai?">Quick check: what's the real benefit of the breaker's <strong>open</strong> state for the whole system?</div>
+    <div class="answer" data-ur="Do faide. (1) Tumhari app <strong>fail fast</strong> karti hai — koi thread ek dead call par 30s wait nahi karta, toh workers free rehte hain aur baaki app zinda. (2) Downstream service ko <strong>recover</strong> hone ka mauqa milta hai kyunke hum use retries se maar nahi rahe. Fail fast + saans lene ka mauqa = koi cascade nahi.">Two benefits. (1) Your app <strong>fails fast</strong> — no thread waits 30s on a dead call, so workers stay free and the rest of the app stays alive. (2) The downstream service gets room to <strong>recover</strong> because we're not hammering it with retries. Fail fast + breathing room = no cascade.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Ek breaker <strong>complexity add karta hai</strong>, aur tumhein ek <em>sensible fallback</em> design karna parta hai. Jab breaker open hai, tum us call ka data nahi dey sakte — toh phir kya do? Ek cached purani value? Ek queued retry (bad mein process)? Ek saaf error message? Agar tumhara &quot;fallback&quot; sirf crash hai, to breaker ne kuch khaas nahi bachaya. Aur galat tuning (threshold bahut aggressive) breaker ko un blips par bhi trip kara sakti hai jo apne aap theek ho jaate. Breaker muft nahi — soch samajh kar lagao.">A breaker <strong>adds complexity</strong>, and you must design a <em>sensible fallback</em>. While the breaker is open you can't return that call's data — so what do you do? A cached stale value? A queued retry (process later)? A clean error message? If your &quot;fallback&quot; is just a crash, the breaker didn't save much. And bad tuning (threshold too aggressive) can trip the breaker on blips that would have healed on their own. A breaker isn't free — apply it deliberately.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek downstream recommendations service 6 baar lagataar fail kar chuki hai, threshold cross ho gaya. Breaker ab kis state mein hai, aur agli call ka kya hota hai?">A downstream recommendations service has failed 6 times in a row, past the threshold. What state is the breaker in now, and what happens to the next call?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Open — agli call foran fail/fallback karti hai, downstream ko call kiye baghair">Open — the next call fails fast / returns a fallback without calling downstream</button>
+      <button class="opt" data-correct="false" data-ur="Closed — agli call normally jaati hai aur 30s wait karti hai">Closed — the next call goes through normally and waits 30s</button>
+      <button class="opt" data-correct="false" data-ur="Half-open — har call ab downstream ko test karti hai">Half-open — every call now tests downstream</button>
+      <button class="opt" data-correct="false" data-ur="Open — breaker downstream ke wapas aane tak sab requests ko queue karta hai">Open — the breaker queues all requests until downstream returns</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Breaker ek minute se open hai. Woh half-open state ka istemaal kis liye karta hai?">The breaker has been open for a minute. What does it use the half-open state for?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Saari pending requests ko ek saath dobara bhejne ke liye">To re-send all pending requests at once</button>
+      <button class="opt" data-correct="true" data-ur="Ek test call jaane deta hai — kaamyab to close, fail to wapas open">To let one test call through — succeeds → close, fails → back to open</button>
+      <button class="opt" data-correct="false" data-ur="Failure count ko permanently zero par reset karne ke liye">To permanently reset the failure count to zero</button>
+      <button class="opt" data-correct="false" data-ur="Requests ko ek doosri backup service par bhejne ke liye">To route requests to a second backup service</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Circuit breaker: ek marti hui dependency par calls maarte raho mat. Breaker failures ginta hai, threshold par <strong>open</strong> hota hai (fail fast, koi wait nahi), phir <strong>half-open</strong> mein ek test call karta hai, aur theek hone par wapas <strong>closed</strong>. Yeh tumhare Gunicorn workers ko bachata hai aur ek cascade rokta hai — availability chain yaad hai, ek dependency puri app ko neeche kheench sakti hai. Django mein: <em>timeouts + ek breaker (jaise pybreaker) + ek sensible fallback</em>. Interview mein &quot;fail fast&quot; aur teen states ka naam lena ek strong resilience signal hai.">Circuit breaker: stop hammering a dying dependency. The breaker counts failures, <strong>opens</strong> at the threshold (fail fast, no waiting), then goes <strong>half-open</strong> with one test call, and returns to <strong>closed</strong> when it heals. This saves your Gunicorn workers and stops a cascade — recall the availability chain, one dependency can drag the whole app down. In Django: <em>timeouts + a breaker (like pybreaker) + a sensible fallback</em>. Naming &quot;fail fast&quot; and the three states in an interview is a strong resilience signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://martinfowler.com/bliki/CircuitBreaker.html&quot; target=&quot;_blank&quot;>Martin Fowler — Circuit Breaker</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">Martin Fowler — Circuit Breaker</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to see a <code>pybreaker</code> snippet wrapping a real <code>requests</code> call, or work out a good threshold/timeout for your payment API? Or unsure how a breaker differs from a plain retry? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 16 (Circuit Breakers).</strong> Builds on <a href="0004-the-nines.html">the nines (availability)</a> — a chain is only as available as its parts. Pairs with retries, timeouts &amp; bulkheads.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank">Circuit Breaker</a>, Martin Fowler.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Past the failure threshold the breaker is OPEN — it fails fast, returning a fallback or error without even touching the dying downstream service. That's what protects your workers."
+                      : "Reconsider. Once failures cross the threshold the breaker trips OPEN and fails fast — the next call does NOT reach downstream and does NOT wait.",
+          q2: correct ? "Yes. Half-open lets exactly one probe call through. Success closes the breaker (back to normal); failure sends it back to open to wait longer."
+                      : "Reconsider. Half-open is a cautious probe: it lets ONE test call through. Success → closed, failure → open. It doesn't flood, reset blindly, or reroute."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

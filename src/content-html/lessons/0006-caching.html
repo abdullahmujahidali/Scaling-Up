@@ -1,0 +1,165 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 04</p>
+    <h1 data-ur="Caching: hot cheezein paas rakho">Caching: keep the hot stuff close</h1>
+    <p class="subtitle" data-ur="System ko fast karne ka sab se sasta tareeqa — aur wohi classic tradeoff jo tumne consistency mein pehle dekha tha.">The cheapest way to make a system faster — and the classic tradeoff you already met in consistency.</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: caching</span>
+      <span>Win: explain caching + one update strategy</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (Lesson 3 yaad karo)">30-second warm-up (recall Lesson 3)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: load balancer tumhein aur servers add karne deta hai (horizontal scaling). Un servers ko kaunsa ek rule follow karna zaroori hai, aur kyun?">From memory: a load balancer lets you add more servers (horizontal scaling). What's the one rule those servers must follow, and why?</div>
+    <div class="answer" data-ur="Woh <strong>stateless</strong> honi chahiyein — kisi user ki koi private memory na rakhein — kyunke balancer tumhari agli request kisi doosre server par bhej sakta hai. Shared state (sessions) database ya shared cache mein rehti hai jahan tak sab servers pohanch saktay hain.">They must be <strong>stateless</strong> — keep no private memory of a user — because the balancer may route your next request to a different server. Shared state (sessions) lives in a database or shared cache all servers can reach.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Cache ek chhota, fast store hota hai un data ki copies ka jo tum bohot use karte ho</strong>, paas rakhi jaati hai taake tumhein mehanga kaam dobara na karna paray. Faster — par copy stale ho sakti hai (consistency wala tradeoff, 2a)."><strong>A cache is a small, fast store of copies of data you use a lot</strong>, kept close so you don't re-do expensive work. Faster — but the copy can go stale (the tradeoff from consistency, 2a).</span>
+  </div>
+
+  <h2 data-ur="Kahani: tumhare desk par notes vs archive room">The story: notes on your desk vs the archive room</h2>
+  <p data-ur="Tum ek desk par kaam karte ho. Hall ke aakhir mein jo <strong>archive room</strong> hai us mein har document mojood hai (woh tumhara <strong>database</strong> hai) — poora, par har baar ek slow chal kar jaana. Toh jo chand documents tum baar baar uthate ho, un ki copies bana kar <strong>apne desk par</strong> rakh lete ho. Woh stack ek <strong>cache</strong> hai: chhota, adhoora, par foran.">You work at a desk. The <strong>archive room</strong> down the hall has every document (that's your <strong>database</strong>) — complete, but a slow walk each time. So for the handful of documents you keep grabbing, you make copies and stack them <strong>on your desk</strong>. That stack is a <strong>cache</strong>: tiny, incomplete, but instant.</p>
+  <p data-ur="Tradeoff kehte hi saaf ho jaata hai: desk wali copy <em>fast</em> hai, par agar archive mein asli document badal jaaye, tumhari desk wali copy ab <strong>stale</strong> hai jab tak tum use refresh na karo. Yehi ek tension — speed vs. staleness — poori caching ki kahani hai.">The trade is obvious the moment you say it: the desk copy is <em>fast</em>, but if the real document in the archive changes, your desk copy is now <strong>stale</strong> until you refresh it. That single tension — speed vs. staleness — is the whole story of caching.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 160" role="img" aria-label="App checks cache first, then database">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="20" y="60" width="90" height="44" rx="6" fill="#f3f1ea" stroke="#1a1a1a"/>
+        <text x="65" y="86" font-weight="600">app</text>
+        <rect x="230" y="55" width="120" height="54" rx="8" fill="#e8f3ec" stroke="#1d6b3a"/>
+        <text x="290" y="78" font-weight="700" fill="#1d6b3a">Cache</text>
+        <text x="290" y="96" fill="#6b6b6b" font-size="11">desk (fast, small)</text>
+        <rect x="470" y="55" width="140" height="54" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="540" y="78" font-weight="700" fill="#2a4d8f">Database</text>
+        <text x="540" y="96" fill="#6b6b6b" font-size="11">archive (slow, complete)</text>
+        <line x1="110" y1="82" x2="228" y2="82" stroke="#1d6b3a" stroke-width="1.5"/>
+        <text x="168" y="72" fill="#1d6b3a" font-size="10">1. check here first</text>
+        <line x1="350" y1="82" x2="468" y2="82" stroke="#2a4d8f" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="409" y="72" fill="#2a4d8f" font-size="10">2. only if missing</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Pehle desk (cache) check karo; archive (database) tak sirf miss par jao.">Check the desk (cache) first; walk to the archive (database) only on a miss.</figcaption>
+  </figure>
+
+  <p data-ur="Do words tum baar baar sunoge:">Two words you'll hear constantly:</p>
+  <ul>
+    <li data-ur="<strong>Cache hit</strong> — copy tumhare desk par thi. Foran. 🎉"><strong>Cache hit</strong> — the copy was on your desk. Instant. 🎉</li>
+    <li data-ur="<strong>Cache miss</strong> — desk par nahi thi; tum archive tak jaate ho, phir (aam tor par) agli baar ke liye ek copy desk par rakh dete ho."><strong>Cache miss</strong> — not on the desk; you walk to the archive, then (usually) drop a copy on the desk for next time.</li>
+  </ul>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: cache ka sab se bara downside kya hai?">Quick check: what's the single biggest downside of a cache?</div>
+    <div class="answer" data-ur="Cache wali copy <strong>stale</strong> ho sakti hai — database ke asli data ke muqablay mein purani. Unhein sync mein rakhna (&quot;cache invalidation&quot;) mashhoor tor par mushkil hissa hai.">The cached copy can be <strong>stale</strong> — out of date versus the real data in the database. Keeping them in sync ("cache invalidation") is famously the hard part.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Caches kahan rehti hain (sirf map)">Where caches live (just the map)</h2>
+  <p data-ur="Caches user aur tumhare database ke darmiyan kai jagahon par baithti hain. Inhein yaad karne ki zaroorat nahi — bas pattern pehchano ke &quot;copy zyada paas rakho&quot;:">Caches sit at many points between the user and your database. You don't need to memorize these — just recognize the pattern is "keep a copy closer":</p>
+  <ul>
+    <li data-ur="<strong>Browser</strong> — user ki apni machine images/files yaad rakhti hai."><strong>Browser</strong> — the user's own machine remembers images/files.</li>
+    <li data-ur="<strong>CDN</strong> — static files (images, CSS) ki copies duniya bhar mein, users ke paas phailayi jaati hain."><strong>CDN</strong> — copies of static files (images, CSS) spread around the world, near users.</li>
+    <li data-ur="<strong>Application cache</strong> — ek in-memory store jaise <strong>Redis</strong> ya <strong>Memcached</strong> jise tumhari app database se pehle check karti hai. (Interviews aam tor par isi ki baat karti hain.)"><strong>Application cache</strong> — an in-memory store like <strong>Redis</strong> or <strong>Memcached</strong> your app checks before the database. (This is the one interviews usually mean.)</li>
+  </ul>
+
+  <h2 data-ur="Asli skill: cache ko kab update karte ho?">The real skill: when do you update the cache?</h2>
+  <p data-ur="Yahin senior soch rehti hai. Chand named strategies hain; sharp lagne ke liye tumhein sirf do sab se aam chahiyein.">This is where the senior thinking lives. There are a few named strategies; you only need the two most common to sound sharp.</p>
+
+  <h3 data-ur="1 · Cache-aside (default)">1 · Cache-aside (the default)</h3>
+  <p data-ur="<strong>Kahani:</strong> tum apna desk check karte ho. Wahan nahi? Archive tak jao, uthao, ek copy desk par rakho, phir use karo. <em>App</em> desk ko manage karti hai."><strong>Story:</strong> you check your desk. Not there? Walk to the archive, grab it, drop a copy on your desk, then use it. The <em>app</em> manages the desk.</p>
+  <p data-ur="Simple aur sab se aam. Downside: kisi bhi cheez ki pehli request hamesha ek slow &quot;miss&quot; hoti hai (teen chakkar — desk check, archive tak jao, copy wapas), aur copies stale ho sakti hain.">Simple and the most common. Downside: the first request for anything is always a slow "miss" (three trips — check desk, walk to archive, copy back), and copies can drift stale.</p>
+
+  <h3 data-ur="2 · Write-through (kabhi stale nahi)">2 · Write-through (never stale)</h3>
+  <p data-ur="<strong>Kahani:</strong> jab bhi tum koi <em>naya</em> document archive mein file karte ho, tum <em>saath hi saath</em> apni desk copy update karte ho — har baar, ussi lamhe. Toh desk kabhi purani nahi hoti."><strong>Story:</strong> whenever you file a <em>new</em> document into the archive, you <em>simultaneously</em> update your desk copy — same moment, every time. So the desk is never out of date.</p>
+  <p data-ur="Upside: cache kabhi stale nahi hoti. Downside: har write thora slow ho jaata hai (tum ek saath do kaam karte ho), aur fresh cache khaali shuru hoti hai.">Upside: the cache is never stale. Downside: every write is a bit slower (you do two things at once), and a fresh cache starts empty.</p>
+
+  <div class="note" style="background:#f3f1ea;border-left:3px solid var(--muted);padding:0.9rem 1.1rem;border-radius:6px;font-size:0.9rem;">
+    <span class="callout-label" style="color:var(--muted)" data-ur="Do aur jinhein tum bas pehchan loge">Two more you'll just recognize</span>
+    <span data-ur="<strong>Write-behind</strong> — desk ab update karo, archive mein baad mein file karo (fast writes, par data khone ka risk agar file karne se pehle desk wipe ho jaaye). <strong>Refresh-ahead</strong> — andaza lagao ke tumhein kya chahiye hoga aur desk copy expire hone se thora pehle refresh kar do. Naam jaan lo; abhi ke liye itna kaafi hai."><strong>Write-behind</strong> — update the desk now, file to the archive later (fast writes, but risk losing data if the desk is wiped before filing). <strong>Refresh-ahead</strong> — predict what you'll need and refresh the desk copy just before it expires. Know the names; that's enough for now.</span>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django ka cache framework haath se <strong>cache-aside</strong> hi hai: <code>cache.get(key)</code> → miss par, ORM hit karo, phir <code>cache.set(key, value, timeout)</code>. Woh <code>timeout</code> (TTL) tumhara yeh kehna hai ke &quot;is desk copy ko N seconds baad stale hone do, phir dobara fetch karo.&quot; Tumne shayad koi mehnga queryset bilkul isi tarah wrap kiya hoga. Jo staleness tum <code>timeout</code> ke zariye accept karte ho, woh 2a wala consistency tradeoff hai, concrete shakl mein.">Django's cache framework is <strong>cache-aside</strong> by hand: <code>cache.get(key)</code> → on a miss, hit the ORM, then <code>cache.set(key, value, timeout)</code>. That <code>timeout</code> (TTL) is you saying "let this desk copy go stale after N seconds, then refetch." You've likely wrapped an expensive queryset in exactly this. The staleness you accept via <code>timeout</code> is the consistency tradeoff from 2a, made concrete.</span>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Mashhoor mushkil hissa">The famous hard part</span>
+    <span data-ur="&quot;Computer science mein sirf do hi mushkil cheezein hain: cache invalidation aur cheezon ke naam rakhna.&quot; Invalidation = yeh jaanna ke ek cache wali copy <em>kab</em> purani ho gayi aur use refresh karna. Iska koi muft jawab nahi — upar har strategy is par ek alag baazi hai ke tum ise kaise handle karte ho. Us tradeoff ka naam zor se lena, phir se, senior signal hai.">"There are only two hard things in computer science: cache invalidation and naming things." Invalidation = knowing <em>when</em> a cached copy is out of date and refreshing it. There's no free answer — every strategy above is a different bet on how you handle it. Naming that tradeoff out loud is, again, the senior signal.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tum ek slow report query ko Django ke cache mein 60-second timeout ke saath wrap karte ho. Ek colleague underlying data update karta hai; report ek minute tak purane numbers dikhati hai. Kya yeh ek bug hai?">You wrap a slow report query in Django's cache with a 60-second timeout. A colleague updates the underlying data; the report shows the old numbers for up to a minute. Is this a bug?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Nahi — yeh wohi staleness hai jo tumne timeout ke saath chuni thi">No — it's the staleness you chose with the timeout</button>
+      <button class="opt" data-correct="false" data-ur="Haan — caches ko hamesha current data dikhana chahiye">Yes — caches should always show current data</button>
+      <button class="opt" data-correct="false" data-ur="Haan — cache write par invalidate karne mein fail hui">Yes — the cache failed to invalidate on write</button>
+      <button class="opt" data-correct="false" data-ur="Nahi — iska matlab database inconsistent hai">No — this means the database is inconsistent</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumhein aisi cache chahiye jo <em>kabhi</em> stale na ho, aur tum thora slow writes se OK ho. Kaunsi strategy?">You need a cache that is <em>never</em> stale, and you're OK with slightly slower writes. Which strategy?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Cache-aside">Cache-aside</button>
+      <button class="opt" data-correct="true" data-ur="Write-through">Write-through</button>
+      <button class="opt" data-correct="false" data-ur="Write-behind">Write-behind</button>
+      <button class="opt" data-correct="false" data-ur="Bilkul cache hi nahi">No cache at all</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Cache hot data ki copies hain jo speed ke liye paas rakhi jaati hain — desk vs archive. <strong>Cache-aside</strong> (app ise lazily bharti hai) default hai; <strong>write-through</strong> (cache + DB ek saath update) write speed ko kabhi stale na hone ke badle deta hai. Hamesha rehne wali cost <strong>staleness / invalidation</strong> hai — wohi speed-vs-freshness tradeoff jo tumne pehle consistency mein dekha. Yeh thread aadha system design aapas mein baandh deta hai.">A cache is copies of hot data kept close for speed — desk vs archive. <strong>Cache-aside</strong> (app fills it lazily) is the default; <strong>write-through</strong> (update cache + DB together) trades write speed for never being stale. The eternal cost is <strong>staleness / invalidation</strong> — the same speed-vs-freshness tradeoff you first met in consistency. That thread ties half of system design together.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#cache&quot; target=&quot;_blank&quot;>System Design Primer — Cache</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. Saari update strategies diagrams ke saath.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#cache" target="_blank">System Design Primer — Cache</a><sup class="cite"><a href="#s1">1</a></sup>. All the update strategies with diagrams.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want a concrete Redis + Django cache-aside snippet? Or to reason through <em>what</em> to cache in a real feature you're building? Ask — applying it to your own code is what makes it stick.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 4 (caching).</strong> Ties back to <a href="0002-consistency-and-availability.html">consistency (2a)</a> — staleness is the same tradeoff. Next: your call — deeper into system design, or into Django/database depth (see chat).</p>
+    <p>📑 New terms (cache, cache hit/miss, cache-aside, write-through, invalidation, TTL) are in the <a href="../reference/glossary.html">Glossary</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#cache" target="_blank">The System Design Primer — Cache</a>, Donne Martin.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Right. A 60s timeout literally says 'a stale copy for up to 60s is acceptable.' That's a deliberate tradeoff, not a bug — though if you need fresher data, shorten the timeout or invalidate on write."
+            : "Reconsider. You explicitly set a 60s timeout — that's you choosing to accept up to 60s of staleness for speed. It's the intended behavior, the classic cache tradeoff.",
+          q2: correct
+            ? "Yes. Write-through updates cache and database together, so the cache is never stale — at the cost of slightly slower writes."
+            : "Reconsider. Cache-aside and write-behind both allow staleness; no cache loses the speed. 'Never stale, slower writes OK' = write-through."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DVA-C02 Practice Exam 7</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=7">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=7">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>Practice Exam 7</h1>
+      <p class="sub">AWS Certified Developer – Associate (DVA-C02) · full-length mock · harder — limits and edge cases</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>65</b><span>questions</span></div>
+        <div class="exam-fact"><b>130</b><span>minutes</span></div>
+        <div class="exam-fact"><b>720</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~47</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start exam</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../exams.html">Back to all exams</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">130:00</span></div>
+      <div class="meta">Practice Exam 7</div>
+      <div class="meta" id="answered-count">0 / 65 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit exam</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"exam-07","title":"Practice Exam 7","minutes":130};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function invoked asynchronously by Amazon SNS fails on every attempt. The team configured both a dead-letter queue and an on-failure destination. Where does the failed event go?",
+  "options": [
+   "To the dead-letter queue only",
+   "To the on-failure destination, which takes precedence over the dead-letter queue",
+   "To both simultaneously",
+   "The event is discarded because the configuration conflicts"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "When both are configured, Lambda uses the on-failure destination and ignores the dead-letter queue. Destinations are the newer mechanism and carry richer context including the request and response payloads, whereas a DLQ receives only the original event body. Nothing is discarded and both are never used together."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A DynamoDB table in provisioned mode has 100 WCU. An application writes items of 3.5 KB. How many items per second can it write before throttling?",
+  "options": [
+   "Approximately 100",
+   "Approximately 25",
+   "Approximately 350",
+   "Approximately 50"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "One WCU covers a write of up to 1 KB, and DynamoDB rounds up, so a 3.5 KB item consumes 4 WCU. With 100 WCU available that supports 100 divided by 4, which is 25 items per second. Assuming 100 items ignores rounding and item size entirely."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application performs eventually consistent reads of 10 KB items from DynamoDB. How many RCU does a single such read consume?",
+  "options": [
+   "3",
+   "1.5",
+   "10",
+   "0.5"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "One RCU provides one strongly consistent read of up to 4 KB, so a 10 KB item rounds up to 12 KB, requiring 3 RCU strongly consistent. Eventually consistent reads cost half, giving 1.5 RCU. Answering 3 forgets the eventual-consistency halving."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A team sets a Lambda function's SQS event source batch size to 10 and the visibility timeout to 30 seconds. The function takes 25 seconds per message. What problem is MOST likely?",
+  "options": [
+   "No problem; the settings are correct",
+   "The batch of 10 takes about 250 seconds, far exceeding the 30-second visibility timeout, so messages are redelivered and processed repeatedly",
+   "The batch size exceeds the SQS maximum",
+   "The visibility timeout is above the allowed maximum"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Visibility timeout must cover processing of the whole batch, not one message. Ten messages at 25 seconds each is roughly 250 seconds, so the timeout expires long before completion and every message is redelivered. AWS recommends a visibility timeout of at least six times the function timeout. Batch size 10 is valid and 30 seconds is well under the 12-hour maximum."
+ },
+ {
+  "id": 5,
+  "domain": 1,
+  "multi": true,
+  "scenario": "Which TWO conditions would make AWS Lambda unsuitable and require AWS Fargate instead?",
+  "options": [
+   "The workload runs for 40 minutes per execution",
+   "The workload requires 20 GB of memory",
+   "The workload is triggered by an S3 event",
+   "The workload processes JSON payloads of 2 MB",
+   "The workload must scale to 500 concurrent executions"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Lambda's hard limits are 15 minutes of execution and 10,240 MB of memory, so a 40-minute runtime or a 20 GB memory requirement rules it out. S3 event triggers are natively supported, a 2 MB payload is within the 6 MB synchronous limit, and 500 concurrent executions is comfortably below the default 1,000 concurrency limit."
+ },
+ {
+  "id": 6,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An API Gateway REST API must accept a 15 MB file upload. What is the correct approach?",
+  "options": [
+   "Increase the API Gateway payload limit to 15 MB",
+   "Have the client upload directly to S3 using a presigned URL obtained from the API",
+   "Compress the payload to under 10 MB",
+   "Use a Lambda proxy integration with more memory"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "API Gateway enforces a hard 10 MB payload limit that cannot be raised, so a 15 MB upload must bypass it. The standard pattern has the API issue a presigned S3 URL and the client upload directly to S3, which also removes the API from the data path entirely. Compression is unreliable for arbitrary files, and Lambda memory is irrelevant to the gateway limit."
+ },
+ {
+  "id": 7,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Kinesis data stream has 4 shards. Producers send 6 MB per second in total, spread evenly. What is the MOST likely outcome?",
+  "options": [
+   "All records are accepted because the stream supports 6 MB per second",
+   "Records are throttled because the stream supports only 4 MB per second of ingest",
+   "Records are throttled because of the consumer read limit",
+   "Kinesis automatically adds shards"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Each shard ingests up to 1 MB per second, so 4 shards support 4 MB per second and a 6 MB per second producer rate causes ProvisionedThroughputExceededException. The fix is to add shards or use on-demand mode. The 2 MB per second figure applies to reads, and a provisioned stream does not scale shards automatically."
+ },
+ {
+  "id": 8,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function must write 300 MB of intermediate data to disk during processing. The function is configured with 512 MB memory and default settings. What happens?",
+  "options": [
+   "The write succeeds because /tmp defaults to 512 MB",
+   "The write fails because /tmp is not writable",
+   "The write succeeds only if memory is increased",
+   "The write fails because /tmp defaults to 10 MB"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Lambda provides a writable /tmp directory that defaults to 512 MB and can be configured up to 10,240 MB, so 300 MB fits within the default. Ephemeral storage is configured independently of memory, and /tmp is always writable."
+ },
+ {
+  "id": 9,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An SQS FIFO queue is used with a single MessageGroupId for all messages. Throughput is far lower than expected. Why?",
+  "options": [
+   "FIFO queues have a hard limit of 300 messages per second regardless of grouping",
+   "Ordering is enforced within a message group, so a single group serialises all processing",
+   "The visibility timeout is too short",
+   "Long polling is disabled"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "FIFO ordering applies per message group, and messages within a group are processed strictly in sequence, so one group means no parallelism at all. Using many groups — for example one per customer — preserves per-entity ordering while allowing concurrent processing. The 300 per second figure is a per-queue API limit rather than the cause of serialisation here."
+ },
+ {
+  "id": 10,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A developer configures a Lambda function with 128 MB of memory. The function makes many parallel HTTPS calls and runs slowly. Increasing memory to 1,769 MB improves it dramatically. What explains this?",
+  "options": [
+   "Lambda allocates CPU proportionally to memory; 1,769 MB provides one full vCPU",
+   "More memory increases the network bandwidth limit only",
+   "More memory disables cold starts",
+   "More memory increases the timeout"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Lambda ties CPU allocation to configured memory, and at 1,769 MB a function receives the equivalent of one full vCPU. Below that it gets a fraction of a core, so CPU-bound work such as TLS handshakes and JSON parsing across many parallel calls runs slowly. Memory does not change timeouts or eliminate cold starts."
+ },
+ {
+  "id": 11,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must store 50,000 configuration values that are read at startup by hundreds of instances. Which approach is MOST cost-effective and scalable?",
+  "options": [
+   "One Secrets Manager secret per value",
+   "Parameter Store standard parameters, cached in the application at startup",
+   "A DynamoDB item per value read on every request",
+   "Environment variables on each instance"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Parameter Store standard parameters are free and suit non-secret configuration, and caching at startup avoids repeated API calls at scale. Secrets Manager charges per secret per month, which for 50,000 values is substantial and only justified when rotation is required. Reading DynamoDB on every request adds cost and latency, and environment variables cap at 4 KB in Lambda and are painful to update fleet-wide."
+ },
+ {
+  "id": 12,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A DynamoDB table has a GSI whose provisioned write capacity is exhausted while the base table has spare capacity. What is the consequence?",
+  "options": [
+   "Only reads from the GSI are throttled",
+   "Writes to the base table are throttled because the GSI cannot keep up",
+   "Nothing; the GSI updates later",
+   "The GSI is automatically deleted"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "When a GSI cannot absorb its share of writes, back-pressure throttles writes to the base table itself — a frequently overlooked failure mode. GSIs must therefore be provisioned for their own write load, and index capacity should be monitored separately from the table."
+ },
+ {
+  "id": 13,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function invoked synchronously returns a 6.5 MB response. What happens?",
+  "options": [
+   "The response is returned successfully",
+   "The invocation fails because the synchronous response payload limit is 6 MB",
+   "The response is truncated to 6 MB",
+   "The response is automatically stored in S3"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Synchronous invocation payloads are limited to 6 MB for both request and response, so a 6.5 MB response causes an error rather than truncation. Large responses must be written to S3 with a presigned URL returned, or delivered using response streaming, which supports up to 200 MB."
+ },
+ {
+  "id": 14,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application uses BatchWriteItem to write 25 items. The response contains UnprocessedItems. What must the application do?",
+  "options": [
+   "Treat the call as failed and start over",
+   "Retry the unprocessed items with exponential backoff",
+   "Ignore them because DynamoDB retries automatically",
+   "Switch to TransactWriteItems"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "BatchWriteItem is not atomic: some items may succeed while others are returned in UnprocessedItems, usually due to throttling. The application must retry just those items with exponential backoff. Restarting the whole batch duplicates successful writes, DynamoDB does not retry them for you, and transactions have different semantics and cost."
+ },
+ {
+  "id": 15,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A developer sets a Lambda function's timeout to 900 seconds and integrates it with API Gateway. Requests fail after 29 seconds. What is the correct conclusion?",
+  "options": [
+   "The Lambda timeout must be lowered to 29 seconds to match",
+   "API Gateway's integration timeout of 29 seconds is a hard limit; the work must become asynchronous",
+   "API Gateway should be replaced with an Application Load Balancer, which has no timeout",
+   "The function needs more memory"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "The 29-second API Gateway integration timeout cannot be raised, so any synchronous request exceeding it fails regardless of the Lambda timeout. The fix is to return 202 immediately and process asynchronously. Lowering the Lambda timeout changes nothing for the client, and an ALB has its own configurable idle timeout but still requires the work to finish within it."
+ },
+ {
+  "id": 16,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which statement about S3 strong consistency is correct?",
+  "options": [
+   "S3 provides strong read-after-write consistency for PUTs and DELETEs of objects",
+   "S3 is eventually consistent for all operations",
+   "Strong consistency requires enabling a bucket setting",
+   "Strong consistency applies only to versioned buckets"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Since December 2020 S3 has provided strong read-after-write consistency for all object PUT and DELETE operations automatically, with no configuration and no additional cost. Older material describing eventual consistency for overwrites is out of date, and the guarantee applies to versioned and unversioned buckets alike."
+ },
+ {
+  "id": 17,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An application must process events in strict order with at-most-once semantics and cannot tolerate duplicates. Which combination is MOST appropriate?",
+  "options": [
+   "SQS FIFO with deduplication and an idempotent consumer",
+   "SQS standard with a large visibility timeout",
+   "SNS with multiple subscribers",
+   "Kinesis with a random partition key"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "FIFO queues provide ordering and five-minute deduplication, but because no distributed system can guarantee at-most-once delivery end to end, the consumer must also be idempotent. Standard queues offer neither ordering nor deduplication, SNS provides no ordering, and a random Kinesis partition key destroys ordering entirely."
+ },
+ {
+  "id": 18,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A Lambda function attached to a VPC scales to 400 concurrent executions and begins failing with network errors. What is the MOST likely cause?",
+  "options": [
+   "Insufficient IP addresses in the configured subnets for the required elastic network interfaces",
+   "The function timeout is too low",
+   "The execution role lacks S3 permissions",
+   "The memory allocation is too high"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "VPC-attached Lambda functions consume elastic network interfaces and subnet IP addresses as they scale, so undersized subnets exhaust available addresses and invocations fail with network errors. The fix is larger subnets or additional subnets across availability zones. Timeouts, unrelated permissions and memory do not exhaust IPs."
+ },
+ {
+  "id": 19,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Which DynamoDB design supports querying orders both by customer and by status efficiently, with minimal cost?",
+  "options": [
+   "A Scan with two different FilterExpressions",
+   "A base table keyed on customer plus a GSI keyed on status",
+   "Two separate tables kept in sync by the application",
+   "A single table with a very large item containing all orders"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Each access pattern needs a key that supports it, so a base table keyed on customer serves one pattern and a GSI keyed on status serves the other, both as efficient Queries. Scans read the entire table for every request, manually synchronised duplicate tables risk divergence, and a single giant item would breach the 400 KB limit."
+ },
+ {
+  "id": 20,
+  "domain": 1,
+  "multi": false,
+  "scenario": "An EventBridge rule targets a Lambda function. The function is failing and events appear to be lost. What should be configured to retain them?",
+  "options": [
+   "A dead-letter queue on the EventBridge target",
+   "A longer Lambda timeout",
+   "A second rule with the same pattern",
+   "S3 versioning"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "EventBridge targets support their own dead-letter queue and retry policy, so events that cannot be delivered after retries are preserved for inspection and replay rather than dropped. Longer timeouts do not prevent loss, a duplicate rule would simply fail twice, and S3 versioning is unrelated to event delivery."
+ },
+ {
+  "id": 21,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A developer must choose between Step Functions Standard and Express workflows for a workflow that runs 100,000 times per hour and completes in 10 seconds. Which is MOST appropriate and why?",
+  "options": [
+   "Standard, because it supports long durations",
+   "Express, because it is optimised for high-volume short-duration workloads and costs far less at that rate",
+   "Standard, because Express does not support Lambda",
+   "Express, because it supports one-year executions"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Express workflows are designed for high-volume event processing up to five minutes and are priced by requests and duration, making them dramatically cheaper at 100,000 executions per hour. Standard workflows are priced per state transition, which becomes expensive at that volume, and their one-year duration limit is unnecessary for a 10-second workflow. Both support Lambda."
+ },
+ {
+  "id": 22,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An IAM policy grants s3:GetObject on arn:aws:s3:::my-bucket. A user calls GetObject on an object in that bucket and receives AccessDenied. Why?",
+  "options": [
+   "The bucket does not exist",
+   "Object-level actions require an object ARN such as arn:aws:s3:::my-bucket/*",
+   "GetObject requires MFA",
+   "The policy needs an explicit Deny removed"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "The bare bucket ARN covers bucket-level operations such as ListBucket, while object operations need the object path, so my-bucket/* is required for GetObject. This bucket-versus-object ARN distinction is one of the most common IAM mistakes. Nothing in the scenario indicates MFA requirements or an explicit deny."
+ },
+ {
+  "id": 23,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A KMS customer managed key in Account A must be usable by a role in Account B. Which TWO-part configuration is required?",
+  "options": [
+   "The key policy in Account A must allow the Account B principal, and Account B's identity policy must allow the KMS actions",
+   "Only the key policy in Account A",
+   "Only the identity policy in Account B",
+   "The key must be copied to Account B"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Cross-account KMS access requires both sides to allow it: the key policy grants the external principal, and that principal's identity policy in its own account permits the KMS actions. Either alone results in AccessDenied, and KMS keys are regional resources that cannot be copied between accounts."
+ },
+ {
+  "id": 24,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An application must call kms:Decrypt on data encrypted with a specific encryption context. What happens if the decrypt call omits that context?",
+  "options": [
+   "Decryption succeeds because context is optional",
+   "Decryption fails because the encryption context is authenticated additional data that must match exactly",
+   "The context is ignored for symmetric keys",
+   "KMS returns the context in the response"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Encryption context is authenticated additional data bound to the ciphertext, so decryption requires exactly the same key-value pairs. This lets policies constrain decryption to a particular context and provides useful CloudTrail detail. A mismatch or omission causes the decrypt to fail."
+ },
+ {
+  "id": 25,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A Cognito user pool app client is configured for a public mobile application. Which configuration is correct?",
+  "options": [
+   "Do not use a client secret, and use the authorization code grant with PKCE",
+   "Embed the client secret in the mobile app",
+   "Use the implicit grant with a client secret",
+   "Use AWS access keys in the app"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Public clients cannot keep a secret because anyone can decompile the application, so no client secret should be configured and PKCE protects the authorization code exchange. Embedding a secret exposes it, the implicit grant is discouraged for security reasons, and AWS access keys must never ship in client applications."
+ },
+ {
+  "id": 26,
+  "domain": 2,
+  "multi": true,
+  "scenario": "Which TWO statements about S3 presigned URLs are correct?",
+  "options": [
+   "The URL inherits the permissions of the identity that signed it",
+   "The URL stops working if the signing credentials expire before the stated expiration",
+   "A presigned URL grants permanent access to the object",
+   "Anyone with the URL can use it until it expires",
+   "Presigned URLs require the bucket to be public"
+  ],
+  "correct": [
+   1,
+   3
+  ],
+  "explain": "A presigned URL is a bearer credential: anyone holding it can perform the operation until expiry, so it must be treated as a secret. It also stops working if the credentials used to sign it expire first, which commonly surprises developers signing with short-lived role credentials. The URL grants only the specific signed operation, never permanent access, and the bucket stays private."
+ },
+ {
+  "id": 27,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A developer must prevent an IAM role from being used outside a specific VPC endpoint. Which condition key achieves this?",
+  "options": [
+   "aws:SourceVpce",
+   "aws:SourceIp",
+   "aws:UserAgent",
+   "aws:RequestedRegion"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "aws:SourceVpce matches the VPC endpoint ID through which a request arrived, so a policy can require access to originate from a specific endpoint. Source IP is unreliable for managed services, user agent is client-supplied and trivially spoofed, and requested region constrains geography rather than network path."
+ },
+ {
+  "id": 28,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An application receives an AccessDenied error when calling sts:AssumeRole, even though the identity policy allows it. What else must be checked?",
+  "options": [
+   "The target role's trust policy must name the calling principal",
+   "The region of the STS endpoint",
+   "The MFA device serial number",
+   "The role's maximum session duration"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Assuming a role requires the role's trust policy to name the caller as a trusted principal — that policy is the resource-based side of the check. Without it the call is denied regardless of identity permissions. STS is global with regional endpoints, and session duration limits how long credentials last rather than whether assumption succeeds."
+ },
+ {
+  "id": 29,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which approach correctly protects an API against replay attacks where a valid signed request is captured and resent?",
+  "options": [
+   "Include a timestamp and nonce in the signed request and reject stale or repeated values server-side",
+   "Use HTTPS only",
+   "Rotate the API key monthly",
+   "Increase the token expiry"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Replay protection requires the server to detect that a previously seen request is being resent, which a signed timestamp plus a recorded nonce achieves by rejecting stale or duplicate requests. HTTPS prevents interception but not replay by someone who already captured a request, infrequent key rotation leaves a long window, and longer expiry makes replay easier."
+ },
+ {
+  "id": 30,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A Lambda function's execution role has AdministratorAccess for convenience during development. What is the MOST significant risk in production?",
+  "options": [
+   "The function will run more slowly",
+   "A code vulnerability or dependency compromise could be used to control the entire AWS account",
+   "Environment variables will not encrypt",
+   "CloudWatch logs will be disabled"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "An over-permissioned execution role means any code execution vulnerability or malicious dependency inherits full account control, turning a contained bug into a total compromise. Least privilege limits that blast radius. Permissions do not affect execution speed, encryption behaviour or logging."
+ },
+ {
+  "id": 31,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about AWS Secrets Manager rotation for a database credential is correct?",
+  "options": [
+   "A rotation Lambda function updates both the secret and the database, and applications must fetch the current value at runtime",
+   "Rotation only updates the stored secret, not the database",
+   "Rotation requires redeploying all applications",
+   "Rotation is only available for DynamoDB"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The rotation function changes the credential in the database and stores the new value in Secrets Manager, keeping them synchronised. Applications that retrieve the secret at runtime pick up the change with no redeployment, which is why caching values at build time defeats rotation. Rotation supports RDS, Redshift, DocumentDB and custom targets."
+ },
+ {
+  "id": 32,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An S3 bucket policy allows access from a specific VPC endpoint. A user with valid IAM permissions accesses the bucket over the internet and is denied. Why?",
+  "options": [
+   "The bucket policy condition restricts access to requests arriving through that endpoint",
+   "IAM permissions were revoked",
+   "S3 requires MFA for all access",
+   "The object is encrypted"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A bucket policy condition on aws:SourceVpce denies requests that do not arrive through the named endpoint, and because an explicit deny overrides identity permissions, valid IAM access is not sufficient. Encryption and MFA are unrelated to this network-path restriction."
+ },
+ {
+  "id": 33,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which is the correct interpretation of an IAM policy with Effect Allow, Action s3:*, Resource *, attached to a role that also has a permission boundary allowing only s3:GetObject?",
+  "options": [
+   "The role can perform all S3 actions",
+   "The role can perform only s3:GetObject, because effective permissions are the intersection",
+   "The boundary is ignored",
+   "The role can perform all actions except GetObject"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Effective permissions are the intersection of the identity policy and the permission boundary, so an action must be allowed by both. Here only s3:GetObject satisfies that, and the broad identity policy is capped. Boundaries are never ignored and never grant permissions themselves."
+ },
+ {
+  "id": 34,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A developer must ensure that objects uploaded to S3 through a presigned URL are encrypted with a specific KMS key. What is required?",
+  "options": [
+   "Include the encryption headers in the signature when generating the URL, and the client must send matching headers",
+   "Encryption cannot be enforced on presigned uploads",
+   "Only bucket default encryption applies",
+   "The client must call KMS directly first"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Encryption headers can be included in the presigned signature, and the client must send exactly matching headers or the request fails, which enforces the required key. A bucket policy denying uploads without the correct header adds defence in depth. Default bucket encryption alone would not reject an explicit different choice."
+ },
+ {
+  "id": 35,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which practice correctly handles a JWT in a single-page web application?",
+  "options": [
+   "Store it in memory or a secure httpOnly cookie, validate signature and claims server-side, and keep lifetimes short",
+   "Store it in localStorage indefinitely",
+   "Send it as a URL query parameter",
+   "Decode it client-side and trust the claims without verification"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Keeping tokens out of persistent client storage limits exposure to cross-site scripting, server-side validation of signature and claims is what actually establishes trust, and short lifetimes limit the damage of a leak. Indefinite localStorage is a common XSS target, URL parameters leak into logs and referrers, and client-side claims are trivially forged."
+ },
+ {
+  "id": 36,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An organisation must ensure that no S3 bucket in any account can be made public, regardless of individual bucket policies. What should be used?",
+  "options": [
+   "A service control policy in AWS Organizations combined with account-level Block Public Access",
+   "A bucket policy on each bucket",
+   "An IAM group policy",
+   "CloudTrail alerts"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A service control policy sets an organisation-wide permission ceiling that even account administrators cannot exceed, and account-level Block Public Access enforces it at the S3 layer. Per-bucket policies must be applied and maintained individually, IAM group policies apply only to specific principals, and CloudTrail alerts detect after the fact rather than preventing."
+ },
+ {
+  "id": 37,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Which statement about encrypting data in transit to Amazon API Gateway is correct?",
+  "options": [
+   "API Gateway endpoints are HTTPS only; plain HTTP is not supported",
+   "HTTP is supported but discouraged",
+   "Encryption in transit requires a custom domain",
+   "Only regional endpoints support TLS"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "API Gateway serves only HTTPS endpoints, so transport encryption is mandatory rather than optional and cannot be disabled. Custom domains allow your own certificate and TLS policy but are not required for encryption, and all endpoint types use TLS."
+ },
+ {
+  "id": 38,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A developer discovers that an application logs the full Authorization header on errors. What is the correct remediation priority?",
+  "options": [
+   "Stop logging the header immediately, then rotate any credentials that may have been captured and review who accessed the logs",
+   "Encrypt the log group and leave the logging in place",
+   "Reduce log retention to seven days",
+   "Move the logs to S3"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Credentials in logs must be treated as compromised, so the fix is to stop the leak, rotate anything exposed, and audit who read the logs. Encryption at rest does not hide values from authorised log readers, and shortening retention or relocating logs leaves the exposed credentials valid."
+ },
+ {
+  "id": 39,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A CloudFormation stack is in UPDATE_ROLLBACK_FAILED state. What is the correct next step?",
+  "options": [
+   "Use ContinueUpdateRollback, optionally skipping the resources that cannot roll back, then fix them manually",
+   "Delete the stack immediately",
+   "Create a new stack with the same resources",
+   "Disable rollback and retry the update"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "UPDATE_ROLLBACK_FAILED means CloudFormation could not revert some resources, and ContinueUpdateRollback — optionally skipping the blocking resources — is the supported recovery path before reconciling them manually. Deleting or duplicating the stack risks data loss and duplicate resources, and no further update can proceed from this state."
+ },
+ {
+  "id": 40,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A CodeDeploy Lambda deployment uses LambdaLinear10PercentEvery1Minute. How long until 100 percent of traffic is on the new version, assuming no alarms fire?",
+  "options": [
+   "1 minute",
+   "About 10 minutes",
+   "About 100 minutes",
+   "Immediately"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Shifting 10 percent every minute takes roughly ten increments, so full traffic arrives after about ten minutes. This gradual approach gives alarms time to detect regressions before all users are affected, which is the trade-off against an immediate all-at-once shift."
+ },
+ {
+  "id": 41,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about CloudFormation Fn::ImportValue is correct?",
+  "options": [
+   "A stack that exports a value cannot be deleted while another stack imports it",
+   "Imported values update automatically when the exporting stack changes them",
+   "Exports are global across all regions",
+   "Imports work across AWS accounts by default"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CloudFormation blocks deletion or modification of an export while another stack imports it, which protects consumers but also creates tight coupling. Exported values cannot be changed while in use, exports are scoped to a single region, and cross-account imports are not supported."
+ },
+ {
+  "id": 42,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A SAM application deploys successfully but the API returns 500 errors. CloudWatch shows the function was never invoked. What should be checked FIRST?",
+  "options": [
+   "The API Gateway integration and the Lambda resource-based policy granting apigateway.amazonaws.com permission to invoke",
+   "The function's memory allocation",
+   "The S3 bucket policy",
+   "The DynamoDB table capacity"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "If the function was never invoked, the failure is between API Gateway and Lambda — typically a missing invoke permission or a misconfigured integration. SAM normally creates that permission automatically, so manual changes are a common cause. Memory, unrelated bucket policies and table capacity would all manifest only after invocation."
+ },
+ {
+  "id": 43,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which approach ensures a CodeBuild project can access a private VPC resource such as an RDS database during integration tests?",
+  "options": [
+   "Configure the CodeBuild project with VPC settings including subnets and a security group",
+   "Make the database publicly accessible",
+   "Run tests only in production",
+   "Use a NAT gateway without VPC configuration"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CodeBuild can run its build containers inside your VPC when configured with subnets and a security group, giving access to private resources. Exposing the database publicly is a serious security regression, testing only in production is unacceptable, and a NAT gateway alone does not place the build inside the VPC."
+ },
+ {
+  "id": 44,
+  "domain": 3,
+  "multi": false,
+  "scenario": "An ECS task definition specifies 512 CPU units and 1024 MB memory on Fargate. The container needs 2 GB during peak. What happens?",
+  "options": [
+   "Fargate automatically grants more memory",
+   "The container is terminated when it exceeds its memory limit, typically with an OOM error",
+   "The task runs slower but continues",
+   "The task is migrated to EC2"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Fargate enforces the task's memory allocation strictly, and a container exceeding it is killed with an out-of-memory error, visible in the task's stopped reason. Task sizes must be raised deliberately in the definition; there is no automatic expansion, graceful degradation or migration."
+ },
+ {
+  "id": 45,
+  "domain": 3,
+  "multi": true,
+  "scenario": "Which TWO are required for a blue/green CodeDeploy deployment to Amazon ECS?",
+  "options": [
+   "An Application Load Balancer with two target groups",
+   "A CodeDeploy application and deployment group configured for ECS",
+   "An EC2 Auto Scaling group",
+   "A DynamoDB table for state",
+   "An SQS queue"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "ECS blue/green requires a load balancer with two target groups so traffic can be shifted between the current and replacement task sets, plus a CodeDeploy application and deployment group that orchestrate the shift and rollback. Auto Scaling groups belong to EC2 deployments, and DynamoDB and SQS play no part in the mechanism."
+ },
+ {
+  "id": 46,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which is the effect of setting UpdateReplacePolicy: Retain on a CloudFormation resource?",
+  "options": [
+   "If an update requires replacement, the original resource is kept rather than deleted",
+   "The resource can never be updated",
+   "The resource is deleted when the stack is deleted",
+   "Updates are skipped entirely"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "UpdateReplacePolicy: Retain preserves the original resource when an update forces replacement, which protects data on stateful resources — though the retained resource then falls outside stack management. DeletionPolicy governs stack deletion separately, and neither prevents updates from occurring."
+ },
+ {
+  "id": 47,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A pipeline must deploy to production only during a maintenance window. What is the MOST reliable approach in CodePipeline?",
+  "options": [
+   "Add a manual approval action, or trigger the pipeline on a schedule that matches the window",
+   "Ask developers to remember to deploy at the right time",
+   "Disable the pipeline permanently",
+   "Reduce the build timeout"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A manual approval gates the production stage until someone releases it, and a scheduled trigger starts the pipeline only within the window — both are enforced by the system rather than by memory. Relying on people is unreliable, disabling the pipeline blocks all deployments, and build timeouts are unrelated."
+ },
+ {
+  "id": 48,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about Elastic Beanstalk immutable deployments is correct?",
+  "options": [
+   "A temporary Auto Scaling group is created with new instances, doubling capacity during the deployment",
+   "Existing instances are updated in place",
+   "Capacity is halved during deployment",
+   "It is the fastest deployment policy"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Immutable deployments launch a full parallel set of instances in a temporary Auto Scaling group, so capacity temporarily doubles and cost rises, but the original instances remain untouched if anything fails. That safety is the trade-off against speed — all at once is the fastest policy."
+ },
+ {
+  "id": 49,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A team must ensure that a Lambda function deployed via SAM always uses the same dependency versions across environments. What should be done?",
+  "options": [
+   "Commit a lockfile and build in a reproducible container image, for example with sam build --use-container",
+   "Install the latest dependencies at deploy time",
+   "Rely on the runtime's bundled libraries",
+   "Use different dependency versions per environment"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A lockfile pins exact versions and building inside a container matching the Lambda runtime produces consistent native binaries, so the same artifact behaves identically everywhere. Installing latest at deploy time introduces drift, runtime-bundled libraries change between runtime versions, and deliberately differing versions guarantees environment-specific bugs."
+ },
+ {
+  "id": 50,
+  "domain": 3,
+  "multi": false,
+  "scenario": "What is the consequence of deploying an API Gateway stage without creating a new deployment after changing a method?",
+  "options": [
+   "The change is not live; the stage continues serving the previously deployed configuration",
+   "The change is live immediately",
+   "The API returns 500 errors",
+   "The stage is deleted"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "API Gateway separates configuration from release, so edits remain staged until a deployment is created and associated with a stage. Forgetting this step is a common cause of confusion when a change appears to have no effect."
+ },
+ {
+  "id": 51,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which approach BEST prevents a failed database migration from blocking a rollback?",
+  "options": [
+   "Deploy schema changes that are backward compatible, then remove old columns in a later release",
+   "Deploy schema and code changes together and drop old columns immediately",
+   "Avoid version control for migrations",
+   "Run migrations manually in production"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Expand-then-contract keeps the schema compatible with both the old and new code, so rolling back code never requires rolling back the database. Dropping columns in the same release makes the previous version unable to run, unversioned migrations lose reproducibility, and manual production changes cause drift and human error."
+ },
+ {
+  "id": 52,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Which statement about CodePipeline artifact encryption is correct?",
+  "options": [
+   "Artifacts in the S3 artifact store are encrypted, and a customer managed KMS key can be used for cross-account pipelines",
+   "Artifacts are never encrypted",
+   "Encryption prevents cross-account access entirely",
+   "Artifacts are stored in DynamoDB"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CodePipeline encrypts artifacts in its S3 bucket, and specifying a customer managed KMS key is required for cross-account pipelines so the other account can be granted decrypt permission. Encryption does not prevent cross-account access when the key policy allows it, and artifacts are stored in S3 rather than DynamoDB."
+ },
+ {
+  "id": 53,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A developer notices that every pipeline execution rebuilds all dependencies, making builds slow. What is the MOST effective fix?",
+  "options": [
+   "Enable CodeBuild caching for the dependency directories",
+   "Increase the build timeout",
+   "Use a smaller compute type",
+   "Disable the test phase"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CodeBuild caching stores specified paths such as node_modules or a package manager cache between builds, so dependencies are restored rather than re-downloaded. Longer timeouts merely tolerate slow builds, a smaller compute type makes them slower, and disabling tests trades correctness for speed."
+ },
+ {
+  "id": 54,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An application's X-Ray traces show a 2-second gap between the end of one subsegment and the start of the next, with no recorded activity. What is the MOST likely explanation?",
+  "options": [
+   "Uninstrumented code is running during that period",
+   "The trace is corrupted",
+   "X-Ray sampling dropped the data",
+   "The clock is wrong"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Gaps between subsegments represent time spent in code that has not been instrumented, such as heavy computation, serialisation or a third-party library without tracing. Adding custom subsegments around suspect blocks reveals what is happening. Sampling excludes whole traces rather than sections, and corruption or clock skew would show as malformed timings."
+ },
+ {
+  "id": 55,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A Lambda function shows Init Duration of 3 seconds in its logs on some invocations and none on others. What does this indicate?",
+  "options": [
+   "Cold starts occur on invocations where a new execution environment is created",
+   "The function is throttled",
+   "The IAM role is slow",
+   "The memory is insufficient"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Init Duration appears only when a new execution environment is initialised, so its presence marks a cold start and its absence a warm invocation. A 3-second init suggests heavy initialisation code or large dependencies, addressed by trimming the package, moving work out of init, or using provisioned concurrency."
+ },
+ {
+  "id": 56,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An SQS queue's ApproximateAgeOfOldestMessage is growing steadily while ApproximateNumberOfMessagesVisible stays constant. What does this suggest?",
+  "options": [
+   "A poison message that repeatedly fails and returns to the queue, blocking progress",
+   "The queue is empty",
+   "Producers have stopped",
+   "The consumers are over-provisioned"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A stable visible count with an ever-increasing oldest-message age indicates the same messages cycling through failed processing and returning after the visibility timeout. Configuring a redrive policy to a dead-letter queue isolates them so the rest of the queue drains. An empty queue or stopped producers would show a falling count."
+ },
+ {
+  "id": 57,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which action MOST directly reduces the cost of a DynamoDB table that is provisioned for peak but idle most of the day?",
+  "options": [
+   "Switch to on-demand capacity mode, or enable auto scaling with a low minimum",
+   "Add a global secondary index",
+   "Enable strongly consistent reads",
+   "Increase the item size"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Paying for peak capacity around the clock is wasteful when the table is mostly idle, so on-demand billing per request or auto scaling with a low minimum aligns cost with actual usage. Extra indexes add cost, strongly consistent reads double read cost, and larger items consume more capacity."
+ },
+ {
+  "id": 58,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An application's CloudWatch dashboard shows Lambda Duration at the p50 of 100 ms and p99 of 8 seconds, with Init Duration present on the slow invocations. What is the correct conclusion?",
+  "options": [
+   "Cold starts are driving tail latency, and provisioned concurrency or lighter initialisation would help",
+   "All invocations are slow",
+   "The function is throttled",
+   "The memory is too high"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Fast typical invocations with a slow tail that coincides with Init Duration is the signature of cold starts. Provisioned concurrency eliminates them for a predictable baseline, and reducing initialisation work shortens them generally. Throttling would appear in the Throttles metric, and excess memory does not slow execution."
+ },
+ {
+  "id": 59,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which is the MOST reliable way to detect that a scheduled job silently stopped running?",
+  "options": [
+   "A CloudWatch alarm configured to treat missing data as breaching on a heartbeat metric the job emits",
+   "Checking logs manually each week",
+   "An alarm on error count only",
+   "Increasing log retention"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A job that stops running produces no errors at all, so error-based alarms stay silent. Emitting a heartbeat metric on each successful run and alarming when data is missing detects absence directly. Manual checks are slow and unreliable, and retention changes what is stored rather than what is noticed."
+ },
+ {
+  "id": 60,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A developer must reduce the latency of a globally distributed API that performs writes to a single region. Which approach helps MOST for the write path?",
+  "options": [
+   "Use CloudFront with an origin in that region to optimise the network path, accepting that writes remain regional",
+   "Cache the writes at the edge",
+   "Use a read replica for writes",
+   "Increase the API Gateway timeout"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Writes must reach the authoritative region, so the realistic improvement is optimising the network path — CloudFront terminates TLS at the edge and forwards over the AWS backbone, cutting round-trip overhead. Writes cannot be cached at the edge without losing correctness, read replicas do not accept writes, and timeouts do not reduce latency."
+ },
+ {
+  "id": 61,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which CloudWatch Logs Insights query pattern counts errors grouped by a structured field?",
+  "options": [
+   "filter level = 'ERROR' | stats count() by errorType",
+   "A metric filter with a numeric threshold",
+   "An alarm on the log group",
+   "A subscription filter to Lambda"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Logs Insights supports filtering and aggregation, so filtering on a level field and using stats count() by a field produces exactly this grouping. Metric filters create metrics from patterns rather than running ad-hoc grouped queries, alarms watch metrics, and subscription filters stream events elsewhere."
+ },
+ {
+  "id": 62,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An application intermittently fails with ConditionalCheckFailedException from DynamoDB. What does this indicate?",
+  "options": [
+   "A conditional write's condition was not satisfied, often because another writer changed the item first",
+   "The table is throttled",
+   "The IAM role lacks permissions",
+   "The item exceeds 400 KB"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "This exception means the condition expression evaluated false — commonly optimistic concurrency detecting a competing update, or an idempotency guard correctly rejecting a duplicate. It is often expected behaviour rather than an error. Throttling, permissions and size limits raise different exceptions."
+ },
+ {
+  "id": 63,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Which change BEST improves the cache hit ratio of a CloudFront distribution serving personalised pages?",
+  "options": [
+   "Include only the headers and cookies that genuinely vary the response in the cache key",
+   "Forward all headers and cookies to the origin",
+   "Disable caching",
+   "Reduce the TTL to zero"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Every value included in the cache key multiplies the number of distinct cached objects, so restricting the key to values that truly change the response dramatically improves hit ratio. Forwarding everything fragments the cache almost per user, and disabling caching or setting a zero TTL sends every request to the origin."
+ },
+ {
+  "id": 64,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A team wants to know which Lambda function is responsible for the largest share of a rising CloudWatch Logs bill. What is the MOST direct approach?",
+  "options": [
+   "Compare IncomingBytes per log group in CloudWatch metrics",
+   "Read every log stream manually",
+   "Check the IAM credential report",
+   "Enable X-Ray tracing"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The IncomingBytes metric per log group shows exactly which function is ingesting the most data, pointing straight at the noisiest logger. Reading streams manually does not scale, credential reports cover security posture, and tracing adds cost without attributing log volume."
+ },
+ {
+  "id": 65,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An application experiences elevated latency only when traffic exceeds a certain rate, and the database shows high connection counts. What is the MOST likely bottleneck and fix?",
+  "options": [
+   "Database connection exhaustion; introduce connection pooling such as RDS Proxy",
+   "Insufficient Lambda memory; increase it",
+   "Too few CloudWatch alarms; add more",
+   "Log retention too short; increase it"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Latency that appears only above a traffic threshold alongside high connection counts points to connection limits, where new requests queue waiting for a connection. RDS Proxy pools and reuses connections across many concurrent function instances. Memory affects compute rather than connection limits, and alarms and retention are observability settings."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=7"></script>
+<script src="../assets/i18n.js?v=7"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Fundamentals · Lesson F5 · Offline Pack</p>
+    <h1 data-ur="Recursion: ek function jo khud ko chota problem dene ke liye call karta hai">Recursion: a function that calls itself on a smaller problem</h1>
+    <p class="subtitle" data-ur="Ek badi problem ko ussi problem ke chote version mein todo, jab tak woh itni choti na ho jaaye ke jawab seedha mil jaaye.">Break a big problem into a smaller version of the same problem, until it's small enough to answer directly.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: recursion</span>
+      <span>Win: read code that calls itself without panicking</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (tree structures yaad karo)">30-second warm-up (recall tree structures)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek <strong>tree</strong> kya hai, aur uske &quot;children&quot; khud kya hote hain?">From memory: what is a <strong>tree</strong>, and what are its "children" themselves?</div>
+    <div class="answer" data-ur="Ek <strong>tree</strong> ek nested structure hai — ek node ke children hote hain, aur har child <em>khud ek chota tree hai</em>. Yani ek folder ke andar folders, comment ke neeche replies, org chart ke neeche team. Yeh &quot;cheez ke andar wohi cheez&quot; wala shape recursion ke liye perfect hai — jo hum ab dekhne wale hain."><strong>A tree</strong> is a nested structure — a node has children, and each child <em>is itself a smaller tree</em>. Folders inside folders, replies under a comment, a team under an org chart. That "same thing inside itself" shape is exactly what recursion is built for — which we're about to see.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Recursion = ek function jo khud ko ussi problem ke <em>chote</em> version par call karta hai, jab tak woh ek &quot;base case&quot; par na pohanche — sabse simple version jiska jawab woh seedha de deta hai.</strong> Do cheezein zaroori hain: ek <strong>base case</strong> (kab RUKNA hai) aur ek <strong>recursive step</strong> (khud ko kisi chote par call karo)."><strong>Recursion = a function that calls itself on a <em>smaller</em> version of the same problem, until it hits a "base case" — the simplest version it can answer directly.</strong> Two must-haves: a <strong>base case</strong> (when to STOP) and a <strong>recursive step</strong> (call itself on something smaller).</span>
+  </div>
+
+  <h2 data-ur="Kahani: Russian nesting dolls (matryoshka)">The story: Russian nesting dolls (matryoshka)</h2>
+  <p data-ur="Tumhare paas ek <strong>matryoshka</strong> hai — woh lakri ki gudiya jo khulti hai aur andar ek choti gudiya hoti hai. Tumhein saari kholni hain. Tumhare paas ek hi rule hai: &quot;Ek gudiya kholo. Agar andar aur choti gudiya hai, toh ussi ke saath <em>bilkul wohi kaam</em> karo. Agar andar thos (solid) choti gudiya hai jo khulti nahi — ruk jao.&quot;">You have a <strong>matryoshka</strong> — that wooden doll that opens to reveal a smaller doll inside. You want to open them all. You have exactly one rule: "Open a doll. If there's a smaller doll inside, do the <em>same exact thing</em> to it. If the doll inside is the tiny solid one that doesn't open — stop."</p>
+  <p data-ur="Ghor karo: tum har doll par koi naya rule nahi banate. Tum <em>ek</em> rule ko baar baar chote par lagate ho. Sabse choti thos doll tumhara <strong>base case</strong> hai — wahan tum rukte ho. Baaki har doll ka &quot;isko kholo phir andar wali ke saath wohi karo&quot; tumhara <strong>recursive step</strong> hai. Yehi recursion hai.">Notice: you don't invent a new rule per doll. You apply <em>one</em> rule again and again to a smaller thing. The tiniest solid doll is your <strong>base case</strong> — that's where you stop. Every other doll's "open this, then do the same to the one inside" is the <strong>recursive step</strong>. That's recursion.</p>
+  <p data-ur="Doosri tasveer: tum ek queue mein khare ho aur jaanna chahte ho ke tum kitne number par ho. Tum aage wale se poochte ho &quot;tum kitne number par ho?&quot; — woh aage wale se poochta hai — jab tak pehla banda (base case) kehta hai &quot;main 1 hoon.&quot; Phir jawab wapas queue mein aata hai, har koi 1 add karta hai. Wohi ek sawal, chote par baar baar.">Another picture: you stand in a queue and want your position number. You ask the person in front "what number are you?" — who asks the person in front of them — until the very first person (the base case) says "I'm 1." Then the answer travels back down the queue, each person adding 1. Same one question, repeated on something smaller.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 200" role="img" aria-label="Recursion unwinds to a base case then returns">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="70" width="120" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="90" y="92" font-weight="700" fill="#2a4d8f">open doll(4)</text>
+        <text x="90" y="110" fill="#6b6b6b" font-size="11">calls doll(3)</text>
+        <rect x="180" y="70" width="120" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="240" y="92" font-weight="700" fill="#2a4d8f">open doll(3)</text>
+        <text x="240" y="110" fill="#6b6b6b" font-size="11">calls doll(2)</text>
+        <rect x="330" y="70" width="120" height="55" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="390" y="92" font-weight="700" fill="#2a4d8f">open doll(2)</text>
+        <text x="390" y="110" fill="#6b6b6b" font-size="11">calls doll(1)</text>
+        <rect x="480" y="70" width="130" height="55" rx="8" fill="#e9f6ee" stroke="#1c7a3e"/>
+        <text x="545" y="92" font-weight="700" fill="#1c7a3e">doll(1) = solid</text>
+        <text x="545" y="110" fill="#1c7a3e" font-size="11">base case — STOP</text>
+        <line x1="150" y1="82" x2="180" y2="82" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <line x1="300" y1="82" x2="330" y2="82" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <line x1="450" y1="82" x2="480" y2="82" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <line x1="480" y1="112" x2="450" y2="112" stroke="#1c7a3e" stroke-width="2" marker-end="url(#b)"/>
+        <line x1="330" y1="112" x2="300" y2="112" stroke="#1c7a3e" stroke-width="2" marker-end="url(#b)"/>
+        <line x1="180" y1="112" x2="150" y2="112" stroke="#1c7a3e" stroke-width="2" marker-end="url(#b)"/>
+        <text x="320" y="150" fill="#2a4d8f" font-size="11">→ go deeper (each call smaller)</text>
+        <text x="320" y="168" fill="#1c7a3e" font-size="11">← answers return back up the stack</text>
+        <defs>
+          <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a4d8f"/></marker>
+          <marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c7a3e"/></marker>
+        </defs>
+      </g>
+    </svg>
+    <figcaption data-ur="Har call ek chote problem ko call karti hai jab tak base case rukta nahi — phir jawab wapas &quot;up&quot; travel karte hain.">Each call calls a smaller problem until the base case stops it — then answers travel back "up."</figcaption>
+  </figure>
+
+  <h2 data-ur="Code mein: factorial">In code: factorial</h2>
+  <p data-ur="Sabse classic misaal — <code>factorial(n)</code> yani <code>n × (n-1) × ... × 1</code>. Ghor karo dono zaroori cheezein kaise dikhti hain:">The most classic example — <code>factorial(n)</code>, i.e. <code>n × (n-1) × ... × 1</code>. Notice how both must-haves show up:</p>
+  <pre><code>def factorial(n):
+    if n == 1:          # base case — when to STOP
+        return 1
+    return n * factorial(n - 1)   # recursive step — call itself on n-1
+
+factorial(4)  # 4 * factorial(3) → 4 * 3 * factorial(2) → ... → 24</code></pre>
+  <ul>
+    <li data-ur="<strong>Base case:</strong> <code>if n == 1: return 1</code>. Yeh sabse simple version hai jiska jawab bina aur call kiye mil jaata hai. Yeh <em>rukne</em> ki wajah hai."><strong>Base case:</strong> <code>if n == 1: return 1</code>. The simplest version, answerable without another call. This is what makes it <em>stop</em>.</li>
+    <li data-ur="<strong>Recursive step:</strong> <code>return n * factorial(n - 1)</code>. Function khud ko <em>chote</em> input (<code>n-1</code>) par call karta hai — base case ki taraf barhta hua."><strong>Recursive step:</strong> <code>return n * factorial(n - 1)</code>. The function calls itself on a <em>smaller</em> input (<code>n-1</code>) — moving toward the base case.</li>
+  </ul>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tumne yeh already Python mein bina naam liye use kiya hoga. Ek <strong>nested folder tree walk</strong> karna, ek <strong>nested JSON</strong> ko flatten karna, ya <strong>threaded comments</strong> render karna (comment ke neeche replies, reply ke neeche aur replies) — yeh saaray natural recursion hain, kyunke data khud nested hai. DRF mein ek self-referencing serializer (comment jiske andar uske children comments) recursion hi hai. Lekin ek warning: Python ki ek <strong>recursion limit ~1000</strong> hai. Agar tumhari nesting bohot deep ho (ya galti se base case miss ho jaaye), toh tumhe <code>RecursionError: maximum recursion depth exceeded</code> milta hai — kyunke har call <strong>call stack</strong> par memory leti hai aur stack overflow ho jaata hai. Bohot deep ya bade data ke liye ek plain loop (ya explicit stack/queue) aksar behtar aur safe hota hai.">You've probably used this in Python without naming it. Walking a <strong>nested folder tree</strong>, flattening <strong>nested JSON</strong>, or rendering <strong>threaded comments</strong> (replies under a comment, more replies under a reply) — these are all natural recursion, because the data is itself nested. In DRF a self-referencing serializer (a comment whose children are comments) is recursion. But a warning: Python has a <strong>recursion limit of ~1000</strong>. If your nesting is very deep (or you accidentally miss the base case), you get <code>RecursionError: maximum recursion depth exceeded</code> — because every call takes memory on the <strong>call stack</strong> and it overflows. For very deep or large data a plain loop (or an explicit stack/queue) is often better and safer.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: agar tum base case bhool jao ya woh kabhi na pohanche, toh kya hota hai?">Quick check: what happens if you forget the base case, or it's never reached?</div>
+    <div class="answer" data-ur="Function khud ko hamesha call karta rehta hai — kabhi rukta nahi. Har call stack par ek naya frame add karti hai, memory khatam hoti hai, aur tumhe <strong>stack overflow</strong> milta hai (Python mein <code>RecursionError</code>). Base case &quot;kab rukna hai&quot; hai — uske baghair recursion ek infinite loop hai.">The function keeps calling itself forever — it never stops. Each call adds a new frame on the stack, memory runs out, and you get a <strong>stack overflow</strong> (in Python, a <code>RecursionError</code>). The base case is "when to stop" — without it, recursion is an infinite loop.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — ise interview mein naam do">The tradeoff — name it in interviews</span>
+    <span data-ur="Recursion <strong>nested/tree data ke liye elegant</strong> hai — code data ke shape se match karta hai, parhne mein saaf. Lekin har call <strong>call-stack memory</strong> leti hai, deep recursion <strong>stack overflow</strong> kar sakti hai, aur yeh hamesha sabse tez nahi hoti. Interview line: &quot;Recursion tree-shaped data ke liye clean hai, lekin main deep inputs ke liye stack depth ka dhyaan rakhta hoon — agar zaroorat ho toh loop ya explicit stack use karta hoon.&quot;">Recursion is <strong>elegant for nested/tree data</strong> — the code matches the shape of the data and reads cleanly. But every call uses <strong>call-stack memory</strong>, deep recursion can <strong>stack overflow</strong>, and it isn't always the fastest. Interview line: "Recursion is clean for tree-shaped data, but I watch stack depth on deep inputs — I'll use a loop or an explicit stack if needed."</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Recursion ke do zaroori hisse kaunse hain?">What are the two must-have parts of a recursive function?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Ek base case (kab rukna hai) aur ek recursive step (khud ko chote par call karo)">A base case (when to stop) and a recursive step (call itself on something smaller)</button>
+      <button class="opt" data-correct="false" data-ur="Ek loop aur ek counter variable">A loop and a counter variable</button>
+      <button class="opt" data-correct="false" data-ur="Ek try/except aur ek return">A try/except and a return</button>
+      <button class="opt" data-correct="false" data-ur="Do functions jo ek doosre ko call karti hain">Two functions that call each other</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumhari recursive function ek bohot deep nested structure (10,000 levels) par <code>RecursionError: maximum recursion depth exceeded</code> deti hai. Sabse mumkina wajah aur fix?">Your recursive function throws <code>RecursionError: maximum recursion depth exceeded</code> on a very deep nested structure (10,000 levels). Most likely cause and fix?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Base case ghalat hai; try/except add karo">The base case is wrong; add a try/except</button>
+      <button class="opt" data-correct="true" data-ur="Nesting Python ki ~1000 recursion limit se deep hai; call stack overflow karta hai — ek loop/explicit stack use karo (ya limit barhao)">Nesting is deeper than Python's ~1000 recursion limit; the call stack overflows — use a loop / explicit stack (or raise the limit)</button>
+      <button class="opt" data-correct="false" data-ur="Recursion Python mein allowed nahi hai">Recursion isn't allowed in Python</button>
+      <button class="opt" data-correct="false" data-ur="Function ka naam function ke andar dobara likhna padega">You must rename the function inside itself</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Recursion: ek function jo khud ko ussi problem ke <strong>chote</strong> version par call karta hai. Do hisse — ek <strong>base case</strong> (kab rukna) aur ek <strong>recursive step</strong> (chote par call). Base case ke baghair yeh kabhi rukti nahi → <strong>stack overflow</strong>. Yeh nested/tree data (folders, JSON, threaded comments) ke liye natural hai, lekin call-stack memory kharch karti hai — toh deep inputs par kabhi loop behtar hai. Ab tum khud ko call karne wala code dekh kar ghabraoge nahi.">Recursion: a function that calls itself on a <strong>smaller</strong> version of the same problem. Two parts — a <strong>base case</strong> (when to stop) and a <strong>recursive step</strong> (call on something smaller). Without a base case it never stops → <strong>stack overflow</strong>. It's natural for nested/tree data (folders, JSON, threaded comments) but spends call-stack memory — so on deep inputs a loop is sometimes better. Now code that calls itself won't scare you.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.python.org/3/&quot; target=&quot;_blank&quot;>Python docs</a> — <code>sys.setrecursionlimit</code> aur functions dekho recursion aur uski depth limit ke liye<sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://docs.python.org/3/" target="_blank">Python docs</a> — see <code>sys.setrecursionlimit</code> and functions for recursion and its depth limit<sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to convert a recursive folder walk into an iterative one with an explicit stack? Or unsure when recursion overflows vs when it's safe? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson F5 (Recursion).</strong> Builds on <a href="0041-trees-and-bst.html">trees &amp; BST</a> and pairs with <a href="0038-big-o.html">Big-O (F1)</a>. See also <a href="0039-hash-tables.html">hash tables</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.python.org/3/" target="_blank">Python 3 documentation</a>, Python Software Foundation (see <code>sys.getrecursionlimit</code> / <code>sys.setrecursionlimit</code>).</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Every recursive function needs a base case to stop and a recursive step that calls itself on a smaller input. Miss either and it breaks."
+                      : "Reconsider. The two essentials are a base case (when to stop) and a recursive step (call itself on something smaller).",
+          q2: correct ? "Yes. 10,000 levels blows past Python's ~1000 default limit, so the call stack overflows. Rewrite iteratively with an explicit stack, or (carefully) raise the limit."
+                      : "Reconsider. Deep nesting past Python's ~1000 recursion limit overflows the call stack — the fix is a loop/explicit stack, or raising the limit."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

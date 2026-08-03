@@ -1,0 +1,159 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B6 · Offline Pack</p>
+    <h1 data-ur="Idempotency: ek hi kaam do baar karo, natija ek hi rahe">Idempotency: do the same thing twice, get the same result</h1>
+    <p class="subtitle" data-ur="Woh ek trick jis se retries aur double-clicks customer ko do baar charge nahi karte.">The one trick that stops retries and double-clicks from charging the customer twice.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: idempotency</span>
+      <span>Win: make retries safe</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (HTTP methods yaad karo)">30-second warm-up (recall HTTP methods)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: <strong>GET</strong>, <strong>PUT</strong>, aur <strong>POST</strong> mein REST design ke lehaz se kya farq hai?">From memory: what's the difference between <strong>GET</strong>, <strong>PUT</strong>, and <strong>POST</strong> in REST design?</div>
+    <div class="answer" data-ur="<strong>GET</strong> data padhta hai, kuch change nahi karta. <strong>PUT</strong> ek resource ko poora replace/update karta hai ek known ID par. <strong>POST</strong> aam tor par kuch <em>naya</em> banata hai (naya order, naya row) — server ID assign karta hai. Yeh farq abhi kaam aane wala hai."><strong>GET</strong> reads data, changes nothing. <strong>PUT</strong> replaces/updates a resource at a known ID. <strong>POST</strong> usually <em>creates</em> something new (a new order, a new row) — the server assigns the ID. This distinction is about to matter.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek operation &quot;idempotent&quot; hai agar use ek baar chalao ya paanch baar — natija bilkul wahi rahe jaisa ek baar chalane par tha.</strong> Isi liye retries aur double-clicks safe ban jaate hain."><strong>An operation is "idempotent" if running it once or five times leaves exactly the same result as running it once.</strong> That's what makes retries and double-clicks safe.</span>
+  </div>
+
+  <h2 data-ur="Kahani: lift ka button">The story: the elevator button</h2>
+  <p data-ur="Tum lift ka intezaar kar rahe ho aur late ho. Tum &quot;up&quot; button dabate ho. Kuch nahi hota, toh tum use <strong>paanch baar</strong> aur dabate ho, phir do baar aur ghusse mein. Lift kya karti hai? Wahi jo pehli dabao par kiya tha — <em>ek</em> lift aati hai. Button paanch dafa dabana ek dafa dabane ke barabar hai. Tum apne aap ko paanch liftein order nahi kar rahe.">You're waiting for the elevator and you're late. You press the "up" button. Nothing happens, so you press it <strong>five more times</strong>, then twice more out of frustration. What does the elevator do? The same thing it did on the first press — <em>one</em> elevator arrives. Pressing the button five times equals pressing it once. You haven't ordered yourself five elevators.</p>
+  <p data-ur="Yeh <strong>idempotency</strong> hai. Ab isi ko payment se map karo: ek customer &quot;Pay&quot; dabata hai, page hang karta hai, woh ghusse mein phir dabata hai. Agar tumhara server har click ko alag treat kare, tumne use <em>do baar charge</em> kar diya. Agar tumhara server lift ke button jaisa behave kare, woh sirf ek baar charge karta hai — chahe woh button kitni baar dabaye.">That's <strong>idempotency</strong>. Now map it to a payment: a customer presses "Pay", the page hangs, they angrily press it again. If your server treats each click as separate, you just <em>charged them twice</em>. If your server behaves like the elevator button, it charges once — no matter how many times they press.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: kya double-click sirf ghusse wale customers ka masla hai, ya aur bhi wajahein hain jo ek hi request do baar bhej dein?">Quick check: is a double-click the only way a request gets sent twice, or are there other causes?</div>
+    <div class="answer" data-ur="Aur bhi bohat: <strong>network timeout</strong> par client retry kar deta hai (jabke pehli request server tak pohanch chuki thi), mobile app connection drop hone par dobara bhejti hai, load balancer retry karta hai, ya Celery task fail samajh kar dobara run ho jaata hai. Insaan ka double-click sirf sab se aasaan misaal hai.">Many more: on a <strong>network timeout</strong> the client retries (even though the first request already reached the server), a mobile app resends when a connection drops, a load balancer retries, or a Celery task re-runs after a perceived failure. A human double-click is just the easiest example.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Konse methods pehle se idempotent hain">Which methods are already idempotent</h2>
+  <table>
+    <tr><th>Method</th><th>Idempotent?</th><th>Why</th></tr>
+    <tr><td><strong>GET</strong></td><td>Yes</td><td>Reads only — nothing changes, ever</td></tr>
+    <tr><td><strong>PUT</strong></td><td>Yes</td><td>Sets a resource to a value; setting it twice = same value</td></tr>
+    <tr><td><strong>DELETE</strong></td><td>Yes</td><td>Deleting an already-deleted thing leaves it deleted</td></tr>
+    <tr><td><strong>POST</strong></td><td><strong>Usually not</strong></td><td>Each call tends to create a new row / new order / new charge</td></tr>
+  </table>
+  <p data-ur="Masla lagbhag hamesha <strong>POST</strong> hai — kyunke wahi kuch naya banata hai. &quot;Create a payment&quot;, &quot;place an order&quot;, &quot;send money&quot; — yeh sab POST hain, aur inhein do baar chalana do payments, do orders, do transfers banata hai. Isi ko theek karna hai.">The problem is almost always <strong>POST</strong> — because that's what creates something new. "Create a payment", "place an order", "send money" — these are all POSTs, and running them twice creates two payments, two orders, two transfers. That's the one we need to fix.</p>
+
+  <h2 data-ur="Fix: idempotency keys">The fix: idempotency keys</h2>
+  <p data-ur="Idea saada hai: <strong>client har request ke saath ek unique key bhejta hai</strong> (ek random UUID, ek dafa banaya). Server us key ko yaad rakhta hai. Agar server dobara wahi key dekhta hai, woh operation <em>dobara run nahi karta</em> — woh bas pehli dafa wala result wapas de deta hai.">The idea is simple: <strong>the client sends a unique key with each request</strong> (a random UUID, generated once). The server remembers that key. If the server sees the same key again, it does <em>not</em> re-run the operation — it just returns the result from the first time.</p>
+  <ol>
+    <li data-ur="Client ek key banata hai, e.g. <code>Idempotency-Key: 7f3a-91c2-...</code>, aur POST ke saath bhejta hai.">The client generates a key, e.g. <code>Idempotency-Key: 7f3a-91c2-...</code>, and sends it with the POST.</li>
+    <li data-ur="Server dekhta hai: &quot;kya main is key ko pehle dekh chuka hoon?&quot; Agar nahi — payment process karo, result store karo us key ke against.">The server checks: "have I seen this key before?" If not — process the payment, store the result against that key.</li>
+    <li data-ur="Agar woh wahi key dobara dekhta hai (retry, double-click) — dobara charge <em>na</em> karo. Store kiya hua wahi response wapas do.">If it sees the same key again (retry, double-click) — do <em>not</em> charge again. Return the same stored response.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="Same idempotency key sent twice results in one charge">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="30" width="120" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="90" y="52" font-weight="700" fill="#2a4d8f">Client</text>
+        <text x="90" y="68" fill="#6b6b6b" font-size="11">key = 7f3a</text>
+        <rect x="490" y="30" width="120" height="45" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="550" y="52" font-weight="700" fill="#2a4d8f">Server</text>
+        <text x="550" y="68" fill="#6b6b6b" font-size="11">seen keys</text>
+
+        <line x1="150" y1="48" x2="490" y2="48" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <text x="320" y="40" fill="#2a4d8f">1st POST (key 7f3a) → charge $20 ✓</text>
+
+        <line x1="150" y1="110" x2="490" y2="110" stroke="#9b1c1c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#a)"/>
+        <text x="320" y="102" fill="#9b1c1c">2nd POST (same key 7f3a) — retry</text>
+
+        <line x1="490" y1="150" x2="150" y2="150" stroke="#1c7a3a" stroke-width="2" marker-end="url(#b)"/>
+        <text x="320" y="142" fill="#1c7a3a">key already seen → same result, NO new charge</text>
+
+        <text x="320" y="185" fill="#6b6b6b">One key = one charge, however many times it's sent.</text>
+        <defs>
+          <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a4d8f"/></marker>
+          <marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c7a3a"/></marker>
+        </defs>
+      </g>
+    </svg>
+    <figcaption data-ur="Wahi key do baar bheji jaaye — server ek hi baar charge karta hai aur wahi result dobara wapas deta hai.">Send the same key twice — the server charges once and returns the same result again.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Agar tum Stripe use karte ho, tumne yeh pehle se dekha hai: har charge request par <code>Idempotency-Key</code> header bhejo, aur Stripe guarantee karta hai ke dobara wahi key charge repeat nahi karega — woh original response wapas de dega. Apni khud ki APIs mein bhi tum yehi bana sakte ho: ek chhoti table <code>IdempotencyKey(key, response, created_at)</code>, ya Redis mein <code>SET idem:&lt;key&gt; &lt;result&gt; NX EX 86400</code>. Payment process karne se <em>pehle</em>, key check karo — agar mojood hai, stored result wapas do aur wahin ruk jao. Postgres mein key column par ek <code>unique</code> constraint bhi ek dusri safety net deta hai: dobara wahi key insert karne par <code>IntegrityError</code> aayega, jise tum pakad kar existing record wapas kar sakte ho. Isi liye Celery tasks aur DRF endpoints ko idempotent banana retries ke saath bohat aaram deta hai.">If you use Stripe, you've already seen this: send an <code>Idempotency-Key</code> header on each charge request, and Stripe guarantees the same key won't repeat the charge — it returns the original response. You can build the same in your own APIs: a small table <code>IdempotencyKey(key, response, created_at)</code>, or Redis with <code>SET idem:&lt;key&gt; &lt;result&gt; NX EX 86400</code>. <em>Before</em> processing the payment, check the key — if it exists, return the stored result and stop. In Postgres a <code>unique</code> constraint on the key column is a second safety net: inserting the same key again raises an <code>IntegrityError</code>, which you catch and return the existing record. This is why making Celery tasks and DRF endpoints idempotent makes retries so much calmer.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: idempotency key <strong>kaun</strong> banata hai — client ya server? Aur kyun?">Quick check: <strong>who</strong> generates the idempotency key — the client or the server? And why?</div>
+    <div class="answer" data-ur="<strong>Client</strong> banata hai (ek baar, request bhejne se pehle) aur retries par wahi key dobara bhejta hai. Agar server banata, toh har retry ek nayi key le kar aata aur server ke paas usay pehchanne ka koi zariya nahi hota — poora point yeh hai ke ek hi &quot;logical&quot; request ka ek stable key ho jo network par kai baar safar kar sakta hai.">The <strong>client</strong> generates it (once, before sending) and resends the same key on retries. If the server generated it, every retry would carry a new key and the server would have no way to recognize it — the whole point is that one "logical" request has one stable key that can travel the network multiple times.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein iska naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Idempotency free nahi hai: tumhein har key ko <strong>store</strong> karna parta hai aur payment process karne se pehle ek <strong>lookup</strong> karna parta hai. Yeh thora extra storage aur ek extra database/Redis hit hai per request. Lekin iske badle tum <em>double charges, duplicate orders, aur repeated money transfers</em> ko rok dete ho — yaani real paisa aur real trust. Trade yeh hai: thoda storage + ek lookup, badle mein aisi disasters se bachao jo customer ko sach mein nuksan deti hain. Kisi bhi payment ya &quot;create&quot; endpoint ke liye yeh trade hamesha faida-mand hai.">Idempotency isn't free: you have to <strong>store</strong> every key and do a <strong>lookup</strong> before processing the payment. That's a little extra storage and one extra database/Redis hit per request. But in exchange you prevent <em>double charges, duplicate orders, and repeated money transfers</em> — real money and real trust. The trade is: a bit of storage + one lookup, in exchange for avoiding disasters that genuinely hurt customers. For any payment or "create" endpoint, that trade is always worth it.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek customer &quot;Pay&quot; dabata hai, page hang karta hai, woh dobara dabata hai. Dono requests ek hi <code>Idempotency-Key</code> le kar aati hain. Ek sahi tarah bana server kya karega?">A customer presses "Pay", the page hangs, they press again. Both requests carry the same <code>Idempotency-Key</code>. What does a correctly built server do?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Ek baar charge karta hai; doosri request par wahi stored result wapas deta hai">Charges once; returns the same stored result for the second request</button>
+      <button class="opt" data-correct="false" data-ur="Do baar charge karta hai — do requests aayi, do charges">Charges twice — two requests came in, so two charges</button>
+      <button class="opt" data-correct="false" data-ur="Doosri request reject karta hai ek error ke saath aur customer ko dobara try karne ko kehta hai">Rejects the second request with an error and asks the customer to retry</button>
+      <button class="opt" data-correct="false" data-ur="Dono requests ignore karta hai kyunke key duplicate hai">Ignores both requests because the key is a duplicate</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="In mein se konsa HTTP method naturally idempotent NAHI hota aur isi liye aksar idempotency keys ki zaroorat parti hai?">Which of these HTTP methods is NOT naturally idempotent and therefore most often needs idempotency keys?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="GET">GET</button>
+      <button class="opt" data-correct="false" data-ur="PUT">PUT</button>
+      <button class="opt" data-correct="true" data-ur="POST">POST</button>
+      <button class="opt" data-correct="false" data-ur="DELETE">DELETE</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Idempotency: ek operation ko chahe ek baar chalao ya paanch baar, natija ek jaisa. GET/PUT/DELETE pehle se aise hain; <strong>POST</strong> aksar nahi. Fix hai <strong>idempotency keys</strong> — client ek unique key bhejta hai, server usay yaad rakhta hai (Redis ya ek DB table), aur payment se pehle check karta hai taake dobara charge na ho. Trade: thora storage + ek lookup, badle mein double charges aur duplicate orders se bachao. Yeh <em>woh</em> pattern hai jo Stripe aur har serious payments API istemal karti hai — interview mein iska naam lena strong senior signal hai.">Idempotency: run an operation once or five times, same result. GET/PUT/DELETE are already like that; <strong>POST</strong> usually isn't. The fix is <strong>idempotency keys</strong> — the client sends a unique key, the server remembers it (Redis or a DB table), and checks it before the payment so it never charges twice. Trade: a little storage + one lookup, in exchange for avoiding double charges and duplicate orders. This is <em>the</em> pattern Stripe and every serious payments API uses — naming it in an interview is a strong senior signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.stripe.com/api/idempotent_requests&quot; target=&quot;_blank&quot;>Stripe API — Idempotent requests</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — dekho ke ek real payments API kaise idempotency keys handle karti hai.">📖 <a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">Stripe API — Idempotent requests</a><sup class="cite"><a href="#s1">1</a></sup> — see how a real payments API handles idempotency keys.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to design an idempotency-key table for one of your own DRF endpoints, or figure out how long to keep keys before expiring them? Or unsure why POST isn't idempotent but PUT is? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B6 (Idempotency).</strong> Builds on <a href="0017-api-design-rest.html">REST API design (17)</a> and pairs well with <a href="0013-message-queues.html">message queues (13)</a> where retries are everywhere.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.stripe.com/api/idempotent_requests" target="_blank">Idempotent requests</a>, Stripe API Reference.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Same key = same logical request. The server processes once, stores the result, and replays that stored result on the retry — one charge, no error to the user."
+                      : "Reconsider. The point of the key is that the server recognizes the retry and returns the first result without charging again — it charges exactly once.",
+          q2: correct ? "Yes. POST typically creates something new each call, so running it twice makes two things. GET/PUT/DELETE are naturally idempotent; POST is the one that needs keys."
+                      : "Reconsider. GET, PUT, and DELETE are naturally idempotent. POST usually creates a new resource each time, so it's the one that needs idempotency keys."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

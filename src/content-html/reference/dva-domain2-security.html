@@ -1,0 +1,213 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Reference · Domain 2</p>
+    <h1 data-ur="Domain 2: Security — 26%">Domain 2: Security — 26%</h1>
+    <p class="subtitle" data-ur="~13 scored sawal. Yeh domain sab se zyada &quot;predictable&quot; hai — AWS ki raaye bilkul saaf hai, aur agar tum woh raaye jaan lo to yeh aasaan points hain.">~13 scored questions. This is the most <em>predictable</em> domain — AWS has very firm opinions, and once you know them these become easy points.</p>
+    <div class="meta">
+      <span>Reference — revisit often</span>
+      <span>~13 scored questions</span>
+      <span>Easiest points on the exam</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Domain 2 ka sunehri usool">The golden rule of Domain 2</span>
+    <span data-ur="<strong>Agar kisi option mein access key, secret key, ya password kahin par bhi &quot;rakha&quot; ja raha hai — woh option lagbhag hamesha GHALAT hai.</strong> AWS ka jawab hamesha yeh hota hai: koi permanent credential mojood hi na ho. Uski jagah <strong>IAM roles</strong> (temporary credentials) aur <strong>Secrets Manager / KMS</strong>. Yeh ek usool akela tumhein Domain 2 ke aadhe sawal de dega."><strong>If an option involves storing an access key, secret key, or password anywhere — that option is almost always WRONG.</strong> AWS's answer is always: make sure no permanent credential exists at all. Instead: <strong>IAM roles</strong> (temporary credentials) and <strong>Secrets Manager / KMS</strong>. This one rule alone will win you half of Domain 2.</span>
+  </div>
+
+  <hr>
+
+  <h2 id="iam" data-ur="1. IAM — policy evaluation (guaranteed sawal)">1. IAM — policy evaluation (a guaranteed question)</h2>
+
+  <p data-ur="Socho ek building mein security guard hai. Teen soorat-e-haal: <strong>(1)</strong> Agar list par likha hai &quot;is bande ko andar mat aane do&quot; — woh andar nahi aa sakta, chahe doosri list par uska naam ho. <strong>(2)</strong> Agar likha hai &quot;is bande ko aane do&quot; — aa sakta hai. <strong>(3)</strong> Agar kisi list par uska naam hai hi nahi — bhi andar nahi aa sakta. Yehi IAM ka poora nizaam hai.">Picture a security guard at a building. Three cases: <strong>(1)</strong> If a list says &quot;do not let this person in&quot; — they cannot enter, even if another list has their name. <strong>(2)</strong> If a list says &quot;let them in&quot; — they enter. <strong>(3)</strong> If they appear on no list at all — they also cannot enter. That is the whole of IAM.</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Tarteeb">Order</th><th data-ur="Rule">Rule</th><th data-ur="Natija">Result</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td data-ur="Explicit DENY — kahin bhi koi Deny likha hai?">Explicit DENY — is there a Deny anywhere?</td><td class="verdict-out" data-ur="MANA. Hamesha jeetta hai. Koi Allow isay nahi hara sakta.">DENIED. Always wins. No Allow can override it.</td></tr>
+      <tr><td><strong>2</strong></td><td data-ur="Explicit ALLOW — koi Allow likha hai?">Explicit ALLOW — is there an Allow?</td><td class="verdict-in" data-ur="IJAZAT.">ALLOWED.</td></tr>
+      <tr><td><strong>3</strong></td><td data-ur="Kuch bhi nahi likha (implicit deny)">Nothing written at all (implicit deny)</td><td class="verdict-out" data-ur="MANA. Default hamesha deny hai.">DENIED. The default is always deny.</td></tr>
+    </tbody>
+  </table>
+
+  <p data-ur="Yaad rakhne ka jumla: <strong>&quot;Explicit Deny &gt; Explicit Allow &gt; Implicit Deny&quot;</strong>. Yeh exam mein tقریباً guaranteed hai — sirf lafz badal kar poocha jaata hai.">Memory phrase: <strong>&quot;Explicit Deny &gt; Explicit Allow &gt; Implicit Deny&quot;</strong>. This is near-guaranteed on the exam — only the wording changes.</p>
+
+  <h3 data-ur="IAM policy ke hisse">Parts of an IAM policy</h3>
+  <ul>
+    <li data-ur="<strong>Effect</strong> — Allow ya Deny."><strong>Effect</strong> — Allow or Deny.</li>
+    <li data-ur="<strong>Action</strong> — kaunsa kaam, jaise <code>s3:GetObject</code>, <code>dynamodb:Query</code>."><strong>Action</strong> — which operation, e.g. <code>s3:GetObject</code>, <code>dynamodb:Query</code>.</li>
+    <li data-ur="<strong>Resource</strong> — kis cheez par, ARN ke tor par."><strong>Resource</strong> — on what, as an ARN.</li>
+    <li data-ur="<strong>Principal</strong> — kaun (sirf resource-based policies mein)."><strong>Principal</strong> — who (only in resource-based policies).</li>
+    <li data-ur="<strong>Condition</strong> — kab, jaise <code>aws:SourceIp</code>, <code>aws:MultiFactorAuthPresent</code>."><strong>Condition</strong> — when, e.g. <code>aws:SourceIp</code>, <code>aws:MultiFactorAuthPresent</code>.</li>
+  </ul>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Identity-based vs Resource-based">Identity-based vs Resource-based</span>
+    <span data-ur="<strong>Identity-based policy</strong> ek user/role par lagti hai: &quot;yeh banda kya kar sakta hai&quot;. <strong>Resource-based policy</strong> khud cheez par lagti hai (S3 bucket policy, Lambda resource policy): &quot;is cheez ko kaun chhoo sakta hai&quot; — isi mein <code>Principal</code> hota hai. <strong>Cross-account access ke liye aksar dono chahiye hote hain</strong> — yeh exam ka aam trap hai."><strong>Identity-based policies</strong> attach to a user/role: &quot;what can this person do&quot;. <strong>Resource-based policies</strong> attach to the thing itself (S3 bucket policy, Lambda resource policy): &quot;who may touch this resource&quot; — this is where <code>Principal</code> appears. <strong>Cross-account access usually needs BOTH</strong> — a common exam trap.</span>
+  </div>
+
+  <hr>
+
+  <h2 id="sts" data-ur="2. STS aur roles — credentials ka sahi tarika">2. STS and roles — the right way to do credentials</h2>
+  <ul>
+    <li data-ur="<strong><code>sts:AssumeRole</code></strong> — temporary credentials leta hai (15 minute se 12 ghante). Yeh AWS ka pasandeeda jawab hai har &quot;access kaise doon&quot; sawal ka."><strong><code>sts:AssumeRole</code></strong> — obtains temporary credentials (15 minutes to 12 hours). This is AWS's preferred answer to every &quot;how do I grant access&quot; question.</li>
+    <li data-ur="<strong>EC2 par:</strong> instance profile ke zariye role attach karo. Code ko kuch karna nahi parta — SDK khud credentials le leta hai."><strong>On EC2:</strong> attach a role via an instance profile. The code does nothing — the SDK picks up credentials automatically.</li>
+    <li data-ur="<strong>Lambda par:</strong> execution role. Wahi baat."><strong>On Lambda:</strong> the execution role. Same idea.</li>
+    <li data-ur="<strong>ECS par:</strong> task role (har task ka apna)."><strong>On ECS:</strong> a task role (per-task).</li>
+    <li data-ur="<strong>Cross-account:</strong> doosre account mein role banao jo tumhare account ko trust kare, phir AssumeRole karo. Access keys share KABHI mat karo."><strong>Cross-account:</strong> create a role in the other account that trusts yours, then AssumeRole. NEVER share access keys.</li>
+    <li data-ur="<strong>SDK credential chain ka order:</strong> environment variables → shared credentials file (<code>~/.aws/credentials</code>) → IAM role (instance/task/execution). Exam kabhi kabhi yeh tarteeb poochta hai."><strong>SDK credential chain order:</strong> environment variables → shared credentials file (<code>~/.aws/credentials</code>) → IAM role (instance/task/execution). The exam sometimes asks this order.</li>
+  </ul>
+
+  <hr>
+
+  <h2 id="cognito" data-ur="3. Cognito — User Pool vs Identity Pool">3. Cognito — User Pool vs Identity Pool</h2>
+  <p data-ur="Yeh exam ka sab se aam confusion hai. Ek hotel ki misaal se saaf ho jaata hai:">This is the most common confusion on the exam. A hotel analogy makes it clear:</p>
+
+  <table class="elim">
+    <thead><tr><th>&nbsp;</th><th data-ur="User Pool">User Pool</th><th data-ur="Identity Pool (Federated Identities)">Identity Pool (Federated Identities)</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-ur="Hotel misaal">Hotel analogy</td>
+        <td data-ur="<strong>Reception desk</strong> — kaun ho tum? ID dikhao, register karo, login karo.">The <strong>reception desk</strong> — who are you? Show ID, register, sign in.</td>
+        <td data-ur="<strong>Room key card</strong> — ab tumhein kaunse kamre/pool/gym tak rasai milegi.">The <strong>room key card</strong> — which rooms/pool/gym you may now access.</td>
+      </tr>
+      <tr>
+        <td data-ur="Kaam">Job</td>
+        <td class="verdict-in" data-ur="AUTHENTICATION — sign-up, sign-in, MFA, password reset. JWT token deta hai.">AUTHENTICATION — sign-up, sign-in, MFA, password reset. Issues a JWT token.</td>
+        <td class="verdict-in" data-ur="AUTHORIZATION — temporary AWS credentials deta hai taake user seedha S3/DynamoDB use kar sake.">AUTHORIZATION — issues temporary AWS credentials so the user can call S3/DynamoDB directly.</td>
+      </tr>
+      <tr>
+        <td data-ur="Sawal mein yeh lafz">Trigger words</td>
+        <td data-ur="&quot;sign up / sign in&quot;, &quot;user directory&quot;, &quot;MFA&quot;, &quot;social login (Google/Facebook)&quot;">&quot;sign up / sign in&quot;, &quot;user directory&quot;, &quot;MFA&quot;, &quot;social login (Google/Facebook)&quot;</td>
+        <td data-ur="&quot;users ko seedha AWS resources tak access do&quot;, &quot;temporary AWS credentials&quot;">&quot;give users direct access to AWS resources&quot;, &quot;temporary AWS credentials&quot;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p data-ur="Aksar dono saath use hote hain: User Pool login karta hai → uska token Identity Pool ko deta hai → Identity Pool AWS credentials deta hai. Agar sawal dono cheezein maang raha hai, jawab &quot;dono&quot; hai.">They're often used together: the User Pool authenticates → its token goes to the Identity Pool → the Identity Pool returns AWS credentials. If a question asks for both, the answer is both.</p>
+
+  <hr>
+
+  <h2 id="kms" data-ur="4. KMS aur encryption">4. KMS and encryption</h2>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="KMS ke numbers">KMS numbers</span>
+    <ul>
+      <li data-ur="<strong>KMS seedha sirf 4 KB tak data encrypt karta hai.</strong> ⭐ Isse bara data? <strong>Envelope encryption</strong> use karo — <code>GenerateDataKey</code> se ek data key lo, us se apna bara data encrypt karo, aur encrypted data key saath rakh lo. Yeh exam ka pakka sawal hai."><strong>KMS directly encrypts only up to 4 KB.</strong> ⭐ Bigger data? Use <strong>envelope encryption</strong> — call <code>GenerateDataKey</code>, encrypt your large data with that data key, and store the encrypted data key alongside. This is a certain exam question.</li>
+      <li data-ur="<strong>Automatic key rotation: har 1 saal</strong> (AWS-managed keys ke liye khud, customer-managed ke liye tum on karte ho). Purani key delete nahi hoti — purana data ab bhi khul jaata hai."><strong>Automatic key rotation: every 1 year</strong> (automatic for AWS-managed keys; you enable it for customer-managed keys). The old key is kept, so old data still decrypts.</li>
+      <li data-ur="<strong>Key deletion: 7 se 30 din ka waiting period</strong> (default 30). Foran delete nahi hoti."><strong>Key deletion: a 7 to 30 day waiting period</strong> (default 30). Never immediate.</li>
+    </ul>
+  </div>
+
+  <h3 data-ur="Encryption ke types — S3 ki misaal se">Encryption types — through S3</h3>
+  <ul>
+    <li data-ur="<strong>SSE-S3</strong> — AWS keys manage karta hai, tum kuch nahi karte. Sab se aasaan. (Ab S3 par default on hai.)"><strong>SSE-S3</strong> — AWS manages the keys, you do nothing. Simplest. (Now on by default in S3.)</li>
+    <li data-ur="<strong>SSE-KMS</strong> — KMS keys, tumhein <em>audit trail</em> milta hai (CloudTrail mein kaun ne kab decrypt kiya) aur key par control. Sawal mein &quot;audit&quot; ya &quot;control over keys&quot; = SSE-KMS."><strong>SSE-KMS</strong> — KMS keys, giving you an <em>audit trail</em> (CloudTrail shows who decrypted and when) and control over the key. &quot;Audit&quot; or &quot;control over the keys&quot; = SSE-KMS.</li>
+    <li data-ur="<strong>SSE-C</strong> — tum apni key har request ke saath bhejte ho; AWS use rakhta nahi. HTTPS zaroori."><strong>SSE-C</strong> — you supply your key on every request; AWS never stores it. HTTPS required.</li>
+    <li data-ur="<strong>Client-side encryption</strong> — tum apne code mein encrypt karte ho AWS bhejne se PEHLE. Sawal mein &quot;AWS ko kabhi plaintext nahi dekhna chahiye&quot; = client-side."><strong>Client-side encryption</strong> — you encrypt in your own code BEFORE sending to AWS. &quot;AWS must never see the plaintext&quot; = client-side.</li>
+  </ul>
+  <p data-ur="<strong>Encryption in transit</strong> = TLS/HTTPS. <strong>Encryption at rest</strong> = disk par mehfooz. Sawal aksar dono maangta hai.">
+    <strong>Encryption in transit</strong> = TLS/HTTPS. <strong>Encryption at rest</strong> = protected on disk. Questions often require both.</p>
+
+  <hr>
+
+  <h2 id="secrets" data-ur="5. Secrets Manager vs Parameter Store — favourite comparison">5. Secrets Manager vs Parameter Store — a favourite comparison</h2>
+  <table class="elim">
+    <thead><tr><th>&nbsp;</th><th data-ur="Secrets Manager">Secrets Manager</th><th data-ur="SSM Parameter Store">SSM Parameter Store</th></tr></thead>
+    <tbody>
+      <tr><td data-ur="Automatic rotation">Automatic rotation</td><td class="verdict-in" data-ur="HAAN — built-in, RDS ke saath native integration">YES — built in, with native RDS integration</td><td class="verdict-out" data-ur="NAHI (khud Lambda likhna paregi)">NO (you'd build it with Lambda)</td></tr>
+      <tr><td data-ur="Cost">Cost</td><td data-ur="Paisa lagta hai (per secret per month)">Costs money (per secret per month)</td><td class="verdict-in" data-ur="Standard tier MUFT">Standard tier is FREE</td></tr>
+      <tr><td data-ur="Kis ke liye">Best for</td><td data-ur="Database passwords, API keys jinhein rotate karna hai">Database passwords, API keys that must rotate</td><td data-ur="Config values, feature flags, non-secret settings">Config values, feature flags, non-secret settings</td></tr>
+      <tr><td data-ur="Exam trigger">Exam trigger</td><td data-ur="⭐ &quot;automatically rotate&quot; = hamesha Secrets Manager">⭐ &quot;automatically rotate&quot; = always Secrets Manager</td><td data-ur="⭐ &quot;MOST cost-effective&quot; + config = Parameter Store">⭐ &quot;MOST cost-effective&quot; + config = Parameter Store</td></tr>
+    </tbody>
+  </table>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — dhyan se parho">Exam English — read carefully</span>
+    <span data-ur="Yeh do sawal bohot milte-julte lagte hain magar jawab alag hai: <br>• &quot;store database credentials that must be <strong>rotated automatically</strong>&quot; → <strong>Secrets Manager</strong><br>• &quot;store configuration values in the <strong>MOST cost-effective</strong> way&quot; → <strong>Parameter Store</strong><br>Farq sirf do lafzon ka hai. Isi liye qualifying word dhoondhna itna zaroori hai.">These two questions look almost identical but have different answers:<br>• &quot;store database credentials that must be <strong>rotated automatically</strong>&quot; → <strong>Secrets Manager</strong><br>• &quot;store configuration values in the <strong>MOST cost-effective</strong> way&quot; → <strong>Parameter Store</strong><br>The difference is two words. This is exactly why finding the qualifying word matters so much.</span>
+  </div>
+
+  <hr>
+
+  <h2 data-ur="Apne aap ko test karo">Test yourself</h2>
+
+  <div class="exam-q" id="d2q1">
+    <span class="exam-tag">Domain 2 · IAM policy evaluation</span>
+    <p class="scenario" data-ur="Ek IAM user do groups mein hai. Group A ki policy <code>s3:GetObject</code> par <strong>Allow</strong> deti hai ek bucket par. Group B ki policy usi bucket par <code>s3:GetObject</code> par <strong>Deny</strong> deti hai. User ki apni identity policy mein bhi <code>s3:GetObject</code> par <strong>Allow</strong> hai. Jab user object parhne ki koshish karta hai to kya hota hai?">An IAM user belongs to two groups. Group A's policy has an <strong>Allow</strong> for <code>s3:GetObject</code> on a bucket. Group B's policy has a <strong>Deny</strong> for <code>s3:GetObject</code> on the same bucket. The user's own identity policy also has an <strong>Allow</strong> for <code>s3:GetObject</code>. What happens when the user tries to read the object?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Access milta hai kyunke do Allow ek Deny se zyada hain">Access is granted because two Allows outweigh one Deny</button>
+      <button class="opt" data-correct="true" data-ur="Access nahi milta — explicit Deny hamesha jeetta hai">Access is denied — an explicit Deny always wins</button>
+      <button class="opt" data-correct="false" data-ur="Access milta hai kyunke user ki apni policy group se upar hai">Access is granted because the user's own policy overrides groups</button>
+      <button class="opt" data-correct="false" data-ur="Nateeja is par depend karta hai ke policies kis tarteeb se lagi hain">The result depends on the order the policies were attached</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="d2q2">
+    <span class="exam-tag">Domain 2 · KMS</span>
+    <p class="scenario" data-ur="Ek app ko 500 MB ki files encrypt karni hain KMS customer-managed key use karte hue, aur company ko key par control aur audit trail chahiye. Developer <code>kms:Encrypt</code> call karta hai to error aata hai. Sahi tareeqa kaunsa hai?">An application must encrypt 500 MB files using a KMS customer-managed key, and the company requires control over the key plus an audit trail. The developer calls <code>kms:Encrypt</code> and receives an error. What is the correct approach?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="KMS key ka size limit barhane ki request karo">Request a quota increase for the KMS key size limit</button>
+      <button class="opt" data-correct="true" data-ur="Envelope encryption: GenerateDataKey se data key lo, us se file encrypt karo, encrypted data key store karo">Use envelope encryption: call GenerateDataKey, encrypt the file with that data key, store the encrypted data key</button>
+      <button class="opt" data-correct="false" data-ur="File ko 4 KB ke tukron mein tor kar har tukra alag encrypt karo">Split the file into 4 KB chunks and encrypt each chunk separately</button>
+      <button class="opt" data-correct="false" data-ur="KMS ki jagah SSE-S3 use karo">Use SSE-S3 instead of KMS</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="d2q3">
+    <span class="exam-tag">Domain 2 · Secrets</span>
+    <p class="scenario" data-ur="Ek Lambda function RDS database se connect hota hai. Security policy kehti hai ke database password har 30 din baad khud badalna chahiye, bina koi code deploy kiye. Kaunsa solution yeh requirement poora karta hai?">A Lambda function connects to an RDS database. Security policy requires the database password to change automatically every 30 days with no code deployment. Which solution meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Password ko Lambda environment variable mein rakho aur KMS se encrypt karo">Store the password in a Lambda environment variable encrypted with KMS</button>
+      <button class="opt" data-correct="true" data-ur="AWS Secrets Manager use karo aur RDS ke liye automatic rotation on karo">Use AWS Secrets Manager with automatic rotation enabled for RDS</button>
+      <button class="opt" data-correct="false" data-ur="Password ko Parameter Store mein SecureString ke tor par rakho">Store the password in Parameter Store as a SecureString</button>
+      <button class="opt" data-correct="false" data-ur="Password ko encrypted S3 object mein rakho">Store the password in an encrypted S3 object</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tum yeh pehle se karte ho. Jab tum <code>SECRET_KEY</code> ya <code>DATABASE_URL</code> ko <code>settings.py</code> mein likhne ke bajaye <code>os.environ</code> se parhte ho — wahi soch hai. AWS bas ek qadam aage jaata hai: env var bhi kaafi nahi, kyunke woh <em>rakha</em> hua hai. IAM role ka matlab hai koi password mojood hi nahi — SDK khud temporary credential le leta hai jo chand ghanton mein expire ho jaata hai. Aur <code>.env</code> file jo tum git se bahar rakhte ho? Uska AWS version <strong>Secrets Manager</strong> hai — magar rotation bhi khud karta hai.">You already do this. When you read <code>SECRET_KEY</code> or <code>DATABASE_URL</code> from <code>os.environ</code> instead of writing it in <code>settings.py</code> — that's the same instinct. AWS goes one step further: an env var still isn't enough, because it is <em>stored</em>. An IAM role means no password exists at all — the SDK fetches a temporary credential that expires in hours. And that <code>.env</code> file you keep out of git? Its AWS version is <strong>Secrets Manager</strong> — but it rotates itself too.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> IAM policy JSON is where most people lose points. Paste me any policy document you don't understand and I'll read it line by line in simple words.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Domain 2 reference.</strong> ← <a href="dva-domain1-development.html">Domain 1</a> · Next: <a href="dva-domain3-deployment.html">Domain 3 — Deployment (24%)</a></p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li><a href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain2.html" target="_blank">DVA-C02 Exam Guide — Content Domain 2</a> — task statements and skills.</li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" target="_blank">IAM policy evaluation logic</a> — explicit deny &gt; explicit allow &gt; implicit deny.</li>
+      <li><a href="https://docs.aws.amazon.com/kms/latest/developerguide/limits.html" target="_blank">AWS KMS quotas</a> — 4 KB direct encryption limit, key deletion waiting period 7–30 days.</li>
+      <li><a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html" target="_blank">Secrets Manager rotation</a> — automatic rotation with native RDS support.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          d2q1: correct ? "Correct. An explicit Deny anywhere — in any group, any attached policy — always wins. The number of Allows is irrelevant, and attachment order never matters in IAM. Remember: Explicit Deny > Explicit Allow > Implicit Deny."
+                        : "Reconsider. IAM does not count votes and does not care about order. A single explicit Deny anywhere beats every Allow. That is the entire evaluation rule: Explicit Deny > Explicit Allow > Implicit Deny.",
+          d2q2: correct ? "Correct. KMS encrypts a maximum of 4 KB directly, so a 500 MB file must use envelope encryption: GenerateDataKey returns a plaintext key (encrypt locally with it) and an encrypted copy (store alongside the file). The customer-managed key still gives control and the CloudTrail audit trail."
+                        : "Reconsider. The 4 KB KMS limit is a hard limit — it cannot be raised. Chunking 500 MB into 4 KB pieces means ~128,000 KMS calls, which is absurd and expensive. SSE-S3 loses the key control and audit trail the company requires. Envelope encryption via GenerateDataKey is the designed solution.",
+          d2q3: correct ? "Correct. \"Rotate automatically\" is the Secrets Manager trigger phrase — it has built-in rotation with native RDS integration, and the function fetches the current value at runtime so no redeploy is needed."
+                        : "Reconsider. The deciding requirement is automatic rotation every 30 days. Parameter Store SecureString stores secrets safely but has no built-in rotation. Environment variables would need a redeploy on every change. Secrets Manager is the only option with native automatic rotation."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

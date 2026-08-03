@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import body from '../../content-html/reference/glossary.html?raw';
+const headExtra = `<style>
+  /* Glossary-specific bits, layered on the shared lesson stylesheet */
+  .search-bar {
+    position: sticky; top: 0; background: var(--paper); padding: 1rem 0 0.8rem;
+    z-index: 5; border-bottom: 1px solid var(--rule); margin-bottom: 1rem;
+  }
+  .search-bar input {
+    width: 100%; font-family: inherit; font-size: 1rem; padding: 0.7rem 1rem;
+    border: 1px solid var(--rule); border-radius: 8px; background: #fff;
+  }
+  .search-bar input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .count { font-family: ui-sans-serif, sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+  .term {
+    border-bottom: 1px solid var(--rule); padding: 1rem 0;
+  }
+  .term-name { font-weight: 600; font-size: 1.08rem; }
+  .term-name .alias-tag {
+    font-family: ui-sans-serif, sans-serif; font-size: 0.62rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted); margin-left: 0.5rem; font-weight: 600;
+  }
+  .term-def { margin: 0.35rem 0 0; }
+  .term-eg { font-size: 0.86rem; color: var(--muted); margin-top: 0.3rem; }
+  .term-avoid { font-size: 0.8rem; color: var(--accent); margin-top: 0.3rem; font-style: italic; }
+  .group-head { margin-top: 2rem; }
+  .term.hidden, .group-head.hidden { display: none; }
+  mark { background: #fff3b0; padding: 0 1px; border-radius: 2px; }
+  .no-results { color: var(--muted); font-style: italic; padding: 1.5rem 0; display: none; }
+  .no-results.show { display: block; }
+</style>`;
+---
+<Base title={"Glossary · System Design"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

@@ -1,0 +1,174 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 02</p>
+    <h1 data-ur="Consistency: jo data aap read karte ho woh kitna fresh hai?">Consistency: how fresh is the data you read?</h1>
+    <p class="subtitle" data-ur="Aik idea, aaram se sikhaya gaya, aik kahani ke saath. (Failover aur &quot;nines&quot; ab apne alag lessons hain.)">One idea, taught slowly, with a story. (Failover and the "nines" are now their own separate lessons.)</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: consistency</span>
+      <span>Win: explain weak vs eventual vs strong in plain words</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar aik cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Consistency = &quot;jab koi data likhta hai, to baaqi sab ko woh kab dikhta hai?&quot;</strong> Kabhi foran, kabhi thori der baad, kabhi kabhi kabhi nahi. Bas yehi poora idea hai."><strong>Consistency = "after someone writes data, when does everyone else see it?"</strong> Sometimes instantly, sometimes after a short delay, sometimes never. That's the whole idea.</span>
+  </div>
+
+  <h2 data-ur="Aik kahani se shuru karo (abhi tech nahi)">Start with a story (no tech yet)</h2>
+
+  <p data-ur="Aik barre office ka socho jahan <strong>main hall mein aik whiteboard</strong> hai aur side rooms mein iski kuch <strong>copies</strong> hain. Koi main board tak jaata hai aur likhta hai:">Imagine a big office with <strong>one whiteboard in the main hall</strong> and a few <strong>copies of it</strong> in side rooms. Someone walks up to the main board and writes:</p>
+
+  <p style="text-align:center;font-size:1.1rem;" data-ur="<em>&quot;Lunch ab 1 baje ho gaya.&quot;</em>"><em>"Lunch moved to 1pm."</em></p>
+
+  <p data-ur="Ab — <em>side rooms</em> mein log apni <strong>copies</strong> parh rahe hain, main board nahi. To bas yehi aik sawal matter karta hai:">Now — the people in the <em>side rooms</em> are reading their <strong>copies</strong>, not the main board. So here's the only question that matters:</p>
+
+  <p style="text-align:center;font-size:1.05rem;font-weight:600;" data-ur="Side rooms ki copies kab update hoti hain?">When do the copies in the side rooms get updated?</p>
+
+  <p data-ur="Iske teen honest jawab hain, aur <strong>har aik real systems ke behave karne ka aik asal tareeqa hai.</strong> Bas — yehi consistency hai. Chalo teenon dekhte hain.">There are three honest answers, and <strong>each one is a real way real systems behave.</strong> That's it — that's consistency. Let's walk the three.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 150" role="img" aria-label="Consistency spectrum from weak to strong">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#6b6b6b"/></marker>
+      </defs>
+      <line x1="40" y1="30" x2="660" y2="30" stroke="#6b6b6b" stroke-width="1.5" marker-end="url(#ar)"/>
+      <text x="40" y="20" font-family="ui-sans-serif" font-size="11" fill="#6b6b6b">copies update slowly / maybe never</text>
+      <text x="660" y="20" font-family="ui-sans-serif" font-size="11" fill="#6b6b6b" text-anchor="end">copies update instantly</text>
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <g>
+          <rect x="40" y="55" width="170" height="70" rx="8" fill="#f6e9e9" stroke="#9b1c1c"/>
+          <text x="125" y="80" font-weight="700" fill="#9b1c1c">Weak</text>
+          <text x="125" y="100" fill="#6b6b6b">side rooms might</text>
+          <text x="125" y="115" fill="#6b6b6b">never find out</text>
+        </g>
+        <g>
+          <rect x="265" y="55" width="170" height="70" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+          <text x="350" y="80" font-weight="700" fill="#2a4d8f">Eventual</text>
+          <text x="350" y="100" fill="#6b6b6b">they find out in</text>
+          <text x="350" y="115" fill="#6b6b6b">a few seconds</text>
+        </g>
+        <g>
+          <rect x="490" y="55" width="170" height="70" rx="8" fill="#e8f3ec" stroke="#1d6b3a"/>
+          <text x="575" y="80" font-weight="700" fill="#1d6b3a">Strong</text>
+          <text x="575" y="100" fill="#6b6b6b">all boards change</text>
+          <text x="575" y="115" fill="#6b6b6b">at the same instant</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption data-ur="Wohi teen jawab, aik spectrum ki tarah draw kiye. Baayein = relaxed aur fast. Daayein = strict aur hamesha correct.">Same three answers, drawn as a spectrum. Left = relaxed and fast. Right = strict and always correct.</figcaption>
+  </figure>
+
+  <h2 data-ur="1 · Weak — &quot;copies shayad kabhi catch up na karein&quot;">1 · Weak — "the copies might never catch up"</h2>
+  <p data-ur="<strong>Kahani:</strong> Aap main board pe likhte ho &quot;Lunch at 1pm.&quot; Koi bhi side-room copies ko update karne ki zehmat nahi karta. Agar aap ne woh change <em>na</em> dekha, to aapke liye woh bas chala gaya. Koi promise nahi."><strong>The story:</strong> You write "Lunch at 1pm" on the main board. Nobody ever bothers to update the side-room copies. If you happened to <em>not</em> see the change, it's just gone for you. No promises.</p>
+  <p data-ur="<strong>Koi yeh kyun chahega?</strong> Kyunke yeh sab se fast hai, aur kabhi kabhi purani info matter hi nahi karti. Aik <strong>live video call</strong> ka socho: agar aadha second ki audio drop ho jaye, aap use rewind kar ke dobara nahi chalate — woh lamha guzar gaya aur woh theek hai. Aapko <em>abhi</em> ki fikr hai, maazi ko catch up karne ki nahi."><strong>Why would anyone want this?</strong> Because it's the fastest, and sometimes old info simply doesn't matter. Think of a <strong>live video call</strong>: if half a second of audio drops, you don't rewind and replay it — that moment is gone and that's fine. You care about <em>now</em>, not catching up on the past.</p>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: aasan lafzon mein, <em>weak</em> consistency write ke baad read ke baare mein kya promise karti hai?">Quick check: in plain words, what does <em>weak</em> consistency promise about a read after a write?</div>
+    <div class="answer" data-ur="Basically kuch nahi — read woh write ko <strong>shayad kabhi na</strong> dekhe. Yeh best-effort hai. Hum yeh speed ke badle mein qabool karte hain, jab stale/miss hua data harmless ho (jaise live call).">Basically nothing — the read <strong>might not</strong> see the write, ever. It's best-effort. We accept that in exchange for speed, when stale/missed data is harmless (like a live call).</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="2 · Eventual — &quot;copies aik lamhe mein catch up kar leti hain&quot;">2 · Eventual — "the copies catch up in a moment"</h2>
+  <p data-ur="<strong>Kahani:</strong> Aap main board pe likhte ho. Aik assistant ghoom kar har side-room copy update karta hai — ismein kuch seconds lagte hain, lekin <em>eventually</em> har copy pe &quot;1pm&quot; likha hota hai. Agar koi us gap mein side-room board parhe, to woh thori der ke liye purana time dekhta hai. Phir yeh khud theek ho jaata hai."><strong>The story:</strong> You write on the main board. An assistant walks around and updates each side-room copy — it takes a few seconds, but <em>eventually</em> every copy says "1pm." If someone reads a side-room board in that gap, they briefly see the old time. Then it fixes itself.</p>
+  <p data-ur="<strong>Rozmarra version:</strong> aap post office mein apna ghar ka address change karte ho. Yeh submit karte hi <em>har jagah</em> update nahi hota — yeh thore time mein aahista aahista phailta hai. Eventually saare systems agree kar lete hain."><strong>Everyday version:</strong> you change your home address with the post office. It's not updated <em>everywhere</em> the instant you submit it — it ripples out over a bit of time. Eventually all the systems agree.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge — ise sach mein samajhna hai">Django bridge — this is the one to really get</span>
+    <span data-ur="Yeh aap ne bina naam liye kiya hua hai. Aik single Postgres <em>main board</em> hai. Jis lamhe aap aik <strong>read replica</strong> add karte ho (aik copy database jo main wale se read load hata leta hai), aap ne aik <em>side-room board</em> add kar diya. Aik user apni profile update karta hai (main board pe likhta hai), foran reload karta hai, aur page <em>replica</em> se read karta hai — jo abhi catch up nahi hui — to woh aik second ke liye <strong>purana naam</strong> dekhta hai. Us gap ko <strong>replication lag</strong> kehte hain, aur yeh bilkul eventual consistency hai. Aap ne kuch tora nahi; yeh aap ne usi lamhe choose kar liya jab replica add kiya.">You've done this without naming it. A single Postgres is the <em>main board</em>. The moment you add a <strong>read replica</strong> (a copy database to take read load off the main one), you've added a <em>side-room board</em>. A user updates their profile (writes to the main board), instantly reloads, and the page reads from the <em>replica</em> — which hasn't caught up yet — so they see the <strong>old name for a second</strong>. That gap is called <strong>replication lag</strong>, and it's exactly eventual consistency. You didn't break anything; you chose this the moment you added a replica.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: <em>eventual</em> consistency mein, kya read eventually write ko dekh legi? Aur catch kya hai?">Quick check: under <em>eventual</em> consistency, will the read eventually see the write? And what's the catch?</div>
+    <div class="answer" data-ur="<strong>Haan</strong> — woh dekh legi, bas foran nahi. Catch: aik chhote window ke liye (aksar milliseconds), read copies ke catch up karne se pehle <strong>purani</strong> value return kar sakti hai."><strong>Yes</strong> — it'll see it, just not instantly. The catch: for a short window (often milliseconds), a read can return the <strong>old</strong> value before the copies catch up.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="3 · Strong — &quot;har board bilkul aik hi lamhe mein change hota hai&quot;">3 · Strong — "every board changes at the exact same instant"</h2>
+  <p data-ur="<strong>Kahani:</strong> Rule ab strict hai — change tab tak &quot;done&quot; nahi maana jaata jab tak <em>har</em> board, main aur side rooms, saath saath update na ho jaye. To jis lamhe koi kahin bhi &quot;1pm&quot; parh sakta hai, to woh <em>har jagah</em> &quot;1pm&quot; kehta hai. Koi kabhi purana time nahi dekhta."><strong>The story:</strong> The rule is now strict — the change isn't considered "done" until <em>every</em> board, main and side rooms, has been updated together. So the moment anyone can read "1pm" anywhere, it says "1pm" <em>everywhere</em>. No one ever sees the old time.</p>
+  <p data-ur="<strong>Iski keemat kyun do?</strong> Kyunke kuch data ke liye, aik second bhi galat hona qabool nahi. Aapka <strong>bank balance</strong> classic example hai: agar aap $100 nikalte ho, to system ke har hisse ko agree karna hoga ke aapka balance gir gaya — foran. Aap kabhi nahi chahoge ke koi &quot;side room&quot; abhi bhi purana, zyada balance dikha raha ho."><strong>Why pay for this?</strong> Because for some data, being wrong for even a second is unacceptable. Your <strong>bank balance</strong> is the classic example: if you withdraw $100, every part of the system must agree your balance dropped — instantly. You'd never want a "side room" still showing the old, higher balance.</p>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Do lafz jo isko decide karte hain">The two words that decide it</span>
+    <span data-ur="<strong>Synchronous</strong> = &quot;write ko done kehne se pehle wait karo jab tak saari copies agree na kar lein&quot; → aise aapko <em>strong</em> milti hai. <strong>Asynchronous</strong> = &quot;abhi save karo, baaqiyon pe baad mein copy karo&quot; → aise aapko <em>eventual</em> milti hai. Yehi do lafz poore system design mein aate hain — aap ne inhe abhi aik whiteboard se seekh liya."><strong>Synchronous</strong> = "wait until all copies agree before we call the write done" → that's how you get <em>strong</em>. <strong>Asynchronous</strong> = "save it now, copy to the others later" → that's how you get <em>eventual</em>. Same two words show up all over system design — you just learned them with a whiteboard.</span>
+  </div>
+
+  <h2 data-ur="Chalo isko ikattha karte hain">Let's pull it together</h2>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Answer chhupao. Teen levels weakest → strongest, aik aik phrase mein batao, whiteboard kahani use kar ke.">Cover the answer. Name the three levels weakest → strongest, in one phrase each, using the whiteboard story.</div>
+    <div class="answer" data-ur="<strong>Weak</strong> — side rooms shayad kabhi catch up na karein (read shayad write ko kabhi na dekhe). <em>Live video call.</em><br>
+      <strong>Eventual</strong> — side rooms aik lamhe mein catch up karti hain (read use thori der baad dekhti hai). <em>Read replica / apna address change karna.</em><br>
+      <strong>Strong</strong> — har board aik saath change hota hai (read hamesha use foran dekhti hai). <em>Bank balance.</em>">
+      <strong>Weak</strong> — side rooms might never catch up (read may never see the write). <em>Live video call.</em><br>
+      <strong>Eventual</strong> — side rooms catch up in a moment (read sees it after a short delay). <em>Read replica / changing your address.</em><br>
+      <strong>Strong</strong> — every board changes at once (read always sees it instantly). <em>Bank balance.</em>
+    </div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Aik quick quiz">One quick quiz</h2>
+  <p data-ur="Sirf aik — upar wale bridge se bilkul wohi Django situation use kar ke.">Just one — using the exact Django situation from the bridge above.</p>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Aap ne apne Postgres se load hataane ke liye aik read replica add ki. Aik user apna profile name update karta hai, foran reload karta hai, aur aik second ke liye <em>purana</em> name dekhta hai, phir woh correct ho jaata hai. Yeh kaunsi consistency hai?">You added a read replica to take load off your Postgres. A user updates their profile name, instantly reloads, and sees the <em>old</em> name for one second, then it corrects. Which consistency is this?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Weak — write kho gayi">Weak — the write was lost</button>
+      <button class="opt" data-correct="true" data-ur="Eventual — replica bas abhi catch up nahi hui thi">Eventual — the replica just hadn't caught up yet</button>
+      <button class="opt" data-correct="false" data-ur="Strong — har copy aik saath update hui">Strong — every copy updated at once</button>
+      <button class="opt" data-correct="false" data-ur="None — iska matlab database kharab hai">None — this means the database is broken</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki aapki jeet">Your win today</span>
+    <span data-ur="Ab aap consistency ko aik kahani se samjha sakte ho: yeh bas <strong>&quot;side-room copies kab catch up karti hain?&quot;</strong> hai — kabhi nahi (weak), jald (eventual), ya foran (strong). Aur aap real-world version jaante ho: Django mein aik read replica add karo aur aap ne <em>eventual</em> choose kar li. Yeh aik solid idea hai, poori tarah aapka. Aik baithak ke liye yeh kaafi hai.">You can now explain consistency with a story: it's just <strong>"when do the side-room copies catch up?"</strong> — never (weak), soon (eventual), or instantly (strong). And you know the real-world version: add a read replica to Django and you've chosen <em>eventual</em>. That's one solid idea, fully yours. That's plenty for one sitting.</span>
+  </div>
+
+  <div class="note" style="background:#eef3f8;border-left:3px solid var(--link);padding:1rem 1.2rem;border-radius:6px;">
+    <span class="callout-label" style="color:var(--link)" data-ur="Is lesson se kya nikal gaya">What moved out of this lesson</span>
+    <span data-ur="Original Lesson 2 mein <em>failover</em> (backup servers) aur <em>&quot;nines&quot;</em> availability math bhi thoos diya gaya tha. Woh aik saath bahut zyada tha — to yeh apne chhote lessons (2b aur 2c) ban rahe hain jab consistency solid feel ho jaye. Aik waqt mein aik idea.">The original Lesson 2 also crammed in <em>failover</em> (backup servers) and the <em>"nines"</em> availability math. That was too much at once — so they're becoming their own small lessons (2b and 2c) once consistency feels solid. One idea at a time.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional, sirf agar curious ho">Read next (primary source) — optional, only if curious</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns&quot; target=&quot;_blank&quot;>System Design Primer — Consistency patterns</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. <em>Sirf</em> teen chhote &quot;consistency&quot; paragraphs parho — iske neeche wali availability wali cheez abhi skip karo. Whiteboard kahani sar mein hone se, yeh aasan parhna chahiye.">📖 <a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">System Design Primer — Consistency patterns</a><sup class="cite"><a href="#s1">1</a></sup>. Read <em>only</em> the three short "consistency" paragraphs — skip the availability stuff below it for now. With the whiteboard story in your head, it should read easy.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> If <em>any</em> part of this still feels fuzzy, tell me which sentence lost you and I'll re-explain it a different way. Want me to walk the read-replica example with an actual diagram of the request? Just ask. There's no "I should already get this" here — confusion is information that helps me teach you better.
+  </div>
+
+  <footer class="lesson-foot">
+    <p data-ur="<strong>Lesson 2 (dobara banaya — sirf consistency).</strong> <a href=&quot;0001-the-design-framework.html&quot;>Lesson 1 — The Framework</a> pe banta hai: consistency aik classic <em>tradeoff</em> (step 5) hai jise aap bol kar batate ho. Aage: <em>Lesson 2b — Failover</em> (server marne pe system ko up rakhna)."><strong>Lesson 2 (rebuilt — consistency only).</strong> Builds on <a href="0001-the-design-framework.html">Lesson 1 — The Framework</a>: consistency is a classic <em>tradeoff</em> (step 5) you name out loud. Next: <em>Lesson 2b — Failover</em> (keeping the system up when a server dies).</p>
+    <p data-ur="📑 Yahan har term <a href=&quot;../reference/glossary.html&quot;>Glossary</a> mein hai — ise aksar skim karo taake chipak jaye.">📑 Every term here is in the <a href="../reference/glossary.html">Glossary</a> — skim it often to make it stick.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#consistency-patterns" target="_blank">The System Design Primer — Consistency patterns</a>, Donne Martin.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    if (!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return;
+        quiz.dataset.done = '1';
+        var correct = btn.dataset.correct === 'true';
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if (b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct
+            ? "Exactly right. The write landed safely on the main board (primary); the side-room copy (replica) just needed a moment to catch up. That short gap is eventual consistency."
+            : "Not quite — nothing is lost or broken. The write is safe on the primary; the replica simply hadn't caught up in that one second. A read seeing the old value during that catch-up window is the definition of eventual consistency."
+        }[quiz.id];
+        fb.textContent = msg;
+        fb.classList.add('show', correct ? 'right' : 'nope');
+      });
+    });
+  });
+</script>

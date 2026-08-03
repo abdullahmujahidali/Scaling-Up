@@ -1,0 +1,155 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 15 · Offline Pack</p>
+    <h1 data-ur="Event streaming (Kafka) vs message queues: ek job vs ek log">Event streaming (Kafka) vs message queues: one job vs one log</h1>
+    <p class="subtitle" data-ur="Ek queue mein kaam ek baar hota hai phir gayab. Ek stream ek permanent log hai jise bohat se readers apni marzi se parh sakte hain.">A queue does a job once, then it's gone. A stream is a permanent log many readers can each read at their own pace.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: log vs queue</span>
+      <span>Win: know when to reach for Kafka</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (message queues yaad karo)">30-second warm-up (recall message queues)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek <strong>message queue</strong> (jaise Celery + RabbitMQ) kaam kaise karti hai?">From memory: how does a <strong>message queue</strong> (like Celery + RabbitMQ) work?</div>
+    <div class="answer" data-ur="Tumhara web request ek <strong>task</strong> queue mein daal deta hai aur foran response de deta hai. Ek background <strong>worker</strong> task ko utha leta hai, chala deta hai (email bhejo, image resize karo), aur task queue se <strong>hat jaata hai</strong>. Ek job → ek worker → done. Aaj hum dekhenge jab yeh &quot;ek baar utha lo phir hata do&quot; wala model kaafi nahi hota.">Your web request drops a <strong>task</strong> into a queue and returns immediately. A background <strong>worker</strong> picks the task up, runs it (send an email, resize an image), and the task is <strong>removed</strong> from the queue. One job → one worker → done. Today we see when that "take it once then delete" model isn't enough.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek queue mein har message ek hi worker uthata hai phir woh gayab ho jaata hai. Ek event stream (Kafka) ek append-only <em>log</em> hai: ek event likha jaata hai aur wahin rehta hai, aur bohat se alag consumers usay har ek alag alag, apni raftaar par parh sakte hain — aur dobara bhi parh sakte hain.</em></strong>"><strong>In a queue, each message is taken by one worker and then it's gone. An event stream (Kafka) is an append-only <em>log</em>: an event is written and stays there, and many separate consumers can each read it independently, at their own pace — and re-read it.</strong></span>
+  </div>
+
+  <h2 data-ur="Kahani: ticket counter vs newspaper archive">The story: ticket counter vs newspaper archive</h2>
+  <p data-ur="Socho ek <strong>single-line ticket counter</strong>. Har customer ek ticket leta hai, ek clerk usay serve karta hai, phir woh ticket <em>khatam</em> — kisi aur ne usay dobara nahi dekha. Bas ek clerk hi har ticket ko handle karta hai. Yeh ek <strong>message queue</strong> hai: ek job, ek worker, phir hata diya.">Picture a <strong>single-line ticket counter</strong>. Each customer takes a ticket, one clerk serves it, then that ticket is <em>done</em> — no one ever sees it again. Exactly one clerk handles each ticket. That's a <strong>message queue</strong>: one job, one worker, then removed.</p>
+  <p data-ur="Ab socho ek <strong>newspaper archive</strong> — ya ek WhatsApp group chat ki poori history. Ek khabar <em>chhapti</em> hai (ek event) aur wahin permanently rehti hai. <strong>Bohat se alag log</strong> usay parh sakte hain: ek reader aaj, ek dobara kal, ek researcher chhe mahine baad. Har koi apni marzi ki jagah se parhta hai, apni raftaar par, aur khabar mit-ti nahi. Yeh ek <strong>event stream</strong> hai.">Now picture a <strong>newspaper archive</strong> — or the full history of a WhatsApp group chat. A story is <em>published</em> (an event) and stays there permanently. <strong>Many different people</strong> can read it: one reader today, one again tomorrow, a researcher six months later. Each reads from wherever they want, at their own pace, and the story is never deleted. That's an <strong>event stream</strong>.</p>
+  <p data-ur="Farq yeh hai: queue &quot;kaam baant do aur hata do&quot; ke liye hai. Stream &quot;yeh hua, jise chahiye react kar le&quot; ke liye hai — aur record reh jaata hai.">The difference: a queue is for "hand out work and delete it." A stream is for "this happened, let whoever cares react" — and the record stays.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 260" role="img" aria-label="Queue removes each message for one worker; stream keeps a log many consumers read">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <text x="150" y="24" font-weight="700" fill="#2a4d8f">Message queue</text>
+        <rect x="40" y="38" width="60" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="70" y="59" font-size="11" fill="#2a4d8f">msg</text>
+        <rect x="110" y="38" width="60" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="140" y="59" font-size="11" fill="#2a4d8f">msg</text>
+        <line x1="180" y1="55" x2="235" y2="55" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="240" y="38" width="70" height="34" rx="6" fill="#e7f3ea" stroke="#1c6b3a"/>
+        <text x="275" y="59" font-size="11" fill="#1c6b3a">worker</text>
+        <text x="150" y="96" fill="#9b1c1c" font-size="11">taken once → removed</text>
+
+        <text x="470" y="24" font-weight="700" fill="#2a4d8f">Event stream (log)</text>
+        <rect x="360" y="120" width="44" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="382" y="141" font-size="11" fill="#2a4d8f">e1</text>
+        <rect x="404" y="120" width="44" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="426" y="141" font-size="11" fill="#2a4d8f">e2</text>
+        <rect x="448" y="120" width="44" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="470" y="141" font-size="11" fill="#2a4d8f">e3</text>
+        <rect x="492" y="120" width="44" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="514" y="141" font-size="11" fill="#2a4d8f">e4</text>
+        <text x="448" y="112" fill="#6b6b6b" font-size="11">append-only, kept</text>
+        <line x1="560" y1="137" x2="600" y2="137" stroke="#2a4d8f" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="360" y="182" width="80" height="30" rx="6" fill="#e7f3ea" stroke="#1c6b3a"/>
+        <text x="400" y="201" font-size="10" fill="#1c6b3a">email svc</text>
+        <rect x="450" y="182" width="80" height="30" rx="6" fill="#e7f3ea" stroke="#1c6b3a"/>
+        <text x="490" y="201" font-size="10" fill="#1c6b3a">inventory</text>
+        <rect x="540" y="182" width="80" height="30" rx="6" fill="#e7f3ea" stroke="#1c6b3a"/>
+        <text x="580" y="201" font-size="10" fill="#1c6b3a">analytics</text>
+        <line x1="400" y1="154" x2="400" y2="182" stroke="#6b6b6b" stroke-width="1.5"/>
+        <line x1="490" y1="154" x2="490" y2="182" stroke="#6b6b6b" stroke-width="1.5"/>
+        <line x1="514" y1="154" x2="580" y2="182" stroke="#6b6b6b" stroke-width="1.5"/>
+        <text x="490" y="234" fill="#6b6b6b" font-size="11">each consumer reads all events, at its own position</text>
+        <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a4d8f"/></marker></defs>
+      </g>
+    </svg>
+    <figcaption data-ur="Queue: har message ek worker leta hai, phir hat jaata hai. Stream: events log mein rehte hain, bohat se consumers har ek sab kuch apni jagah se parhte hain.">Queue: each message is taken by one worker, then removed. Stream: events stay in the log, many consumers each read everything from their own position.</figcaption>
+  </figure>
+
+  <h2 data-ur="Kafka ki chaar simple lafz">Kafka's four simple words</h2>
+  <ul>
+    <li data-ur="<strong>Topic</strong> — ek named log, jaise ek channel. Misaal: ek <code>orders</code> topic jismein har &quot;order placed&quot; event jaata hai."><strong>Topic</strong> — a named log, like a channel. Example: an <code>orders</code> topic where every "order placed" event goes.</li>
+    <li data-ur="<strong>Producer</strong> — woh jo events likhta hai. Tumhara Django app ek order banne par ek event <em>produce</em> karta hai."><strong>Producer</strong> — whoever writes events. Your Django app <em>produces</em> an event when an order is created.</li>
+    <li data-ur="<strong>Consumer</strong> — woh jo events parhta hai. Email service, inventory service, aur analytics <em>alag alag</em> consumers hain — sab wahi events parhte hain."><strong>Consumer</strong> — whoever reads events. The email service, inventory service, and analytics are <em>separate</em> consumers — all reading the same events.</li>
+    <li data-ur="<strong>Partition</strong> — ek topic ko kai tukron mein baant diya jaata hai taake events parallel process ho saken. Zyada partitions = zyada consumers ek saath kaam kar sakte hain (throughput). Bas itna hi samajhna zaroori hai."><strong>Partition</strong> — a topic is split into pieces so events can be processed in parallel. More partitions = more consumers working at once (throughput). That's all you need to grasp.</li>
+  </ul>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tumhara aam kaam <strong>Celery + RabbitMQ/Redis se chal jaata hai</strong>: ek user signup hua → ek welcome email task queue mein daalo → ek worker bhej de. Ek job, ek worker, done. Ismein Kafka mat lao. Kafka tab utha-o jab: (1) <strong>ek hi event par bohat se systems react karne hain</strong> — &quot;order placed&quot; se email service <em>aur</em> inventory service <em>aur</em> analytics sab ko chalna hai, aur tum har naye consumer ke liye producer ko chhedna nahi chahte; (2) tumhein <strong>replay</strong> chahiye — ek naya analytics feature aaya, purane events dobara process karo; ya ek consumer crash hua, wahin se resume karo; (3) <strong>bohat zyada throughput</strong> (per second laakhon events) jise ek simple queue handle nahi kar paati. Ek quick rule: <em>agar tum queue mein &quot;kaam ho chuka, hata do&quot; soch rahe ho toh Celery kaafi hai; agar tum &quot;yeh hua, kai systems ko batao aur record rakho&quot; soch rahe ho toh Kafka.</em>">Your everyday work is <strong>handled by Celery + RabbitMQ/Redis</strong>: a user signs up → drop a welcome-email task on the queue → a worker sends it. One job, one worker, done. Don't reach for Kafka here. Reach for Kafka when: (1) <strong>many systems must react to the same event</strong> — "order placed" needs to trigger the email service <em>and</em> inventory service <em>and</em> analytics, and you don't want to touch the producer for every new consumer; (2) you need <strong>replay</strong> — a new analytics feature ships, reprocess old events; or a consumer crashes, resume from where it left off; (3) <strong>very high throughput</strong> (millions of events per second) a simple queue can't handle. A quick rule: <em>if you're thinking "work's done, delete it," Celery is enough; if you're thinking "this happened, tell several systems and keep the record," reach for Kafka.</em></span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: ek queue aur ek Kafka topic mein sab se bada farq ek line mein?">Quick check: the single biggest difference between a queue and a Kafka topic, in one line?</div>
+    <div class="answer" data-ur="Queue: ek message ek consumer uthata hai phir woh <strong>delete</strong> ho jaata hai. Kafka topic: event ek <strong>log</strong> mein rehta hai, bohat se consumers usay har ek parh sakte hain aur dobara bhi parh sakte hain (replay).">Queue: a message is taken by one consumer and then <strong>deleted</strong>. Kafka topic: the event stays in a <strong>log</strong>, so many consumers can each read it and re-read it (replay).</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — interview mein naam lo">The tradeoff — name it in interviews</span>
+    <span data-ur="Kafka bohat powerful hai, lekin ek simple queue se <strong>chalana aur maintain karna kaafi bhaari</strong> hai: brokers, partitions, replication, consumer offsets, ek poora cluster jise monitor karna parta hai. Ek chhote app ke liye jise bas background tasks chahiye, Kafka <strong>over-engineering</strong> hai — Celery + RabbitMQ kam operational bojh mein wahi kaam karega. Sahi cheez: sab se saada tool jo kaam kar de. Kafka ki zaroorat ko <em>justify</em> karo (bohat consumers, replay, high throughput), sirf shauq mein mat lo.">Kafka is very powerful, but it's <strong>heavier to run and operate</strong> than a simple queue: brokers, partitions, replication, consumer offsets — a whole cluster to monitor. For a small app that just needs background tasks, Kafka is <strong>over-engineering</strong> — Celery + RabbitMQ does the same job with far less operational load. The right move: the simplest tool that works. Justify Kafka by need (many consumers, replay, high throughput), not by hype.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek &quot;order placed&quot; event ko email service, inventory service, aur analytics — teenon ko trigger karna hai, aur tum chahte ho baad mein naye consumers bhi purane orders dobara parh saken. Behtar fit?">An "order placed" event must trigger the email service, inventory service, and analytics — all three — and you want new consumers to be able to re-read past orders later. Better fit?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Ek Kafka event stream — ek log jise kai consumers parhen aur replay kar saken">A Kafka event stream — one log many consumers read and can replay</button>
+      <button class="opt" data-correct="false" data-ur="Ek single message queue — pehla worker event uthata hai phir woh gayab">A single message queue — the first worker takes the event, then it's gone</button>
+      <button class="opt" data-correct="false" data-ur="Ek direct synchronous HTTP call har service ko">A direct synchronous HTTP call to each service</button>
+      <button class="opt" data-correct="false" data-ur="Data ko ek database table mein likho aur har service ko poll karao">Write to a database table and have each service poll it</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Tumhare Django app ko signup ke baad ek welcome email bhejni hai — bas ek worker ko bhejna hai, dobara koi nahi parhega, low volume. Sab se munasib?">Your Django app needs to send a welcome email after signup — just one worker sends it, nobody re-reads it, low volume. Most appropriate?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek Kafka cluster khada karo replay ke saath">Stand up a Kafka cluster with replay</button>
+      <button class="opt" data-correct="true" data-ur="Ek simple task queue (Celery + RabbitMQ/Redis) — ek job, ek worker">A simple task queue (Celery + RabbitMQ/Redis) — one job, one worker</button>
+      <button class="opt" data-correct="false" data-ur="Har event ke liye ek naya partition banao">Create a new partition for every event</button>
+      <button class="opt" data-correct="false" data-ur="Kai consumer groups taake email kai baar jaaye">Multiple consumer groups so the email sends several times</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ek <strong>queue</strong> = ek job ek worker uthata hai, phir hata diya (to-do list). Ek <strong>event stream / Kafka</strong> = ek append-only <strong>log</strong> jise bohat se consumers har ek apni raftaar par parhte hain, aur events rehte hain (replay ho sakta hai). Kafka ke chaar lafz: <em>topic, producer, consumer, partition</em>. Reach for Kafka jab kai systems ek hi event par react karein, replay chahiye, ya throughput bohat zyada ho — warna Celery kaafi hai. Interview mein &quot;queue delete karti hai, log rakhta hai&quot; ka farq clear bolna ek strong signal hai.">A <strong>queue</strong> = one job taken by one worker, then removed (a to-do list). An <strong>event stream / Kafka</strong> = an append-only <strong>log</strong> that many consumers each read at their own pace, and events stay (can be replayed). Kafka's four words: <em>topic, producer, consumer, partition</em>. Reach for Kafka when many systems react to the same event, you need replay, or throughput is very high — otherwise Celery is enough. Cleanly stating "a queue deletes, a log keeps" in an interview is a strong signal.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://github.com/donnemartin/system-design-primer#asynchronism&quot; target=&quot;_blank&quot;>System Design Primer — Asynchronism (message queues &amp; streams)</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>.">📖 <a href="https://github.com/donnemartin/system-design-primer#asynchronism" target="_blank">System Design Primer — Asynchronism (message queues &amp; streams)</a><sup class="cite"><a href="#s1">1</a></sup>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to map your current Celery setup to where Kafka would (or wouldn't) help? Or unsure how consumer offsets let two services read the same topic independently? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 15 (Event Streaming).</strong> Builds on <a href="0013-message-queues.html">message queues (8)</a> — one job, one worker vs one log, many consumers.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://github.com/donnemartin/system-design-primer#asynchronism" target="_blank">The System Design Primer — Asynchronism</a>, Donne Martin.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Many independent consumers reacting to the same event, plus replay of past events, is exactly what an event stream (Kafka) gives you — one log, read by many."
+                      : "Reconsider. A plain queue hands each message to one worker and deletes it, so three services can't all react and past events can't be replayed. That's the Kafka case.",
+          q2: correct ? "Yes. One job, one worker, no replay, low volume — a simple task queue like Celery is the right, lightest tool. Kafka would be over-engineering."
+                      : "Reconsider. For a single fire-and-forget email at low volume, a Kafka cluster is heavy over-engineering — a simple Celery queue is the right fit."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

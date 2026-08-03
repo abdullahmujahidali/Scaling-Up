@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/how-to-use.html?raw';
+const headExtra = `<style>
+  .step { display:flex; gap:1rem; align-items:flex-start; margin:1.1rem 0; }
+  .step-num { flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--accent);
+    color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;
+    font-family:ui-sans-serif,sans-serif; font-size:1.1rem; }
+  .step-body { flex:1; }
+  .step-body h3 { margin:0.3rem 0 0.4rem; }
+</style>`;
+---
+<Base title={"How to Use · Scaling Up"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

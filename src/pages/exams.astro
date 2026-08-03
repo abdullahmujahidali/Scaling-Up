@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import body from '../content-html/exams.html?raw';
+const headExtra = `<style>
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.7rem; margin:1.2rem 0 1.6rem; }
+  .stat { background:#fff; border:1px solid var(--rule); border-radius:6px; padding:0.8rem 0.9rem; text-align:center;
+          font-family:ui-sans-serif,-apple-system,sans-serif; }
+  .stat b { display:block; font-size:1.7rem; color:var(--accent); line-height:1.1; }
+  .stat span { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .readiness { border-radius:8px; padding:1.1rem 1.3rem; margin:1.2rem 0;
+               font-family:ui-sans-serif,sans-serif; font-size:0.9rem; line-height:1.55; }
+  .readiness.none  { background:var(--code-bg); border:1px solid var(--rule); }
+  .readiness.notyet{ background:var(--accent-soft); border:1px solid var(--accent); }
+  .readiness.close { background:#fff3cd; border:1px solid #d9a300; }
+  .readiness.ready { background:var(--good-soft); border:1px solid var(--good); }
+</style>`;
+---
+<Base title={"DVA-C02 Practice Exams"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import body from '../../content-html/reference/dva-study-notes.html?raw';
+const headExtra = `<style>
+  .trigger { background: var(--code-bg); border-left: 3px solid #9b1c1c; padding: 0.7rem 0.9rem; margin: 0.9rem 0; border-radius: 0 4px 4px 0; }
+  .trigger strong { color: #9b1c1c; }
+  html[data-lang] .trigger em { font-style: normal; font-weight: 600; }
+  .rule { text-align: center; font-weight: 600; background: var(--code-bg); padding: 0.8rem; border-radius: 4px; margin: 0.9rem 0; }
+  .sec-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0; }
+  .sec-nav a { font-size: 0.85rem; padding: 0.35rem 0.7rem; background: var(--code-bg); border-radius: 20px; text-decoration: none; }
+</style>`;
+---
+<Base title={"DVA-C02 Master Study Notes — the whole exam on one page"} headExtra={headExtra}>
+  <Fragment set:html={body} />
+</Base>

@@ -1,0 +1,157 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">System Design · Lesson 20 · Offline Pack</p>
+    <h1 data-ur="Observability: jab system live ho aur kuch toot jaaye, tum dekho kaise?">Observability: when your system is live and something breaks, how do you SEE it?</h1>
+    <p class="subtitle" data-ur="Teen pillars — logs, metrics, traces. Jo cheez tum dekh nahi sakte usse fix nahi kar sakte.">Three pillars — logs, metrics, traces. You can't fix what you can't see.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: the three pillars</span>
+      <span>Win: instrument your system like a senior</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (circuit breaker yaad karo)">30-second warm-up (recall the circuit breaker)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek <strong>circuit breaker</strong> kab &quot;open&quot; hota hai, aur usse kaise pata chalta hai?">From memory: when does a <strong>circuit breaker</strong> trip "open", and how does it even know?</div>
+    <div class="answer" data-ur="Jab ek downstream service bar bar fail karti hai (error rate ek threshold cross kar jaati hai), breaker <strong>open</strong> ho jaata hai aur calls rok deta hai. Lekin gaur karo — usse pehle <em>error rate ko count karna</em> parta hai. Woh &quot;error rate&quot; ek <strong>metric</strong> hai. Aaj hum us data ko sahi tareeqe se dekhne aur measure karne ka poora ecosystem seekhenge.">When a downstream service keeps failing (error rate crosses a threshold), the breaker goes <strong>open</strong> and stops calls. But notice — first it has to <em>count the error rate</em>. That &quot;error rate&quot; is a <strong>metric</strong>. Today we learn the whole ecosystem for seeing and measuring that data properly.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Observability ke teen pillars hain: LOGS (kya hua — detailed text records), METRICS (kitna / kitni tez — numbers over time), aur TRACES (ek request kahan gayi — services ke beech uska poora safar).</strong> Teenon milke tumhe live system ki &quot;aankhein&quot; dete hain."><strong>Observability has three pillars: LOGS (what happened — detailed text records), METRICS (how much / how fast — numbers over time), and TRACES (where one request went — its journey across services).</strong> Together they give you &quot;eyes&quot; into a live system.</span>
+  </div>
+
+  <h2 data-ur="Teen pillars">The three pillars</h2>
+  <ul>
+    <li data-ur="<strong>Logs — &quot;kya hua&quot;:</strong> alag alag events ke detailed text records. <code>User 42 ne login kiya</code>, <code>Payment fail hua: card declined</code>. Jab tum yeh jaanna chaahte ho ke <em>exactly</em> kis line par kya hua, tum logs parhte ho."><strong>Logs — &quot;what happened&quot;:</strong> detailed text records of individual events. <code>User 42 logged in</code>, <code>Payment failed: card declined</code>. When you want to know <em>exactly</em> what happened at which line, you read logs.</li>
+    <li data-ur="<strong>Metrics — &quot;kitna / kitni tez&quot;:</strong> waqt ke saath numbers. Request rate (kitni requests per second), error rate, latency (kitni der lagi), CPU, memory. Yeh cheezein graph par dikhti hain aur alerts trigger karti hain."><strong>Metrics — &quot;how much / how fast&quot;:</strong> numbers over time. Request rate (requests per second), error rate, latency (how long it took), CPU, memory. These get graphed and trigger alerts.</li>
+    <li data-ur="<strong>Traces — &quot;time kahan gaya / fail kahan hua&quot;:</strong> EK request ko follow karo jab woh service se service par hop karti hai. Web app → auth service → database → payment API. Trace batata hai har hop mein kitna time laga aur kahan toota."><strong>Traces — &quot;where did the time go / where did it fail&quot;:</strong> follow ONE request as it hops from service to service. Web app → auth service → database → payment API. The trace shows how long each hop took and where it broke.</li>
+  </ul>
+  <p data-ur="Ek acchi mental hook: <strong>logs</strong> zoom-in hain (ek event), <strong>metrics</strong> zoom-out hain (poore system ki sehat), aur <strong>traces</strong> horizontal hain (ek request ka safar).">A good mental hook: <strong>logs</strong> are zoomed in (one event), <strong>metrics</strong> are zoomed out (whole-system health), and <strong>traces</strong> are horizontal (one request's journey).</p>
+
+  <h2 data-ur="Kahani: ek restaurant chalana">The story: running a restaurant</h2>
+  <p data-ur="Socho tum ek busy restaurant chalate ho, aur ek raat customers shikayat karte hain ke &quot;service slow hai&quot;. Tumhare paas dekhne ke teen tareeqe hain — bilkul teen pillars jaise:">Imagine you run a busy restaurant, and one night customers complain that &quot;service is slow.&quot; You have three ways to see what's going on — exactly like the three pillars:</p>
+  <ul>
+    <li data-ur="<strong>Logs = order tickets:</strong> har order ki detailed parchi — kya order hua, kis waqt, kis table se. Agar ek dish ghalat gayi, tum us exact ticket ko dhoond ke parhte ho. Yeh <em>ek event</em> ki poori kahani hai."><strong>Logs = the order tickets:</strong> the detailed slip for each order — what was ordered, at what time, from which table. If a dish went wrong, you find and read that exact ticket. It's the full story of <em>one event</em>.</li>
+    <li data-ur="<strong>Metrics = deewar par dashboard:</strong> &quot;tables served per hour&quot;, &quot;average wait time&quot;, &quot;kitchen busy %&quot;. Ek nazar mein tumhe pata chal jaata hai ke aaj raat normal se slow hai — bina koi ticket parhe."><strong>Metrics = the dashboard on the wall:</strong> &quot;tables served per hour&quot;, &quot;average wait time&quot;, &quot;kitchen busy %&quot;. One glance tells you tonight is slower than normal — without reading a single ticket.</li>
+    <li data-ur="<strong>Traces = ek customer ka poora safar follow karna:</strong> darwaze se andar aana → seat → order → kitchen → serve → bill. Tum EK khaas customer ke saath chalte ho aur dekhte ho ke waqt kahan zaya hua — &quot;order 20 minute kitchen mein baitha raha.&quot; Wahi bottleneck hai."><strong>Traces = following one specific customer's whole journey:</strong> door → seat → order → kitchen → served → bill. You walk with ONE particular customer and see where the time was lost — &quot;the order sat in the kitchen for 20 minutes.&quot; That's the bottleneck.</li>
+  </ul>
+  <p data-ur="Dashboard (metrics) tumhe batata hai ke <em>kuch</em> galat hai. Traces tumhe batate hain ke <em>kahan</em>. Aur order tickets (logs) tumhe batate hain ke <em>exactly kya</em>. Teenon chaahiye.">The dashboard (metrics) tells you <em>something</em> is wrong. Traces tell you <em>where</em>. And the order tickets (logs) tell you <em>exactly what</em>. You need all three.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 210" role="img" aria-label="Three pillars of observability: logs, metrics, traces">
+      <g font-family="ui-sans-serif, sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="40" width="170" height="130" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="115" y="62" font-weight="700" fill="#2a4d8f">LOGS</text>
+        <text x="115" y="82" fill="#6b6b6b" font-size="11">what happened</text>
+        <text x="115" y="108" fill="#6b6b6b" font-size="10">User 42 login OK</text>
+        <text x="115" y="124" fill="#6b6b6b" font-size="10">Payment failed</text>
+        <text x="115" y="140" fill="#6b6b6b" font-size="10">order tickets</text>
+
+        <rect x="235" y="40" width="170" height="130" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="320" y="62" font-weight="700" fill="#2a4d8f">METRICS</text>
+        <text x="320" y="82" fill="#6b6b6b" font-size="11">how much / how fast</text>
+        <polyline points="255,150 280,140 305,148 330,120 355,132 385,105" fill="none" stroke="#2a4d8f" stroke-width="2"/>
+        <text x="320" y="165" fill="#6b6b6b" font-size="10">wall dashboard</text>
+
+        <rect x="440" y="40" width="170" height="130" rx="8" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="525" y="62" font-weight="700" fill="#2a4d8f">TRACES</text>
+        <text x="525" y="82" fill="#6b6b6b" font-size="11">where did time go</text>
+        <line x1="460" y1="110" x2="590" y2="110" stroke="#2a4d8f" stroke-width="2"/>
+        <circle cx="470" cy="110" r="5" fill="#2a4d8f"/>
+        <circle cx="510" cy="110" r="5" fill="#2a4d8f"/>
+        <circle cx="560" cy="110" r="5" fill="#9b1c1c"/>
+        <circle cx="585" cy="110" r="5" fill="#2a4d8f"/>
+        <text x="525" y="140" fill="#6b6b6b" font-size="10">one customer's journey</text>
+      </g>
+    </svg>
+    <figcaption data-ur="Logs = order tickets, metrics = deewar ka dashboard, traces = ek customer ka poora safar.">Logs = order tickets, metrics = the wall dashboard, traces = one customer's whole journey.</figcaption>
+  </figure>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Tumhare Django stack mein teenon pehle se within reach hain. <strong>Logs:</strong> Python ka built-in <code>logging</code> module — <code>logger.info()</code>, <code>logger.error()</code> — aur behtar hai ke <em>structured logs</em> (JSON) likho taake machine unhein search kar sake. <strong>Error tracking:</strong> <code>Sentry</code> har exception ko traceback ke saath pakadta hai. <strong>Metrics:</strong> <code>Prometheus</code> numbers scrape karta hai (request rate, latency) aur <code>Grafana</code> unhein graph karta hai. <strong>Traces:</strong> <code>OpenTelemetry</code> ek request ko Django view → Celery task → external API call ke aar paar follow karta hai — taake tum dekh sako ke us slow request ka waqt Celery mein gaya ya third-party API mein.">All three are already within reach in your Django stack. <strong>Logs:</strong> Python's built-in <code>logging</code> module — <code>logger.info()</code>, <code>logger.error()</code> — and prefer <em>structured logs</em> (JSON) so machines can search them. <strong>Error tracking:</strong> <code>Sentry</code> catches every exception with its traceback. <strong>Metrics:</strong> <code>Prometheus</code> scrapes numbers (request rate, latency) and <code>Grafana</code> graphs them. <strong>Traces:</strong> <code>OpenTelemetry</code> follows one request across a Django view → Celery task → external API call — so you can see whether that slow request lost its time in Celery or in a third-party API.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: users kehte hain &quot;checkout slow hai&quot;. Kaun sa pillar sabse pehle batayega ke waqt <em>kahan</em> zaya ho raha hai — auth, database, ya payment API?">Quick check: users say &quot;checkout is slow&quot;. Which pillar first tells you <em>where</em> the time is being lost — auth, database, or the payment API?</div>
+    <div class="answer" data-ur="<strong>Traces.</strong> Ek trace ek checkout request ko har hop ke aar paar follow karta hai aur har step ka time dikhata hai, toh tum foran dekh lete ho ke bottleneck payment API hai (nahi ke tumhara database). Metrics ne tumhe alert kiya ke &quot;latency up hai&quot;; logs baad mein exact error line denge."><strong>Traces.</strong> A trace follows one checkout request across every hop and shows each step's timing, so you immediately see the bottleneck is the payment API (not your database). Metrics alerted you that &quot;latency is up&quot;; logs will later give the exact error line.</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <h2 data-ur="Kaunsa pillar kis sawaal ka jawab deta hai">Which pillar answers which question</h2>
+  <table>
+    <tr><th>Pillar</th><th>Answers</th><th>Shape of data</th><th>Django tool</th></tr>
+    <tr><td><strong>Logs</strong></td><td>What exactly happened?</td><td>Text records of events</td><td><code>logging</code>, Sentry</td></tr>
+    <tr><td><strong>Metrics</strong></td><td>How much / how fast? Is it healthy?</td><td>Numbers over time</td><td>Prometheus + Grafana</td></tr>
+    <tr><td><strong>Traces</strong></td><td>Where did the time go / fail?</td><td>One request across services</td><td>OpenTelemetry</td></tr>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff: sab kuch measure karna mehnga aur bekaar hai">The tradeoff: measuring everything is expensive and useless</span>
+    <span data-ur="Instrumentation <em>free</em> nahi — har log line, metric, aur trace CPU, network, aur storage kharch karta hai, aur runtime mein thora overhead add karta hai. Aur bhi bura: agar tum <strong>sab kuch</strong> log karo, signal noise mein doob jaata hai — 10,000 useless lines mein woh ek asli error dhoondna namumkin ho jaata hai. Isliye senior engineers <strong>choose karte hain KYA measure karna hai</strong>: key metrics, meaningful log levels, aur sirf important requests ki sampled traces. Interview mein isse kaho: &quot;observability ka cost overhead aur noise hai, toh main deliberately choose karta hoon ke kya instrument karna hai.&quot;">Instrumentation is not <em>free</em> — every log line, metric, and trace costs CPU, network, and storage, and adds a little runtime overhead. Worse: if you log <strong>everything</strong>, the signal drowns in noise — finding the one real error inside 10,000 useless lines becomes impossible. So senior engineers <strong>choose WHAT to measure</strong>: key metrics, meaningful log levels, and sampled traces of only important requests. Name it in an interview: &quot;observability's cost is overhead and noise, so I deliberately choose what to instrument.&quot;</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Ek alert firing hai: &quot;error rate 5 minute mein 1% se 12% ho gaya.&quot; Yeh signal — waqt ke saath ek number — kaunsa observability pillar hai?">An alert is firing: &quot;error rate jumped from 1% to 12% over 5 minutes.&quot; This signal — a number over time — is which observability pillar?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Logs">Logs</button>
+      <button class="opt" data-correct="true" data-ur="Metrics">Metrics</button>
+      <button class="opt" data-correct="false" data-ur="Traces">Traces</button>
+      <button class="opt" data-correct="false" data-ur="In mein se koi nahi">None of these</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Ek user ki checkout request 8 second leti hai. Tum EXACTLY dekhna chahte ho ke woh 8 second kahan gaye — Django view, Celery task, ya payment API ke beech. Tum kya reach karoge?">A user's checkout request takes 8 seconds. You want to see EXACTLY where those 8 seconds went — across the Django view, a Celery task, or the payment API. What do you reach for?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Metrics — kyunke woh time measure karte hain">Metrics — because they measure time</button>
+      <button class="opt" data-correct="true" data-ur="A distributed trace of that one request">A distributed trace of that one request</button>
+      <button class="opt" data-correct="false" data-ur="Ek raw text log dump of every event">A raw text log dump of every event</button>
+      <button class="opt" data-correct="false" data-ur="CPU usage graph">The CPU usage graph</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Observability ke teen pillars: <strong>logs</strong> (kya hua — detailed events, jaise order tickets), <strong>metrics</strong> (kitna/kitni tez — numbers over time, jaise deewar ka dashboard), aur <strong>traces</strong> (waqt kahan gaya — ek request ka safar, jaise ek customer ko follow karna). Django mein: <code>logging</code>+Sentry, Prometheus+Grafana, aur OpenTelemetry. Aur tum tradeoff jaante ho — sab kuch measure karna mehnga aur shor bhara hai, isliye deliberately choose karo. Jo tum dekh nahi sakte usse fix nahi kar sakte — aur ab tum dekhna jaante ho.">The three pillars of observability: <strong>logs</strong> (what happened — detailed events, like order tickets), <strong>metrics</strong> (how much/how fast — numbers over time, like the wall dashboard), and <strong>traces</strong> (where the time went — one request's journey, like following a customer). In Django: <code>logging</code>+Sentry, Prometheus+Grafana, and OpenTelemetry. And you know the tradeoff — measuring everything is expensive and noisy, so choose deliberately. You can't fix what you can't see — and now you know how to see.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.python.org/3/library/logging.html&quot; target=&quot;_blank&quot;>Python docs — the <code>logging</code> module</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup>. Pehle pillar ko haathon se seekhne ki sabse sasti jagah.">📖 <a href="https://docs.python.org/3/library/logging.html" target="_blank">Python docs — the <code>logging</code> module</a><sup class="cite"><a href="#s1">1</a></sup>. The cheapest place to learn the first pillar hands-on.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to set up structured JSON logging in a Django project, or wire Sentry / OpenTelemetry into a Celery worker? Or unsure what to actually alert on? Ask.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson 20 (Observability).</strong> Builds on the <a href="0027-circuit-breaker.html">circuit breaker (27)</a> — which needed a metric to know when to trip. Next: <em>Load Testing &amp; Capacity Planning</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.python.org/3/library/logging.html" target="_blank">logging — Logging facility for Python</a>, Python Software Foundation.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. A number tracked over time — error rate — is a metric. Metrics are what alerts and dashboards watch."
+                      : "Reconsider. 'A number over time' is the definition of a metric. Logs are text events; traces follow one request.",
+          q2: correct ? "Yes. A distributed trace follows that single request across services and shows the time spent in each hop — so you see exactly where the 8 seconds went."
+                      : "Reconsider. Metrics show aggregate latency, not one request's path; logs are events. Following ONE request across services is a trace."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

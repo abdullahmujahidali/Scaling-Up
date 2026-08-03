@@ -1,0 +1,149 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Lesson A4 · Domain 2 (26%)</p>
+    <h1 data-ur="IAM policy evaluation: Deny hamesha jeetta hai">IAM policy evaluation: Deny always wins</h1>
+    <p class="subtitle" data-ur="Yeh exam ka sab se aasaan point hai. Qanoon sirf ek line ka hai, aur is par lagbhag hamesha ek sawal aata hai. Yeh muft ke number hain — bas qanoon yaad hona chahiye.">This is the easiest point on the exam. The rule is one line long, and a question on it appears almost every time. These are free marks — you only have to know the rule.</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: how AWS decides allowed or denied</span>
+      <span>Win: a guaranteed exam question</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="A3 se yaad karo: table production mein hai aur naye attribute par query chahiye — LSI ya GSI, aur kyun?">Recall from A3: the table is in production and you need to query a new attribute — LSI or GSI, and why?</div>
+    <div class="answer" data-ur="<strong>GSI.</strong> L = Local = Locked — LSI sirf table banate waqt banta hai. Table pehle se maujood hai, to LSI ka option mar chuka hai."><strong>GSI.</strong> L = Local = Locked — an LSI is only creatable with the table. The table already exists, so that option is dead.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny (default).</strong><br><br>Iska matlab: agar kahin bhi — kisi ek bhi policy mein — <strong>Deny</strong> likha hai, to jawab hamesha &quot;access nahi milega&quot; hai. Chahe das doosri policies Allow keh rahi hon. Aur agar kisi cheez ka zikr kahin hai hi nahi, to woh bhi <strong>mana</strong> hai — kyunke AWS mein default &quot;na&quot; hai."><strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny (the default).</strong><br><br>Meaning: if <strong>Deny</strong> appears anywhere — in even one policy — the answer is always &quot;access denied&quot;. Even if ten other policies say Allow. And anything not mentioned at all is also <strong>denied</strong> — because AWS's default is no.</span>
+  </div>
+
+  <h2 data-ur="Kahani: building ka guard">The story: the building's security guard</h2>
+  <p data-ur="Socho ek office building hai jismein ek guard hai. Uske paas teen list hain:">Imagine an office building with one security guard. He has three lists:</p>
+  <ul>
+    <li data-ur="<strong>&quot;Andar mat aane do&quot; list (Deny).</strong> Guard pehle yeh dekhta hai. Agar tumhara naam yahan hai — bas, khatam. Chahe tumhare paas CEO ka likha hua permission letter ho, chahe tumhara naam &quot;andar aane do&quot; list mein bhi ho. Guard ke liye yeh list sab se upar hai."><strong>The &quot;do not admit&quot; list (Deny).</strong> He checks this first. If your name is on it — that's it, finished. Even if you carry a permission letter from the CEO, even if your name is also on the &quot;admit&quot; list. For the guard, this list outranks everything.</li>
+    <li data-ur="<strong>&quot;Andar aane do&quot; list (Allow).</strong> Deny list mein naam nahi tha? Ab yeh dekhta hai. Naam mila to andar jao."><strong>The &quot;admit&quot; list (Allow).</strong> Not on the deny list? Now he checks this one. Name found → you go in.</li>
+    <li data-ur="<strong>Kisi list mein naam hi nahi (implicit deny).</strong> Guard kehta hai &quot;main tumhein nahi jaanta&quot; — aur andar nahi jaane deta. Yeh default hai. AWS mein bhi bilkul yehi: jis cheez ki ijazat likhi hui nahi, woh mana hai."><strong>Name on neither list (implicit deny).</strong> The guard says &quot;I don't know you&quot; — and doesn't let you in. That's the default. AWS works identically: anything not explicitly allowed is denied.</li>
+  </ul>
+  <p data-ur="Bas yehi poora qanoon hai. Exam is ka sawal aise poochta hai: teen policies dikhata hai aur poochta hai &quot;kya user yeh kaam kar sakta hai?&quot; — tumhara kaam sirf itna hai ke <strong>Deny dhoondo</strong>. Mil gaya to jawab &quot;nahi&quot;, chahe baaki sab Allow ho.">That's the entire rule. The exam asks it like this: it shows three policies and asks &quot;can the user do this?&quot; — and your only job is to <strong>hunt for a Deny</strong>. Found one → the answer is no, whatever the rest say.</p>
+
+  <h2 data-ur="Policy ke hisse — sawal parhne ke liye itna kaafi hai">Parts of a policy — this is enough to read the question</h2>
+  <table class="elim">
+    <thead><tr><th data-ur="Hissa">Part</th><th data-ur="Matlab">Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Effect</strong></td><td data-ur="<code>Allow</code> ya <code>Deny</code>. ⭐ Sab se pehle yehi dekho."><code>Allow</code> or <code>Deny</code>. ⭐ Look at this first.</td></tr>
+      <tr><td><strong>Action</strong></td><td data-ur="Kaun sa kaam — jaise <code>s3:GetObject</code>, <code>dynamodb:PutItem</code>. <code>*</code> ka matlab sab kuch.">Which operation — e.g. <code>s3:GetObject</code>, <code>dynamodb:PutItem</code>. <code>*</code> means everything.</td></tr>
+      <tr><td><strong>Resource</strong></td><td data-ur="Kis cheez par — ARN se likha jata hai. Dhyan do: <code>bucket</code> aur <code>bucket/*</code> alag cheezein hain (ek bucket khud, doosra uske andar ki files).">On what — written as an ARN. Note: <code>bucket</code> and <code>bucket/*</code> are different things (the bucket itself vs the objects inside it).</td></tr>
+      <tr><td><strong>Condition</strong></td><td data-ur="Kab laagu ho — jaise sirf is IP se, ya sirf MFA ke saath. Condition poori na ho to woh statement laagu hi nahi hoti.">When it applies — e.g. only from this IP, or only with MFA. If the condition isn't met, that statement simply doesn't apply.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Trap — role vs user">Trap — role vs user</span>
+    <span data-ur="Security ke lagbhag har sawal mein ek option hota hai jismein <strong>access key</strong> kahin rakhi jati hai — environment variable mein, encrypted file mein, config mein. <strong>Yeh sab ghalat hain.</strong> Sahi jawab lagbhag hamesha <strong>IAM role</strong> hota hai, kyunke role temporary credentials deta hai jo khud badalte rehte hain — chorane ke liye koi permanent key hoti hi nahi. Yaad rakho: sawal &quot;key kahan chupayein&quot; nahi poochta; sahi jawab &quot;key rakho hi mat&quot; hota hai.">Nearly every security question includes an option that stores an <strong>access key</strong> somewhere — an environment variable, an encrypted file, a config file. <strong>They are all wrong.</strong> The right answer is almost always an <strong>IAM role</strong>, because a role hands out temporary, auto-rotating credentials — there's no permanent key to steal. Remember: the question isn't &quot;where do we hide the key&quot;; the right answer is &quot;don't have a key at all&quot;.</span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — security ke sawal mein yeh lafz">Exam English — words in security questions</span>
+    <span data-ur="<strong>&quot;explicit&quot;</strong> = saaf saaf likha hua. <strong>&quot;implicit&quot;</strong> = likha hua nahi, khud samjha jaye. <strong>&quot;least privilege&quot;</strong> = sirf utni ijazat jitni zaroori hai, ek zarra zyada nahi — yeh AWS ka pasandeeda usool hai. <strong>&quot;assume a role&quot;</strong> = aarzi tor par kisi role ki permissions le lena (AWS mein &quot;andaza lagana&quot; nahi, &quot;dharan karna&quot;). <strong>&quot;temporary credentials&quot;</strong> = kuch der baad khud khatam ho jane wali chaabi.">
+      <strong>&quot;explicit&quot;</strong> = written out plainly. <strong>&quot;implicit&quot;</strong> = not written, understood by default. <strong>&quot;least privilege&quot;</strong> = only as much permission as needed, not a scrap more — AWS's favourite principle. <strong>&quot;assume a role&quot;</strong> = temporarily take on a role's permissions (here &quot;assume&quot; means <em>take on</em>, not <em>guess</em>). <strong>&quot;temporary credentials&quot;</strong> = a key that expires by itself.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 2 · Security · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek IAM user ke saath do policies attached hain. Policy A <code>s3:GetObject</code> ko bucket <code>reports</code> par <strong>Allow</strong> karti hai. Policy B usi bucket par <code>s3:GetObject</code> ko <strong>Deny</strong> karti hai. User bucket se ek file parhne ki koshish karta hai. Kya hoga?">An IAM user has two policies attached. Policy A <strong>Allows</strong> <code>s3:GetObject</code> on the <code>reports</code> bucket. Policy B <strong>Denies</strong> <code>s3:GetObject</code> on the same bucket. The user tries to read a file from the bucket. What happens?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Request kamyab hogi, kyunke Allow policy pehle attach hui thi">The request succeeds, because the Allow policy was attached first</button>
+      <button class="opt" data-correct="true" data-ur="Request nakaam hogi — explicit Deny hamesha explicit Allow ko haraata hai">The request is denied — an explicit Deny always overrides an explicit Allow</button>
+      <button class="opt" data-correct="false" data-ur="Request kamyab hogi, kyunke zyada khaas (specific) policy jeetti hai">The request succeeds, because the more specific policy wins</button>
+      <button class="opt" data-correct="false" data-ur="AWS error dega ke policies aapas mein takra rahi hain">AWS returns an error saying the policies conflict</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 2 · Security · the implicit deny</span>
+    <p class="scenario" data-ur="Ek IAM role ke saath sirf ek policy hai, jo <code>s3:GetObject</code> ko <strong>Allow</strong> karti hai. Application us role se <code>s3:PutObject</code> chalane ki koshish karti hai. Kahin bhi koi Deny statement nahi hai. Kya hoga?">An IAM role has exactly one policy, which <strong>Allows</strong> <code>s3:GetObject</code>. The application uses that role to call <code>s3:PutObject</code>. There is no Deny statement anywhere. What happens?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Request kamyab hogi, kyunke koi Deny nahi hai">The request succeeds, because there is no Deny</button>
+      <button class="opt" data-correct="true" data-ur="Request nakaam hogi — jis kaam ki ijazat likhi nahi, woh implicitly mana hai">The request is denied — anything not explicitly allowed is implicitly denied</button>
+      <button class="opt" data-correct="false" data-ur="Request kamyab hogi, kyunke GetObject ki ijazat mein PutObject shaamil hai">The request succeeds, because allowing GetObject includes PutObject</button>
+      <button class="opt" data-correct="false" data-ur="Request kamyab hogi magar CloudTrail mein warning aayegi">The request succeeds but logs a warning to CloudTrail</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 2 · Security · role vs key</span>
+    <p class="scenario" data-ur="Ek Lambda function ko ek DynamoDB table parhna hai. Ek developer ne function ke environment variables mein IAM access key aur secret key daal di hain. Security review ne isay reject kar diya. Kaunsa solution <span class=&quot;qual&quot;>SAB SE ZYADA mehfooz</span> hai?">A Lambda function needs to read a DynamoDB table. A developer placed an IAM access key and secret key in the function's environment variables. A security review rejected this. Which solution is <span class="qual">MOST secure</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Environment variables ko KMS se encrypt kar do">Encrypt the environment variables with KMS</button>
+      <button class="opt" data-correct="false" data-ur="Access keys Secrets Manager mein rakho aur startup par parho">Store the access keys in Secrets Manager and read them at startup</button>
+      <button class="opt" data-correct="true" data-ur="Lambda ke execution role ko DynamoDB parhne ki ijazat do aur access keys bilkul hata do">Grant the Lambda execution role permission to read DynamoDB and remove the access keys entirely</button>
+      <button class="opt" data-correct="false" data-ur="Access keys har 90 din baad rotate karo">Rotate the access keys every 90 days</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="Django ki permissions bhi bilkul aise hi kaam karti hain. Jab tum <code>@permission_required</code> lagate ho aur user ke paas woh permission nahi hoti, to Django usay andar nahi jaane deta — chahe uske paas doosri das permissions hon. Yeh <strong>implicit deny</strong> hai: jo ijazat di nahi gayi, woh nahi hai. Aur access key vs IAM role wala farq bilkul wohi hai jo tumhare <code>settings.py</code> mein hard-coded <code>SECRET_KEY</code> aur environment se aane wale secret ka hai — bas AWS ek qadam aage jaata hai: role ke saath koi permanent secret hota hi nahi, is liye chorane ko kuch bacha hi nahi.">Django permissions work the same way. When you add <code>@permission_required</code> and the user lacks it, Django refuses — however many other permissions they hold. That's <strong>implicit deny</strong>: what wasn't granted doesn't exist. And the access-key vs IAM-role distinction is exactly your hard-coded <code>SECRET_KEY</code> in <code>settings.py</code> versus reading it from the environment — except AWS goes one step further: with a role there is no permanent secret at all, so there's nothing left to steal.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se, poora qanoon ek line mein — aur agar kisi kaam ka kahin zikr hi nahi to kya hota hai?">From memory, the whole rule in one line — and what happens if an action is never mentioned anywhere?</div>
+    <div class="answer" data-ur="<strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny.</strong> Aur agar zikr hi nahi to <strong>mana</strong> hai — AWS ka default &quot;na&quot; hai. Sawal mein sirf Deny dhoondo; mil gaya to jawab &quot;nahi&quot;."><strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny.</strong> And if it's never mentioned, it's <strong>denied</strong> — AWS's default is no. Hunt for a Deny; if you find one, the answer is no.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Yeh sab se sasta point hai jo tum is poore course mein kama sakte ho. Ek line ka qanoon, aur lagbhag har exam mein us par sawal. Tum ab policy wale sawal ko 20 second mein hal kar sakte ho: sirf Deny dhoondo. Aur tumne security ka sab se bara pattern bhi pakar liya — jawab hamesha &quot;key hata do, role lagao&quot; hota hai, na ke &quot;key ko behtar chupao&quot;.">This is the cheapest point you can earn in the whole course. A one-line rule, and a question on it in nearly every exam. You can now solve a policy question in 20 seconds: just hunt for the Deny. And you've got security's biggest pattern — the answer is always &quot;remove the key, use a role&quot;, never &quot;hide the key better&quot;.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html&quot; target=&quot;_blank&quot;>IAM Policy Evaluation Logic</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS ka apna flowchart. Sirf pehla diagram dekh lo, wohi kaafi hai.">📖 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" target="_blank">IAM Policy Evaluation Logic</a><sup class="cite"><a href="#s1">1</a></sup> — AWS's own flowchart. Looking at the first diagram is enough.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> If a question shows you a JSON policy and you're unsure, paste it. I'll read the JSON with you line by line — the JSON is often easier than the English paragraph around it.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson A4 (IAM policy evaluation).</strong> Part of the <a href="../MISSION-AWS.md">DVA-C02 track</a>. Previous: <a href="0047-aws-dynamodb-keys-and-indexes.html">A3 · DynamoDB keys and indexes</a>. Next: <a href="0049-aws-messaging-services.html">A5 · SQS vs SNS vs Kinesis</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" target="_blank">Policy evaluation logic — AWS IAM User Guide</a> — an explicit deny in any policy overrides any allow; requests are denied by default.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank">Security best practices in IAM</a> — use roles to deliver temporary credentials instead of long-term access keys; apply least-privilege permissions.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html" target="_blank">Lambda execution role</a> — how a Lambda function receives permissions without stored credentials.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. An explicit Deny always wins, no matter how many Allows exist, in what order they were attached, or how specific they are. There is no 'conflict error' in IAM — evaluation is deterministic: any Deny means denied."
+                      : "Reconsider. Order of attachment does not matter, and IAM has no 'more specific wins' rule for Deny — that's a distractor borrowed from other systems. The rule is absolute: explicit DENY > explicit ALLOW > implicit deny. One Deny anywhere means denied.",
+          q2: correct ? "Correct. This is implicit deny. The policy allows GetObject and says nothing about PutObject — and in AWS, anything not explicitly allowed is denied by default. Permissions are never inherited between actions: allowing a read never implies a write."
+                      : "Reconsider. You don't need a Deny to be denied. AWS's default answer is no — access is granted only by an explicit Allow. The policy allows GetObject only, and PutObject is a separate action, so it falls to implicit deny. Read permission never implies write permission.",
+          q3: correct ? "Correct. Options 1, 2 and 4 all still leave a long-lived access key existing somewhere — they only hide it better or change it more often. A leaked key is still a leaked key. The execution role gives Lambda temporary auto-rotating credentials, so no permanent key exists at all. \"MOST secure\" means eliminate the secret, not relocate it."
+                      : "Reconsider. Encrypting, relocating or rotating the key (options 1, 2, 4) all leave a permanent credential in existence — they just make it harder to reach. Lambda already has an execution role; granting it DynamoDB read access removes the need for any key at all. That's the pattern the exam always rewards."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,189 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS DVA-C02 · Lesson A5 · Domain 1 (32%)</p>
+    <h1 data-ur="SQS vs SNS vs Kinesis: kaunsa, kab">SQS vs SNS vs Kinesis: which one, when</h1>
+    <p class="subtitle" data-ur="Teenon &quot;messages bhejne&quot; ki services hain, is liye exam inhein ek doosre ke distractor ki tarah istemaal karta hai. Farq sirf ek sawal se tay hota hai: message ko kitne log parhenge, aur kya woh baad mein dobara parha ja sakta hai?">All three are &quot;sending messages&quot; services, so the exam uses them as distractors for each other. One question separates them: how many readers does the message have, and can it be read again later?</p>
+    <div class="meta">
+      <span>~9 min</span>
+      <span>One concept: one reader, many readers, or replayable</span>
+      <span>Win: a whole family of questions</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="A4 se yaad karo: IAM ka poora qanoon ek line mein?">Recall from A4: the whole IAM rule in one line?</div>
+    <div class="answer" data-ur="<strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny.</strong> Ek bhi Deny mil jaye to jawab &quot;nahi&quot;."><strong>Explicit DENY &gt; Explicit ALLOW &gt; Implicit deny.</strong> Find a single Deny and the answer is no.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>SQS = ek message, ek parhne wala, parhne ke baad khatam.</strong><br><strong>SNS = ek message, sab ko copy — foran, aur bhool jao.</strong><br><strong>Kinesis = data ki nadi — kai log parhein, aur baad mein dobara bhi parh sakein (replay).</strong><br><br>Sawal mein &quot;replay&quot;, &quot;re-process&quot;, ya &quot;analytics&quot; ka lafz sirf <strong>Kinesis</strong> ki taraf jaata hai."><strong>SQS = one message, one reader, gone once read.</strong><br><strong>SNS = one message, copied to everyone — instantly, then forgotten.</strong><br><strong>Kinesis = a river of data — many readers, and re-readable later (replay).</strong><br><br>The words &quot;replay&quot;, &quot;re-process&quot;, or &quot;analytics&quot; in a question point only to <strong>Kinesis</strong>.</span>
+  </div>
+
+  <h2 data-ur="Kahani: teen tarah ki dak">The story: three kinds of post</h2>
+  <ul>
+    <li data-ur="<strong>SQS = daftar ka to-do box.</strong> Kaam ki parchi box mein daal di. Jo bhi worker khaali ho, parchi uthata hai, kaam karta hai, aur parchi <strong>phaar deta hai</strong>. Ek parchi = ek banda. Doosra worker wahi parchi dobara nahi utha sakta. Agar koi worker bimar ho jaye to parchi wapas box mein aa jati hai taake koi aur kar le.">
+      <strong>SQS = the office to-do box.</strong> A task slip goes into the box. Whichever worker is free picks it up, does the work, and <strong>tears the slip up</strong>. One slip = one person. No second worker can pick up that same slip. If a worker falls ill, the slip returns to the box for someone else.</li>
+    <li data-ur="<strong>SNS = building ka loudspeaker.</strong> Ek elaan hota hai, aur jitne log us waqt sun rahe hain sab ko ek saath pohanchta hai. Elaan kahin mehfooz nahi hota — jo us waqt maujood nahi tha, usne miss kar diya, bas.">
+      <strong>SNS = the building loudspeaker.</strong> One announcement reaches everyone listening at that moment, all at once. Nothing is stored — whoever wasn't there missed it, and that's that.</li>
+    <li data-ur="<strong>Kinesis = akhbar ki dukan jahan purane akhbar bhi rakhe hain.</strong> Akhbar rozana aata hai, kai log parhte hain — aur agar tumhein pichlay hafte ka chahiye to woh bhi mil jata hai (default 24 ghante, 365 din tak barhaya ja sakta hai). Isi liye jab sawal kahe &quot;data dobara process karna hai&quot; to jawab Kinesis hai.">
+      <strong>Kinesis = a newsstand that also keeps back issues.</strong> The paper arrives daily, many people read it — and if you want last week's, it's still there (24 hours by default, extendable to 365 days). That's why &quot;we need to re-process the data&quot; points to Kinesis.</li>
+  </ul>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Sawal mein yeh dikhe">See this in the question</th><th data-ur="Jawab">Answer</th><th data-ur="Kyun">Why</th></tr></thead>
+    <tbody>
+      <tr>
+        <td data-ur="&quot;kaam ka bojh baant do&quot;, &quot;worker process karein&quot;, &quot;decouple&quot;">&quot;distribute work&quot;, &quot;workers process tasks&quot;, &quot;decouple&quot;</td>
+        <td><strong>SQS</strong></td>
+        <td data-ur="Har kaam ek hi baar hona chahiye.">Each job should be done exactly once.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;ek event, kai systems ko batao&quot;, &quot;fan-out&quot;, &quot;notify&quot;">&quot;one event, notify several systems&quot;, &quot;fan-out&quot;</td>
+        <td><strong>SNS</strong></td>
+        <td data-ur="Sab ko apni apni copy chahiye.">Everyone needs their own copy.</td>
+      </tr>
+      <tr>
+        <td data-ur="⭐ &quot;har subscriber ka apna queue ho aur retry bhi ho&quot;">⭐ &quot;each subscriber needs its own queue with retries&quot;</td>
+        <td><strong>SNS + SQS fan-out</strong></td>
+        <td data-ur="Exam ka pasandeeda pattern: SNS topic → kai SQS queues.">The exam's favourite pattern: one SNS topic → several SQS queues.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;real-time streaming&quot;, &quot;replay&quot;, &quot;analytics&quot;, &quot;kai consumers wohi data parhein&quot;">&quot;real-time streaming&quot;, &quot;replay&quot;, &quot;analytics&quot;, &quot;multiple consumers read the same data&quot;</td>
+        <td><strong>Kinesis Data Streams</strong></td>
+        <td data-ur="Data mehfooz rehta hai, kai baar parha ja sakta hai.">The data persists and can be read repeatedly.</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;order barqarar rahe&quot; + &quot;duplicate na hon&quot;">&quot;preserve order&quot; + &quot;no duplicates&quot;</td>
+        <td><strong>SQS FIFO</strong></td>
+        <td data-ur="Sirf FIFO tarteeb aur exactly-once deta hai (300–3,000 msg/sec).">Only FIFO gives ordering and exactly-once (300–3,000 msg/sec).</td>
+      </tr>
+      <tr>
+        <td data-ur="&quot;AWS services ke beech event routing&quot;, &quot;schedule&quot;, &quot;SaaS se event&quot;">&quot;route events between AWS services&quot;, &quot;schedule&quot;, &quot;events from a SaaS app&quot;</td>
+        <td><strong>EventBridge</strong></td>
+        <td data-ur="Rules ke zariye event routing; cron bhi karta hai.">Rule-based event routing; also does cron.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Messaging ke numbers jo exam poochta hai">The messaging numbers the exam asks for</span>
+    <ul>
+      <li data-ur="<strong>SQS message: max 256 KB.</strong> Is se bara → S3 mein rakho aur link bhejo (Extended Client Library)."><strong>SQS message: max 256 KB.</strong> Bigger → store in S3 and send a pointer (the Extended Client Library).</li>
+      <li data-ur="<strong>SQS retention: 4 din default, max 14 din.</strong> Minimum 60 second."><strong>SQS retention: 4 days default, 14 days max.</strong> Minimum 60 seconds.</li>
+      <li data-ur="<strong>Visibility timeout: 30 second default, max 12 ghante.</strong> ⭐ Agar message baar baar process ho raha hai (duplicate kaam), to jawab hai visibility timeout barhao — kyunke worker khatam karne se pehle hi message dobara nazar aa jata hai."><strong>Visibility timeout: 30 seconds default, 12 hours max.</strong> ⭐ If a message is being processed repeatedly (duplicate work), the answer is to raise the visibility timeout — the message is reappearing before the worker finishes.</li>
+      <li data-ur="<strong>Long polling: max 20 second.</strong> ⭐ &quot;SQS ki cost kam karo&quot; ka jawab lagbhag hamesha yehi hai (khali requests kam ho jati hain)."><strong>Long polling: max 20 seconds.</strong> ⭐ Almost always the answer to &quot;reduce SQS costs&quot; (it cuts empty receive requests).</li>
+      <li data-ur="<strong>Kinesis shard: 1 MB/s andar, 2 MB/s bahar.</strong> Retention 24 ghante default, 365 din tak."><strong>Kinesis shard: 1 MB/s in, 2 MB/s out.</strong> Retention 24 hours by default, up to 365 days.</li>
+      <li data-ur="<strong>SQS FIFO: 300 msg/sec</strong> (batching ke saath 3,000). Standard queue: unlimited."><strong>SQS FIFO: 300 msg/sec</strong> (3,000 with batching). Standard queue: unlimited.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Trap — Standard queue duplicate de sakta hai">Trap — a Standard queue can deliver duplicates</span>
+    <span data-ur="SQS <strong>Standard</strong> queue &quot;at-least-once&quot; delivery deta hai — yani ek message <em>kabhi kabhi do baar</em> aa sakta hai, aur tarteeb ki bhi guarantee nahi. Agar sawal kahe &quot;payment do baar process ho gayi&quot; to do jawab mumkin hain: <strong>FIFO queue</strong> (agar tarteeb bhi chahiye) ya <strong>idempotent processing</strong> (code aisa ho ke dobara chalne se nuqsan na ho). Agar sawal &quot;code change nahi&quot; kahe to FIFO; agar &quot;throughput zyada chahiye&quot; kahe to idempotency, kyunke FIFO sust hai.">An SQS <strong>Standard</strong> queue gives &quot;at-least-once&quot; delivery — a message can <em>occasionally arrive twice</em>, and ordering isn't guaranteed. If a question says &quot;the payment was processed twice&quot;, two answers are possible: a <strong>FIFO queue</strong> (if ordering matters too) or <strong>idempotent processing</strong> (code that's safe to run twice). If the question says &quot;no code changes&quot;, pick FIFO; if it says &quot;high throughput required&quot;, pick idempotency, because FIFO is slower.</span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — messaging ke lafz">Exam English — messaging words</span>
+    <span data-ur="<strong>&quot;decouple&quot;</strong> = do hisson ko alag karna taake ek girne se doosra na gire (yeh lafz lagbhag hamesha SQS ki taraf ishara karta hai). <strong>&quot;fan-out&quot;</strong> = ek cheez ko kai jagah bhejna. <strong>&quot;poll&quot;</strong> = baar baar ja kar poochna &quot;kuch hai?&quot;. <strong>&quot;dead-letter queue (DLQ)&quot;</strong> = woh jagah jahan baar baar fail hone wale messages jaate hain taake unhein alag se dekha ja sake. <strong>&quot;idempotent&quot;</strong> = ek kaam do baar karne se bhi nateeja wohi rahe.">
+      <strong>&quot;decouple&quot;</strong> = separate two parts so one failing doesn't take the other down (this word points to SQS almost every time). <strong>&quot;fan-out&quot;</strong> = send one thing to many places. <strong>&quot;poll&quot;</strong> = repeatedly ask &quot;is there anything?&quot;. <strong>&quot;dead-letter queue (DLQ)&quot;</strong> = where repeatedly-failing messages go so they can be inspected separately. <strong>&quot;idempotent&quot;</strong> = doing it twice gives the same result as doing it once.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 1 · Development · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek e-commerce app mein jab order aata hai to teen alag systems ko us ka pata chalna chahiye: inventory, shipping, aur analytics. Har system ko <strong>apni copy</strong> chahiye aur agar koi system band ho to message zaya nahi hona chahiye. Kaunsa design yeh <span class=&quot;qual&quot;>SAB SE ACHA</span> poora karta hai?">In an e-commerce app, when an order is placed three separate systems must learn about it: inventory, shipping, and analytics. Each system needs <strong>its own copy</strong>, and no message may be lost if a system is down. Which design <span class="qual">BEST</span> meets this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek SQS queue jise teenon systems parhein">A single SQS queue that all three systems read from</button>
+      <button class="opt" data-correct="true" data-ur="Ek SNS topic jis se teen SQS queues subscribe karein, har system apna queue parhe">An SNS topic with three subscribed SQS queues, each system reading its own queue</button>
+      <button class="opt" data-correct="false" data-ur="Ek SNS topic jis se teenon systems seedha subscribe karein">An SNS topic that all three systems subscribe to directly</button>
+      <button class="opt" data-correct="false" data-ur="Teen alag Lambda functions jo order database ko har minute poll karein">Three Lambda functions polling the orders database every minute</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 4 · Troubleshooting · the visibility timeout</span>
+    <p class="scenario" data-ur="Ek SQS queue se messages Lambda process karta hai. Har message ko process hone mein takreeban <strong>90 second</strong> lagte hain. Team dekh rahi hai ke kuch orders <strong>do ya teen baar</strong> process ho rahe hain. Queue ka visibility timeout default par hai. Sab se acha hal kya hai?">A Lambda function processes messages from an SQS queue. Each message takes about <strong>90 seconds</strong> to process. The team sees some orders being processed <strong>two or three times</strong>. The queue's visibility timeout is at its default. What is the best fix?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Queue ko FIFO mein badal do">Convert the queue to a FIFO queue</button>
+      <button class="opt" data-correct="true" data-ur="Visibility timeout ko function ke processing time se zyada kar do (jaise 120 second)">Increase the visibility timeout to more than the processing time (e.g. 120 seconds)</button>
+      <button class="opt" data-correct="false" data-ur="Message retention 14 din kar do">Increase message retention to 14 days</button>
+      <button class="opt" data-correct="false" data-ur="Long polling on kar do">Enable long polling</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 1 · Development · replay</span>
+    <p class="scenario" data-ur="Ek company clickstream data process karti hai. Do alag teams ko <strong>wohi data</strong> parhna hai, aur data science team ko kabhi kabhi <strong>pichlay 7 din ka data dobara process</strong> karna parta hai jab woh apna algorithm badalti hai. Kaunsi service yeh requirement poori karti hai?">A company processes clickstream data. Two separate teams must read <strong>the same data</strong>, and the data science team sometimes needs to <strong>re-process the last 7 days</strong> when they change their algorithm. Which service meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="SQS Standard queue">An SQS Standard queue</button>
+      <button class="opt" data-correct="false" data-ur="SNS topic">An SNS topic</button>
+      <button class="opt" data-correct="true" data-ur="Kinesis Data Streams jiska retention 7 din par set ho">Kinesis Data Streams with retention set to 7 days</button>
+      <button class="opt" data-correct="false" data-ur="SQS FIFO queue">An SQS FIFO queue</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="<strong>SQS bilkul tumhara Celery + Redis/RabbitMQ hai.</strong> Tum task queue mein daalte ho, koi ek worker usay uthata hai, karta hai, khatam. <strong>Visibility timeout wohi cheez hai jo Celery ka <code>visibility_timeout</code> hai</strong> — aur wahi masla bhi: agar task worker ke khatam karne se pehle wapas queue mein aa jaye to woh <em>do baar</em> chal jata hai. Tumne yeh production mein dekha hoga. <strong>SNS wohi hai jo Django signals hain</strong> — ek event hua, kai receivers ko pata chala, koi kuch mehfooz nahi karta. Aur Kinesis ka koi seedha Django jora nahi — woh Kafka jaisa hai, aur tumne uska lesson (0025) pehle hi kiya hua hai.">
+      <strong>SQS is exactly your Celery + Redis/RabbitMQ.</strong> You push a task, one worker picks it up, runs it, done. <strong>The visibility timeout is precisely Celery's <code>visibility_timeout</code></strong> — including the same bug: if the task returns to the queue before the worker finishes, it runs <em>twice</em>. You've probably hit this in production. <strong>SNS is Django signals</strong> — an event fires, several receivers hear it, nothing is stored. Kinesis has no direct Django equivalent — it's Kafka-like, and you already did that lesson (0025).</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: message do baar process ho raha hai aur processing 90 second leti hai — kya barhana hai? Aur &quot;replay&quot; ka lafz kis service ki taraf jata hai?">From memory: a message is being processed twice and processing takes 90 seconds — what do you raise? And which service does the word &quot;replay&quot; point to?</div>
+    <div class="answer" data-ur="<strong>Visibility timeout</strong> barhao (default 30 second hai, processing 90 second — isi liye message wapas nazar aa jata hai). <strong>&quot;Replay&quot; = Kinesis</strong>, kyunke sirf wahi data mehfooz rakhta hai."><strong>The visibility timeout</strong> (the default is 30 seconds while processing takes 90 — which is exactly why the message reappears). <strong>&quot;Replay&quot; = Kinesis</strong>, because only it retains the data.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab tum messaging ka poora khandaan alag alag pehchante ho — aur exam ka sab se pasandeeda pattern (SNS + SQS fan-out) bhi. Tum &quot;duplicate processing&quot; ka asal sabab jaante ho (visibility timeout, na ke FIFO), aur &quot;SQS cost kam karo&quot; ka jawab (long polling). Yeh sab Domain 1 hai — exam ka 32%.">You can now tell the messaging family apart — including the exam's favourite pattern (SNS + SQS fan-out). You know the real cause of duplicate processing (visibility timeout, not FIFO) and the answer to &quot;reduce SQS cost&quot; (long polling). All of this is Domain 1 — 32% of the exam.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html&quot; target=&quot;_blank&quot;>SQS visibility timeout</a><sup class=&quot;cite&quot;><a href=&quot;#s2&quot;>2</a></sup> — AWS khud samjhata hai ke duplicate processing kyun hoti hai.">📖 <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html" target="_blank">SQS visibility timeout</a><sup class="cite"><a href="#s2">2</a></sup> — AWS explaining exactly why duplicate processing happens.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Messaging questions often bury the deciding detail (how many readers? does it need replay?) in the middle of a long paragraph. Paste one and I'll show you where the deciding phrase was.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson A5 (SQS vs SNS vs Kinesis).</strong> Part of the <a href="../MISSION-AWS.md">DVA-C02 track</a>. Previous: <a href="0048-aws-iam-policy-evaluation.html">A4 · IAM policy evaluation</a>. Next: <a href="0050-aws-deployment-strategies.html">A6 · Deployment strategies</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/quotas-messages.html" target="_blank">Amazon SQS message quotas</a> — 256 KB maximum message size, 4-day default retention with a 14-day maximum, 20-second maximum long-poll wait.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html" target="_blank">Amazon SQS visibility timeout</a> — 30-second default, 12-hour maximum; a timeout shorter than processing time causes repeat delivery.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html" target="_blank">Kinesis Data Streams quotas</a> — 1 MB/s write and 2 MB/s read per shard; 24-hour default retention extendable to 365 days.</li>
+      <li id="s4"><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html" target="_blank">Amazon SQS FIFO queues</a> — ordering and exactly-once processing; 300 messages/second, or 3,000 with batching.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct — this is the exam's favourite pattern. SNS fans the order out to three queues, and each SQS queue buffers for its own system, so nothing is lost while a system is down. Option 1 fails because in SQS one message goes to only ONE reader. Option 3 fails the durability requirement: SNS alone does not store messages, so a system that's down misses the event."
+                      : "Reconsider. Option 1 is wrong because an SQS message is consumed by exactly one reader — the three systems would steal messages from each other. Option 3 gets each system a copy, but SNS stores nothing, so anything delivered while a system is down is lost forever. Adding an SQS queue per subscriber gives both fan-out AND durability. That's SNS + SQS fan-out.",
+          q2: correct ? "Correct. The default visibility timeout is 30 seconds but processing takes 90 — so at 30 seconds SQS assumes the worker died and hands the message to someone else, while the first worker is still going. Raising the timeout above the processing time fixes it. FIFO would not help: this is not an ordering problem."
+                      : "Reconsider. Compare two numbers: default visibility timeout 30 seconds, processing time 90 seconds. At the 30-second mark SQS decides the message was never handled and redelivers it — while the original worker is still running. That is the duplicate. Retention and long polling are unrelated; FIFO addresses ordering, not this.",
+          q3: correct ? "Correct. Two requirements point the same way: multiple consumers reading the SAME data, and re-processing the last 7 days. Only Kinesis retains data for replay (24 hours by default, configurable up to 365 days). SQS deletes a message once it is read, and SNS stores nothing at all."
+                      : "Reconsider. The deciding word is \"re-process\" the last 7 days. SQS deletes a message once consumed, and SNS keeps nothing — so with either one, last week's data no longer exists. Only Kinesis Data Streams retains records for replay, with retention configurable up to 365 days."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

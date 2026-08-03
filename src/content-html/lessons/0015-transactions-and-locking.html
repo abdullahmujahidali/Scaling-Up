@@ -1,0 +1,150 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Backend Depth · Lesson B4 · Databases · Week 2 · Day 2</p>
+    <h1 data-ur="Transactions &amp; locking: paisa double-spend kyun nahi hota">Transactions &amp; locking: why money doesn't double-spend</h1>
+    <p class="subtitle" data-ur="&quot;All-or-nothing&quot; ke peeche ki depth — aur woh race condition jo har backend engineer ko ek baar to zaroor kaat-ti hai.">The depth behind "all-or-nothing" — and the race condition that bites every backend engineer once.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>One concept: transactions &amp; race conditions</span>
+      <span>Win: prevent a double-spend bug</span>
+    </div>
+  </header>
+
+  <h2 data-ur="30-second warm-up (DNS &amp; CDN yaad karo)">30-second warm-up (recall DNS &amp; CDN)</h2>
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: ek ek line — DNS aur CDN.">From memory: one line each — DNS and CDN.</div>
+    <div class="answer" data-ur="<strong>DNS</strong> = name → IP (internet ki phone book). <strong>CDN</strong> = static files ki copies duniya bhar mein users ke qareeb servers pe, speed ke liye."><strong>DNS</strong> = name → IP (the internet's phone book). <strong>CDN</strong> = copies of static files on servers near users worldwide, for speed.</div>
+    <div class="hint">click to reveal — say it first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Ek transaction kai database steps ko ek all-or-nothing unit mein group karti hai — ya to sab hote hain, ya koi nahi.</strong> Locking do transactions ko ek hi waqt mein ek doosre pe qadam rakhne se rokti hai."><strong>A transaction groups several database steps into one all-or-nothing unit — they all happen, or none do.</strong> Locking stops two transactions from stepping on each other at the same time.</span>
+  </div>
+
+  <h2 data-ur="Part 1 · Transactions — sab kuch ya kuch nahi">Part 1 · Transactions — all or nothing</h2>
+  <p data-ur="<strong>Kahani:</strong> Ali se Sara ko $100 transfer karna <em>do</em> steps hain: Ali se $100 minus karo, Sara mein $100 add karo. Socho ke bijli in do steps ke <em>darmiyan</em> chali jaye — Ali ke $100 gaye aur Sara ko kuch nahi mila. Paisa gayab. Ek <strong>transaction</strong> kehti hai: &quot;in do steps ko ek samjho. Agar dono complete na ho sakein, to sab kuch undo kardo.&quot; Koi half-done state kabhi nahi."><strong>Story:</strong> transferring $100 from Ali to Sara is <em>two</em> steps: subtract $100 from Ali, add $100 to Sara. Imagine the power cuts out <em>between</em> the two steps — Ali lost $100 and Sara got nothing. Money vanished. A <strong>transaction</strong> says: "treat these two steps as one. If both can't complete, undo everything." No half-done state, ever.</p>
+  <p data-ur="Yeh ACID ka <strong>A</strong> hai — <em>Atomicity</em> (all-or-nothing), jisse tum pehle SQL lesson mein mile the. Ab tumhein samajh aa gaya ke yeh kyun matter karta hai.">This is the <strong>A</strong> in ACID — <em>Atomicity</em> (all-or-nothing), which you first met back in the SQL lesson. Now you see why it matters.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge">Django bridge</span>
+    <span data-ur="Django tumhein yeh seedha deta hai: <code>with transaction.atomic():</code> ek block ko wrap karta hai taake agar andar <em>kuch bhi</em> raise ho, to poora block roll back ho jaye — kuch save nahi hota. Tumhari money-transfer view hamesha <code>atomic()</code> ke andar honi chahiye. Iske baghair, beech mein ek crash tumhara data ek tooti hui half-state mein chhod deta hai. Yeh ek line hai jo disasters ki poori category rok deti hai.">Django gives you this directly: <code>with transaction.atomic():</code> wraps a block so if <em>anything</em> inside raises, the whole block rolls back — nothing is saved. Your money-transfer view should always be inside <code>atomic()</code>. Without it, a crash mid-way leaves your data in a broken half-state. This is one line that prevents a whole category of disasters.</span>
+  </div>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;"><code>from django.db import transaction
+
+with transaction.atomic():          # all-or-nothing
+    ali.balance  -= 100
+    ali.save()
+    sara.balance += 100
+    sara.save()                     # crash anywhere → both undone</code></pre>
+
+  <h2 data-ur="Part 2 · Race condition — do log, ek seat">Part 2 · The race condition — two people, one seat</h2>
+  <p data-ur="Transactions crashes handle karti hain. Lekin ek zyada chalaak problem hai: <strong>do cheezein bilkul ek hi waqt pe ho rahi hon.</strong>">Transactions handle crashes. But there's a sneakier problem: <strong>two things happening at the exact same time.</strong></p>
+  <p data-ur="<strong>Kahani:</strong> concert ki ek seat bachi hai. Do buyers ek hi lamhe mein &quot;buy&quot; click karte hain. Dono requests parhti hain &quot;1 seat available,&quot; dono sochti hain &quot;zabardast, yeh free hai!&quot;, dono likhti hain &quot;0 seats, sold.&quot; <strong>Tumne abhi ek seat do baar bech di.</strong> Yeh hai <strong>race condition</strong> — nateeja is pe depend karta hai ke wahan pehle kaun pohancha, aur kisi ne bhi zahiri tor pe kuch galat nahi kiya."><strong>Story:</strong> one concert seat left. Two buyers click "buy" at the same instant. Both requests read "1 seat available," both think "great, it's free!", both write "0 seats, sold." <strong>You just sold one seat twice.</strong> That's a <strong>race condition</strong> — the result depends on who got there first, and nobody did anything obviously wrong.</p>
+
+  <figure>
+    <svg viewBox="0 0 640 150" role="img" aria-label="Two requests read the same value and both write">
+      <g font-family="ui-sans-serif, sans-serif" font-size="11" text-anchor="middle">
+        <rect x="30" y="20" width="150" height="34" rx="6" fill="#eef3f8" stroke="#2a4d8f"/>
+        <text x="105" y="42" fill="#2a4d8f">Buyer A reads: 1 left</text>
+        <rect x="30" y="95" width="150" height="34" rx="6" fill="#fbf3e2" stroke="#b8860b"/>
+        <text x="105" y="117" fill="#8a6400">Buyer B reads: 1 left</text>
+        <text x="320" y="60" fill="#6b6b6b">both think it's available…</text>
+        <rect x="460" y="55" width="160" height="40" rx="6" fill="#f6e9e9" stroke="#9b1c1c"/>
+        <text x="540" y="72" fill="#9b1c1c" font-weight="700">sold twice ✗</text>
+        <text x="540" y="88" fill="#6b6b6b" font-size="10">1 seat, 2 buyers</text>
+        <line x1="180" y1="37" x2="458" y2="70" stroke="#9b1c1c" stroke-width="1.2"/>
+        <line x1="180" y1="112" x2="458" y2="78" stroke="#9b1c1c" stroke-width="1.2"/>
+      </g>
+    </svg>
+    <figcaption data-ur="Dono purani value parhte hain us se pehle ke koi bhi likhe — classic race condition.">Both read the old value before either writes — the classic race condition.</figcaption>
+  </figure>
+
+  <h3 data-ur="Fix: locking">The fix: locking</h3>
+  <p data-ur="Ek <strong>lock</strong> kehta hai &quot;jab tak main is row pe kaam kar raha hoon, koi aur ise chhoo nahi sakta — unhein intezar karna hoga.&quot; To Buyer A seat lock karta hai, check karta hai, khareedta hai, release karta hai. Buyer B ko <em>intezar pe majboor</em> kiya gaya, aur jab woh andar aata hai, to use &quot;0 left&quot; dikhta hai aur use sahi tor pe mana kar diya jata hai. Ek seat, ek buyer.">A <strong>lock</strong> says "while I'm working on this row, nobody else can touch it — they must wait." So Buyer A locks the seat, checks it, buys it, releases. Buyer B was <em>forced to wait</em>, and when they get in, they see "0 left" and are correctly refused. One seat, one buyer.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Django bridge — asal fix">Django bridge — the actual fix</span>
+    <span data-ur="Ek <code>atomic()</code> block ke andar <code>select_for_update()</code> un rows ko lock kar deta hai jo tum parhte ho jab tak transaction khatam na ho. Doosri request tab tak block rehti hai jab tak pehli mukammal na ho, phir updated value dekhti hai. Yeh <em>woh</em> pattern hai concurrency ke neeche mehfooz tareeqe se &quot;inventory decrement karna / seat claim karna / balance debit karna&quot; ke liye."><code>select_for_update()</code> inside an <code>atomic()</code> block locks the rows you read until the transaction ends. The second request blocks until the first finishes, then sees the updated value. This is <em>the</em> pattern for "decrement inventory / claim a seat / debit a balance" safely under concurrency.</span>
+  </div>
+
+  <pre style="background:var(--code-bg);padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;"><code>with transaction.atomic():
+    seat = Seat.objects.select_for_update().get(id=seat_id)  # 🔒 locks the row
+    if seat.available:
+        seat.available = False
+        seat.save()      # Buyer B waits here until we're done, then sees it's gone</code></pre>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Quick check: race condition kya hai, aur konsa tool ise rokta hai?">Quick check: what's a race condition, and what tool prevents it?</div>
+    <div class="answer" data-ur="Do operations jo <strong>ek hi waqt</strong> pe chal rahi hon aur same data ko read-phir-write karti hon, ek galat nateeja peda karti hain (jaise ek seat do baar bechna). Ise ek <strong>lock</strong> se roko — ek ko doosre ke khatam hone tak intezar karna hoga (Django mein: <code>atomic()</code> ke andar <code>select_for_update()</code>).">Two operations running at the <strong>same time</strong> that read-then-write the same data, producing a wrong result (e.g. selling one seat twice). Prevent it with a <strong>lock</strong> — one must wait until the other finishes (in Django: <code>select_for_update()</code> inside <code>atomic()</code>).</div>
+    <div class="hint">click to reveal</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Tradeoff — ise naam do">The tradeoff — name it</span>
+    <span data-ur="Locks cheezon ko <em>correct</em> banate hain lekin <em>speed</em> ko nuqsaan pohancha sakte hain: jab ek transaction lock rakhti hai, baqi intezar karti hain. Bohot zyada ya bohot lambe lock karo to slowdowns ya <strong>deadlocks</strong> bhi mil sakte hain (do transactions har ek doosre ka intezar karti hain, hamesha ke liye phansi). Is liye <em>sab se chhoti</em> cheez ko <em>sab se kam</em> waqt ke liye lock karo. Correctness vs throughput — ek asal tradeoff jise zubaan se kehna chahiye.">Locks make things <em>correct</em> but can hurt <em>speed</em>: while one transaction holds a lock, others wait. Lock too much or too long and you get slowdowns or even <strong>deadlocks</strong> (two transactions each waiting on the other, stuck forever). So lock the <em>smallest</em> thing for the <em>shortest</em> time. Correctness vs throughput — a real tradeoff to name out loud.</span>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="q" data-ur="Tumhara &quot;redeem coupon&quot; endpoint kabhi kabhi ek hi one-time coupon ko do baar use hone deta hai jab tezi se click karo. Root cause aur fix?">Your "redeem coupon" endpoint occasionally lets the same one-time coupon be used twice when clicked rapidly. Root cause and fix?</div>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Race condition; row ko atomic() ke andar select_for_update se lock karo">Race condition; lock the row with select_for_update in atomic()</button>
+      <button class="opt" data-correct="false" data-ur="Missing index; coupon pe db_index=True add karo">Missing index; add db_index=True on the coupon</button>
+      <button class="opt" data-correct="false" data-ur="Stale cache; cache TTL kam karo">Stale cache; lower the cache TTL</button>
+      <button class="opt" data-correct="false" data-ur="Ghalat database type; NoSQL pe switch karo">Wrong database type; switch to NoSQL</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q" data-ur="Ek money-transfer function ek account se minus karta hai aur doosre mein add karta hai. Do steps ke darmiyan ek crash se paisa nahi khona chahiye. Tum ise kis mein wrap karte ho?">A money-transfer function subtracts from one account and adds to another. A crash between the two steps must not lose money. What do you wrap it in?</div>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Ek cache short timeout ke saath">A cache with a short timeout</button>
+      <button class="opt" data-correct="true" data-ur="Ek transaction (transaction.atomic) — all-or-nothing">A transaction (transaction.atomic) — all-or-nothing</button>
+      <button class="opt" data-correct="false" data-ur="Ek background Celery task">A background Celery task</button>
+      <button class="opt" data-correct="false" data-ur="Ek read replica">A read replica</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki teri jeet">Your win today</span>
+    <span data-ur="Ek <strong>transaction</strong> kai steps ko all-or-nothing bana deti hai (Django ka <code>atomic()</code>) — crashes se bach jaati hai. Ek <strong>lock</strong> do concurrent operations ko same row corrupt karne se rokta hai (<code>select_for_update()</code>) — race conditions se bach jaata hai. Milkar yeh woh tareeqa hain jisse tum paise, inventory, ya seats wali koi bhi cheez bina disaster ke banate ho. Yeh deep, asal, interview-and-job depth hai.">A <strong>transaction</strong> makes several steps all-or-nothing (Django's <code>atomic()</code>) — survives crashes. A <strong>lock</strong> stops two concurrent operations from corrupting the same row (<code>select_for_update()</code>) — survives race conditions. Together they're how you build anything with money, inventory, or seats without disaster. This is deep, real, interview-and-job depth.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source) — optional">Read next (primary source) — optional</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.djangoproject.com/en/stable/topics/db/transactions/&quot; target=&quot;_blank&quot;>Django docs — Database transactions</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> aur <a href=&quot;https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-for-update&quot; target=&quot;_blank&quot;>select_for_update</a>.">📖 <a href="https://docs.djangoproject.com/en/stable/topics/db/transactions/" target="_blank">Django docs — Database transactions</a><sup class="cite"><a href="#s1">1</a></sup> and <a href="https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-for-update" target="_blank">select_for_update</a>.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Want to see how a deadlock actually forms, or the difference between pessimistic locking (locks) and optimistic locking (version checks)? Bring a concurrency bug and we'll dissect it.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson B4 (transactions &amp; locking).</strong> Builds on ACID from <a href="0010-sql-vs-nosql.html">SQL vs NoSQL (6)</a>. Next (Day 3, Track A): <em>Monolith vs Microservices</em>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources"><li id="s1"><a href="https://docs.djangoproject.com/en/stable/topics/db/transactions/" target="_blank">Django docs — Database transactions</a>.</li></ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Right. Rapid double-use of a one-time thing = a race condition. Lock the row (select_for_update in atomic) so the second request waits and then sees it's used."
+                      : "Reconsider. The bug appears only under concurrent clicks — that's a race condition, not an index or cache issue. Lock the row with select_for_update inside atomic().",
+          q2: correct ? "Yes. Two steps that must both succeed or both undo = wrap in transaction.atomic() for all-or-nothing atomicity."
+                      : "Reconsider. Protecting a multi-step change from a mid-way crash is exactly what a transaction (atomic) is for — not caches, tasks, or replicas."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
