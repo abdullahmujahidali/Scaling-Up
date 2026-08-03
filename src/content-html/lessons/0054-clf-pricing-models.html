@@ -1,0 +1,206 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C3 · Domain 4 (12%)</p>
+    <h1 data-ur="Pricing models: ek hi server, paanch qeematein">Pricing models: one server, five prices</h1>
+    <p class="subtitle" data-ur="Bilkul wohi EC2 instance paanch mukhtalif qeematon par mil sakta hai. Farq machine mein nahi — <em>waaday</em> mein hai. Exam yeh nahi poochta ke qeemat kya hai; woh poochta hai ke kis halaat mein kaun sa tareeqa theek hai.">The exact same EC2 instance can cost five different amounts. The difference isn't the machine — it's the <em>promise</em> you make. The exam never asks the price; it asks which option fits the situation.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>One concept: commitment buys discount</span>
+      <span>Win: the Spot vs Reserved decision</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C2 se yaad karo: 24×7 support wala sab se sasta plan kaun sa? Aur &quot;designated TAM&quot; kis plan ka lafz hai? Budgets aage dekhta hai ya peechay?">First, recall from C2: cheapest plan with 24×7 support? Which plan does &quot;designated TAM&quot; point to? Does Budgets look forward or back?</div>
+    <div class="answer" data-ur="<strong>Business</strong> (24×7, sab se sasta). <strong>Enterprise</strong> (designated TAM + 15 minute). <strong>Budgets = aage</strong> — alert deta hai hadd paar hone par; Cost Explorer peechay dekhta hai. Aaj hum us cheez par aate hain jo bill ka asal size tay karti hai: pricing model."><strong>Business</strong> (24×7, cheapest). <strong>Enterprise</strong> (designated TAM + 15 minutes). <strong>Budgets = forward</strong> — it alerts when you cross a limit; Cost Explorer looks back. Today: the thing that actually decides the size of the bill.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Jitna bara waada, utni bari chhoot. Aur Spot alag qism ka sauda hai — waada nahi, khatra.</strong><br><br><strong>On-Demand</strong> = koi waada nahi, poori qeemat, jab chaho band kar do.<br><strong>Reserved / Savings Plans</strong> = 1 ya 3 saal ka waada → <strong>72% tak</strong> sasta.<br><strong>Spot</strong> = AWS ki bachi hui capacity → <strong>90% tak</strong> sasta, magar AWS <strong>2 minute</strong> ka notice de kar wapas le sakta hai.<br><br>Exam ka faisla-kun sawal hamesha yeh hai: <em>kya yeh kaam beech mein ruk sakta hai?</em> Agar haan (batch processing, testing) → <strong>Spot</strong>. Agar nahi (database, production web server) → <strong>Spot kabhi nahi</strong>."><strong>The bigger the promise, the bigger the discount. And Spot is a different kind of deal — not a promise, a risk.</strong><br><br><strong>On-Demand</strong> = no promise, full price, stop whenever you like.<br><strong>Reserved / Savings Plans</strong> = a 1- or 3-year promise → up to <strong>72%</strong> off.<br><strong>Spot</strong> = AWS's spare capacity → up to <strong>90%</strong> off, but AWS can take it back with <strong>2 minutes</strong> notice.<br><br>The deciding exam question is always: <em>can this work be interrupted?</em> If yes (batch processing, testing) → <strong>Spot</strong>. If no (a database, a production web server) → <strong>never Spot</strong>.</span>
+  </div>
+
+  <h2 data-ur="Kahani: hotel ka kamra">The story: booking a hotel room</h2>
+  <p data-ur="Ek hi kamra, paanch tareeqe se mil sakta hai. <strong>On-Demand</strong>: aaj ja kar reception par poori qeemat do — mehnga, magar jab chaho aao jao. <strong>Reserved</strong>: teen saal ka contract karo ke har raat yeh kamra tumhara hai — bohot sasta par jaata hai, magar agar tum na aao tab bhi paisa dena hai.">The same room, five ways to get it. <strong>On-Demand</strong>: walk up to reception today and pay full price — expensive, but come and go as you please. <strong>Reserved</strong>: sign a three-year contract for that room every night — far cheaper, but you pay whether you show up or not.</p>
+  <p data-ur="<strong>Spot</strong>: hotel kehta hai &quot;jo kamre raat 9 baje tak khali reh jaate hain woh tumhein 90% sasta de denge — magar agar koi poori qeemat wala mehmaan aa gaya to tumhein 2 minute mein kamra khali karna hoga.&quot; Chhutti manane walon ke liye tabahi. Magar agar tum sirf do ghante aaram karne aaye ho aur kahin aur bhi ja sakte ho — behtareen sauda."><strong>Spot</strong>: the hotel says &quot;any room still empty at 9pm is yours at 90% off — but if a full-price guest arrives, you must vacate within 2 minutes.&quot; A disaster if you're on holiday. An excellent deal if you only came to rest for two hours and can easily go elsewhere.</p>
+  <p data-ur="<strong>Savings Plans</strong> yeh kehta hai: &quot;main teen saal tak har mahine kam az kam 10,000 rupay is hotel chain mein kharch karunga&quot; — kamra kaun sa hoga, kaunse shehar mein, yeh tay nahi. Isi liye yeh Reserved se zyada lachakdaar hai."><strong>Savings Plans</strong> says something different: &quot;I promise to spend at least X per hour with this hotel chain for three years&quot; — without fixing which room, or even which city. That's why it's more flexible than Reserved.</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Tareeqa">Option</th><th data-ur="Chhoot">Discount</th><th data-ur="Sauda kya hai">The deal</th><th data-ur="Exam mein jawab kab">When it's the answer</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>On-Demand</strong></td>
+        <td class="n" data-ur="Koi nahi (buniyadi qeemat)">None (baseline)</td>
+        <td data-ur="Jitna chalao utna do. Koi waada nahi, koi hadd nahi.">Pay per second/hour used. No commitment at all.</td>
+        <td data-ur="&quot;Short-term&quot;, &quot;unpredictable&quot;, &quot;spiky&quot; workload, ya pehli baar test kar rahe hain — yani abhi usage ka andaza hi nahi.">&quot;Short-term&quot;, &quot;unpredictable&quot;, &quot;spiky&quot; workloads, or first-time testing — when usage isn't known yet.</td>
+      </tr>
+      <tr style="background:var(--flag-soft)">
+        <td><strong>Spot</strong> ⭐</td>
+        <td class="n" data-ur="90% tak">up to 90%</td>
+        <td data-ur="AWS ki bachi hui capacity. AWS kisi bhi waqt <strong>2 minute ka notice</strong> de kar wapas le sakta hai.">AWS's spare capacity. AWS can reclaim it any time with <strong>2 minutes' notice</strong>.</td>
+        <td data-ur="⭐ Lafz <strong>&quot;fault-tolerant&quot;</strong>, <strong>&quot;flexible start/end time&quot;</strong>, <strong>&quot;can be interrupted&quot;</strong>, batch processing, CI/CD, big-data analysis. <strong>Database ya production web server ke liye kabhi nahi.</strong>">⭐ The words <strong>&quot;fault-tolerant&quot;</strong>, <strong>&quot;flexible start and end times&quot;</strong>, <strong>&quot;can be interrupted&quot;</strong>, batch processing, CI/CD, big-data analysis. <strong>Never for a database or production web server.</strong></td>
+      </tr>
+      <tr style="background:var(--flag-soft)">
+        <td><strong>Reserved Instances</strong> ⭐</td>
+        <td class="n" data-ur="72% tak">up to 72%</td>
+        <td data-ur="<strong>1 ya 3 saal</strong> ka waada, ek khaas instance type ka. 3 saal = zyada chhoot. Kharidne ke baad <strong>cancel nahi hota</strong>.">A <strong>1- or 3-year</strong> commitment to a specific instance type. 3 years = bigger discount. <strong>Cannot be cancelled</strong> once bought.</td>
+        <td data-ur="⭐ <strong>&quot;steady state&quot;</strong>, <strong>&quot;predictable usage&quot;</strong>, &quot;always-on database&quot; — yani woh cheez jo hamesha chalti rehti hai.">⭐ <strong>&quot;Steady state&quot;</strong>, <strong>&quot;predictable usage&quot;</strong>, &quot;an always-on database&quot; — anything that runs continuously.</td>
+      </tr>
+      <tr>
+        <td><strong>Savings Plans</strong></td>
+        <td class="n" data-ur="72% tak">up to 72%</td>
+        <td data-ur="Instance ka nahi, <strong>paise ka</strong> waada: &quot;1 ya 3 saal tak itne $/ghanta kharch karunga&quot;. Zyada lachakdaar.">A commitment to <strong>spend</strong>, not to an instance: &quot;$X per hour for 1 or 3 years&quot;. More flexible.</td>
+        <td data-ur="Wohi steady usage, magar sawal mein <strong>&quot;flexibility&quot;</strong> ka lafz ho — instance family ya region badalne ki azadi chahiye. <strong>Compute SP = 66% tak</strong> (Lambda aur Fargate par bhi lagta hai), <strong>EC2 Instance SP = 72% tak</strong> (kam lachak, zyada chhoot).">The same steady usage, but when the question stresses <strong>&quot;flexibility&quot;</strong> — freedom to change instance family or Region. <strong>Compute SP = up to 66%</strong> (covers Lambda and Fargate too); <strong>EC2 Instance SP = up to 72%</strong> (less flexible, bigger discount).</td>
+      </tr>
+      <tr>
+        <td><strong>Dedicated Host</strong></td>
+        <td class="n" data-ur="Sab se mehnga">Most expensive</td>
+        <td data-ur="Poora physical server sirf tumhara. Tum socket/core tak dekh sakte ho.">An entire physical server for you alone, with visibility of sockets and cores.</td>
+        <td data-ur="⭐ Sirf do wajahein: <strong>&quot;bring your own licence&quot; (BYOL)</strong> jahan licence physical cores se bandha ho, ya sakht <strong>compliance/regulatory</strong> requirement. Yeh lafz na hon to yeh jawab nahi.">⭐ Only two reasons: <strong>&quot;bring your own licence&quot; (BYOL)</strong> where licensing is tied to physical cores, or a strict <strong>compliance/regulatory</strong> requirement. Without those words, it isn't the answer.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Woh tafseelat jo exam poochta hai">The details the exam asks for</span>
+    <ul>
+      <li data-ur="⭐ <strong>Reserved Instance ke term: sirf 1 saal ya 3 saal.</strong> Koi 2 saal ya 5 saal nahi — agar option mein &quot;2-year Reserved Instance&quot; likha ho to woh jhoota option hai."><strong>⭐ Reserved Instance terms: 1 year or 3 years only.</strong> There is no 2-year or 5-year term — an option saying &quot;2-year Reserved Instance&quot; is a fake.</li>
+      <li data-ur="<strong>Payment ke teen tareeqe:</strong> <strong>All Upfront</strong> (sab pehle — sab se zyada chhoot), <strong>Partial Upfront</strong> (kuch pehle), <strong>No Upfront</strong> (kuch nahi pehle — sab se kam chhoot). Zyada pehle do = zyada bachao."><strong>Three payment options:</strong> <strong>All Upfront</strong> (pay everything now — biggest discount), <strong>Partial Upfront</strong>, <strong>No Upfront</strong> (smallest discount). More paid upfront = more saved.</li>
+      <li data-ur="<strong>Standard vs Convertible RI:</strong> <strong>Standard</strong> = zyada chhoot, magar instance type badal nahi sakte (sirf modify). <strong>Convertible</strong> = kam chhoot, magar doosre instance type se <strong>exchange</strong> ho sakta hai. Sawal mein &quot;might need to change instance type&quot; = Convertible."><strong>Standard vs Convertible RI:</strong> <strong>Standard</strong> = bigger discount, cannot change instance type (only modify). <strong>Convertible</strong> = smaller discount, but can be <strong>exchanged</strong> for a different instance type. &quot;Might need to change instance type&quot; = Convertible.</li>
+      <li data-ur="<strong>Regional vs Zonal RI:</strong> <strong>Regional</strong> = poore region mein chalta hai, AZ ki lachak deta hai magar capacity reserve nahi karta. <strong>Zonal</strong> = ek AZ ke liye, aur <strong>capacity reserve</strong> karta hai. &quot;Guarantee capacity in a specific AZ&quot; = Zonal."><strong>Regional vs Zonal RI:</strong> <strong>Regional</strong> = applies across the Region, gives AZ flexibility but does <em>not</em> reserve capacity. <strong>Zonal</strong> = tied to one AZ and <strong>does reserve capacity</strong>. &quot;Guarantee capacity in a specific AZ&quot; = Zonal.</li>
+      <li data-ur="⭐ <strong>Spot ka notice: 2 minute.</strong> Yeh number poocha jaata hai."><strong>⭐ Spot interruption notice: 2 minutes.</strong> This number gets asked.</li>
+      <li data-ur="⭐ <strong>Data transfer ka qaida — yeh bohot poocha jaata hai:</strong> AWS mein data <strong>aana (inbound/in) hamesha MUFT</strong> hai. <strong>Bahar jaana (outbound/out) ka paisa lagta hai.</strong> Ek hi AZ ke andar private IP par = muft. Ek region ke andar AZ se AZ = paisa. Ek region se doosre region = zyada paisa. Internet par bahar = sab se zyada. <strong>Yaad rakhne ka jumla: andar aana muft, bahar jaana mehnga.</strong>"><strong>⭐ The data transfer rule — asked often:</strong> data <strong>IN to AWS is always free</strong>. Data <strong>OUT costs money</strong>. Within one AZ over private IP = free. Across AZs in a Region = charged. Region to Region = more. Out to the internet = most. <strong>The phrase to hold: in is free, out is expensive.</strong></li>
+      <li data-ur="<strong>S3 ke storage tiers (qeemat ke lehaaz se):</strong> <strong>Standard</strong> (aksar istemaal), <strong>Standard-IA</strong> / <strong>One Zone-IA</strong> (kam istemaal, sasta rakhna magar nikalne ka paisa), <strong>Glacier Instant / Flexible / Deep Archive</strong> (archive — sab se sasta rakhna, magar nikalne mein waqt aur paisa). ⭐ <strong>S3 Intelligent-Tiering</strong> = jab usage ka pattern <em>maloom hi nahi</em> — AWS khud tier badal deta hai. Sawal mein &quot;unknown or changing access patterns&quot; = Intelligent-Tiering, hamesha."><strong>S3 storage tiers by cost:</strong> <strong>Standard</strong> (frequent access), <strong>Standard-IA / One Zone-IA</strong> (infrequent — cheaper to store, but a retrieval fee), <strong>Glacier Instant / Flexible / Deep Archive</strong> (archival — cheapest storage, but retrieval costs time and money). ⭐ <strong>S3 Intelligent-Tiering</strong> = when access patterns are <em>unknown or changing</em> — AWS moves objects between tiers automatically. That phrase in a question means Intelligent-Tiering, always.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="Sab se aam trap — &quot;sab se sasta&quot; hamesha Spot nahi hota">The most common trap — &quot;cheapest&quot; doesn't always mean Spot</span>
+    <span data-ur="Sawal aksar <span class=&quot;qual&quot;>MOST COST-EFFECTIVE</span> poochta hai, aur Spot sab se sasta dikhta hai — is liye log usay chun lete hain. <strong>Magar pehle yeh dekho ke kaam ruk sakta hai ya nahi.</strong><br><br>Agar sawal mein &quot;production database&quot;, &quot;must run continuously&quot;, ya &quot;cannot be interrupted&quot; likha hai — <strong>Spot foran ghalat hai, chahe kitna hi sasta ho.</strong> Us soorat mein sab se sasta <em>mumkin</em> jawab Reserved ya Savings Plans hai.<br><br>Yaad rakho: exam &quot;sab se sasta&quot; nahi poochta — woh poochta hai &quot;sab se sasta jo kaam bhi kar sake&quot;. Pehle na-mumkin options kaato, phir sasta dhoondo.">Questions often ask for the <span class="qual">MOST COST-EFFECTIVE</span> option, and Spot looks cheapest — so people pick it. <strong>But first check whether the work can be interrupted.</strong><br><br>If the question says &quot;production database&quot;, &quot;must run continuously&quot;, or &quot;cannot be interrupted&quot; — <strong>Spot is immediately wrong, however cheap.</strong> The cheapest <em>viable</em> answer is then Reserved or Savings Plans.<br><br>Remember: the exam isn't asking for the cheapest option — it's asking for the cheapest option <em>that also works</em>. Eliminate the impossible first, then look at price.</span>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — yeh lafz pricing ke sawal ka jawab tay kar dete hain">Exam English — words that decide pricing questions</span>
+    <span data-ur="<strong>&quot;fault-tolerant&quot;</strong> = jo kharabi bardasht kar le, ruk kar dobara chal sakta hai. ⭐ Yeh lafz dikhte hi <strong>Spot</strong> socho.<br><strong>&quot;steady state&quot;</strong> / <strong>&quot;predictable&quot;</strong> = hamesha ek jaisa chalta rehta hai. → Reserved ya Savings Plans.<br><strong>&quot;spiky&quot;</strong> / <strong>&quot;unpredictable&quot;</strong> / <strong>&quot;short-term&quot;</strong> = kabhi zyada kabhi kam, pata nahi. → On-Demand.<br><strong>&quot;interrupted&quot;</strong> = beech mein rok diya gaya.<br><strong>&quot;upfront&quot;</strong> = pehle se, shuru mein diya gaya paisa.<br><strong>&quot;commitment&quot;</strong> = waada, pabandi.<br><strong>&quot;cost-effective&quot;</strong> = paise ke lehaaz se behtareen — <em>sab se sasta nahi</em>, balke &quot;jo kaam kare aur sab se kam kharche mein&quot;.<br><strong>&quot;tenancy&quot;</strong> = hardware kis ke saath share ho raha hai (shared ya dedicated).<br><strong>&quot;retrieval&quot;</strong> = archive se data wapas nikalna (Glacier ke sawal mein aata hai).">
+      <strong>&quot;fault-tolerant&quot;</strong> = able to survive failure and restart. ⭐ On sight, think <strong>Spot</strong>.<br>
+      <strong>&quot;steady state&quot; / &quot;predictable&quot;</strong> = runs the same continuously. → Reserved or Savings Plans.<br>
+      <strong>&quot;spiky&quot; / &quot;unpredictable&quot; / &quot;short-term&quot;</strong> = varies, unknown. → On-Demand.<br>
+      <strong>&quot;interrupted&quot;</strong> = stopped part-way through.<br>
+      <strong>&quot;upfront&quot;</strong> = paid at the start.<br>
+      <strong>&quot;commitment&quot;</strong> = a binding promise.<br>
+      <strong>&quot;cost-effective&quot;</strong> = best value — <em>not simply cheapest</em>, but &quot;works, at the lowest cost&quot;.<br>
+      <strong>&quot;tenancy&quot;</strong> = who else shares the hardware (shared or dedicated).<br>
+      <strong>&quot;retrieval&quot;</strong> = getting data back out of an archive (appears in Glacier questions).</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 4 · Pricing · the Spot giveaway</span>
+    <p class="scenario" data-ur="Ek company raat ko ek bara batch data-processing job chalati hai. Yeh job <strong>fault-tolerant</strong> hai aur agar ruk jaye to dobara shuru ho sakti hai. Job ka waqt lachakdaar hai. Kaunsa purchasing option <span class=&quot;qual&quot;>SAB SE ZYADA COST-EFFECTIVE</span> hai?">A company runs a large batch data-processing job overnight. The job is <strong>fault-tolerant</strong> and can restart if interrupted. Its start and end times are flexible. Which purchasing option is <span class="qual">MOST COST-EFFECTIVE</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="On-Demand Instances">On-Demand Instances</button>
+      <button class="opt" data-correct="true" data-ur="Spot Instances">Spot Instances</button>
+      <button class="opt" data-correct="false" data-ur="3-saal ke Reserved Instances">3-year Reserved Instances</button>
+      <button class="opt" data-correct="false" data-ur="Dedicated Hosts">Dedicated Hosts</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 4 · Pricing · the trap version of the same question</span>
+    <p class="scenario" data-ur="Ek company ka <strong>production database</strong> ek EC2 instance par 24×7 chalta hai aur agle teen saal tak isi tarah chalta rahega. Yeh <strong>kisi soorat mein ruk nahi sakta</strong>. Kaunsa purchasing option <span class=&quot;qual&quot;>SAB SE ZYADA COST-EFFECTIVE</span> hai?">A company's <strong>production database</strong> runs 24×7 on an EC2 instance and will continue for the next three years. It <strong>cannot be interrupted</strong>. Which purchasing option is <span class="qual">MOST COST-EFFECTIVE</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Spot Instances, kyunke woh sab se sasta hai">Spot Instances, because they are the cheapest</button>
+      <button class="opt" data-correct="true" data-ur="3-saal ke Reserved Instances">3-year Reserved Instances</button>
+      <button class="opt" data-correct="false" data-ur="On-Demand Instances">On-Demand Instances</button>
+      <button class="opt" data-correct="false" data-ur="Dedicated Hosts">Dedicated Hosts</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 4 · Data transfer costs</span>
+    <p class="scenario" data-ur="Ek company AWS ke bill par data transfer ka kharcha kam karna chahti hai. Data transfer ke baare mein kaunsa bayan <span class=&quot;qual&quot;>DURUST</span> hai?">A company wants to reduce data transfer costs on its AWS bill. Which statement about data transfer is <span class="qual">TRUE</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AWS mein data laana aur bahar bhejna dono ka barabar paisa lagta hai">Transferring data into AWS and out of AWS cost the same</button>
+      <button class="opt" data-correct="true" data-ur="AWS mein data laana aam tor par muft hai; internet par bahar bhejne ka paisa lagta hai">Transferring data into AWS is generally free; transferring data out to the internet is charged</button>
+      <button class="opt" data-correct="false" data-ur="AWS ke andar har tarah ka data transfer muft hai">All data transfer within AWS is free</button>
+      <button class="opt" data-correct="false" data-ur="Data laane ka paisa lagta hai, bahar bhejna muft hai">Transferring data in is charged; transferring data out is free</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 4 · Storage tiers · &quot;unknown pattern&quot;</span>
+    <p class="scenario" data-ur="Ek company ke paas S3 mein bohot data hai jis ka <strong>access pattern maloom nahi</strong> aur waqt ke saath badalta rehta hai. Woh manually tiers manage nahi karna chahte magar kharcha kam karna chahte hain. Kaunsa S3 storage class <span class=&quot;qual&quot;>SAB SE BEHTAR</span> hai?">A company stores data in S3 with <strong>unknown access patterns</strong> that change over time. They don't want to manage tiers manually but want to reduce cost. Which S3 storage class is <span class="qual">BEST</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="S3 Standard">S3 Standard</button>
+      <button class="opt" data-correct="true" data-ur="S3 Intelligent-Tiering">S3 Intelligent-Tiering</button>
+      <button class="opt" data-correct="false" data-ur="S3 Glacier Deep Archive">S3 Glacier Deep Archive</button>
+      <button class="opt" data-correct="false" data-ur="S3 One Zone-IA">S3 One Zone-IA</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="Yeh sauda tum pehle se samajhte ho, chahe AWS ke lafzon mein na sahi. <strong>On-Demand = mahana subscription</strong> jo kabhi bhi cancel ho sakti hai. <strong>Reserved = saalana plan</strong> jo sasta parta hai magar paisa phansa deta hai. Har SaaS tool isi tarah bikta hai — tumhari company ne yehi faisla Sentry ya GitHub par kiya hoga.<br><br><strong>Spot</strong> ka jor tumhare kaam se aur bhi saaf hai: yeh bilkul woh Celery task hai jo <code>retry</code> ke saath likha ho. Agar tumhara task idempotent hai aur mar kar dobara chal sakta hai, to usay sasti aur na-yaqeeni machine par chalana bilkul mehfooz hai. Agar tumhara task aisa hai ke beech mein marne se data kharab ho jaye — to tum usay kabhi aisi machine par na chalate. <strong>Exam bas yehi poochta hai: kya yeh kaam idempotent aur restartable hai?</strong>">You already understand this trade, even if not in AWS's words. <strong>On-Demand = a monthly subscription</strong> you can cancel any time. <strong>Reserved = the annual plan</strong> that's cheaper but locks your money in. Every SaaS tool sells this way — your company made the same call on Sentry or GitHub.<br><br><strong>Spot</strong> maps even more cleanly: it's a Celery task written with <code>retry</code>. If your task is idempotent and can die and re-run safely, running it on a cheap, unreliable machine is fine. If dying mid-way would corrupt data, you'd never put it there. <strong>The exam is asking exactly that: is this work idempotent and restartable?</strong></span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: Spot ki chhoot aur uska notice? Reserved ke term kitne saal ke hote hain? Data IN muft ya OUT muft? Aur &quot;unknown access pattern&quot; = kaunsa S3 class?">From memory: Spot's discount and its notice period? What Reserved terms exist? Is data IN free or OUT free? And &quot;unknown access pattern&quot; = which S3 class?</div>
+    <div class="answer" data-ur="<strong>Spot = 90% tak sasta, 2 minute ka notice.</strong> <strong>Reserved = sirf 1 ya 3 saal</strong> (2 saal wala option jhoota hota hai). <strong>Data IN muft, data OUT ka paisa.</strong> <strong>Unknown/changing pattern = S3 Intelligent-Tiering.</strong> Chaaron aa gaye? To Domain 4 ka pricing wala hissa ab tumhara hai."><strong>Spot = up to 90% off, 2-minute notice.</strong> <strong>Reserved = 1 or 3 years only</strong> (a &quot;2-year&quot; option is a fake). <strong>Data IN is free, data OUT is charged.</strong> <strong>Unknown/changing pattern = S3 Intelligent-Tiering.</strong> All four? Then the pricing half of Domain 4 is yours.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab tum pricing ke sawal ko ulta parhna jaante ho: pehle qeemat nahi dekhte, pehle yeh dekhte ho ke <em>kaam ruk sakta hai ya nahi</em>. Yehi ek sawal Spot ko chun bhi leta hai aur kaat bhi deta hai — aur yehi woh trap hai jismein log &quot;sab se sasta&quot; parh kar phans jaate hain. C2 ke saath mila kar, ab Domain 4 ka poora 12% tumhare paas hai: support plans, cost tools, aur pricing models.">You can now read a pricing question backwards: don't look at price first, look at whether <em>the work can be interrupted</em>. That single question both selects Spot and eliminates it — and it's the exact trap people fall into when they read &quot;cheapest&quot;. Together with C2, you now hold all 12% of Domain 4: support plans, cost tools, and pricing models.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html&quot; target=&quot;_blank&quot;>EC2 instance purchasing options</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS ke apne lafzon mein saare tareeqe ek jagah. Chhota page hai, poora parh lo.">📖 <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html" target="_blank">EC2 instance purchasing options</a><sup class="cite"><a href="#s1">1</a></sup> — every option in AWS's own words, on one short page.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Pricing questions are where the English does the most damage: one adjective (&quot;fault-tolerant&quot;, &quot;steady state&quot;, &quot;unpredictable&quot;) decides the whole answer. If you get one wrong, paste it here and I'll show you which single word you needed to catch.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C3 (Pricing models).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0053-clf-support-plans.html">C2 · Support plans</a>. Next: the CLF numbers sheet — <a href="../reference/clf-numbers.html">every number this exam asks for</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-reserved-instances.html" target="_blank">Reserved Instances for Amazon EC2</a> — 1-year or 3-year terms only; All Upfront / Partial Upfront / No Upfront payment options; Standard RIs can be modified but not exchanged, Convertible RIs can be exchanged; RIs cannot be cancelled after purchase.</li>
+      <li id="s2"><a href="https://aws.amazon.com/ec2/spot/" target="_blank">Amazon EC2 Spot Instances</a> — &quot;up to a 90% discount compared to On-Demand prices&quot;; AWS provides a two-minute interruption notice.</li>
+      <li id="s3"><a href="https://aws.amazon.com/savingsplans/compute-pricing/" target="_blank">AWS Savings Plans pricing</a> — Compute Savings Plans save up to 66% and apply across EC2, Fargate and Lambda regardless of instance family, size, Region or OS; EC2 Instance Savings Plans save up to 72% in exchange for committing to an instance family in a Region. Both use 1- or 3-year terms measured in $/hour.</li>
+      <li id="s4"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html" target="_blank">CLF-C02 Exam Guide — Domain 4</a> — Task Statement 4.1 names the tested purchasing options (On-Demand, Reserved, Spot, Savings Plans, Dedicated Hosts, Dedicated Instances, Capacity Reservations), Reserved Instance flexibility, and data transfer costs between and within Regions. Verified 3 Aug 2026.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. \"Fault-tolerant\", \"can restart if interrupted\" and \"flexible timing\" are the three phrases AWS uses to signal Spot, which is up to 90% off. Reserved would commit you for years to a job that runs a few hours a night, and Dedicated Hosts are the most expensive option with no reason to use them here."
+                      : "Reconsider. Three phrases in the scenario all point one way: \"fault-tolerant\", \"can restart if interrupted\", \"flexible start and end times\". That is AWS's standard description of a Spot workload, at up to 90% off. A 3-year Reserved commitment for a nightly job wastes the commitment, and Dedicated Hosts cost the most.",
+          q2: correct ? "Correct — and note this is the same question as q1 with the key facts reversed. \"Cannot be interrupted\" kills Spot no matter how cheap it is. With steady, predictable 24×7 usage for a known three years, a 3-year Reserved Instance gives up to 72% off. Always eliminate the impossible before comparing price."
+                      : "Reconsider. The phrase \"cannot be interrupted\" eliminates Spot immediately — cheapness is irrelevant if the option doesn't meet the requirement. The workload is steady, predictable and known to last three years, which is the exact description of a Reserved Instance (up to 72% off). Dedicated Hosts are for BYOL licensing or compliance only.",
+          q3: correct ? "Correct. Data in to AWS is generally free; data out to the internet is charged. This is deliberate — AWS makes it cheap to move data in and expensive to move it out. Note that transfer between AZs within a Region is also charged, so \"all transfer within AWS is free\" is wrong too."
+                      : "Reconsider. The rule to memorise: in is free, out is expensive. AWS does not charge for inbound data transfer, but charges for data leaving to the internet — and also for traffic crossing AZs or Regions, which is why \"all data transfer within AWS is free\" is also incorrect.",
+          q4: correct ? "Correct. \"Unknown access patterns that change over time\" plus \"don't want to manage tiers manually\" is the precise use case Intelligent-Tiering exists for — it moves objects between tiers automatically based on actual access. Choosing any fixed tier requires knowing the pattern in advance, which they don't."
+                      : "Reconsider. The deciding words are \"unknown access patterns\" and \"don't want to manage tiers manually\". Every fixed class — Standard, One Zone-IA, Deep Archive — requires you to already know how often the data is read. Intelligent-Tiering is the one that decides for you automatically. Treat \"unknown or changing access pattern\" as a direct signal for it."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

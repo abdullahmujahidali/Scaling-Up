@@ -1,0 +1,107 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Reference · Cheat Sheet</p>
+    <h1 data-ur="CLF Numbers aur Trigger Words — yeh sab yaad karo">CLF Numbers &amp; Trigger Words</h1>
+    <p class="subtitle" data-ur="Cloud Practitioner DVA jitne numbers nahi poochta — yeh exam zyada tar &quot;kaun si service&quot; poochta hai. Is liye yeh sheet do hisson mein hai: woh chand numbers jo waqai aate hain, aur woh <em>lafz</em> jo seedha jawab bata dete hain. Lafz wala hissa tumhare liye zyada aham hai.">Cloud Practitioner asks for far fewer numbers than DVA — it mostly asks &quot;which service&quot;. So this sheet has two halves: the few numbers that genuinely appear, and the <em>words</em> that point straight at an answer. Given the English, the second half matters more for you.</p>
+    <div class="meta">
+      <span>Print this one</span>
+      <span class="star-key">⭐ = most frequently tested</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Isay kaise istemaal karo">How to use this sheet</span>
+    <span data-ur="Poori sheet ek saath yaad karne ki koshish mat karo. Pehle sirf <strong>⭐ wale rows</strong> karo. Har roz sheet dekho, magar <em>pehle apne aap se poocho, phir dekho</em> — sirf parhne se yaad nahi hota, yaad karne ki koshish se hota hai.<br><br><strong>Tumhare liye khaas:</strong> neeche &quot;Trigger Words&quot; wala table sab se zyada faida dega. Woh exam ki <em>English</em> ko seedha jawab se jorta hai. Agar tum sirf woh table yaad kar lo, tum bohot se sawal poora samjhe baghair bhi theek kar loge.">Don't try to memorise the whole sheet at once. Do the <strong>⭐ rows</strong> first. Look at it daily, but <em>test yourself first, then look</em> — reading doesn't build memory, trying to recall does.<br><br><strong>Specifically for you:</strong> the &quot;Trigger Words&quot; table below will pay the most. It maps the exam's <em>English</em> directly onto answers. Learn only that table and you'll get many questions right even without fully parsing the sentence.</span>
+  </div>
+
+  <h2 data-ur="⭐ Trigger words — lafz se jawab tak">⭐ Trigger words — from word to answer</h2>
+  <p data-ur="AWS ke sawal lambe hote hain, magar aksar unmein <strong>ek lafz</strong> hota hai jo jawab tay kar deta hai. Baaqi sab sirf kahani hai. Yeh table wohi lafz hain.">AWS questions are long, but usually <strong>one word</strong> decides the answer. The rest is just scenery. This table is those words.</p>
+  <table class="nums">
+    <thead><tr><th data-ur="Sawal mein yeh lafz">If the question says</th><th data-ur="Jawab yeh hai">The answer is</th><th data-ur="Kyun">Why</th></tr></thead>
+    <tbody>
+      <tr class="star"><td data-ur="&quot;designated TAM&quot;">&quot;designated TAM&quot;</td><td class="n">Enterprise Support</td><td data-ur="Sirf Enterprise zaati TAM deta hai. On-Ramp sirf pool deta hai.">Only Enterprise gives a personal TAM. On-Ramp gives a pool.</td></tr>
+      <tr class="star"><td data-ur="&quot;24×7 support, sab se sasta&quot;">&quot;24×7 support, lowest cost&quot;</td><td class="n">Business Support</td><td data-ur="Pehla plan jismein 24×7 phone/chat hai.">The first plan with 24×7 phone and chat.</td></tr>
+      <tr class="star"><td data-ur="&quot;fault-tolerant&quot;, &quot;can be interrupted&quot;, &quot;flexible timing&quot;">&quot;fault-tolerant&quot;, &quot;can be interrupted&quot;</td><td class="n">Spot Instances</td><td data-ur="90% tak sasta. Sirf tab jab kaam ruk sakta ho.">Up to 90% off. Only when work can stop.</td></tr>
+      <tr class="star"><td data-ur="&quot;steady state&quot;, &quot;predictable usage&quot;">&quot;steady state&quot;, &quot;predictable&quot;</td><td class="n">Reserved / Savings Plans</td><td data-ur="Hamesha chalne wala kaam = waada karo, chhoot lo.">Always-on work = commit and save.</td></tr>
+      <tr><td data-ur="&quot;unpredictable&quot;, &quot;spiky&quot;, &quot;short-term&quot;">&quot;unpredictable&quot;, &quot;short-term&quot;</td><td class="n">On-Demand</td><td data-ur="Andaza nahi to waada mat karo.">Don't commit to what you can't predict.</td></tr>
+      <tr class="star"><td data-ur="&quot;alert when spending exceeds&quot;">&quot;alert when spending exceeds&quot;</td><td class="n">AWS Budgets</td><td data-ur="Budgets aage dekhta hai. Cost Explorer peechay.">Budgets looks forward; Cost Explorer looks back.</td></tr>
+      <tr><td data-ur="&quot;analyse/visualise past costs&quot;">&quot;analyse past costs&quot;</td><td class="n">Cost Explorer</td><td data-ur="Jo kharch ho chuka. 12 mahine ka forecast bhi.">What's already spent. Also a 12-month forecast.</td></tr>
+      <tr><td data-ur="&quot;estimate cost before building&quot;">&quot;estimate before building&quot;</td><td class="n">Pricing Calculator</td><td data-ur="Banane se pehle ka andaza.">An estimate before anything exists.</td></tr>
+      <tr class="star"><td data-ur="&quot;unknown or changing access pattern&quot;">&quot;unknown/changing access pattern&quot;</td><td class="n">S3 Intelligent-Tiering</td><td data-ur="AWS khud tier badalta hai.">AWS moves tiers for you automatically.</td></tr>
+      <tr><td data-ur="&quot;archive&quot;, &quot;7 saal rakhna hai&quot;, &quot;sab se sasta storage&quot;">&quot;archive&quot;, &quot;retain 7 years&quot;</td><td class="n">S3 Glacier Deep Archive</td><td data-ur="Sab se sasta rakhna, magar nikalne mein ghante lagte hain.">Cheapest storage; retrieval takes hours.</td></tr>
+      <tr class="star"><td data-ur="&quot;BYOL&quot;, &quot;licence physical cores se bandha&quot;, &quot;compliance&quot;">&quot;BYOL&quot;, &quot;licensing&quot;, &quot;compliance&quot;</td><td class="n">Dedicated Hosts</td><td data-ur="Sirf yeh do wajahein. Warna yeh jawab nahi.">Only these two reasons justify it.</td></tr>
+      <tr class="star"><td data-ur="&quot;single point of failure se bachna&quot;, &quot;high availability&quot;">&quot;highly available&quot;</td><td class="n" data-ur="Multiple AZs">Multiple AZs</td><td data-ur="HA = kai AZ. Kai Region = disaster recovery ya latency.">HA = multiple AZs. Multiple Regions = DR or latency.</td></tr>
+      <tr><td data-ur="&quot;users doosray mulk mein hain, latency kam karni hai&quot;">&quot;global users, reduce latency&quot;</td><td class="n">CloudFront</td><td data-ur="CDN — content users ke qareeb cache hota hai.">The CDN — content cached near users.</td></tr>
+      <tr class="star"><td data-ur="&quot;kis ne kya kiya&quot;, &quot;API calls ka record&quot;, &quot;audit&quot;">&quot;who did what&quot;, &quot;audit&quot;</td><td class="n">CloudTrail</td><td data-ur="CloudTrail = kaun/kab (audit). CloudWatch = kya haal hai (metrics).">CloudTrail = who/when (audit). CloudWatch = how it's performing (metrics).</td></tr>
+      <tr><td data-ur="&quot;metrics&quot;, &quot;alarms&quot;, &quot;logs&quot;, &quot;monitoring&quot;">&quot;metrics&quot;, &quot;alarms&quot;, &quot;monitoring&quot;</td><td class="n">CloudWatch</td><td data-ur="Sehat aur karkardagi ki nigrani.">Health and performance monitoring.</td></tr>
+      <tr><td data-ur="&quot;abuse report karna&quot;">&quot;report abuse&quot;</td><td class="n" data-ur="AWS Trust &amp; Safety team">AWS Trust &amp; Safety</td><td data-ur="Chhota sa sawal magar aata hai.">A small question, but it appears.</td></tr>
+      <tr><td data-ur="&quot;AWS ki services down hain kya&quot;">&quot;is AWS itself down?&quot;</td><td class="n">AWS Health Dashboard</td><td data-ur="AWS ki apni kharabi aur tumhare account par asar.">AWS's own outages and their effect on your account.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Support plans">Support plans</h2>
+  <p style="font-size:0.9rem;opacity:0.8" data-ur="⚠️ Yeh <strong>purane</strong> naam hain — aur exam yehi poochta hai. AWS ne Dec 2025 mein plans badal diye (Business Support+, Unified Operations) aur Developer/Business/On-Ramp 1 Jan 2027 ko band ho rahe hain. Website par naye naam milenge; <strong>exam ke liye yeh wali list yaad karo</strong>. Tafseel <a href='../lessons/0053-clf-support-plans.html'>C2</a> mein."><strong>⚠️ These are the OLD names — and the exam asks for these.</strong> AWS restructured its plans in Dec 2025 (Business Support+, Unified Operations) and Developer/Business/On-Ramp end on 1 Jan 2027. The website shows the new names; <strong>memorise this list for the exam</strong>. Detail in <a href="../lessons/0053-clf-support-plans.html">C2</a>.</p>
+  <table class="nums">
+    <thead><tr><th data-ur="Plan">Plan</th><th data-ur="Number">Key number</th><th data-ur="Sirf yeh yaad rakho">The one thing</th></tr></thead>
+    <tbody>
+      <tr><td>Basic</td><td class="n" data-ur="Muft">Free</td><td data-ur="⚠️ Koi technical support NAHI. Sirf billing + core Trusted Advisor checks.">⚠️ NO technical support. Billing + core Trusted Advisor checks only.</td></tr>
+      <tr><td>Developer</td><td class="n">$29/mo+</td><td data-ur="Ek banda, business hours, email. Sirf test/dev.">One contact, business hours, email. Test/dev only.</td></tr>
+      <tr class="star"><td>⭐ Business</td><td class="n">$100/mo+</td><td data-ur="Pehla 24×7 phone+chat. POORE Trusted Advisor checks. Production ke liye pehla theek plan.">First with 24×7 phone+chat. FULL Trusted Advisor checks. First production-worthy plan.</td></tr>
+      <tr><td>Enterprise On-Ramp</td><td class="n" data-ur="$5,500/mo+ · 30 min">$5,500/mo+ · 30 min</td><td data-ur="TAMs ka POOL (koi zaati banda nahi).">A POOL of TAMs (not a named person).</td></tr>
+      <tr class="star"><td>⭐ Enterprise</td><td class="n" data-ur="$15,000/mo+ · 15 min">$15,000/mo+ · 15 min</td><td data-ur="DESIGNATED TAM + sab se tez jawab. &quot;Designated&quot; lafz = yehi jawab.">DESIGNATED TAM + fastest response. The word &quot;designated&quot; = this.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Pricing aur discounts">Pricing &amp; discounts</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Exam mein kyun matter karta hai">Why it matters</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Spot discount</td><td class="n" data-ur="90% tak">up to 90%</td><td data-ur="Sab se sasta — magar sirf ruk sakne wale kaam ke liye.">Cheapest — but only for interruptible work.</td></tr>
+      <tr class="star"><td>⭐ Spot notice</td><td class="n" data-ur="2 minute">2 minutes</td><td data-ur="AWS itna waqt de kar instance wapas le leta hai.">The warning before AWS reclaims the instance.</td></tr>
+      <tr class="star"><td>⭐ Reserved discount</td><td class="n" data-ur="72% tak">up to 72%</td><td data-ur="Steady, hamesha chalne wale kaam ke liye.">For steady, always-on workloads.</td></tr>
+      <tr class="star"><td>⭐ Reserved terms</td><td class="n" data-ur="Sirf 1 ya 3 saal">1 or 3 years ONLY</td><td data-ur="&quot;2-year RI&quot; wala option hamesha jhoota hota hai.">A &quot;2-year RI&quot; option is always fake.</td></tr>
+      <tr><td>Compute Savings Plan</td><td class="n" data-ur="66% tak">up to 66%</td><td data-ur="Sab se lachakdaar — EC2 + Fargate + Lambda par lagta hai.">Most flexible — covers EC2, Fargate and Lambda.</td></tr>
+      <tr><td>EC2 Instance Savings Plan</td><td class="n" data-ur="72% tak">up to 72%</td><td data-ur="Kam lachak, zyada chhoot (ek instance family, ek region).">Less flexible, bigger discount (one family, one Region).</td></tr>
+      <tr><td>Payment options</td><td class="n" data-ur="3 tareeqe">3 options</td><td data-ur="All / Partial / No Upfront. Zyada pehle do = zyada bachao.">All / Partial / No Upfront. More upfront = more saved.</td></tr>
+      <tr class="star"><td>⭐ Data transfer IN</td><td class="n" data-ur="Muft">FREE</td><td data-ur="AWS mein data laana muft hai.">Bringing data into AWS costs nothing.</td></tr>
+      <tr class="star"><td>⭐ Data transfer OUT</td><td class="n" data-ur="Paisa lagta hai">CHARGED</td><td data-ur="Internet par bahar bhejna sab se mehnga. AZ-to-AZ bhi paisa.">Out to internet costs most. AZ-to-AZ also charged.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Exam ke apne numbers">The exam's own numbers</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Number">Number</th><th data-ur="Note">Note</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Passing score</td><td class="n">700 / 1000</td><td data-ur="Compensatory scoring — har domain alag se pass karna zaroori NAHI, sirf kul milakar.">Compensatory scoring — you do NOT need to pass each domain, only overall.</td></tr>
+      <tr><td>Questions</td><td class="n" data-ur="65 kul · 50 scored">65 total · 50 scored</td><td data-ur="15 sawal ginti mein nahi aate, magar pata nahi chalta kaun se. Sab ka jawab do.">15 don't count, but aren't marked. Answer everything.</td></tr>
+      <tr class="star"><td>⭐ Time</td><td class="n" data-ur="90 min (ESL ke saath 120)">90 min (120 with ESL)</td><td data-ur="ESL +30 booking se PEHLE maango. Ek hi baar, phir har exam par.">Request ESL +30 BEFORE booking. Once, then it applies to every exam.</td></tr>
+      <tr><td>Cost</td><td class="n">100 USD</td><td data-ur="Team lead se poocho: company deti hai ya voucher hai?">Ask your team lead: does the company pay, or is there a voucher?</td></tr>
+      <tr><td>Domain weights</td><td class="n" data-ur="34 / 30 / 24 / 12">34 / 30 / 24 / 12</td><td data-ur="Technology 34% · Security 30% · Concepts 24% · Billing 12%.">Technology 34% · Security 30% · Concepts 24% · Billing 12%.</td></tr>
+      <tr><td>Guessing</td><td class="n" data-ur="Koi saza nahi">No penalty</td><td data-ur="Khali chhorna = ghalat. Har sawal ka jawab do, chahe andaza ho.">Blank = wrong. Answer every question, even by guessing.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 data-ur="Shared Responsibility — ek nazar mein">Shared Responsibility — at a glance</h2>
+  <table class="nums">
+    <thead><tr><th data-ur="Cheez">Item</th><th data-ur="Kis ka kaam">Whose job</th><th data-ur="Note">Note</th></tr></thead>
+    <tbody>
+      <tr class="star"><td>⭐ Data</td><td class="n" data-ur="Hamesha customer">Always customer</td><td data-ur="Koi istisna nahi, chahe service kitni bhi managed ho.">No exceptions, however managed the service.</td></tr>
+      <tr class="star"><td>⭐ EC2 guest OS patching</td><td class="n" data-ur="Customer">Customer</td><td data-ur="Tum log in kar sakte ho = tumhara kaam.">You can log in = your job.</td></tr>
+      <tr class="star"><td>⭐ RDS OS/engine patching</td><td class="n">AWS</td><td data-ur="Managed service = lakeer khisak jaati hai.">Managed service = the line moves.</td></tr>
+      <tr><td>IAM users/permissions</td><td class="n" data-ur="Customer">Customer</td><td data-ur="Kis ko access dena hai yeh hamesha tumhara faisla.">Who gets access is always your decision.</td></tr>
+      <tr><td>Physical data centre</td><td class="n">AWS</td><td data-ur="Jo tum haath nahi laga sakte woh AWS ka.">What you cannot touch is AWS's.</td></tr>
+      <tr><td>Encryption ON karna</td><td class="n" data-ur="Customer">Customer</td><td data-ur="AWS taala deta hai; lagana tumhara kaam.">AWS provides the lock; using it is your job.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Exam se ek raat pehle">The night before the exam</span>
+    <span data-ur="Sirf <strong>⭐ wale rows</strong> aur upar wala <strong>Trigger Words</strong> table dekho. Naya kuch mat parho — is waqt naya parhna sirf ghabrahat barhata hai. Aur yaad rakho: pass hone ke liye <strong>700/1000</strong> chahiye, aur har domain alag se pass karna zaroori nahi. Khali sawal chhorne ki koi wajah nahi — ghalat jawab par koi saza nahi.">Look only at the <strong>⭐ rows</strong> and the <strong>Trigger Words</strong> table. Don't read anything new — at that point new material only adds anxiety. And remember: you need <strong>700/1000</strong> overall, not a pass in each domain. Never leave a question blank — there's no penalty for a wrong answer.</span>
+  </div>
+
+  <p style="font-size:0.9rem;opacity:0.75" data-ur="<strong>Maakhaz</strong> (3 Aug 2026 ko verify kiya gaya): <a href='https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.html' target='_blank'>CLF-C02 Exam Guide</a> (65 sawal / 50 scored, 700 pass, domain weights, compensatory scoring), <a href='https://aws.amazon.com/premiumsupport/plans/' target='_blank'>AWS Support Plans</a>, <a href='https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html' target='_blank'>Support plans end of support</a> (1 Jan 2027), <a href='https://aws.amazon.com/ec2/spot/' target='_blank'>EC2 Spot</a> (90%, 2 minute), <a href='https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-reserved-instances.html' target='_blank'>Reserved Instances</a> (1/3 saal, payment options), <a href='https://aws.amazon.com/savingsplans/compute-pricing/' target='_blank'>Savings Plans</a> (66% / 72%)."><strong>Sources</strong> (verified 3 Aug 2026): <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.html" target="_blank">CLF-C02 Exam Guide</a> (65 questions / 50 scored, 700 to pass, domain weights, compensatory scoring, no penalty for guessing), <a href="https://aws.amazon.com/premiumsupport/plans/" target="_blank">AWS Support Plans</a>, <a href="https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html" target="_blank">Support plans end of support</a> (1 Jan 2027), <a href="https://aws.amazon.com/ec2/spot/" target="_blank">EC2 Spot</a> (up to 90%, 2-minute notice), <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-reserved-instances.html" target="_blank">Reserved Instances</a> (1/3-year terms, payment options, Standard vs Convertible), <a href="https://aws.amazon.com/savingsplans/compute-pricing/" target="_blank">Savings Plans</a> (66% / 72%).</p>
+
+  <p class="back"><a href="../clf-index.html" data-ur="← CLF-C02 track">← CLF-C02 track</a></p>
+
+</div>

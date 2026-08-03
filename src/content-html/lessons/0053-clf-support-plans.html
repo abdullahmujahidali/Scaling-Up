@@ -1,0 +1,204 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C2 · Domain 4 (12%)</p>
+    <h1 data-ur="Support plans: woh domain jo tumhara kaam kabhi nahi sikhata">Support plans: the domain your day job never teaches you</h1>
+    <p class="subtitle" data-ur="Domain 4 sirf 12% hai — magar tumhare liye yeh sab se zyada faida dene wala lesson hai. Wajah saaf hai: tum ne kabhi AWS ka support plan nahi khareeda. Yeh cheez code likhne se nahi seekhi jaati, sirf yaad karne se aati hai.">Domain 4 is only 12% — but it's your highest-value lesson. The reason is simple: you have never bought an AWS support plan. This isn't learned by writing code; it's learned by memorising it once.</p>
+    <div class="meta">
+      <span>~10 min</span>
+      <span>One concept: which plan, and why</span>
+      <span>Win: ~6 questions you'd otherwise guess</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C1 se yaad karo: AWS security OF the cloud ka zimmedar hai ya IN the cloud ka? Aur EC2 par guest OS kis ne patch karna hai?">First, recall from C1: is AWS responsible for security OF the cloud or IN the cloud? And who patches the guest OS on EC2?</div>
+    <div class="answer" data-ur="<strong>AWS = OF the cloud</strong> (jo tum haath nahi laga sakte). <strong>Tum = IN the cloud.</strong> <strong>EC2 ka guest OS tumhara</strong> — RDS ka AWS ka. Aaj hum uss cheez par aa rahe hain jo tumhare paise se khareedi jaati hai: support."><strong>AWS = OF the cloud</strong> (what you cannot touch). <strong>You = IN the cloud.</strong> <strong>EC2's guest OS is yours</strong> — RDS's is AWS's. Today we move to the thing you buy with money: support.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="warn">
+    <span class="callout-label" data-ur="⚠️ Pehle yeh parho — warna tum ghalat cheez yaad kar loge">⚠️ Read this first — or you'll memorise the wrong thing</span>
+    <span data-ur="Dec 2025 mein AWS ne apne support plans ka naam aur dhaancha badal diya. Ab AWS ki website par <strong>Business Support+</strong> aur <strong>Unified Operations</strong> likha milta hai, aur <strong>Developer, Business aur Enterprise On-Ramp 1 January 2027 ko band ho rahe hain.</strong><br><br><strong>MAGAR CLF-C02 ka exam guide abhi bhi PURANE naam poochta hai</strong> — Developer, Business, Enterprise On-Ramp, Enterprise. Exam guide ke apne lafz yeh hain: &quot;AWS Developer Support, AWS Business Support, AWS Enterprise On-Ramp Support, AWS Enterprise Support&quot;.<br><br><strong>Is liye: exam ke liye PURANI list yaad karo</strong> (jo neeche hai). Agar tum aaj aws.amazon.com/premiumsupport par ja kar parhoge to tumhein woh naye naam milenge jo exam mein nahi aayenge — aur tum confuse ho jaoge. Yeh trap asli hai. Naye naam sirf tumhare <em>kaam</em> ke liye jaan lo, exam ke liye nahi.">In December 2025 AWS renamed and restructured its support plans. The AWS website now shows <strong>Business Support+</strong> and <strong>Unified Operations</strong>, and <strong>Developer, Business and Enterprise On-Ramp are being discontinued on 1 January 2027.</strong><br><br><strong>But the CLF-C02 exam guide still asks for the OLD names</strong> — Developer, Business, Enterprise On-Ramp, Enterprise. The exam guide's own words are: &quot;AWS Developer Support, AWS Business Support, AWS Enterprise On-Ramp Support, AWS Enterprise Support&quot;.<br><br><strong>So: memorise the OLD ladder below for the exam.</strong> If you go and read aws.amazon.com/premiumsupport today, you'll find new names that won't appear on your exam — and you'll get confused. This trap is real. Learn the new names for your <em>job</em>, not for the exam.</span>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Har plan ek cheez khareedta hai. Woh ek cheez yaad rakho, poori list nahi:</strong><br><br><strong>Basic</strong> = muft, koi technical support nahi (sirf billing).<br><strong>Developer</strong> = ek banda, kaam ke waqt mein, sirf test/dev ke liye.<br><strong>Business</strong> = ⭐ <strong>24×7 phone aur chat</strong> + <strong>poore Trusted Advisor checks</strong>. Yeh pehla plan hai jo production ke laayak hai.<br><strong>Enterprise On-Ramp</strong> = TAM ka pool (koi ek banda nahi).<br><strong>Enterprise</strong> = ⭐ <strong>apna zaati TAM</strong> + <strong>15 minute</strong> ka jawab.<br><br>Exam ka sab se aam sawal: &quot;production system hai, 24×7 support chahiye, sab se sasta plan kaun sa?&quot; → <strong>Business</strong>. Aur &quot;designated TAM chahiye&quot; → <strong>Enterprise</strong>. Yeh do jorey zyada tar sawal hal kar dete hain."><strong>Each plan buys one thing. Remember that one thing, not the whole list:</strong><br><br><strong>Basic</strong> = free, no technical support (billing only).<br><strong>Developer</strong> = one person, business hours, test/dev only.<br><strong>Business</strong> = ⭐ <strong>24×7 phone and chat</strong> + <strong>the full set of Trusted Advisor checks</strong>. The first plan fit for production.<br><strong>Enterprise On-Ramp</strong> = a <em>pool</em> of TAMs (not one named person).<br><strong>Enterprise</strong> = ⭐ <strong>your own designated TAM</strong> + <strong>15-minute</strong> response.<br><br>The most common exam question: &quot;production workload, needs 24×7 support, cheapest plan?&quot; → <strong>Business</strong>. And &quot;needs a designated TAM&quot; → <strong>Enterprise</strong>. Those two pairs solve most of them.</span>
+  </div>
+
+  <h2 data-ur="Kahani: hospital ka insurance">The story: hospital cover</h2>
+  <p data-ur="Socho paanch tarah ka health cover hai. <strong>Basic (muft)</strong>: koi doctor nahi milta, sirf reception se poocha ja sakta hai ke bill kitna hai. <strong>Developer</strong>: ek doctor hai, magar sirf daftar ke waqt mein, aur sirf mamooli masle ke liye — raat ko koi nahi. <strong>Business</strong>: 24 ghante phone uthta hai, koi bhi ghar ka fard call kar sakta hai — yeh pehla cover hai jis par tum asal bharosa kar sakte ho.">Imagine five kinds of health cover. <strong>Basic (free)</strong>: no doctor at all, you may only ask reception what the bill is. <strong>Developer</strong>: there is a doctor, but only during office hours, and only for minor issues — nobody at night. <strong>Business</strong>: the phone is answered 24 hours and any family member may call — the first cover you can actually rely on.</p>
+  <p data-ur="<strong>Enterprise On-Ramp</strong>: ek doctors ki team tumhare liye maujood hai, magar har baar shayad doosra doctor aaye. <strong>Enterprise</strong>: tumhara apna zaati doctor hai jo tumhara naam aur tumhari poori history jaanta hai, aur emergency mein 15 minute mein hazir. Mehnga hai — magar agar tumhari zindagi us par chalti hai to yehi chahiye."><strong>Enterprise On-Ramp</strong>: a team of doctors is available to you, but you may get a different one each time. <strong>Enterprise</strong>: you have your own personal doctor who knows your name and your whole history, and in an emergency arrives within 15 minutes. Expensive — but if your life depends on it, that's what you need.</p>
+  <p data-ur="Exam bilkul isi tarah poochta hai: halaat batata hai (&quot;mission-critical production workload&quot;, ya &quot;sirf test environment&quot;) aur poochta hai kaun sa cover theek hai. Halaat se plan pehchanna aa gaya to sawal khatam.">The exam asks in exactly this shape: it describes a situation (&quot;mission-critical production workload&quot;, or &quot;a test environment only&quot;) and asks which cover fits. Once you can read the situation, the question is over.</p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Plan">Plan</th><th data-ur="Qeemat">Cost</th><th data-ur="Jawab ka waqt">Response time</th><th data-ur="Sirf yeh yaad rakho">The one thing to remember</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Basic</strong></td>
+        <td data-ur="Muft">Free</td>
+        <td data-ur="Koi technical SLA nahi">No technical SLA</td>
+        <td data-ur="⚠️ <strong>Koi technical support nahi.</strong> Sirf billing/account ke sawal, documentation, forums, aur core Trusted Advisor checks. Agar sawal mein &quot;technical support&quot; chahiye to Basic hamesha ghalat hai."><strong>⚠️ No technical support at all.</strong> Billing/account questions, documentation, forums, and core Trusted Advisor checks only. If a question needs <em>technical</em> support, Basic is always wrong.</td>
+      </tr>
+      <tr>
+        <td><strong>Developer</strong></td>
+        <td data-ur="$29/mah se">from $29/mo</td>
+        <td data-ur="General: 24 ghante<br>System impaired: 12 ghante">General: 24 h<br>System impaired: 12 h</td>
+        <td data-ur="<strong>Ek banda, sirf business hours, sirf email.</strong> Sawal mein &quot;test&quot; ya &quot;development environment&quot; ka lafz = yeh jawab. Production ke liye kabhi nahi (koi 24×7 nahi)."><strong>One contact, business hours, email only.</strong> The words &quot;test&quot; or &quot;development environment&quot; in a question = this answer. Never for production (no 24×7).</td>
+      </tr>
+      <tr style="background:var(--flag-soft)">
+        <td><strong>Business</strong> ⭐</td>
+        <td data-ur="$100/mah se">from $100/mo</td>
+        <td data-ur="Production down: <strong>1 ghanta</strong><br>Production impaired: 4 ghante">Production down: <strong>1 hour</strong><br>Production impaired: 4 h</td>
+        <td data-ur="⭐ <strong>Pehla plan jismein 24×7 phone + chat hai, aur POORE Trusted Advisor checks.</strong> Unlimited log case khol sakte hain. Third-party software ki madad bhi. <strong>Yeh exam ka sab se aam jawab hai</strong> — &quot;production, 24×7, sab se sasta&quot; = Business."><strong>⭐ The first plan with 24×7 phone + chat, and the FULL set of Trusted Advisor checks.</strong> Unlimited people can open cases. Third-party software help included. <strong>This is the exam's most common answer</strong> — &quot;production, 24×7, cheapest&quot; = Business.</td>
+      </tr>
+      <tr>
+        <td><strong>Enterprise On-Ramp</strong></td>
+        <td data-ur="$5,500/mah se">from $5,500/mo</td>
+        <td data-ur="Business-critical down: <strong>30 minute</strong>">Business-critical down: <strong>30 min</strong></td>
+        <td data-ur="<strong>TAMs ka pool</strong> — madad milti hai magar koi ek zaati banda nahi. Yeh Business aur Enterprise ke darmiyan ka step hai. Sawal mein &quot;pool of TAMs&quot; ya &quot;30 minutes&quot; = yehi."><strong>A pool of TAMs</strong> — you get help, but not one named person. The step between Business and Enterprise. &quot;Pool of TAMs&quot; or &quot;30 minutes&quot; in a question = this.</td>
+      </tr>
+      <tr style="background:var(--flag-soft)">
+        <td><strong>Enterprise</strong> ⭐</td>
+        <td data-ur="$15,000/mah se">from $15,000/mo</td>
+        <td data-ur="Business-critical down: <strong>15 minute</strong>">Business-critical down: <strong>15 min</strong></td>
+        <td data-ur="⭐ <strong>Designated TAM</strong> (tumhara apna, naam se) + <strong>15 minute</strong> (sab se tez) + Concierge + Countdown/Infrastructure Event Management. Lafz <strong>&quot;designated&quot;</strong> ya <strong>&quot;15 minutes&quot;</strong> dikha = jawab Enterprise, hamesha."><strong>⭐ A designated TAM</strong> (your own, by name) + <strong>15 minutes</strong> (the fastest) + Concierge + Countdown / Infrastructure Event Management. The word <strong>&quot;designated&quot;</strong> or <strong>&quot;15 minutes&quot;</strong> = Enterprise, always.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Domain 4 ke baaqi numbers jo poochay jaate hain">The rest of Domain 4's tested facts</span>
+    <ul>
+      <li data-ur="⭐ <strong>Trusted Advisor:</strong> Basic aur Developer par sirf <strong>core checks</strong>. Business, Enterprise On-Ramp aur Enterprise par <strong>poore checks</strong>. Trusted Advisor ke paanch hisse: cost optimisation, performance, security, fault tolerance, service limits (quotas)."><strong>⭐ Trusted Advisor:</strong> Basic and Developer get <strong>core checks only</strong>. Business, Enterprise On-Ramp and Enterprise get the <strong>full checks</strong>. Its five categories: cost optimisation, performance, security, fault tolerance, service limits (quotas).</li>
+      <li data-ur="⭐ <strong>Cost Explorer vs Budgets — yeh jora poocha jaata hai.</strong> <strong>Cost Explorer = PEECHAY dekhna</strong> (jo kharch ho chuka usay dekhna aur samajhna, graph, 12 mahine ka forecast). <strong>Budgets = AAGE dekhna</strong> (hadd muqarrar karo, aur hadd paar hone se pehle alert milay). Sawal mein &quot;alert&quot; ya &quot;notify when spending exceeds&quot; = <strong>Budgets</strong>. &quot;Analyse&quot; ya &quot;visualise past costs&quot; = <strong>Cost Explorer</strong>."><strong>⭐ Cost Explorer vs Budgets — this pair gets asked.</strong> <strong>Cost Explorer = looking BACK</strong> (see and analyse what you already spent; graphs; 12-month forecast). <strong>Budgets = looking FORWARD</strong> (set a limit and get alerted before you cross it). &quot;Alert&quot; or &quot;notify when spending exceeds&quot; = <strong>Budgets</strong>. &quot;Analyse&quot; or &quot;visualise past costs&quot; = <strong>Cost Explorer</strong>.</li>
+      <li data-ur="<strong>AWS Pricing Calculator</strong> = kuch banane se <em>pehle</em> andaza lagana ke kitna kharcha hoga. (Purana naam &quot;Simple Monthly Calculator&quot; ab nahi hai.)"><strong>AWS Pricing Calculator</strong> = estimating cost <em>before</em> you build something. (The old &quot;Simple Monthly Calculator&quot; is gone.)</li>
+      <li data-ur="⭐ <strong>AWS Organizations ka consolidated billing:</strong> saare accounts ka bill ek jagah aata hai — aur <strong>volume discount ke liye sab ka usage jama kar liya jaata hai</strong>, is liye kul mila kar sasta parta hai. Reserved Instances aur Savings Plans ka faida bhi poore organization mein share hota hai. Yeh &quot;kyun consolidate karein&quot; ka jawab hai."><strong>⭐ AWS Organizations consolidated billing:</strong> one bill for all accounts — and <strong>usage is aggregated for volume discounts</strong>, so the total costs less. Reserved Instance and Savings Plans benefits are also shared across the organization. That's the &quot;why consolidate&quot; answer.</li>
+      <li data-ur="<strong>Cost allocation tags</strong> = resources par labels lagao (jaise <code>Project=alpha</code>) taake bill mein pata chale kis team/project ka kitna kharcha hai. Do qism: <strong>AWS-generated</strong> (aws: se shuru) aur <strong>user-defined</strong> (tum banate ho). Billing mein dikhne se pehle inhein <strong>activate</strong> karna parta hai."><strong>Cost allocation tags</strong> = labels on resources (e.g. <code>Project=alpha</code>) so the bill shows which team or project spent what. Two kinds: <strong>AWS-generated</strong> (prefixed <code>aws:</code>) and <strong>user-defined</strong> (yours). They must be <strong>activated</strong> before they appear in billing reports.</li>
+      <li data-ur="<strong>AWS Health Dashboard</strong> = AWS ki apni services mein kharabi ka pata (tumhare account par kya asar par raha hai). <strong>AWS Trust &amp; Safety team</strong> = AWS resources ke ghalat istemaal (abuse) ki report karne ke liye. Yeh dono chhote se sawal ban jaate hain."><strong>AWS Health Dashboard</strong> = whether AWS's own services are broken and how that affects your account. <strong>AWS Trust &amp; Safety team</strong> = where you report abuse of AWS resources. Both become small questions.</li>
+      <li data-ur="<strong>Madad kahan se milti hai:</strong> <strong>re:Post</strong> (community sawal-jawab, muft), <strong>Knowledge Center</strong> (aam masail ke hal), <strong>Prescriptive Guidance</strong> (AWS ke tajweez karda tareeqe), <strong>Professional Services</strong> aur <strong>Solutions Architects</strong> (paid/assigned madad), <strong>AWS Marketplace</strong> (third-party software khareedna)."><strong>Where help comes from:</strong> <strong>re:Post</strong> (community Q&amp;A, free), <strong>Knowledge Center</strong> (fixes for common issues), <strong>Prescriptive Guidance</strong> (AWS's recommended approaches), <strong>Professional Services</strong> and <strong>Solutions Architects</strong> (paid/assigned help), <strong>AWS Marketplace</strong> (buying third-party software).</li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — yeh lafz Domain 4 mein bar bar aate hain">Exam English — words that recur in Domain 4</span>
+    <span data-ur="<strong>&quot;designated&quot;</strong> = khaas tor par tumhare liye muqarrar kiya gaya (tumhara apna banda). Yeh lafz dikhte hi <strong>Enterprise</strong> socho — yeh sab se bara ishara hai.<br><strong>&quot;mission-critical&quot;</strong> / <strong>&quot;business-critical&quot;</strong> = jis ke bagair karobar ruk jaye. Yaani sab se ooncha plan chahiye.<br><strong>&quot;impaired&quot;</strong> = poori tarah band nahi, magar theek se kaam nahi kar raha. (&quot;Down&quot; = bilkul band — is ka jawab ka waqt tez hota hai.)<br><strong>&quot;consolidated billing&quot;</strong> = kai accounts ka ek hi bill.<br><strong>&quot;forecast&quot;</strong> = aage ka andaza.<br><strong>&quot;incur&quot;</strong> = kharcha uthana (&quot;charges are incurred&quot; = paisa lagta hai).<br><strong>&quot;waive&quot;</strong> = maaf kar dena (fees).<br><strong>&quot;entitlement&quot;</strong> = kisi cheez ka haq/license (Marketplace ke sawal mein aata hai).">
+      <strong>&quot;designated&quot;</strong> = assigned specifically to you (your own person). Seeing this word, think <strong>Enterprise</strong> — it's the biggest single giveaway.<br>
+      <strong>&quot;mission-critical&quot; / &quot;business-critical&quot;</strong> = the business stops without it. So: the highest plan.<br>
+      <strong>&quot;impaired&quot;</strong> = not completely down, but not working properly. (&quot;Down&quot; = fully stopped — and gets a faster response time.)<br>
+      <strong>&quot;consolidated billing&quot;</strong> = one bill for many accounts.<br>
+      <strong>&quot;forecast&quot;</strong> = a prediction of what's ahead.<br>
+      <strong>&quot;incur&quot;</strong> = to accumulate a cost (&quot;charges are incurred&quot; = it costs money).<br>
+      <strong>&quot;waive&quot;</strong> = to cancel or forgive (a fee).<br>
+      <strong>&quot;entitlement&quot;</strong> = a licence or right to use something (appears in Marketplace questions).</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 4 · Billing &amp; Support · the most common shape</span>
+    <p class="scenario" data-ur="Ek company AWS par ek production workload chala rahi hai. Unhein <strong>24×7 phone, email aur chat</strong> se technical support chahiye, aur <span class=&quot;qual&quot;>SAB SE KAM</span> kharcha karna hai. Kaun sa AWS Support plan lena chahiye?">A company runs a production workload on AWS. They need technical support by <strong>24×7 phone, email and chat</strong>, at the <span class="qual">LOWEST</span> cost. Which AWS Support plan should they choose?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Basic Support">Basic Support</button>
+      <button class="opt" data-correct="false" data-ur="Developer Support">Developer Support</button>
+      <button class="opt" data-correct="true" data-ur="Business Support">Business Support</button>
+      <button class="opt" data-correct="false" data-ur="Enterprise Support">Enterprise Support</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 4 · the &quot;designated&quot; giveaway</span>
+    <p class="scenario" data-ur="Ek bari company ko ek <strong>designated Technical Account Manager (TAM)</strong> chahiye aur business-critical system down hone par <strong>15 minute</strong> mein jawab chahiye. Kaun sa support plan yeh zaroorat poori karta hai?">A large enterprise requires a <strong>designated Technical Account Manager (TAM)</strong> and a <strong>15-minute</strong> response time for business-critical systems down. Which support plan meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Business Support">Business Support</button>
+      <button class="opt" data-correct="false" data-ur="Enterprise On-Ramp Support">Enterprise On-Ramp Support</button>
+      <button class="opt" data-correct="true" data-ur="Enterprise Support">Enterprise Support</button>
+      <button class="opt" data-correct="false" data-ur="Developer Support">Developer Support</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 4 · Cost tools · the confusable pair</span>
+    <p class="scenario" data-ur="Ek team chahti hai ke jab mahine ka AWS kharcha <strong>$5,000 se barh jaye to unhein alert milay</strong>. Kaun si AWS service yeh karti hai?">A team wants to <strong>be alerted when their monthly AWS spending exceeds $5,000</strong>. Which AWS service does this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AWS Cost Explorer">AWS Cost Explorer</button>
+      <button class="opt" data-correct="true" data-ur="AWS Budgets">AWS Budgets</button>
+      <button class="opt" data-correct="false" data-ur="AWS Pricing Calculator">AWS Pricing Calculator</button>
+      <button class="opt" data-correct="false" data-ur="AWS Cost and Usage Report">AWS Cost and Usage Report</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 4 · Organizations · why consolidate</span>
+    <p class="scenario" data-ur="Ek company AWS Organizations mein consolidated billing on karti hai. <span class=&quot;qual&quot;>SAB SE BARA</span> maali faida kya hai?">A company enables consolidated billing in AWS Organizations. What is the <span class="qual">GREATEST</span> financial benefit?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="Har account ko 20% discount milta hai">Each account receives a flat 20% discount</button>
+      <button class="opt" data-correct="true" data-ur="Saare accounts ka usage jama ho jaata hai, jis se volume discounts milte hain aur Reserved Instances/Savings Plans ka faida share hota hai">Usage is aggregated across accounts, unlocking volume discounts and sharing Reserved Instance / Savings Plans benefits</button>
+      <button class="opt" data-correct="false" data-ur="AWS data transfer ki saari fees maaf kar deta hai">AWS waives all data transfer fees</button>
+      <button class="opt" data-correct="false" data-ur="Har account ko muft Enterprise Support mil jaata hai">Every account gets Enterprise Support for free</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="Yeh domain tumhare liye naya <em>lagta</em> hai, magar tum ne yeh faisla pehle dekha hua hai. Jab tumhari company ne Sentry ya koi database ka managed plan liya hoga, to bilkul yehi sawal tha: <em>muft tier kaafi hai, ya paid chahiye kyunke raat ko koi uthana chahiye?</em><br><br>Support plans us se mukhtalif nahi. <strong>Developer plan = staging environment.</strong> <strong>Business plan = production.</strong> Aur <strong>Enterprise = woh system jis ke down hone par CEO ko call jaata hai.</strong> Exam bas yeh dekhta hai ke tum sawal ke andar se yeh pehchan sakte ho ke masla staging ka hai ya production ka.<br><br>Aur Budgets vs Cost Explorer? Yeh bilkul <em>alerting</em> aur <em>dashboard</em> ka farq hai — jaise tumhare kaam mein PagerDuty (aage ka alert) aur Grafana (peechay ka graph).">This domain <em>feels</em> new, but you've seen the decision before. When your company bought a paid Sentry tier or a managed database plan, the question was identical: <em>is the free tier enough, or do we need paid because someone must be wakeable at night?</em><br><br>Support plans are no different. <strong>Developer plan = staging.</strong> <strong>Business plan = production.</strong> <strong>Enterprise = the system where the CEO gets called when it's down.</strong> The exam only checks whether you can read the scenario and tell staging from production.<br><br>And Budgets vs Cost Explorer? That's exactly the difference between <em>alerting</em> and a <em>dashboard</em> — PagerDuty (warns you ahead) versus Grafana (shows you what happened).</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: 24×7 support wala sab se sasta plan? &quot;Designated TAM&quot; kaun sa plan? Enterprise ka jawab ka waqt? Budgets aage dekhta hai ya peechay? Aur poore Trusted Advisor checks kis plan se shuru hote hain?">From memory: cheapest plan with 24×7 support? Which plan has a &quot;designated TAM&quot;? Enterprise's response time? Does Budgets look forward or back? And which plan first gives the full Trusted Advisor checks?</div>
+    <div class="answer" data-ur="<strong>24×7 sab se sasta = Business.</strong> <strong>Designated TAM = Enterprise.</strong> <strong>Enterprise = 15 minute.</strong> <strong>Budgets = aage</strong> (Cost Explorer = peechay). <strong>Poore Trusted Advisor checks Business se shuru</strong> hote hain. Paanchon aa gaye? To Domain 4 ke zyada tar sawal ab tumhare hain — aur yeh wohi domain tha jismein tum guess karte."><strong>Cheapest 24×7 = Business.</strong> <strong>Designated TAM = Enterprise.</strong> <strong>Enterprise = 15 minutes.</strong> <strong>Budgets = forward</strong> (Cost Explorer = backward). <strong>Full Trusted Advisor checks start at Business.</strong> All five? Then most of Domain 4 is now yours — and this was the domain you would have guessed on.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Domain 4 exam ka 12% hai — takreeban <strong>6 scored sawal</strong>. Yeh woh hissa tha jahan tumhara AWS ka tajurba tumhein bilkul madad nahi deta, kyunke support plan khareedna developer ka kaam nahi hota. Ab tumhare paas do lafz hain jo aksar sawal khud hal kar dete hain: <strong>&quot;designated&quot; = Enterprise</strong> aur <strong>&quot;24×7 + sasta&quot; = Business</strong>. Yeh guess se yaqeen tak ka safar hai — aur yeh 6 sawal 700 ke pass mark mein seedha farq daalte hain.">Domain 4 is 12% of the exam — about <strong>6 scored questions</strong>. It was the part where your AWS experience gives you nothing, because buying support plans isn't a developer's job. You now have two words that solve most of them on sight: <strong>&quot;designated&quot; = Enterprise</strong> and <strong>&quot;24×7 + cheapest&quot; = Business</strong>. That's a move from guessing to knowing — and those 6 questions count directly toward the 700 you need.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html&quot; target=&quot;_blank&quot;>CLF-C02 Exam Guide — Domain 4</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS khud batata hai ke is domain mein kya poocha jayega. Yeh chhota hai aur seedha exam ki zubaan mein hai. <strong>Note:</strong> support plans ke liye marketing page ke bajaye yehi guide dekho — wajah upar wale warning box mein likhi hai.">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html" target="_blank">CLF-C02 Exam Guide — Domain 4</a><sup class="cite"><a href="#s1">1</a></sup> — AWS stating exactly what this domain tests, in the exam's own language. <strong>Note:</strong> for support plans, trust this guide over the marketing page — the reason is in the warning box above.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> Domain 4 is pure memory work, so if a plan comparison won't stick, tell me and I'll drill you on it with different question shapes until it does. This is the domain where repetition genuinely pays.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C2 (Support plans, billing and cost tools).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0052-clf-shared-responsibility.html">C1 · Shared Responsibility Model</a>. Next: <a href="0054-clf-pricing-models.html">C3 · Pricing models — On-Demand, Reserved, Spot, Savings Plans</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain4.html" target="_blank">CLF-C02 Exam Guide — Domain 4: Billing, Pricing, and Support</a> (12% of scored content). Task Statement 4.3 names the support options tested verbatim: &quot;AWS Developer Support, AWS Business Support, AWS Enterprise On-Ramp Support, AWS Enterprise Support&quot;, plus Trusted Advisor, AWS Health Dashboard/API, the AWS Trust and Safety team, AWS Partner Network, Marketplace, re:Post, Knowledge Center, Prescriptive Guidance, Professional Services. Task 4.2 names AWS Budgets, Cost Explorer, Pricing Calculator, Organizations consolidated billing, and cost allocation tags. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://aws.amazon.com/premiumsupport/plans/" target="_blank">Compare AWS Support Plans</a> — response-time commitments per severity, Trusted Advisor coverage, and TAM inclusion per plan.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html" target="_blank">Developer, Business, and Enterprise On-Ramp end of support</a> — AWS will discontinue Developer Support, Business Support and Enterprise On-Ramp on <strong>1 January 2027</strong>; they are replaced by Business Support+ ($29/month minimum) and Enterprise Support ($5,000 minimum, reduced from $15,000). These plans remain available in AWS GovCloud (US). <strong>This is why the live AWS site disagrees with the exam guide</strong> — the CLF-C02 guide still tests the pre-2026 plan names. Verified 3 Aug 2026.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Business is the cheapest plan with 24×7 phone, email and chat. Basic has no technical support at all; Developer is email-only during business hours, so neither meets the requirement. Enterprise would meet it but costs far more, and the question says LOWEST cost — read that qualifier, it decides the answer."
+                      : "Reconsider. Two options fail the requirement outright: Basic gives no technical support, and Developer is business-hours email only. That leaves Business and Enterprise — both offer 24×7, but the question says LOWEST cost, so Business wins. Watch for that qualifier; AWS uses it to separate two otherwise-correct answers.",
+          q2: correct ? "Correct. The word \"designated\" is the giveaway — only Enterprise gives you your own named TAM, and only Enterprise offers the 15-minute response. Enterprise On-Ramp is the trap here: it provides a pool of TAMs, not a designated one, and responds in 30 minutes rather than 15."
+                      : "Reconsider. Two clues both point to the same plan: \"designated\" TAM and \"15 minutes\". Enterprise On-Ramp is the deliberate distractor — it gives a pool of TAMs and a 30-minute response. Only Enterprise gives a designated TAM at 15 minutes. Business has no TAM at all.",
+          q3: correct ? "Correct. Budgets looks forward: you set a threshold and it alerts you when spending is projected to or does exceed it. Cost Explorer looks backward — analysing and visualising spend that already happened. The word \"alerted\" decides this question."
+                      : "Reconsider. The keyword is \"alerted\". Budgets is the forward-looking tool — set a limit, get notified. Cost Explorer analyses past spending (no alerts). Pricing Calculator estimates costs before you build. Cost and Usage Report is the detailed raw billing data. Memory hook: Budgets = forward, Cost Explorer = backward.",
+          q4: correct ? "Correct. Consolidated billing aggregates usage across all accounts, so the organization reaches volume discount tiers sooner, and unused Reserved Instance and Savings Plans capacity is shared across accounts. That aggregation is the real financial benefit — not a fixed discount."
+                      : "Reconsider. AWS never offers a flat percentage discount, waives all data transfer, or bundles free Enterprise Support — those three options are invented, which is a common CLF distractor pattern. The genuine benefit is aggregation: combined usage reaches volume discount tiers, and RI/Savings Plans benefits are shared across the organization."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

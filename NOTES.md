@@ -17,6 +17,13 @@ request, free, requested once, applies to every future exam. Must be requested
 *before* booking. Given the English constraint below, this is the single biggest
 lever in the mission.
 
+**⚠️ Support plans: the exam guide disagrees with the AWS website.** AWS
+restructured its plans in Dec 2025 (Business Support+, Unified Operations) and
+retires Developer/Business/Enterprise On-Ramp on 1 Jan 2027. The CLF-C02 exam
+guide still tests the **old** ladder. Teach the old names; the live pricing page
+will mislead him. Full detail and the re-verify instruction in
+[record 0010](./learning-records/0010-clf-track-built.md).
+
 ### AWS-track rules (in addition to everything below)
 
 - **English is the binding constraint.** Learner said directly: *"i am not that good at

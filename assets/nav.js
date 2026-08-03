@@ -14,6 +14,10 @@
     // deleted — a finished track just becomes 'done' and collapses.
     { track: 'CLF', label: 'Cloud Practitioner', header: true, note: 'active' },
     { kind: 'clfhub' },
+    { file: '0052-clf-shared-responsibility.html', num: 'C1', title: 'Shared Responsibility Model' },
+    { file: '0053-clf-support-plans.html',         num: 'C2', title: 'Support plans & cost tools' },
+    { file: '0054-clf-pricing-models.html',        num: 'C3', title: 'Pricing models' },
+    { ref: 'clf-numbers.html',                     num: '*',  title: 'CLF Numbers & Trigger Words' },
     { track: 'AIF', label: 'AI Practitioner', header: true, collapsed: true, note: 'next' },
     { kind: 'aifplaceholder' },
     { track: 'AWS', label: 'Developer Associate', header: true, collapsed: true, note: 'later' },

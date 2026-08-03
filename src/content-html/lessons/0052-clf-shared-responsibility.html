@@ -1,0 +1,163 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C1 · Domain 2 (30%)</p>
+    <h1 data-ur="Shared Responsibility Model: ek lakeer jo har sawal ka jawab deti hai">The Shared Responsibility Model: one line that answers many questions</h1>
+    <p class="subtitle" data-ur="Is exam mein yeh cheez zaroor aayegi — aur ek se zyada baar. Achi baat yeh hai ke isay yaad karne ki zaroorat nahi. Ek hi sawal hai jo tum har baar poochte ho, aur jawab khud nikal aata hai.">This will definitely appear on your exam — more than once. The good news: you don't memorise it. There's a single question you ask each time, and the answer falls out.</p>
+    <div class="meta">
+      <span>~8 min</span>
+      <span>One concept: who fixes what</span>
+      <span>Win: a guaranteed-marks question</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>AWS cloud KI security ka zimmedar hai. Tum cloud MEIN security ke zimmedar ho.</strong><br><br>English mein yeh do lafz hain: AWS = security <strong>OF</strong> the cloud. Tum = security <strong>IN</strong> the cloud. Poora model in do lafzon par khara hai — <em>of</em> aur <em>in</em>.<br><br>Aur asaan tareeqa: <strong>AWS woh sab sambhalta hai jise tum haath nahi laga sakte.</strong> Data centre ka darwaza, physical server, bijli, network ki taarein — tum wahan ja hi nahi sakte, is liye AWS ka kaam hai. Jo cheez tum console ya API se badal sakte ho — woh tumhari zimmedari hai."><strong>AWS is responsible for the security OF the cloud. You are responsible for security IN the cloud.</strong><br><br>The whole model rests on two small English words — <em>of</em> and <em>in</em>.<br><br>An easier test: <strong>AWS handles everything you cannot touch.</strong> The data centre door, the physical server, the power, the network cabling — you can't go there, so it's AWS's job. Anything you can change from the console or an API is yours.</span>
+  </div>
+
+  <h2 data-ur="Kahani: kiraye ka flat">The story: a rented flat</h2>
+  <p data-ur="Tum ek flat kiraye par lete ho. <strong>Malik (AWS)</strong> building ka zimmedar hai — buniyaad, chhat, bahar ka darwaza, bijli ki wiring, paani ka system. Agar chhat tapke to yeh malik ka kaam hai. Tum chhat theek nahi kar sakte; tumhein ijazat hi nahi.">You rent a flat. The <strong>landlord (AWS)</strong> is responsible for the building — the foundation, the roof, the main door, the electrical wiring, the plumbing. If the roof leaks, that's the landlord's job. You can't fix the roof; you're not even allowed to.</p>
+  <p data-ur="<strong>Tum (customer)</strong> us cheez ke zimmedar ho jo tum andar rakhte ho aur karte ho. Apna darwaza band karna. Apni chaabi kis ko deni hai. Apna saamaan. Agar tum darwaza khula chhor kar chale jao aur chori ho jaye — yeh malik ka qusoor nahi. Us ne taala diya tha; istemaal karna tumhara kaam tha."><strong>You (the customer)</strong> are responsible for what you put inside and what you do. Locking your own door. Who you give your key to. Your belongings. If you leave the door open and get burgled — that isn't the landlord's fault. They provided the lock; using it was your job.</p>
+  <p data-ur="AWS bilkul yeh hai. <strong>S3 bucket public chhor dena = darwaza khula chhorna.</strong> AWS ne taala diya tha (bucket default private hota hai, encryption maujood hai, IAM maujood hai). Agar tum ne khud usay public kar diya — yeh tumhari zimmedari hai, AWS ki nahi. Exam yeh baat baar baar aise hi poochta hai.">AWS is exactly this. <strong>Leaving an S3 bucket public = leaving the door open.</strong> AWS gave you the lock (buckets are private by default, encryption exists, IAM exists). If you made it public yourself, that's on you, not AWS. The exam asks this shape of question repeatedly.</p>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Lakeer ke dono taraf — yeh table exam hai">Both sides of the line — this table <em>is</em> the exam</span>
+    <ul>
+      <li data-ur="⭐ <strong>AWS ka kaam — &quot;security OF the cloud&quot;:</strong> data centres aur unki physical security, hardware/servers, bijli aur cooling, host operating system, virtualization layer, AWS Regions/AZs ka network infrastructure, aur managed services ka andaruni maintenance (jaise RDS ka OS patch karna, DynamoDB ke servers)."><strong>⭐ AWS's job — &quot;security OF the cloud&quot;:</strong> data centres and their physical security, hardware and servers, power and cooling, the host operating system, the virtualization layer, the network infrastructure of Regions and AZs, and the internal maintenance of managed services (patching RDS's OS, running DynamoDB's servers).</li>
+      <li data-ur="⭐ <strong>Tumhara kaam — &quot;security IN the cloud&quot;:</strong> tumhara data (hamesha, bila istisna), IAM users/roles/permissions, guest OS patching (EC2 par), security groups aur firewall rules, encryption on karna, network traffic protection, application ka code."><strong>⭐ Your job — &quot;security IN the cloud&quot;:</strong> your data (always, no exceptions), IAM users/roles/permissions, guest OS patching (on EC2), security groups and firewall rules, turning encryption on, network traffic protection, your application code.</li>
+      <li data-ur="⭐ <strong>Data HAMESHA tumhara hai.</strong> Chahe koi bhi service ho, chahe kitni hi managed ho — data ki classification, uska encryption on karna, aur uska access control hamesha customer ka kaam hai. Agar sawal &quot;data&quot; ke baare mein hai, jawab takreeban hamesha &quot;customer&quot; hai."><strong>⭐ Data is ALWAYS yours.</strong> Whatever the service, however managed — classifying your data, turning on its encryption, and controlling access to it is always the customer's job. If the question is about <em>data</em>, the answer is almost always &quot;customer&quot;.</li>
+      <li data-ur="<strong>Kuch cheezein dono ki hain (&quot;shared controls&quot;):</strong> patch management (AWS infrastructure patch karta hai, tum apna guest OS aur app), configuration management (AWS apne devices ki, tum apne resources ki), aur awareness/training (dono apne apne logon ki)."><strong>Some things are shared (&quot;shared controls&quot;):</strong> patch management (AWS patches the infrastructure, you patch your guest OS and app), configuration management (AWS configures its devices, you configure your resources), and awareness/training (each trains their own people).</li>
+    </ul>
+  </div>
+
+  <h2 data-ur="Woh baat jo log ghalat samajhte hain: lakeer service ke saath khisakti hai">The part people get wrong: the line moves with the service</h2>
+  <p data-ur="Yeh sab se aham nukta hai, aur yahin sab se zyada marks jaate hain. Lakeer ek jagah khari nahi rehti — <strong>jitni service managed hoti hai, utna hi AWS ka hissa barhta hai aur tumhara ghatta hai.</strong>">This is the most important subtlety, and where most marks are lost. The line doesn't stand still — <strong>the more managed the service, the more AWS takes on and the less you do.</strong></p>
+
+  <table class="elim">
+    <thead><tr><th data-ur="Service">Service</th><th data-ur="AWS kya karta hai">AWS does</th><th data-ur="Tum kya karte ho">You do</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>EC2</strong><br><span style="color:#6b6b6b" data-ur="sab se zyada tumhara kaam">most work is yours</span></td>
+        <td data-ur="Physical server, hypervisor, network, bijli.">Physical server, hypervisor, network, power.</td>
+        <td data-ur="⚠️ <strong>Guest OS patch karna</strong>, software install karna, security groups, firewall, data encryption. EC2 par OS patching <strong>tumhara</strong> kaam hai — yeh exam ka pasandeeda sawal hai."><strong>⚠️ Patching the guest OS</strong>, installing software, security groups, firewall, encrypting data. On EC2, OS patching is <strong>yours</strong> — a favourite exam question.</td>
+      </tr>
+      <tr>
+        <td><strong>RDS</strong><br><span style="color:#6b6b6b" data-ur="managed">managed</span></td>
+        <td data-ur="Sab kuch EC2 wala, <strong>plus database ka OS aur engine patch karna</strong>, backups, replication.">Everything EC2 does, <strong>plus patching the database OS and engine</strong>, backups, replication.</td>
+        <td data-ur="Database ke andar users aur permissions, apna data, encryption on karna, security group kis ko access de.">Users and permissions inside the database, your data, enabling encryption, which security group gets access.</td>
+      </tr>
+      <tr>
+        <td><strong>S3 / Lambda / DynamoDB</strong><br><span style="color:#6b6b6b" data-ur="sab se zyada AWS ka kaam">most work is AWS's</span></td>
+        <td data-ur="Poora infrastructure, OS, scaling, availability — sab AWS ka.">The entire infrastructure, OS, scaling, availability — all AWS.</td>
+        <td data-ur="Sirf: kis ko access hai (IAM/bucket policy), encryption on hai ya nahi, aur data khud. Bas yehi teen cheezein.">Only: who has access (IAM / bucket policy), whether encryption is on, and the data itself. Just those three.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p data-ur="Yaad rakhne ka tareeqa: <strong>EC2 par OS tumhara, RDS par OS AWS ka.</strong> Agar yeh ek jora yaad rehta hai to zyada tar sawal khud hal ho jaate hain."><strong>The memory hook: on EC2 the OS is yours; on RDS the OS is AWS's.</strong> Hold that one pair and most questions solve themselves.</p>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — yeh lafz is sawal mein aate hain">Exam English — the words that appear in these questions</span>
+    <span data-ur="<strong>&quot;responsible for&quot;</strong> = kis ka kaam hai, kis ki zimmedari hai. Sawal ka asal matlab: &quot;yeh kaam kaun karega?&quot;<br><strong>&quot;patching&quot;</strong> = software ki security update lagana.<br><strong>&quot;guest OS&quot;</strong> = woh operating system jo tumhare EC2 instance ke <em>andar</em> chalta hai (Ubuntu, Amazon Linux). <strong>&quot;host OS&quot;</strong> = jo asal physical machine par chalta hai — woh AWS ka.<br><strong>&quot;underlying&quot;</strong> = neeche wala, buniyadi. &quot;Underlying infrastructure&quot; ka matlab hamesha AWS ka hissa.<br><strong>&quot;on-premises&quot;</strong> = tumhare apne data centre mein, cloud mein nahi.<br><strong>&quot;compliance&quot;</strong> = qanooni ya industry ke usoolon par poora utarna.">
+      <strong>&quot;responsible for&quot;</strong> = whose job it is. The question really means: &quot;who does this work?&quot;<br>
+      <strong>&quot;patching&quot;</strong> = applying security updates to software.<br>
+      <strong>&quot;guest OS&quot;</strong> = the operating system running <em>inside</em> your EC2 instance (Ubuntu, Amazon Linux). <strong>&quot;host OS&quot;</strong> = the one on the real physical machine — that's AWS's.<br>
+      <strong>&quot;underlying&quot;</strong> = the layer beneath. &quot;Underlying infrastructure&quot; always means AWS's side.<br>
+      <strong>&quot;on-premises&quot;</strong> = in your own data centre, not in the cloud.<br>
+      <strong>&quot;compliance&quot;</strong> = meeting legal or industry rules.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 2 · Security &amp; Compliance · shaped like the real exam</span>
+    <p class="scenario" data-ur="Ek company apni application <strong>Amazon EC2</strong> instances par chalati hai. AWS Shared Responsibility Model ke mutabiq, in EC2 instances par <span class=&quot;qual&quot;>guest operating system ko patch karne</span> ka zimmedar kaun hai?">A company runs its application on <strong>Amazon EC2</strong> instances. According to the AWS Shared Responsibility Model, who is responsible for <span class="qual">patching the guest operating system</span> on those instances?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AWS, kyunke AWS saara infrastructure sambhalta hai">AWS, because AWS manages all infrastructure</button>
+      <button class="opt" data-correct="true" data-ur="Customer">The customer</button>
+      <button class="opt" data-correct="false" data-ur="AWS aur customer barabar ke shareek hain">AWS and the customer equally</button>
+      <button class="opt" data-correct="false" data-ur="Woh AWS Partner jis ne account banaya">The AWS Partner who created the account</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 2 · the line moves — RDS vs EC2</span>
+    <p class="scenario" data-ur="Ek company <strong>Amazon RDS</strong> par apna database chalati hai. Shared Responsibility Model ke tehat <span class=&quot;qual&quot;>database engine ko patch karne</span> ka zimmedar kaun hai?">A company runs its database on <strong>Amazon RDS</strong>. Under the Shared Responsibility Model, who is responsible for <span class="qual">patching the database engine</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="AWS">AWS</button>
+      <button class="opt" data-correct="false" data-ur="Customer, kyunke database customer ka hai">The customer, because the database belongs to the customer</button>
+      <button class="opt" data-correct="false" data-ur="Customer, magar sirf Multi-AZ deployment mein">The customer, but only in a Multi-AZ deployment</button>
+      <button class="opt" data-correct="false" data-ur="Woh third-party vendor jis ne database banaya">The third-party vendor that makes the database</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 2 · the classic S3 trap</span>
+    <p class="scenario" data-ur="Ek employee galti se ek Amazon S3 bucket ko public kar deta hai aur customer ka data internet par nazar aane lagta hai. Shared Responsibility Model ke mutabiq is ka zimmedar kaun tha?">An employee accidentally makes an Amazon S3 bucket public, exposing customer data on the internet. Under the Shared Responsibility Model, who was responsible?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false" data-ur="AWS, kyunke S3 AWS ki service hai">AWS, because S3 is an AWS service</button>
+      <button class="opt" data-correct="true" data-ur="Customer, kyunke access control aur data ki hifazat customer ka hissa hai">The customer, because access control and protecting the data are the customer's side</button>
+      <button class="opt" data-correct="false" data-ur="AWS, kyunke AWS ko public buckets rokne chahiye the">AWS, because AWS should prevent public buckets</button>
+      <button class="opt" data-correct="false" data-ur="Dono, kyunke yeh ek shared control hai">Both, because this is a shared control</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare Django kaam se jor">Bridge to your Django work</span>
+    <span data-ur="Tum yeh lakeer pehle hi rozana mehsoos karte ho. Jab tum apni Django app ko ek managed platform par deploy karte ho, tum kabhi yeh nahi sochte ke &quot;server ka Linux kernel kis ne update karna hai&quot; — woh platform ka kaam hai. Magar <strong>tumhari <code>settings.py</code> mein <code>DEBUG=False</code> hai ya nahi, <code>ALLOWED_HOSTS</code> theek hai ya nahi, database ka password kahan rakha hai</strong> — yeh koi platform tumhare liye theek nahi karega. Yehi &quot;security IN the cloud&quot; hai.<br><br>Aur S3 wala sawal bilkul wohi cheez hai jo Django mein <code>DEBUG=True</code> production mein chhor dena hai. Framework ne tumhein mehfooz default diya tha; tum ne usay badal diya. Framework ka qusoor nahi.">You already feel this line daily. When you deploy a Django app to a managed platform, you never wonder who updates the server's Linux kernel — that's the platform's job. But <strong>whether <code>DEBUG=False</code> is set in your <code>settings.py</code>, whether <code>ALLOWED_HOSTS</code> is right, where your database password lives</strong> — no platform fixes those for you. That is exactly &quot;security IN the cloud&quot;.<br><br>And the S3 question is the same thing as leaving <code>DEBUG=True</code> on in production. The framework gave you a safe default; you changed it. Not the framework's fault.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se, bina upar dekhe: AWS security OF ya IN the cloud? EC2 par OS kis ka? RDS par OS kis ka? Aur data kis ka — hamesha?">From memory, without scrolling up: is AWS security OF or IN the cloud? Who patches the OS on EC2? On RDS? And whose is the data — always?</div>
+    <div class="answer" data-ur="<strong>AWS = security OF the cloud</strong> (tum = IN). <strong>EC2 ka guest OS = tumhara.</strong> <strong>RDS ka OS aur engine = AWS ka.</strong> <strong>Data hamesha customer ka</strong> — koi istisna nahi. Agar chaaron aa gaye to is domain ke sawal tumhare liye muft marks hain."><strong>AWS = security OF the cloud</strong> (you = IN). <strong>EC2 guest OS = yours.</strong> <strong>RDS OS and engine = AWS's.</strong> <strong>Data is always the customer's</strong> — no exceptions. If you got all four, these questions are free marks for you.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Yeh exam ka sab se yaqeeni topic hai aur ab tumhare paas ek aisa qaida hai jo har shakal ke sawal par chalta hai: <em>jo tum haath nahi laga sakte woh AWS ka, jo tum badal sakte ho woh tumhara.</em> Tum jaante ho ke lakeer service ke saath khisakti hai (EC2 → RDS → S3), aur data hamesha tumhara rehta hai. Yeh Domain 2 hai — exam ka 30%, sab se bara security hissa.">This is the exam's most certain topic, and you now have a rule that works on every shape of the question: <em>what you cannot touch is AWS's; what you can change is yours.</em> You know the line moves with the service (EC2 → RDS → S3), and that data stays yours throughout. This is Domain 2 — 30% of the exam.</span>
+  </div>
+
+  <h2 data-ur="Aage parho (primary source)">Read next (primary source)</h2>
+  <p data-ur="📖 <a href=&quot;https://aws.amazon.com/compliance/shared-responsibility-model/&quot; target=&quot;_blank&quot;>AWS Shared Responsibility Model</a><sup class=&quot;cite&quot;><a href=&quot;#s1&quot;>1</a></sup> — AWS ke apne lafzon mein, aur us par ek tasveer jo exam ke zehen se bilkul milti hai. Yeh page chhota hai; poora parh lo.">📖 <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank">AWS Shared Responsibility Model</a><sup class="cite"><a href="#s1">1</a></sup> — in AWS's own words, with the diagram the exam thinks in. It's a short page; read all of it.</p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> If a responsibility question confuses you, paste it here. Usually the confusion is one word — &quot;guest&quot; vs &quot;host&quot;, or &quot;underlying&quot; — and once that word lands, the question becomes easy. Tell me which word stopped you.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C1 (Shared Responsibility Model).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Next: <a href="0053-clf-support-plans.html">C2 · Support plans — the one domain your day job never covers</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank">AWS Shared Responsibility Model</a> — AWS is responsible for &quot;security <em>of</em> the cloud&quot; (hardware, software, networking, facilities); the customer is responsible for &quot;security <em>in</em> the cloud&quot; (customer data, platform/application management, guest OS patching, IAM, firewall configuration, encryption). Shared controls: patch management, configuration management, awareness and training.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain2.html" target="_blank">CLF-C02 Exam Guide — Domain 2: Security and Compliance</a> (30% of scored content) — Task Statement 2.1 requires understanding the AWS shared responsibility model, including where responsibility shifts between AWS and the customer for different service types. Verified 3 Aug 2026.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. EC2 gives you the virtual machine, and everything inside it is yours — including the guest OS. AWS patches the host OS and hypervisor underneath, which you cannot see or touch. The test: could you run the patch command yourself? On EC2, yes. So it's your job."
+                      : "Reconsider. On EC2 you control the instance, so the guest OS inside it is yours to patch — AWS only patches the host OS and hypervisor beneath it, which you cannot access. Use the test: if you can log in and run the update yourself, it's your responsibility. Note the contrast with RDS in the next question.",
+          q2: correct ? "Correct. RDS is a managed service, so the line moves: AWS patches the database OS and engine, handles backups and replication. You still own what's inside the database — users, permissions, your data, and whether encryption is on."
+                      : "Reconsider. This is the pair to memorise. On EC2 the OS is yours; on RDS, because it is managed, AWS patches both the OS and the database engine. What stays yours on RDS is what's inside the database: users, permissions, the data, and enabling encryption.",
+          q3: correct ? "Correct. Access control and data protection are always the customer's side. AWS supplied safe defaults — buckets are private by default and Block Public Access exists — and the customer overrode them. This is the single most common shape of the shared-responsibility question."
+                      : "Reconsider. Data and access control are always the customer's responsibility, on every service. S3 buckets are private by default and AWS provides Block Public Access; making it public was a customer configuration choice. AWS provided the lock — using it is your job."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
