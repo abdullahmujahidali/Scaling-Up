@@ -18,3 +18,7 @@ Thumbs.db
 # Logs
 npm-debug.log*
 yarn-error.log*
+
+# Copyrighted course slide decks — marked "NOT FOR DISTRIBUTION" by the author.
+# Kept locally as a study source; never committed or published.
+*.pdf

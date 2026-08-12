@@ -1,0 +1,210 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C8 · Domain 3 (34%) — the gaps found in the audit</p>
+    <h1 data-ur="Chaar cheezein jo tumhare lessons mein reh gayi thin">Four things the earlier lessons left out</h1>
+    <p class="subtitle" data-ur="Tum ne slides bhej kar poocha ke sab kuch cover hua ya nahi. Maine check kiya — aur nahi hua tha. Yeh chaar cheezein exam mein aksar aati hain aur tumhare lessons mein bilkul nahi thin. Yeh lesson sirf woh kami poori karta hai.">You sent the slides and asked whether everything was covered. I checked — and it was not. These four topics come up often on the exam and were completely absent from your lessons. This lesson closes exactly that gap.</p>
+    <div class="meta">
+      <span>~14 min</span>
+      <span>One concept: pick the right service, not the deepest one</span>
+      <span>Win: four stock exam questions</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C6 se yaad karo: high availability kaise milti hai? EBS aur EFS ka farq? Aur CloudFront kis liye hai?">From C6: how do you get high availability? EBS vs EFS? And what is CloudFront for?</div>
+    <div class="answer" data-ur="High availability = <strong>kai Availability Zones</strong>. <strong>EBS</strong> = ek instance ki disk (ek AZ); <strong>EFS</strong> = kai instances ka shared file system. <strong>CloudFront</strong> = CDN, content users ke qareeb. Aaj: load balancer ki qismain, CloudWatch, SQS aur Route 53.">High availability = <strong>multiple Availability Zones</strong>. <strong>EBS</strong> = one instance's disk (one AZ); <strong>EFS</strong> = a shared file system for many instances. <strong>CloudFront</strong> = the CDN, content near users. Today: load balancer types, CloudWatch, SQS and Route 53.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="Yeh chaaron sawal <strong>pehchan</strong> ke sawal hain, gehrai ke nahi. Har ek mein exam tumhein ek lafz deta hai aur us lafz se jawab nikal aata hai: &quot;HTTP&quot; = ALB, &quot;order&quot; = FIFO, &quot;alarm&quot; = CloudWatch, &quot;closest Region&quot; = latency routing. Lafz pakro, jawab mil gaya."><strong>All four are recognition questions, not depth questions.</strong> In each one the exam hands you a single word and that word decides the answer: &quot;HTTP&quot; = ALB, &quot;order&quot; = FIFO, &quot;alarm&quot; = CloudWatch, &quot;closest Region&quot; = latency routing. Catch the word, you have the mark.</span>
+  </div>
+
+  <h2 data-ur="1. Load balancer ki qismain (ALB / NLB / GWLB)">1. The load balancer types (ALB / NLB / GWLB)</h2>
+
+  <p data-ur="Tum ne C6 mein &quot;load balancer&quot; parha tha, magar exam aksar poochta hai ke <em>kaunsa</em> load balancer. AWS ke paas teen hain, aur farq sirf ek cheez ka hai: woh kis level par kaam karta hai.">You met &quot;load balancer&quot; in C6, but the exam usually asks <em>which</em> load balancer. AWS has three, and they differ on one thing only: the level they work at.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Roz ki misaal">Everyday analogy</span>
+    <span data-ur="Ek building ka receptionist socho. <strong>ALB</strong> woh receptionist hai jo tumhari <em>baat sunta</em> hai — &quot;mujhe accounts chahiye&quot; — aur tumhein sahi floor bhejta hai. Usay maloom hai tum kya maang rahe ho. <strong>NLB</strong> woh guard hai jo sirf darwaza kholta hai — bahut tez, magar usay parwah nahi tum kya chahte ho, sirf tumhein andar bhejta hai. <strong>GWLB</strong> woh security check hai jis se har aane wale ko guzarna parta hai, chahe woh kahin bhi ja raha ho.">Think of a receptionist in a building. <strong>ALB</strong> is the receptionist who <em>listens to what you say</em> — &quot;I need accounts&quot; — and sends you to the right floor. It understands your request. <strong>NLB</strong> is the guard who just opens the door — extremely fast, but doesn't care what you want, only that you get in. <strong>GWLB</strong> is the security checkpoint everyone must pass through, wherever they're headed.</span>
+  </div>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Type</th><th>Works on</th><th>Exam trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ALB</strong> — Application Load Balancer</td><td>HTTP / HTTPS (layer 7)</td><td>&quot;HTTP&quot;, &quot;web application&quot;, &quot;route by URL / path&quot;, &quot;microservices&quot;, &quot;containers&quot;</td></tr>
+        <tr><td><strong>NLB</strong> — Network Load Balancer</td><td>TCP / UDP (layer 4)</td><td>&quot;extreme performance&quot;, &quot;millions of requests&quot;, &quot;low latency&quot;, &quot;static IP&quot;, &quot;TCP/UDP&quot;, &quot;gaming&quot;</td></tr>
+        <tr><td><strong>GWLB</strong> — Gateway Load Balancer</td><td>Layer 3 (IP packets)</td><td>&quot;firewall&quot;, &quot;intrusion detection&quot;, &quot;inspect traffic&quot;, &quot;third-party appliances&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="english"><span class="callout-label" data-ur="Exam ki English">The English of the exam</span> <span data-ur="Agar sawal mein <strong>&quot;HTTP&quot;</strong> ya <strong>&quot;URL&quot;</strong> hai to jawab ALB hai. Agar <strong>&quot;extreme performance&quot;</strong> ya <strong>&quot;static IP&quot;</strong> hai to NLB. <strong>&quot;Firewall appliance&quot;</strong> ho to GWLB — yeh teesra sab se kam aata hai, is par waqt zaya mat karo.">If the question contains <strong>&quot;HTTP&quot;</strong> or <strong>&quot;URL&quot;</strong>, the answer is ALB. If it says <strong>&quot;extreme performance&quot;</strong> or <strong>&quot;static IP&quot;</strong>, it's NLB. <strong>&quot;Firewall appliance&quot;</strong> means GWLB — the rarest of the three, so don't spend study time on it.</span></p>
+
+  <h2 data-ur="2. CloudWatch ke teen hissay">2. The three parts of CloudWatch</h2>
+
+  <p data-ur="CloudWatch ka naam tumhare lessons mein tha, magar uske teen hissay kabhi alag nahi kiye gaye — aur exam inhi ko alag alag poochta hai. Yeh Domain 3 ka pakka sawal hai.">CloudWatch appeared by name in your lessons, but its three parts were never separated — and separating them is exactly what the exam asks. This is a near-guaranteed Domain 3 question.</p>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Part</th><th>What it is</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Metrics</strong></td><td>Numbers over time — CPU, network, disk</td><td>&quot;monitor performance&quot;, &quot;CPU utilization&quot;, &quot;graph&quot;</td></tr>
+        <tr><td><strong>Alarms</strong></td><td>Do something when a metric crosses a threshold (notify, auto scale, stop an instance)</td><td>&quot;notify when&quot;, &quot;threshold&quot;, &quot;trigger an action&quot;, <strong>&quot;billing alarm&quot;</strong></td></tr>
+        <tr><td><strong>Logs</strong></td><td>The text your application writes</td><td>&quot;application logs&quot;, &quot;log files&quot;, &quot;error messages&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se">From your work</span>
+    <span data-ur="Django mein: <strong>metrics</strong> = server ka CPU graph, <strong>logs</strong> = tumhari <code>logger.error()</code> lines, <strong>alarm</strong> = woh email jo tumhein raat ko uthata hai jab CPU 90% ho jaye. Teeno alag cheezein hain — CloudWatch mein bhi alag hain.">In Django terms: <strong>metrics</strong> = the server's CPU graph, <strong>logs</strong> = your <code>logger.error()</code> lines, <strong>alarm</strong> = the email that wakes you at night when CPU hits 90%. Three different things — and CloudWatch keeps them separate too.</span>
+  </div>
+
+  <p class="qual"><span class="callout-label" data-ur="Exam ka pasandeeda trap">The exam's favourite trap</span> <span data-ur="<strong>CloudWatch vs CloudTrail.</strong> CloudWatch = <em>performance</em> (kya chal raha hai). CloudTrail = <em>kis ne kya kiya</em> (audit, API calls). Agar sawal mein &quot;who deleted&quot; ya &quot;audit&quot; ho to jawab CloudTrail hai, CloudWatch nahi. Yeh dono har exam mein saath aate hain."><strong>CloudWatch vs CloudTrail.</strong> CloudWatch = <em>performance</em> (what is running). CloudTrail = <em>who did what</em> (audit, API calls). If the question says &quot;who deleted&quot; or &quot;audit&quot;, the answer is CloudTrail, not CloudWatch. These two appear together on nearly every exam.</span></p>
+
+  <h2 data-ur="3. SQS: decoupling aur FIFO">3. SQS: decoupling and FIFO</h2>
+
+  <p data-ur="&quot;Decouple&quot; exam ka sab se pasandeeda architecture lafz hai, aur tumhare lessons mein yeh lafz ek baar bhi nahi tha. Iska matlab bahut simple hai.">&quot;Decouple&quot; is the exam's single favourite architecture word, and it did not appear once in your lessons. The meaning is simple.</p>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Roz ki misaal">Everyday analogy</span>
+    <span data-ur="Restaurant socho. Waiter order likh kar kitchen ki khirki par laga deta hai aur wapas chala jata hai. Woh khara ho kar khana banne ka intezaar nahi karta. Agar kitchen dheeli ho jaye to bhi waiter orders leta rehta hai — parchiyan jama hoti rehti hain. <strong>Yeh queue hai, aur yehi decoupling hai:</strong> dono hissay ek doosre ka intezaar nahi karte. Agar kitchen band ho jaye to orders zaya nahi hote, queue mein mehfooz rehte hain.">Picture a restaurant. The waiter writes the order, clips it to the kitchen window, and walks away. They don't stand there waiting for the food. If the kitchen slows down, the waiter keeps taking orders — the tickets just pile up. <strong>That is a queue, and that is decoupling:</strong> neither side waits on the other. If the kitchen stops entirely, the orders aren't lost — they're safe in the queue.</span>
+  </div>
+
+  <p data-ur="AWS mein woh khirki <strong>Amazon SQS</strong> hai. Exam is ka faida yun poochta hai: &quot;agar ek hissa fail ho jaye to doosra chalta rahe&quot; — jawab SQS.">In AWS that window is <strong>Amazon SQS</strong>. The exam phrases the benefit like this: &quot;so that one component failing doesn't stop the other&quot; — the answer is SQS.</p>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Queue type</th><th>Guarantee</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Standard</strong> (default)</td><td>Very high throughput; order <em>not</em> guaranteed, a message can arrive twice</td><td>&quot;maximum throughput&quot;, &quot;order doesn't matter&quot;</td></tr>
+        <tr><td><strong>FIFO</strong></td><td>Exact order preserved, each message delivered exactly once; lower throughput</td><td><strong>&quot;order&quot;</strong>, &quot;sequence&quot;, &quot;exactly once&quot;, &quot;no duplicates&quot;, &quot;banking transactions&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="english"><span class="callout-label" data-ur="Exam ki English">The English of the exam</span> <span data-ur="FIFO = <strong>F</strong>irst <strong>I</strong>n, <strong>F</strong>irst <strong>O</strong>ut — jo pehle aaya woh pehle nikla. Sawal mein lafz <strong>&quot;order&quot;</strong> ya <strong>&quot;sequence&quot;</strong> dikhte hi FIFO chun lo. Yeh ek lafz poora sawal hal kar deta hai.">FIFO = <strong>F</strong>irst <strong>I</strong>n, <strong>F</strong>irst <strong>O</strong>ut. The moment you see the word <strong>&quot;order&quot;</strong> or <strong>&quot;sequence&quot;</strong>, choose FIFO. That one word settles the whole question.</span></p>
+
+  <p class="qual"><span class="callout-label" data-ur="SQS vs SNS">SQS vs SNS</span> <span data-ur="<strong>SQS = queue</strong>, ek message ek receiver ko (kitchen ki parchi). <strong>SNS = notification</strong>, ek message <em>bohot</em> subscribers ko (announcement). &quot;Fan out&quot; ya &quot;notify many&quot; = SNS. &quot;Buffer&quot; ya &quot;decouple&quot; = SQS."><strong>SQS = a queue</strong>, one message to one receiver (the kitchen ticket). <strong>SNS = notifications</strong>, one message to <em>many</em> subscribers (an announcement). &quot;Fan out&quot; or &quot;notify many&quot; = SNS. &quot;Buffer&quot; or &quot;decouple&quot; = SQS.</span></p>
+
+  <h2 data-ur="4. Route 53 routing policies">4. Route 53 routing policies</h2>
+
+  <p data-ur="Route 53 DNS hai — naam ko IP mein badalta hai. Magar exam yeh poochta hai ke woh <em>kaunsa</em> IP wapas kare. Do policies aksar aati hain:">Route 53 is DNS — it turns a name into an IP address. But the exam asks <em>which</em> IP it should return. Two policies come up most:</p>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Policy</th><th>What it does</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Latency</strong></td><td>Sends the user to the Region that answers fastest for them</td><td>&quot;lowest latency&quot;, &quot;closest Region&quot;, &quot;best performance for global users&quot;</td></tr>
+        <tr><td><strong>Failover</strong></td><td>Sends everyone to the backup when the primary fails a health check</td><td>&quot;disaster recovery&quot;, &quot;if the primary fails&quot;, &quot;active-passive&quot;</td></tr>
+        <tr><td><strong>Weighted</strong></td><td>Splits traffic by percentage</td><td>&quot;10% of traffic&quot;, &quot;test a new version&quot;</td></tr>
+        <tr><td><strong>Simple / Geolocation</strong></td><td>One record / route by the user's country</td><td>&quot;users in Germany must reach&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="qual"><span class="callout-label" data-ur="Barik farq">A fine distinction</span> <span data-ur="<strong>Latency routing vs CloudFront.</strong> Dono &quot;tez&quot; hain, magar CloudFront <em>content cache</em> karta hai edge par; latency routing user ko poore <em>application</em> ke sab se qareeb Region par bhejta hai. Sawal mein &quot;cache&quot; ya &quot;static content&quot; = CloudFront. &quot;Region&quot; ka zikr = latency routing."><strong>Latency routing vs CloudFront.</strong> Both mean &quot;faster&quot;, but CloudFront <em>caches content</em> at the edge, while latency routing sends the user to the nearest <em>full application</em> Region. &quot;Cache&quot; or &quot;static content&quot; in the question = CloudFront. A mention of &quot;Regions&quot; = latency routing.</span></p>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A company runs a web application that must route incoming HTTPS requests to different groups of containers based on the URL path (for example, /api and /images). Which AWS service should the company use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Network Load Balancer</button>
+      <button class="opt" data-correct="true">Application Load Balancer</button>
+      <button class="opt" data-correct="false">Gateway Load Balancer</button>
+      <button class="opt" data-correct="false">AWS Global Accelerator</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A payment application must process transactions in exactly the order they were submitted, with no message processed twice. Which solution meets these requirements?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">An Amazon SQS standard queue</button>
+      <button class="opt" data-correct="true">An Amazon SQS FIFO queue</button>
+      <button class="opt" data-correct="false">An Amazon SNS topic</button>
+      <button class="opt" data-correct="false">An Amazon EventBridge rule</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 4</span>
+    <p class="scenario">A company wants to receive an email automatically when its estimated monthly AWS charges go above 500 USD. Which service provides this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">AWS CloudTrail</button>
+      <button class="opt" data-correct="false">AWS Trusted Advisor</button>
+      <button class="opt" data-correct="true">Amazon CloudWatch alarms</button>
+      <button class="opt" data-correct="false">AWS Config</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">An application is deployed in Regions in the United States, Europe, and Asia. The company wants each user's request sent to the Region that gives that user the lowest response time. Which Route 53 routing policy should be used?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Failover routing</button>
+      <button class="opt" data-correct="false">Weighted routing</button>
+      <button class="opt" data-correct="true">Latency-based routing</button>
+      <button class="opt" data-correct="false">Simple routing</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Chaar aise sawal jo pehle tumhare notes mein kahin nahi thay, ab tumhare paas hain — aur chaaron exam mein aam hain. Sab se ahem: ab tum jaante ho ke <strong>ek lafz</strong> (&quot;HTTP&quot;, &quot;order&quot;, &quot;alarm&quot;, &quot;lowest latency&quot;) poora sawal hal kar deta hai. Yeh tumhare liye sab se qeemti technique hai, kyunke lamba English sawal poora samajhne ki zaroorat nahi rehti.">Four questions that appeared nowhere in your notes before — all four common on the exam. Most importantly: you now know that <strong>one word</strong> (&quot;HTTP&quot;, &quot;order&quot;, &quot;alarm&quot;, &quot;lowest latency&quot;) can settle an entire question. That is the most valuable technique you have, because it means you don't need to fully parse a long English scenario to answer it.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <span class="callout-label" data-ur="Mujh se poocho">Ask your teacher</span>
+    <span data-ur="Agar in mein se koi cheez ulajhi hui lage — khaas taur par SQS vs SNS, ya CloudWatch vs CloudTrail — to mujh se poocho. Main is ki aur misaalein de sakta hoon ya aur sawal bana sakta hoon. Yeh dono jorey exam mein saath aate hain, is liye inhein saaf hona zaroori hai.">If any of this feels tangled — especially SQS vs SNS, or CloudWatch vs CloudTrail — ask me. I can give more examples or write more practice questions. Those two pairs turn up together on the exam, so they're worth getting clean.</span>
+  </div>
+
+  <div class="lesson-foot">
+    <p><strong>Lesson C8 (the audit gaps).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0062-clf-remaining-services.html">C7 · Everything else</a>. Next: <a href="../reference/clf-numbers.html">CLF numbers &amp; trigger words sheet</a>.</p>
+    <p><strong>Primary source to read:</strong> <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html" target="_blank">CLF-C02 Exam Guide — Domain 3</a>, task statements 3.3 (compute and load balancers) and 3.8 (SNS, SQS, EventBridge). Read only the task statements — not the whole guide.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain3.html" target="_blank">CLF-C02 Exam Guide — Domain 3: Cloud Technology and Services</a> (34%). Task statement 3.3 names load balancers explicitly; 3.5 names Route 53; 3.8 names SNS and SQS. Verified 12 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html" target="_blank">Elastic Load Balancing User Guide</a> — the three load balancer types and the layer each operates at. Verified 12 Aug 2026.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html" target="_blank">Amazon SQS Developer Guide — FIFO queues</a> — exact ordering and exactly-once processing, versus standard queues' best-effort ordering. Verified 12 Aug 2026.</li>
+      <li id="s4"><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html" target="_blank">Amazon Route 53 Developer Guide — Choosing a routing policy</a> — latency, failover, weighted, geolocation. Verified 12 Aug 2026.</li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.classList.contains('answered')) return;
+        quiz.classList.add('answered');
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Routing by URL path requires understanding the HTTP request itself, which only the Application Load Balancer does (layer 7). A Network Load Balancer works at layer 4 and cannot see the path. Gateway Load Balancer is for third-party firewall appliances, and Global Accelerator routes across Regions rather than by URL."
+                      : "Reconsider. Two clues point the same way: \"HTTPS\" and \"based on the URL path\". Reading the URL requires layer 7, which is the Application Load Balancer. NLB operates at layer 4 and never sees the path. GWLB is for inspection appliances; Global Accelerator routes between Regions.",
+          q2: correct ? "Correct. \"Exactly the order they were submitted\" plus \"no message processed twice\" is the definition of an SQS FIFO queue. A standard queue gives very high throughput but only best-effort ordering and can deliver a message more than once. SNS is a publish/subscribe notification service, and EventBridge routes events by rules — neither guarantees ordering."
+                      : "Reconsider. The word \"order\" decides this: SQS FIFO preserves exact ordering and delivers each message exactly once. A standard queue explicitly does not guarantee order and may deliver duplicates. SNS broadcasts to many subscribers; EventBridge routes events. Hook: \"order\" or \"sequence\" always means FIFO.",
+          q3: correct ? "Correct. A billing alarm is a CloudWatch alarm watching the estimated-charges metric, and it sends a notification when the threshold is crossed. CloudTrail records who made API calls, Trusted Advisor gives best-practice recommendations, and Config tracks resource configuration changes — none of them send threshold-based billing alerts."
+                      : "Reconsider. The trigger phrase is \"automatically when charges go above\" — a threshold crossing, which is what a CloudWatch alarm does (this specific case is called a billing alarm). CloudTrail is for auditing who did what; Trusted Advisor advises; Config tracks configuration changes. Note: AWS Budgets is also a valid budget-alert tool, but of the four options here only CloudWatch alarms fit.",
+          q4: correct ? "Correct. \"Lowest response time\" for each individual user is latency-based routing, which sends each request to the Region that responds fastest for that user. Failover is for disaster recovery (primary/backup), weighted splits traffic by percentage, and simple routing always returns the same record regardless of location."
+                      : "Reconsider. The deciding phrase is \"the Region that gives that user the lowest response time\" — that is latency-based routing. Failover routing is about a primary failing over to a backup. Weighted routing splits traffic by percentage, often for testing. Simple routing ignores the user's location entirely."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
