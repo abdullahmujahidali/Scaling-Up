@@ -1,0 +1,335 @@
+{
+ "meta": {
+  "id": "clf-08",
+  "cert": "clf",
+  "title": "CLF Quiz 8",
+  "minutes": 30,
+  "focus": "lessons C8 & C9 — load balancing, monitoring, messaging, resilience",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "clf-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "domain": 1,
+   "scenario": "A development team wants to deploy an application by uploading its code, without provisioning servers, patching operating systems, or managing capacity. Which cloud computing model does this describe?",
+   "options": [
+    "Infrastructure as a Service (IaaS)",
+    "Platform as a Service (PaaS)",
+    "Software as a Service (SaaS)",
+    "On-premises hosting"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Uploading code onto a managed platform that handles the operating system, patching and capacity is Platform as a Service; AWS Elastic Beanstalk is the classic example. With IaaS, such as Amazon EC2, the customer still patches the guest operating system. SaaS is finished software you simply consume, so there is no application of yours to deploy. Hook: focus only on the code means PaaS.",
+   "id": 1,
+   "multi": false
+  },
+  {
+   "domain": 1,
+   "scenario": "A company uses Amazon EC2 instances because it needs full control over the operating system, including installing custom kernel modules. Which cloud computing model is the company using?",
+   "options": [
+    "Software as a Service (SaaS)",
+    "Platform as a Service (PaaS)",
+    "Infrastructure as a Service (IaaS)",
+    "Function as a Service (FaaS)"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Full control of the operating system, including kernel-level changes, describes Infrastructure as a Service, and Amazon EC2 is the standard AWS example. SaaS provides ready-to-use software with no OS access at all. PaaS hides the operating system so that only your code matters. Function as a Service, such as AWS Lambda, runs individual functions and exposes no operating system to manage.",
+   "id": 2,
+   "multi": false
+  },
+  {
+   "domain": 1,
+   "scenario": "A company runs part of its workload in its own data centre and part on AWS, with the two connected. Which cloud deployment model is this?",
+   "options": [
+    "Public cloud",
+    "Hybrid cloud",
+    "Private cloud",
+    "Multi-tenant cloud"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Running workloads across both an on-premises data centre and AWS, connected together, is the hybrid model. A public cloud deployment would place everything on AWS. A private cloud, sometimes called on-premises, keeps everything in infrastructure the company operates itself. Multi-tenant is not one of the three deployment models the exam uses. Hook: the phrase existing data centre alongside AWS means hybrid.",
+   "id": 3,
+   "multi": false
+  },
+  {
+   "domain": 1,
+   "scenario": "An application automatically adds instances when traffic rises and removes them when traffic falls, so the company pays only for what it currently needs. Which characteristic of cloud computing does this describe?",
+   "options": [
+    "Elasticity",
+    "Agility",
+    "High availability",
+    "Fault tolerance"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Growing and shrinking automatically with demand is elasticity. Note the contrast the exam relies on: scalability is only the ability to handle more load, while elasticity includes scaling back down. Agility describes how quickly a company can experiment and innovate. High availability and fault tolerance are about surviving failures, not about matching capacity to demand.",
+   "id": 4,
+   "multi": false
+  },
+  {
+   "domain": 1,
+   "scenario": "Which of the following best describes the cloud computing characteristic known as on-demand self-service?",
+   "options": [
+    "Users can provision resources themselves without human interaction from the provider",
+    "Resources are billed at a fixed monthly rate regardless of usage",
+    "AWS assigns dedicated hardware to each customer",
+    "Capacity must be requested from AWS Support in advance"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "On-demand self-service means a user can provision computing capabilities as needed, automatically, without requiring human interaction with the service provider. Fixed monthly billing contradicts the measured service characteristic, where you pay for what you use. Dedicated hardware describes Dedicated Hosts, a purchasing option rather than a cloud characteristic. Requesting capacity in advance is the traditional data-centre model the cloud replaces.",
+   "id": 5,
+   "multi": false
+  },
+  {
+   "domain": 2,
+   "scenario": "A security team wants a single account-level report listing every IAM user together with the status of their passwords, access keys, and MFA devices. Which tool provides this?",
+   "options": [
+    "The IAM credentials report",
+    "IAM Access Advisor",
+    "AWS CloudTrail",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The IAM credentials report is an account-level CSV listing every user and the state of their credentials, including passwords, access keys and MFA. IAM Access Advisor works per user or role, showing which services were last accessed and when, which helps remove unused permissions. CloudTrail records API activity. Amazon Inspector scans workloads for software vulnerabilities.",
+   "id": 6,
+   "multi": false
+  },
+  {
+   "domain": 2,
+   "scenario": "A company wants to enforce that all IAM user passwords are at least 14 characters long, contain numbers and symbols, and expire every 90 days. What should the company configure?",
+   "options": [
+    "An IAM password policy",
+    "A service control policy (SCP)",
+    "An IAM permissions boundary",
+    "AWS Secrets Manager rotation"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Password length, required character types, expiry and reuse rules are all set by the account's IAM password policy. A service control policy restricts which actions an account may perform in AWS Organizations; it does not define password complexity. A permissions boundary caps the maximum permissions an identity can receive. Secrets Manager rotates application secrets such as database credentials, not IAM console passwords.",
+   "id": 7,
+   "multi": false
+  },
+  {
+   "domain": 2,
+   "scenario": "A company wants to perform penetration testing against its own Amazon EC2 instances. What does the AWS customer support policy for penetration testing allow?",
+   "options": [
+    "Testing of the eight permitted services without prior approval from AWS",
+    "No penetration testing of any kind is permitted on AWS",
+    "Testing is allowed only after AWS Support opens a case for each test",
+    "Simulated denial-of-service attacks are permitted without approval"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS permits customers to perform penetration testing against eight listed services, including Amazon EC2 and Amazon RDS, without requesting prior approval. Testing is therefore neither banned outright nor dependent on a support case for each test. Simulated denial-of-service attacks remain prohibited unless separately arranged with AWS, which is the distractor most often chosen here.",
+   "id": 8,
+   "multi": false
+  },
+  {
+   "domain": 2,
+   "scenario": "A company must protect an entire Amazon VPC by filtering network traffic entering and leaving it, using a managed firewall service. Which service should it use?",
+   "options": [
+    "AWS WAF",
+    "AWS Network Firewall",
+    "AWS Shield Standard",
+    "Amazon GuardDuty"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Filtering traffic for a whole VPC is AWS Network Firewall. AWS WAF is the usual trap: it protects web applications from threats such as SQL injection and cross-site scripting at layer 7, not the VPC network. Shield Standard defends against DDoS attacks. GuardDuty detects suspicious activity but does not filter or block traffic. Hook: WAF means web app, Network Firewall means VPC network, Shield means DDoS.",
+   "id": 9,
+   "multi": false
+  },
+  {
+   "domain": 2,
+   "scenario": "An organization uses AWS Organizations and wants to guarantee that no account in a particular organizational unit can ever use a specific AWS Region, even by its own account administrator. What should be applied?",
+   "options": [
+    "A service control policy (SCP)",
+    "An IAM user policy in each account",
+    "A permissions boundary on the root user",
+    "An AWS Config rule"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "A service control policy applies to an entire account or organizational unit and defines the maximum available permissions, so an action it denies cannot be performed by anyone in that account, including the account administrator and root user. IAM policies applied per account could be changed by that account's administrator. AWS Config detects and reports non-compliance but does not prevent the action.",
+   "id": 10,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "A retail company runs a web application in containers. Incoming HTTPS traffic must be sent to different container groups depending on whether the request path begins with /checkout or /catalog. Which service meets this requirement?",
+   "options": [
+    "Network Load Balancer",
+    "Application Load Balancer",
+    "Gateway Load Balancer",
+    "Amazon Route 53"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Routing on the URL path requires reading the HTTP request itself, which is layer 7 — the Application Load Balancer. A Network Load Balancer works at layer 4 (TCP/UDP) and cannot see the path. Gateway Load Balancer is for third-party inspection appliances such as firewalls. Route 53 is DNS: it resolves a name to an address and never inspects paths. Hook: the word HTTP or URL in a question means ALB.",
+   "id": 11,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "A gaming company needs to handle millions of TCP requests per second with the lowest possible latency, and requires a static IP address for its load balancer. Which load balancer should it choose?",
+   "options": [
+    "Application Load Balancer",
+    "Network Load Balancer",
+    "Gateway Load Balancer",
+    "Classic Load Balancer"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Extreme performance, millions of requests, TCP and a static IP all point to the Network Load Balancer, which operates at layer 4. The Application Load Balancer handles HTTP/HTTPS and does not offer a static IP per Availability Zone. Gateway Load Balancer exists to route traffic through inspection appliances. The Classic Load Balancer is the previous generation and is not the recommended answer.",
+   "id": 12,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "A company wants to collect and search the application log files written by code running on its Amazon EC2 instances. Which service is designed for this?",
+   "options": [
+    "Amazon CloudWatch Logs",
+    "AWS CloudTrail",
+    "AWS Config",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Application log files are collected by Amazon CloudWatch Logs. CloudTrail is the common trap here, but it records API activity — who called what — rather than the text your application writes. AWS Config tracks resource configuration changes over time. Amazon Inspector scans workloads for vulnerabilities. Hook: CloudWatch is about performance and logs, CloudTrail is about who did what.",
+   "id": 13,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "An operations team wants to be notified automatically whenever the average CPU utilization of an EC2 instance stays above 80 percent for five minutes. What should the team configure?",
+   "options": [
+    "An AWS Config rule",
+    "An Amazon CloudWatch alarm",
+    "An AWS CloudTrail trail",
+    "An AWS Trusted Advisor check"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Acting when a metric crosses a threshold is exactly what a CloudWatch alarm does, and CPU utilization is a standard CloudWatch metric. AWS Config rules evaluate whether resource configurations comply with your policies, not live performance. A CloudTrail trail records API calls. Trusted Advisor gives periodic best-practice recommendations, not real-time threshold alerts.",
+   "id": 14,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "An order-processing application must guarantee that messages are processed in the exact order they were sent and that no message is processed more than once. Which service configuration meets this requirement?",
+   "options": [
+    "An Amazon SQS standard queue",
+    "An Amazon SQS FIFO queue",
+    "An Amazon SNS standard topic",
+    "Amazon Kinesis Data Firehose"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Exact ordering plus exactly-once processing is the definition of an Amazon SQS FIFO queue. A standard queue offers much higher throughput but only best-effort ordering, and may deliver a message more than once. SNS is publish/subscribe: it broadcasts to many subscribers rather than queueing work for one consumer. Kinesis Data Firehose loads streaming data into destinations such as S3. Hook: the word order means FIFO.",
+   "id": 15,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "A company wants its web tier to keep accepting customer orders even when the processing tier is temporarily unavailable, so that no orders are lost. Which approach achieves this?",
+   "options": [
+    "Place an Amazon SQS queue between the two tiers to decouple them",
+    "Move both tiers onto a single larger EC2 instance",
+    "Enable Amazon CloudFront in front of the web tier",
+    "Convert the processing tier to a Reserved Instance"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "A queue between the tiers decouples them: the web tier writes messages and continues, and the messages wait safely until the processing tier recovers. Combining both tiers onto one instance couples them more tightly and adds a single point of failure. CloudFront caches content at the edge and does nothing for a failed processing tier. Reserved Instances are a pricing commitment, not an availability mechanism.",
+   "id": 16,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "An application is deployed in three AWS Regions. The company wants every user's DNS query answered with the Region that provides that user the fastest response. Which Amazon Route 53 routing policy should be used?",
+   "options": [
+    "Weighted routing",
+    "Failover routing",
+    "Latency-based routing",
+    "Simple routing"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Sending each user to whichever Region responds fastest for them is latency-based routing. Weighted routing splits traffic by percentages, which is useful for testing a new version. Failover routing is for active-passive disaster recovery: everyone moves to the backup when the primary fails a health check. Simple routing returns the same answer regardless of the user's location.",
+   "id": 17,
+   "multi": false
+  },
+  {
+   "domain": 3,
+   "scenario": "A company hosts a primary website and an identical standby site. If the primary fails its health check, all traffic must move automatically to the standby. Which Route 53 routing policy supports this?",
+   "options": [
+    "Failover routing",
+    "Geolocation routing",
+    "Latency-based routing",
+    "Multivalue answer routing"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Automatically shifting traffic to a standby when the primary fails a health check is failover routing, an active-passive pattern. Geolocation routing answers based on where the user is located. Latency-based routing chooses the fastest Region but is not driven by a primary/standby relationship. Multivalue answer routing returns several healthy records at once, which spreads traffic rather than providing designated failover.",
+   "id": 18,
+   "multi": false
+  },
+  {
+   "domain": 4,
+   "scenario": "A company wants to be alerted when its AWS spending increases in an unusual pattern, without having to define a specific dollar threshold in advance. Which service should it use?",
+   "options": [
+    "AWS Budgets",
+    "AWS Cost Anomaly Detection",
+    "AWS Cost Explorer",
+    "AWS Pricing Calculator"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AWS Cost Anomaly Detection uses machine learning to learn your normal spending pattern and alerts you to unusual increases, so no threshold has to be set. AWS Budgets requires you to define the limit yourself, which the question explicitly rules out. Cost Explorer visualises and analyses past spending. The Pricing Calculator estimates the cost of a workload before you build it.",
+   "id": 19,
+   "multi": false
+  },
+  {
+   "domain": 4,
+   "scenario": "A company wants to group its AWS resources by project using tags, so that costs and management actions can be applied to each project as a unit. Which service supports this?",
+   "options": [
+    "AWS Resource Groups and Tag Editor",
+    "AWS Organizations",
+    "AWS Service Catalog",
+    "AWS Control Tower"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Resource Groups and Tag Editor lets you group resources by tag and then view and act on them together, which is the intent described. AWS Organizations manages multiple AWS accounts rather than resources within one. Service Catalog publishes approved products for users to launch. Control Tower sets up and governs a multi-account landing zone.",
+   "id": 20,
+   "multi": false
+  }
+ ]
+}

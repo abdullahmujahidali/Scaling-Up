@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLF-C02 CLF Quiz 10</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>CLF Quiz 10</h1>
+      <p class="sub">AWS Certified Cloud Practitioner (CLF-C02) · 20-question revision quiz · lesson C10 & review — the remaining services, plus cloud value and billing</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../clf-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">CLF Quiz 10</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"clf-10","title":"CLF Quiz 10","minutes":30,"pass":700,"domainNames":{"1":"Cloud Concepts","2":"Security & Compliance","3":"Cloud Technology & Services","4":"Billing, Pricing & Support"},"domainWeights":{"1":24,"2":30,"3":34,"4":12},"backTo":"clf-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "domain": 1,
+  "scenario": "A company subscribes to a ready-to-use email and collaboration product where it manages no servers, no runtime, and no application code. Which cloud computing model is this?",
+  "options": [
+   "Software as a Service (SaaS)",
+   "Platform as a Service (PaaS)",
+   "Infrastructure as a Service (IaaS)",
+   "Hybrid deployment"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Consuming a finished application where the provider manages everything, including the application itself, is Software as a Service. Platform as a Service would still require the customer to supply application code. Infrastructure as a Service would leave the operating system to the customer. Hybrid describes where workloads run, across cloud and on-premises, rather than which service model is being consumed.",
+  "id": 1,
+  "multi": false
+ },
+ {
+  "domain": 1,
+  "scenario": "A company can launch a test environment in minutes instead of waiting weeks for hardware to be purchased and installed. Which benefit of cloud computing does this describe?",
+  "options": [
+   "Increased speed and agility",
+   "Economies of scale",
+   "Global reach in minutes",
+   "Trading capital expense for variable expense"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Being able to provision resources in minutes rather than weeks is the benefit AWS calls increased speed and agility, because it shortens the time between an idea and an experiment. Economies of scale refers to lower prices achieved through AWS's aggregated purchasing power. Going global in minutes refers to deploying into new Regions quickly. Trading capital expense for variable expense is about how you pay, not how fast you move.",
+  "id": 2,
+  "multi": false
+ },
+ {
+  "domain": 1,
+  "scenario": "A company deploys its application into additional AWS Regions so that customers on other continents experience lower latency. Which benefit of cloud computing does this illustrate?",
+  "options": [
+   "Going global in minutes",
+   "Stop guessing capacity",
+   "Economies of scale",
+   "Increased security compliance"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deploying into additional Regions to serve customers worldwide with lower latency is the benefit AWS describes as going global in minutes. Stop guessing capacity refers to scaling to actual demand instead of over-provisioning hardware in advance. Economies of scale concerns AWS's lower costs through scale. Compliance is not achieved simply by deploying into more Regions.",
+  "id": 3,
+  "multi": false
+ },
+ {
+  "domain": 1,
+  "scenario": "Which of the following is an example of the AWS Cloud benefit described as stop guessing capacity?",
+  "options": [
+   "Using Auto Scaling so capacity matches actual demand instead of provisioning for a peak that may never come",
+   "Signing a three-year Reserved Instance commitment for all workloads",
+   "Purchasing physical servers sized for the busiest day of the year",
+   "Restricting the application to a single Availability Zone"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Stop guessing capacity means you no longer have to predict demand and buy hardware for a peak in advance; Auto Scaling adjusts capacity to real demand. A three-year commitment is a pricing decision and still fixes capacity. Buying servers sized for the busiest day is exactly the guessing the cloud removes. Restricting to one Availability Zone reduces availability and is unrelated to capacity planning.",
+  "id": 4,
+  "multi": false
+ },
+ {
+  "domain": 1,
+  "scenario": "A company wants to run a workload in AWS but must keep certain data physically inside its own data centre for regulatory reasons. Which approach fits this requirement?",
+  "options": [
+   "A hybrid deployment connecting on-premises infrastructure with AWS",
+   "A public cloud deployment using multiple AWS Regions",
+   "Migrating all workloads to AWS and deleting the data centre",
+   "Using AWS Local Zones exclusively"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Keeping some data on-premises while running other components in AWS, with the two connected, is the hybrid deployment model. A purely public cloud deployment would not satisfy the requirement to keep data in the company's own facility. Migrating everything contradicts the constraint. Local Zones place AWS infrastructure closer to large population centres but are still AWS facilities, not the customer's data centre.",
+  "id": 5,
+  "multi": false
+ },
+ {
+  "domain": 2,
+  "scenario": "A company wants a single service that continuously monitors for malicious activity such as compromised instances and unusual API calls, using machine learning and threat intelligence. Which service should it use?",
+  "options": [
+   "Amazon GuardDuty",
+   "Amazon Inspector",
+   "Amazon Macie",
+   "AWS Config"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Amazon GuardDuty continuously analyses events and network activity to detect threats such as compromised instances and unusual API behaviour. Amazon Inspector scans workloads for software vulnerabilities and unintended network exposure, which is about weaknesses rather than active attacks. Macie discovers and protects sensitive data such as personal information in Amazon S3. AWS Config evaluates whether resource configurations comply with rules.",
+  "id": 6,
+  "multi": false
+ },
+ {
+  "domain": 2,
+  "scenario": "A company must store and automatically rotate database credentials used by an application, without embedding them in source code. Which service is designed for this?",
+  "options": [
+   "AWS Secrets Manager",
+   "AWS Key Management Service (AWS KMS)",
+   "AWS Artifact",
+   "Amazon Cognito"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Secrets Manager stores secrets such as database credentials and can rotate them automatically on a schedule. AWS KMS manages the encryption keys used to protect data, rather than storing the credentials themselves. AWS Artifact provides compliance reports and agreements. Amazon Cognito handles sign-up and sign-in for application end users.",
+  "id": 7,
+  "multi": false
+ },
+ {
+  "domain": 2,
+  "scenario": "Under the AWS shared responsibility model, which of these remains the responsibility of AWS?",
+  "options": [
+   "Physical security of the data centres and the hypervisor",
+   "Configuring security groups for EC2 instances",
+   "Managing IAM users, groups, and roles",
+   "Encrypting data before uploading it to Amazon S3"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS is responsible for security of the cloud, which includes physical data-centre security and the virtualisation layer beneath your instances. Configuring security groups, managing IAM identities and choosing how data is encrypted are all customer responsibilities, because they are things the customer controls through the console or API. Hook: AWS protects what you cannot touch.",
+  "id": 8,
+  "multi": false
+ },
+ {
+  "domain": 2,
+  "scenario": "A company must prove to an auditor that its AWS environment meets a compliance standard, and needs to download AWS SOC and ISO reports. Which service provides these documents?",
+  "options": [
+   "AWS Artifact",
+   "AWS Audit Manager",
+   "AWS Config",
+   "AWS Security Hub"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Artifact is the self-service portal for downloading AWS compliance reports such as SOC and ISO certifications, plus agreements. AWS Audit Manager helps collect evidence from your own environment to support an audit, which is the closest distractor. AWS Config records configuration changes. Security Hub aggregates security findings from multiple services into one view.",
+  "id": 9,
+  "multi": false
+ },
+ {
+  "domain": 2,
+  "scenario": "A company wants to encrypt data stored in Amazon S3 and control the encryption keys centrally, including auditing their use. Which service manages these keys?",
+  "options": [
+   "AWS Key Management Service (AWS KMS)",
+   "AWS Secrets Manager",
+   "AWS Certificate Manager",
+   "Amazon Macie"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS KMS creates and controls the encryption keys used to protect data, and integrates with CloudTrail so key usage can be audited. Secrets Manager stores credentials such as database passwords rather than encryption keys. Certificate Manager provisions and manages SSL/TLS certificates for websites. Macie discovers sensitive data in Amazon S3 but does not manage keys.",
+  "id": 10,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company needs a fully managed Git-compatible source control service, a service to automate deploying its application to EC2 instances, and a place to store its private software packages. Which combination of AWS services provides these three capabilities?",
+  "options": [
+   "AWS CodeCommit, AWS CodeDeploy, and AWS CodeArtifact",
+   "Amazon S3, AWS Lambda, and Amazon ECR",
+   "AWS Cloud9, AWS CloudShell, and AWS CodeStar",
+   "AWS CloudFormation, AWS Config, and AWS Systems Manager"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "CodeCommit provides Git repositories, CodeDeploy automates deployment onto compute such as EC2, and CodeArtifact stores software packages and dependencies. The second option mixes unrelated storage and container services. Cloud9 is a browser-based IDE, CloudShell a browser-based terminal and CodeStar an older project dashboard. The fourth option lists infrastructure and configuration management tools rather than a source-to-deployment toolchain.",
+  "id": 11,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A developer wants to run AWS CLI commands from a browser-based terminal that is already authenticated, without installing anything on a local machine. Which service provides this?",
+  "options": [
+   "AWS CloudShell",
+   "AWS Cloud9",
+   "Amazon WorkSpaces",
+   "AWS Systems Manager Session Manager"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS CloudShell is a browser-based shell, pre-authenticated with your console credentials and pre-loaded with the AWS CLI. Cloud9 is a full browser-based development environment for writing and debugging code, which is more than the question asks for. WorkSpaces provides a complete virtual desktop. Session Manager connects you to a shell on your own EC2 instances rather than providing an AWS CLI environment.",
+  "id": 12,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company needs a Redis-compatible, in-memory database that also provides durability, so that data survives a restart. Which service should it choose?",
+  "options": [
+   "Amazon MemoryDB for Redis",
+   "Amazon ElastiCache for Memcached",
+   "Amazon DynamoDB",
+   "Amazon Neptune"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Amazon MemoryDB for Redis is a Redis-compatible in-memory database that is also durable, so it can serve as a primary database rather than only a cache. ElastiCache for Memcached is a cache and does not offer the same durability. DynamoDB is a NoSQL key-value database but is not Redis-compatible. Neptune is a graph database for highly connected data.",
+  "id": 13,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company must transfer files into Amazon S3 from partners who can only use SFTP. Which AWS service supports this directly?",
+  "options": [
+   "AWS Transfer Family",
+   "AWS DataSync",
+   "AWS Snowball",
+   "Amazon S3 Transfer Acceleration"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Transfer Family provides managed SFTP, FTPS and FTP endpoints that write directly into Amazon S3, which matches the partners' constraint. DataSync moves large volumes of data between storage systems but is not an SFTP server. Snowball is a physical device for offline bulk transfer. Transfer Acceleration speeds up uploads over long distances but does not add SFTP support.",
+  "id": 14,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A manufacturer needs to run AWS Lambda functions and machine learning inference locally on factory devices that are frequently disconnected from the internet. Which service supports this?",
+  "options": [
+   "AWS IoT Greengrass",
+   "AWS IoT Core",
+   "AWS Outposts",
+   "AWS Wavelength"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS IoT Greengrass extends AWS to edge devices so they can run Lambda functions and inference locally and continue operating while disconnected. IoT Core connects devices to the AWS Cloud but relies on connectivity for processing. Outposts places AWS infrastructure racks in your own data centre, which is a much larger deployment than factory devices. Wavelength places infrastructure inside telecommunications networks for mobile edge computing.",
+  "id": 15,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company wants a guided experience that provisions and configures a large third-party application such as SAP or Microsoft SQL Server on AWS according to best practices. Which service provides this?",
+  "options": [
+   "AWS Launch Wizard",
+   "AWS Elastic Beanstalk",
+   "AWS Service Catalog",
+   "AWS Application Migration Service"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Launch Wizard guides you through sizing, configuring and deploying large enterprise applications such as SAP and SQL Server following AWS best practices. Elastic Beanstalk deploys your own web applications. Service Catalog distributes pre-approved products defined by your own administrators. Application Migration Service lifts and shifts existing servers into AWS rather than provisioning a new application.",
+  "id": 16,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company wants to buy third-party data sets, such as financial market data, and use them in its analytics on AWS. Which service provides this?",
+  "options": [
+   "AWS Data Exchange",
+   "AWS Marketplace",
+   "Amazon Athena",
+   "AWS Glue"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Data Exchange is the marketplace specifically for finding and subscribing to third-party data sets. AWS Marketplace sells software products such as AMIs and SaaS rather than data itself, which makes it the closest distractor. Athena queries data already in Amazon S3 using SQL. Glue is an extract, transform and load service for preparing data.",
+  "id": 17,
+  "multi": false
+ },
+ {
+  "domain": 3,
+  "scenario": "A company is moving an application to AWS by lifting and shifting it onto Amazon EC2 without changing the application code. Which of the 7 Rs migration strategies does this describe?",
+  "options": [
+   "Rehost",
+   "Replatform",
+   "Refactor",
+   "Retire"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Moving an application as-is onto AWS without changing its code is rehosting, often called lift and shift, and it is usually the fastest way to migrate. Replatforming makes a few optimisations on the way, such as moving the database to Amazon RDS, without rewriting the application. Refactoring rewrites the application to use cloud-native services. Retiring means switching off an application that is no longer needed.",
+  "id": 18,
+  "multi": false
+ },
+ {
+  "domain": 4,
+  "scenario": "A company wants a single monthly bill covering all of its AWS accounts, and wants combined usage to qualify for volume discounts. Which feature provides this?",
+  "options": [
+   "Consolidated billing in AWS Organizations",
+   "AWS Budgets",
+   "Cost allocation tags",
+   "AWS Billing Conductor"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Consolidated billing in AWS Organizations produces one bill for all member accounts and aggregates usage so the organization can reach volume discount tiers sooner. AWS Budgets alerts on spending against a threshold. Cost allocation tags attribute costs to teams or projects but do not combine billing. Billing Conductor creates customised billing views, typically for resellers re-billing their own customers.",
+  "id": 19,
+  "multi": false
+ },
+ {
+  "domain": 4,
+  "scenario": "A company wants recommendations to reduce cost, improve performance, and close security gaps across its AWS account, based on AWS best practices. Which service provides these checks?",
+  "options": [
+   "AWS Trusted Advisor",
+   "AWS Compute Optimizer",
+   "Amazon CloudWatch",
+   "AWS Well-Architected Tool"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS Trusted Advisor inspects an account and gives recommendations across cost optimisation, performance, security, fault tolerance and service limits. Compute Optimizer is narrower, recommending optimal compute resources based on utilisation. CloudWatch monitors metrics and logs. The Well-Architected Tool guides a structured review of a workload against the framework's pillars rather than scanning the account automatically.",
+  "id": 20,
+  "multi": false
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

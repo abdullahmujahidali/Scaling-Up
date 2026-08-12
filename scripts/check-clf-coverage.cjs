@@ -87,11 +87,20 @@ function classify(keys) {
   return 'absent';
 }
 
-const svcResult = { taught: [], quizOnly: [], absent: [] };
-for (const s of services) svcResult[classify(aliases(s))].push(s);
+/** Taught but never asked about: the learner reads it and is never made to recall it. */
+const untested = keys => !keys.some(k => quizzes.includes(norm(k)));
 
-const conResult = { taught: [], quizOnly: [], absent: [] };
-for (const [name, keys] of Object.entries(CONCEPTS)) conResult[classify(keys)].push(name);
+const svcResult = { taught: [], quizOnly: [], absent: [], untested: [] };
+for (const s of services) {
+  svcResult[classify(aliases(s))].push(s);
+  if (untested(aliases(s))) svcResult.untested.push(s);
+}
+
+const conResult = { taught: [], quizOnly: [], absent: [], untested: [] };
+for (const [name, keys] of Object.entries(CONCEPTS)) {
+  conResult[classify(keys)].push(name);
+  if (untested(keys)) conResult.untested.push(name);
+}
 
 const pct = (n, d) => ((n / d) * 100).toFixed(0);
 const line = '─'.repeat(64);
@@ -112,9 +121,14 @@ console.log(`  ABSENT            : ${conResult.absent.length}`);
 if (conResult.absent.length) console.log('    ✗ ' + conResult.absent.join('\n    ✗ '));
 if (conResult.quizOnly.length) console.log('    ~ (tested, never taught) ' + conResult.quizOnly.join(', '));
 
-const gaps = svcResult.absent.length + conResult.absent.length;
+console.log(`\nRETRIEVAL (concepts taught but never asked in any quiz)`);
+console.log(`  drilled           : ${conTotal - conResult.untested.length}/${conTotal}`);
+if (conResult.untested.length) console.log('    ! ' + conResult.untested.join('\n    ! '));
+
+const gaps = svcResult.absent.length + conResult.absent.length + conResult.untested.length;
 console.log(`\n${line}`);
 console.log(gaps === 0
-  ? 'RESULT: no gaps. Every in-scope service and concept is taught.'
-  : `RESULT: ${gaps} gap(s) remain — ${svcResult.absent.length} service(s), ${conResult.absent.length} concept(s).`);
+  ? 'RESULT: no gaps. Every in-scope service and concept is taught AND drilled.'
+  : `RESULT: ${gaps} gap(s) — ${svcResult.absent.length} service(s) untaught, ` +
+    `${conResult.absent.length} concept(s) untaught, ${conResult.untested.length} concept(s) never quizzed.`);
 console.log(`${line}\n`);

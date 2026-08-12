@@ -132,11 +132,63 @@ genuinely taught and only missed the literal string "private cloud".
 This is the argument for keeping the quiz-only distinction in the script rather
 than collapsing it into a single covered/not-covered flag.
 
+## Update 2: the quizzes, and a second meaning of "covered"
+
+He pushed back on the previous "next steps" list: *"you shouldn't report if
+something is left... make sure you cover all"*. Correct — leaving retrieval
+practice as a to-do meant the material was taught but never drilled, and
+teaching without retrieval is exactly what this workspace exists to prevent.
+
+**Three new banks, 60 questions, every one explained:**
+
+| Bank | Focus | Domains |
+|---|---|---|
+| `clf-08` | C8/C9 — load balancing, monitoring, messaging, resilience | 5/5/8/2 |
+| `clf-09` | C9/C10 — vocabulary, replication, remaining services | 5/5/8/2 |
+| `clf-10` | C10 & review — remaining services, cloud value, billing | 5/5/8/2 |
+
+CLF totals are now **10 quizzes + 1 mock = 265 questions**.
+
+### The checker now audits retrieval, not just teaching
+
+`check-clf-coverage.cjs` gained a **RETRIEVAL** section: concepts that are taught
+but appear in no quiz bank. This is a distinct failure from "not taught" and was
+invisible before — the previous run reported "no gaps" while 31 of 45 topics had
+never been asked about once.
+
+That new check immediately caught the **7 Rs of migration**: taught in C9, asked
+nowhere. Now in `clf-10`.
+
+### What the domain validator forced
+
+The builder's proportional check (every domain within ±1.5 of its real weighting)
+rejected the first draft of `clf-10` at 3/4/9/4. The right fix was writing more
+Domain 1 and 2 questions, **not** relabelling existing ones to satisfy the
+validator — relabelling would have quietly destroyed the per-domain scoring that
+tells him which area is weak. Final shape: 5/5/8/2 in all three banks.
+
+One swap during rebalancing silently dropped **WorkSpaces Web** coverage. The
+45-topic re-check caught it; it was restored as the sharp distractor in `clf-05`'s
+WorkSpaces question, which is a better home than a question of its own.
+
+### Verified in-browser
+
+All three banks driven end to end through the palette. `clf-08` and `clf-09`
+answered fully correctly → **1000/1000, 20 of 20** — which proves every answer
+key, since a single wrong key would have shown as a lost mark. `clf-10` answered
+with one deliberate error → **955/1000, 19 of 20**, confirming wrong answers are
+caught and the review names the miss. Explanations render under "Why:".
+**All three test attempts were cleared from localStorage afterwards** so his own
+score history stays clean.
+
 ## Next
 
-- The **7 Rs of migration** are named in C7 only in passing; the deck gives them
-  five slides. If his practice scores show migration questions failing, that is
-  the first thing to write.
-- **Quiz banks have not been extended** to cover C8–C10's new material. The
-  lessons teach it, but spaced retrieval will not reach it until questions exist.
-  Build those on evidence — after he reports scores, not before.
+Nothing outstanding on CLF coverage — services, concepts and retrieval all check
+clean, and `npm run check:clf` reproduces it.
+
+The remaining work is **evidence-driven, not gap-driven**: when he takes these
+quizzes and the mock, weak domains should drive the next questions. Do not
+pre-write more banks speculatively — record 0010's closing note still holds.
+
+**AIF has not been audited this way.** The same script pattern should be run
+against `aif-*` banks and the AIF in-scope list before he books that exam.
