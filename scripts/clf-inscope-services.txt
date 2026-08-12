@@ -1,0 +1,127 @@
+AWS Activate for Startups
+AWS Amplify
+AWS AppConfig
+AWS AppSync
+AWS Application Discovery Service
+AWS Application Migration Service
+AWS Artifact
+AWS Audit Manager
+AWS Auto Scaling
+AWS Backup
+AWS Batch
+AWS Billing Conductor
+AWS Budgets
+AWS CLI
+AWS Certificate Manager (ACM)
+AWS Cloud9
+AWS CloudFormation
+AWS CloudHSM
+AWS CloudShell
+AWS CloudTrail
+AWS CodeArtifact
+AWS CodeBuild
+AWS CodeCommit
+AWS CodeDeploy
+AWS CodePipeline
+AWS CodeStar
+AWS Compute Optimizer
+AWS Config
+AWS Control Tower
+AWS Cost Explorer
+AWS Cost and Usage Report
+AWS Data Exchange
+AWS Database Migration Service (AWS DMS)
+AWS Device Farm
+AWS Direct Connect
+AWS Directory Service
+AWS Elastic Beanstalk
+AWS Elastic Disaster Recovery
+AWS Fargate
+AWS Firewall Manager
+AWS Global Accelerator
+AWS Glue
+AWS Health Dashboard
+AWS IAM Identity Center (AWS Single Sign-On)
+AWS IQ
+AWS Identity and Access Management (IAM)
+AWS IoT Core
+AWS IoT Greengrass
+AWS Key Management Service (AWS KMS)
+AWS Lambda
+AWS Launch Wizard
+AWS License Manager
+AWS Local Zones
+AWS Managed Services (AMS)
+AWS Management Console
+AWS Marketplace
+AWS Migration Hub
+AWS Network Firewall
+AWS Organizations
+AWS Outposts
+AWS Resource Access Manager (AWS RAM)
+AWS Resource Groups and Tag Editor
+AWS Schema Conversion Tool (AWS SCT)
+AWS Secrets Manager
+AWS Security Hub
+AWS Service Catalog
+AWS Shield
+AWS Snow Family
+AWS Step Functions
+AWS Storage Gateway
+AWS Support
+AWS Systems Manager
+AWS Transfer Family
+AWS Trusted Advisor
+AWS VPN
+AWS WAF
+AWS Wavelength
+AWS Well-Architected Tool
+AWS X-Ray
+Amazon API Gateway
+Amazon AppStream 2.0
+Amazon Athena
+Amazon Aurora
+Amazon CloudFront
+Amazon CloudWatch
+Amazon Cognito
+Amazon Comprehend
+Amazon Connect
+Amazon Detective
+Amazon DynamoDB
+Amazon EC2
+Amazon EMR
+Amazon Elastic Block Store (Amazon EBS)
+Amazon Elastic Container Registry (Amazon ECR)
+Amazon Elastic Container Service (Amazon ECS)
+Amazon Elastic File System (Amazon EFS)
+Amazon Elastic Kubernetes Service (Amazon EKS)
+Amazon EventBridge
+Amazon FSx
+Amazon GuardDuty
+Amazon Inspector
+Amazon Kendra
+Amazon Kinesis
+Amazon Lex
+Amazon Lightsail
+Amazon Macie
+Amazon Managed Streaming for Apache Kafka (Amazon MSK)
+Amazon MemoryDB for Redis
+Amazon Neptune
+Amazon OpenSearch Service
+Amazon Polly
+Amazon QuickSight
+Amazon RDS
+Amazon Redshift
+Amazon Rekognition
+Amazon Route 53
+Amazon S3
+Amazon S3 Glacier
+Amazon SageMaker
+Amazon Simple Email Service (Amazon SES)
+Amazon Simple Notification Service (Amazon SNS)
+Amazon Simple Queue Service (Amazon SQS)
+Amazon Transcribe
+Amazon Translate
+Amazon VPC
+Amazon WorkSpaces
+Amazon WorkSpaces Web

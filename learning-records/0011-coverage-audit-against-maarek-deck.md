@@ -92,14 +92,51 @@ silently rots.
   the exam guide now disagree with each other, exactly as 0010 predicted. The
   exam guide wins.
 
+## Update, same day: all gaps closed, and this time it is checkable
+
+He asked "ok now its covering all right??" after C8. The honest answer was no —
+so rather than answer from memory (the exact failure that caused this record),
+the audit was rewritten as a committed script and re-run.
+
+**`scripts/check-clf-coverage.cjs`** (`npm run check:clf`) diffs the lessons and
+quiz banks against `scripts/clf-inscope-services.txt` — Appendix A extracted
+verbatim — plus a 22-entry concept list. It strips HTML tags before matching so
+a tag boundary cannot split a phrase and fake a miss, and it distinguishes
+*taught in lessons* from *quiz-only* (tested but never taught), which is how the
+SCP gap below was caught.
+
+Three lessons written:
+
+| File | Lesson | Closes |
+|---|---|---|
+| `lessons/0063-clf-elb-monitoring-messaging.html` | C8 · ELB, CloudWatch, SQS, Route 53 | 4 concepts |
+| `lessons/0064-clf-resilience-and-vocabulary.html` | C9 · Resilience & Domain 1 vocabulary | 9 concepts |
+| `lessons/0065-clf-last-service-names.html` | C10 · The last 18 names | 18 services |
+
+**Final state, reproducible by anyone running the script:**
+
+```
+SERVICES : 127/127 taught (100%)   ABSENT 0
+CONCEPTS :  22/22  taught (100%)   ABSENT 0
+RESULT: no gaps.
+```
+
+### What the quiz-only column caught
+
+**Service Control Policies were tested in three questions across clf-05 and
+clf-06 but taught in no lesson.** That is worse than an untaught topic — he
+would have met SCPs first as a question he could not answer, with no page to
+revise from. Added to C9. The same check cleared "deployment models", which was
+genuinely taught and only missed the literal string "private cloud".
+
+This is the argument for keeping the quiz-only distinction in the script rather
+than collapsing it into a single covered/not-covered flag.
+
 ## Next
 
-Two gap-filler lessons, concepts before service names:
-
-- **C8** — the missing Domain 3 mechanics: ELB types, CloudWatch trio, SQS
-  FIFO/decoupling, Route 53 routing policies.
-- **C9** — migration & resilience: the 7 Rs, DR strategies, plus a recognition
-  sweep of the 18 absent service names.
-
-Build C8 first — it is the highest-weight material and the biggest single
-correction to the record.
+- The **7 Rs of migration** are named in C7 only in passing; the deck gives them
+  five slides. If his practice scores show migration questions failing, that is
+  the first thing to write.
+- **Quiz banks have not been extended** to cover C8–C10's new material. The
+  lessons teach it, but spaced retrieval will not reach it until questions exist.
+  Build those on evidence — after he reports scores, not before.

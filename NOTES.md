@@ -22,18 +22,16 @@ lifecycle) as sequences, not lists.
 AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
 way.
 
-**⚠️ Coverage is NOT complete — the old claim here was wrong.** Audited
-2026-08-12 against the Maarek deck + the official exam guide: the in-scope list
-has **127 services, not 112**, no verification script ever existed, and
-**18 in-scope services appear nowhere** (107/127 = 84% taught). More
-importantly, several heavily-tested *concepts* are missing: ELB types
-(ALB/NLB/GWLB), the CloudWatch trio, SQS FIFO/decoupling, Route 53 routing
-policies, the 7 Rs, DR strategies. See
+**Coverage: 100%, and verifiable — run `npm run check:clf`.** The old claim
+here ("112 services, verified by script") was wrong: the list has **127**
+services, no script existed, and 18 were missing. Audited and fixed 2026-08-12;
+lessons **C8, C9, C10** closed every gap. The checker
+(`scripts/check-clf-coverage.cjs`) now reports 127/127 services and 22/22
+concepts, and it distinguishes *taught* from *quiz-only* — that column caught
+SCPs being tested in three questions but taught nowhere. **Re-run it after
+touching any CLF lesson.** See
 [record 0011](./learning-records/0011-coverage-audit-against-maarek-deck.md).
-Lessons C8/C9 are planned to close this. CLF C1–C7 does cover all 4 domains, AIF I1–I4 covers all 5,
-plus **17 question banks / 430 questions**, every one explained: 7 CLF quizzes,
-8 AIF quizzes (Quiz 8 drills ordering+matching), and a **65-question / 90-minute
-full mock for each certification**. Indexes: `clf-quizzes.html`, `aif-quizzes.html`.
+CLF C1–C10 covers all 4 domains, AIF I1–I4 covers all 5,
 
 **Rule: never assert coverage without a committed script that reproduces it.**
 The "112 services, verified by script" line was asserted, propagated into

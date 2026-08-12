@@ -1,0 +1,132 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C10 · Domain 3 · recognition sweep</p>
+    <h1 data-ur="Aakhri 18 naam — sirf pehchan ke liye">The last 18 names — recognition only</h1>
+    <p class="subtitle" data-ur="Yeh lesson parhne ka nahi, ek nazar dekhne ka hai. Script ne AWS ki official list se 18 aise naam nikale jo tumhare kisi lesson mein nahi thay. In par exam gehra sawal nahi poochta — zyada tar to aate hi nahi. Maqsad sirf itna: exam mein naam dikhe to ajnabi na lage.">This lesson is for one look, not for study. The checker found 18 names on AWS's official list that appeared in none of your lessons. The exam asks nothing deep about these — most won't appear at all. The only goal: if a name shows up on exam day, it isn't a stranger.</p>
+    <div class="meta">
+      <span>~7 min</span>
+      <span>One concept: recognition, not memory</span>
+      <span>Win: no unfamiliar names left</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="C9 se yaad karo: &quot;focus only on their code&quot; = kaunsa model? Read replica kis liye hai? Aur pilot light kya hai?">From C9: &quot;focus only on their code&quot; = which model? What is a read replica for? And what is pilot light?</div>
+    <div class="answer" data-ur="<strong>PaaS</strong> (Elastic Beanstalk). <strong>Read replica = performance</strong> (Multi-AZ = availability). <strong>Pilot light</strong> = sirf zaroori core chal raha hai, barhane ke liye tayyar."><strong>PaaS</strong> (Elastic Beanstalk). <strong>Read replica = performance</strong> (Multi-AZ = availability). <strong>Pilot light</strong> = only the critical core running, ready to scale up.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Is page ko yaad karne ki koshish mat karo.</strong> Ek baar parh lo, aur agar exam mein yeh naam kisi ghalat option ki tarah aaye — jo sab se zyada mumkin hai — to tum pehchan loge ke woh sawal ka jawab nahi hai. Exam mein aksar yeh naam <em>distractor</em> hote hain, jawab nahi."><strong>Do not try to memorise this page.</strong> Read it once. If one of these names appears on the exam — most likely as a wrong option — you'll recognise that it isn't the answer. On this exam these names are usually <em>distractors</em>, not answers.</span>
+  </div>
+
+  <h2 data-ur="Developer tools (ek hi khandaan)">Developer tools (one family)</h2>
+
+  <p data-ur="Yeh sab &quot;code likhne aur deploy karne&quot; wale auzaar hain. Tum ne CodeBuild aur CodePipeline pehle parh liye hain; baaqi khandaan yeh hai:">These are all &quot;write and ship code&quot; tools. You've already met CodeBuild and CodePipeline; here's the rest of the family:</p>
+
+  <ul>
+    <li data-ur="<strong>AWS CodeCommit</strong> = AWS ka private Git repository (GitHub jaisa, magar AWS ke andar). <em>Nawishta: AWS ne naye customers ke liye ise band kar diya hai, magar exam guide mein abhi bhi hai.</em>"><strong>AWS CodeCommit</strong> = a private Git repository inside AWS (like GitHub, but AWS's own). <em>Note: AWS has closed it to new customers, but it is still named in the exam guide.</em></li>
+    <li data-ur="<strong>AWS CodeDeploy</strong> = tayyar code ko servers par pohanchane wala auzaar (deployment automate karta hai)."><strong>AWS CodeDeploy</strong> = the tool that pushes finished code onto your servers (it automates deployment).</li>
+    <li data-ur="<strong>AWS CodeArtifact</strong> = packages/libraries ka store (pip, npm ke packages apne paas rakhna). Django wale ke liye: apna private PyPI."><strong>AWS CodeArtifact</strong> = a store for packages and libraries (hosting your pip or npm packages). For a Django developer: your own private PyPI.</li>
+    <li data-ur="<strong>AWS CodeStar</strong> = purana &quot;sab kuch ek jagah&quot; wala dashboard jo yeh saari services jor deta tha."><strong>AWS CodeStar</strong> = an older &quot;everything in one place&quot; dashboard that tied these services together.</li>
+    <li data-ur="<strong>AWS Cloud9</strong> = browser ke andar chalne wala code editor (IDE)."><strong>AWS Cloud9</strong> = a code editor (IDE) that runs inside your browser.</li>
+    <li data-ur="<strong>AWS CloudShell</strong> = browser ke andar chalne wala terminal, jis mein AWS CLI pehle se lagi hoti hai."><strong>AWS CloudShell</strong> = a terminal in your browser with the AWS CLI already installed.</li>
+  </ul>
+
+  <h2 data-ur="Baaqi naam, ek ek jumla">The remaining names, one line each</h2>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Service</th><th>The one sentence</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AWS Network Firewall</strong></td><td>A managed firewall protecting an entire VPC (WAF protects web apps; this protects the network).</td></tr>
+        <tr><td><strong>Amazon MemoryDB for Redis</strong></td><td>A Redis-compatible database held in memory — very fast, and durable too.</td></tr>
+        <tr><td><strong>AWS Transfer Family</strong></td><td>Transferring files into S3 using SFTP/FTP.</td></tr>
+        <tr><td><strong>AWS Resource Groups and Tag Editor</strong></td><td>Grouping resources by tag so you can see and manage them together.</td></tr>
+        <tr><td><strong>AWS Billing Conductor</strong></td><td>Producing customised billing views — used by resellers who re-bill customers.</td></tr>
+        <tr><td><strong>AWS Data Exchange</strong></td><td>A marketplace for third-party <em>data sets</em>.</td></tr>
+        <tr><td><strong>AWS Device Farm</strong></td><td>Testing your mobile app on real physical phones in the cloud.</td></tr>
+        <tr><td><strong>AWS IoT Greengrass</strong></td><td>Running AWS logic on local IoT devices, even when offline.</td></tr>
+        <tr><td><strong>AWS Launch Wizard</strong></td><td>A guided setup for large applications such as SAP or SQL Server.</td></tr>
+        <tr><td><strong>Amazon WorkSpaces Web</strong></td><td>A secure browser-only workspace (WorkSpaces gives a full desktop).</td></tr>
+        <tr><td><strong>AWS Activate for Startups</strong></td><td>Free credits and support for startups.</td></tr>
+        <tr><td><strong>AWS IQ</strong></td><td>Hiring an AWS-certified expert for a paid project.</td></tr>
+        <tr><td><strong>AWS Management Console</strong></td><td>The web interface you already use every day.</td></tr>
+        <tr><td><strong>Amazon OpenSearch Service</strong></td><td>Searching and analysing logs and data (the successor to Elasticsearch Service).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="qual"><span class="callout-label" data-ur="Ek farq jo waqai poocha ja sakta hai">One distinction that could genuinely be asked</span> <span data-ur="<strong>WAF banam Network Firewall banam Shield.</strong> <strong>WAF</strong> = web application ko bachata hai (SQL injection waghera). <strong>Network Firewall</strong> = poore VPC ke network ko bachata hai. <strong>Shield</strong> = DDoS. Teeno &quot;security&quot; hain magar teen alag levels par."><strong>WAF vs Network Firewall vs Shield.</strong> <strong>WAF</strong> protects a web application (SQL injection and similar). <strong>Network Firewall</strong> protects the whole VPC network. <strong>Shield</strong> handles DDoS. All three are security, at three different levels.</span></p>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A company needs to protect an entire Amazon VPC with a managed firewall that filters network traffic entering and leaving the VPC. Which service should it use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">AWS WAF</button>
+      <button class="opt" data-correct="true">AWS Network Firewall</button>
+      <button class="opt" data-correct="false">AWS Shield Standard</button>
+      <button class="opt" data-correct="false">Amazon GuardDuty</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A development team wants to test its mobile application on many real physical devices without buying them. Which AWS service supports this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Amazon AppStream 2.0</button>
+      <button class="opt" data-correct="false">Amazon WorkSpaces</button>
+      <button class="opt" data-correct="true">AWS Device Farm</button>
+      <button class="opt" data-correct="false">AWS Amplify</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Ab AWS ki official in-scope list par koi aisa naam nahi bacha jo tumhare lessons mein na aaya ho — aur is baar yeh mera dawa nahi, script ka nateeja hai. <code>npm run check:clf</code> chala kar tum khud dekh sakte ho.">There is now no name on AWS's official in-scope list that hasn't appeared in your lessons — and this time that isn't my claim, it's the checker's output. You can run <code>npm run check:clf</code> and see for yourself.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <span class="callout-label" data-ur="Mujh se poocho">Ask your teacher</span>
+    <span data-ur="In naamon mein se agar koi exam mein bar bar aata dikhe to mujhe batao — main us par poora lesson bana dunga. Filhaal yeh sirf pehchan ke liye kaafi hain.">If any of these names keep turning up in practice questions, tell me and I'll write a full lesson on it. For now, recognition is enough.</span>
+  </div>
+
+  <div class="lesson-foot">
+    <p><strong>Lesson C10 (recognition sweep).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0064-clf-resilience-and-vocabulary.html">C9 · Resilience &amp; vocabulary</a>. Next: <a href="../reference/clf-numbers.html">CLF numbers &amp; trigger words sheet</a>.</p>
+    <p><strong>Primary source to read:</strong> <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank">CLF-C02 Exam Guide — Appendix A, in-scope services</a>. Skim the list once; don't study it.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank">CLF-C02 Exam Guide — Appendix A: in-scope AWS services and features</a>. The 127-service list this lesson completes; extracted to <code>scripts/clf-inscope-services.txt</code> and checked by <code>npm run check:clf</code>. Verified 12 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html" target="_blank">AWS Network Firewall Developer Guide</a> — VPC-level network protection, distinct from AWS WAF. Verified 12 Aug 2026.</li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.classList.contains('answered')) return;
+        quiz.classList.add('answered');
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Protecting an entire VPC's network traffic is AWS Network Firewall. AWS WAF is the trap: it protects web applications from threats such as SQL injection, not the whole VPC network. Shield Standard defends against DDoS, and GuardDuty detects threats but does not filter traffic."
+                      : "Reconsider. The phrase \"entire VPC\" plus \"filters network traffic\" points to AWS Network Firewall. AWS WAF operates at the web-application layer. Shield is for DDoS. GuardDuty detects suspicious activity but blocks nothing. Hook: WAF = web app, Network Firewall = VPC network, Shield = DDoS.",
+          q2: correct ? "Correct. Testing an app on real physical devices in the cloud is AWS Device Farm. AppStream 2.0 streams desktop applications, WorkSpaces provides virtual desktops, and Amplify helps build and host web and mobile front ends — none of them run tests on physical handsets."
+                      : "Reconsider. The clue is \"real physical devices\" for mobile testing — that's AWS Device Farm. AppStream 2.0 streams applications to users, WorkSpaces gives virtual desktops, and Amplify is for building and hosting front ends."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,204 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C9 · Domains 1–3 · gap-filler</p>
+    <h1 data-ur="Resilience, replication, aur woh lafz jo Domain 1 mein aate hain">Resilience, replication, and the Domain 1 vocabulary</h1>
+    <p class="subtitle" data-ur="C8 ke baad script ne 13 concepts abhi bhi missing dikhaye. Yeh lesson un mein se ahem tareen uthata hai: cloud ke buniyadi lafz (IaaS/PaaS/SaaS), database ki copies (read replica, DAX), aur disaster recovery. Yeh sab exam mein naam se poochay jaate hain.">After C8, the checker still showed 13 missing concepts. This lesson takes the most important of them: the foundational cloud vocabulary (IaaS/PaaS/SaaS), database copies (read replicas, DAX), and disaster recovery. The exam asks for all of these by name.</p>
+    <div class="meta">
+      <span>~15 min</span>
+      <span>One concept: the words the exam expects you to already own</span>
+      <span>Win: Domain 1's easiest marks</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="C8 se yaad karo: &quot;HTTP&quot; = kaunsa load balancer? &quot;order&quot; = kaunsi queue? Aur &quot;lowest latency&quot; = kaunsi routing policy?">From C8: &quot;HTTP&quot; = which load balancer? &quot;order&quot; = which queue? And &quot;lowest latency&quot; = which routing policy?</div>
+    <div class="answer" data-ur="<strong>HTTP = ALB.</strong> <strong>order = SQS FIFO.</strong> <strong>lowest latency = latency-based routing.</strong> Aaj wohi tareeqa — ek lafz, ek jawab — magar naye topics par.""><strong>HTTP = ALB.</strong> <strong>order = SQS FIFO.</strong> <strong>lowest latency = latency-based routing.</strong> Today: the same one-word-one-answer technique, on new topics.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="Domain 1 (24%) tumhare liye sab se sasta domain hai, kyunke woh <strong>technical gehrai nahi</strong> maangta — sirf lafz maangta hai. Agar tum &quot;IaaS&quot;, &quot;elasticity&quot; aur &quot;pilot light&quot; ka matlab jaante ho to yeh sawal 20 second mein hal ho jaate hain. Yeh yaad karne wali cheezein hain, samajhne wali nahi."><strong>Domain 1 (24%) is your cheapest domain</strong>, because it asks for <strong>no technical depth</strong> — only vocabulary. If you know what &quot;IaaS&quot;, &quot;elasticity&quot; and &quot;pilot light&quot; mean, those questions take 20 seconds each. These are things to memorise, not to understand deeply.</span>
+  </div>
+
+  <h2 data-ur="1. IaaS, PaaS, SaaS — kaun kitna sambhalta hai">1. IaaS, PaaS, SaaS — who manages how much</h2>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Roz ki misaal">Everyday analogy</span>
+    <span data-ur="Pizza socho. <strong>IaaS</strong> = tum ghar par pizza banate ho, magar oven kiraye ka hai — aata, cheese, sab tumhara kaam. <strong>PaaS</strong> = pizza base ready mila hai, tum sirf topping dalte ho aur bake karte ho. <strong>SaaS</strong> = pizza restaurant se aaya, tum sirf khate ho. Jitna upar jaoge, utna kam kaam tumhara.">Think of pizza. <strong>IaaS</strong> = you make it at home but rent the oven — dough, cheese, all your work. <strong>PaaS</strong> = the base arrives ready; you add toppings and bake. <strong>SaaS</strong> = the pizza is delivered; you just eat. The higher you go, the less you manage.</span>
+  </div>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Model</th><th>You manage</th><th>AWS example</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>IaaS</strong> — Infrastructure as a Service</td><td>OS, patching, apps</td><td><strong>EC2</strong></td><td>&quot;maximum control&quot;, &quot;manage the operating system&quot;, &quot;virtual machines&quot;</td></tr>
+        <tr><td><strong>PaaS</strong> — Platform as a Service</td><td>Only your code</td><td><strong>Elastic Beanstalk</strong>, Lambda</td><td>&quot;focus on code&quot;, &quot;no infrastructure management&quot;, &quot;deploy an application&quot;</td></tr>
+        <tr><td><strong>SaaS</strong> — Software as a Service</td><td>Nothing — just use it</td><td>Amazon <strong>WorkSpaces</strong>, Gmail</td><td>&quot;ready-to-use software&quot;, &quot;no installation&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="english"><span class="callout-label" data-ur="Exam ki English">The English of the exam</span> <span data-ur="&quot;<strong>Manage the operating system</strong>&quot; = IaaS = EC2. &quot;<strong>Focus only on their code</strong>&quot; = PaaS = Elastic Beanstalk. Yeh do jumle exam mein tqreeban lafz-ba-lafz aate hain.">&quot;<strong>Manage the operating system</strong>&quot; = IaaS = EC2. &quot;<strong>Focus only on their code</strong>&quot; = PaaS = Elastic Beanstalk. Those two phrases show up on the exam almost word for word.</span></p>
+
+  <h2 data-ur="2. Deployment models aur cloud ki 5 khoobiyan">2. Deployment models and the 5 characteristics</h2>
+
+  <p data-ur="Teen deployment models: <strong>Cloud/Public</strong> (sab kuch AWS par), <strong>Hybrid</strong> (kuch AWS, kuch tumhare apne data centre mein — trigger lafz &quot;on-premises&quot; ke saath), aur <strong>Private cloud / On-premises</strong> (sab kuch tumhara apna). Sawal mein &quot;existing data centre&quot; + &quot;AWS&quot; dono = <strong>hybrid</strong>.">Three deployment models: <strong>Cloud/Public</strong> (everything on AWS), <strong>Hybrid</strong> (some AWS, some in your own data centre — triggered by the words &quot;on-premises&quot;), and <strong>Private cloud / On-premises</strong> (all your own). A question mentioning both an &quot;existing data centre&quot; and AWS = <strong>hybrid</strong>.</p>
+
+  <p data-ur="AWS cloud computing ki <strong>5 khoobiyan</strong> ginwata hai. Inhein ratna nahi — bas pehchan lena: <strong>on-demand self-service</strong> (khud le lo, kisi se poochna nahi), <strong>broad network access</strong> (kahin se bhi), <strong>resource pooling</strong> (sab customers ek bare pool se lete hain), <strong>rapid elasticity</strong> (foran ghata barha sakte ho), <strong>measured service</strong> (jitna use, utna bill).">AWS lists <strong>5 characteristics</strong> of cloud computing. Don't drill them — just recognise them: <strong>on-demand self-service</strong> (help yourself, no one to ask), <strong>broad network access</strong> (reach it from anywhere), <strong>resource pooling</strong> (all customers draw from one large pool), <strong>rapid elasticity</strong> (scale up and down instantly), <strong>measured service</strong> (pay for what you use).</p>
+
+  <p class="qual"><span class="callout-label" data-ur="Do lafz jo exam ulajhata hai">Two words the exam confuses on purpose</span> <span data-ur="<strong>Scalability</strong> = zyada load sambhalne ki salahiyat (bara ho sakta hai). <strong>Elasticity</strong> = zaroorat ke mutabiq khud-ba-khud <em>barhna aur ghatna</em>. &quot;Automatically&quot; ya &quot;scale down when demand drops&quot; = elasticity. <br><br>Aur: <strong>vertical scaling</strong> = ek machine ko bara karna (t2.micro → t2.large). <strong>Horizontal scaling</strong> = zyada machinein lagana (1 server → 5 servers). Exam &quot;scale out&quot; kehta hai to matlab horizontal."><strong>Scalability</strong> = the ability to handle more load (it can grow). <strong>Elasticity</strong> = growing <em>and shrinking</em> automatically with demand. &quot;Automatically&quot; or &quot;scale down when demand drops&quot; = elasticity.<br><br>Also: <strong>vertical scaling</strong> = making one machine bigger (t2.micro → t2.large). <strong>Horizontal scaling</strong> = adding more machines (1 server → 5). When the exam says &quot;scale out&quot;, it means horizontal.</span></p>
+
+  <h2 data-ur="3. Copies: read replica, Multi-AZ, DAX, Global Tables">3. Copies: read replicas, Multi-AZ, DAX, Global Tables</h2>
+
+  <p data-ur="Databases ki copies banane ke chaar tareeqe hain aur exam har ek ka <em>maqsad</em> poochta hai. Farq sirf yeh hai: copy <strong>kis liye</strong> bani hai.">There are four ways to copy a database, and the exam asks the <em>purpose</em> of each. The only difference: <strong>what the copy is for</strong>.</p>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Feature</th><th>What it's for</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Read replica</strong> (RDS)</td><td><strong>Performance</strong> — extra copies to read from, spreading query load</td><td>&quot;too many reads&quot;, &quot;reporting queries slow it down&quot;, &quot;improve read performance&quot;</td></tr>
+        <tr><td><strong>Multi-AZ</strong> (RDS)</td><td><strong>Availability</strong> — a standby in another AZ, automatic failover</td><td>&quot;high availability&quot;, &quot;automatic failover&quot;, &quot;survive an AZ failure&quot;</td></tr>
+        <tr><td><strong>DAX</strong> (DynamoDB Accelerator)</td><td><strong>Speed</strong> — an in-memory cache in front of DynamoDB (microseconds)</td><td>&quot;DynamoDB&quot; + &quot;caching&quot; / &quot;microsecond&quot;</td></tr>
+        <tr><td><strong>Global Tables</strong> (DynamoDB)</td><td><strong>Geography</strong> — the same table live in several Regions</td><td>&quot;DynamoDB&quot; + &quot;multiple Regions&quot; / &quot;global users&quot;</td></tr>
+        <tr><td><strong>Aurora Serverless</strong></td><td><strong>Unpredictable load</strong> — capacity starts and stops itself</td><td>&quot;unpredictable&quot;, &quot;intermittent&quot;, &quot;don't want to manage capacity&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="qual"><span class="callout-label" data-ur="Sab se aam trap">The most common trap</span> <span data-ur="<strong>Read replica banam Multi-AZ.</strong> Dono &quot;copy&quot; hain, magar maqsad ulta hai: read replica = <em>raftaar</em> (performance), Multi-AZ = <em>bharosa</em> (availability). Agar sawal mein &quot;failover&quot; ya &quot;AZ fail ho jaye&quot; ho to Multi-AZ. Agar &quot;reads slow hain&quot; ho to read replica."><strong>Read replica vs Multi-AZ.</strong> Both are copies, but their purposes are opposite: read replica = <em>performance</em>, Multi-AZ = <em>availability</em>. If the question says &quot;failover&quot; or &quot;an AZ fails&quot;, it's Multi-AZ. If it says reads are slow, it's a read replica.</span></p>
+
+  <p data-ur="<strong>S3 replication</strong> bhi isi mantiq par: <strong>CRR</strong> (Cross-Region Replication) = doosre Region mein copy — compliance, ya users doosre mulk mein. <strong>SRR</strong> (Same-Region Replication) = usi Region mein copy — logs jama karna, ya production se test mein data lana.">The same logic for <strong>S3 replication</strong>: <strong>CRR</strong> (Cross-Region Replication) = a copy in another Region — for compliance, or users in another country. <strong>SRR</strong> (Same-Region Replication) = a copy in the same Region — aggregating logs, or copying production data into test.</p>
+
+  <h2 data-ur="4. Disaster recovery ke chaar tareeqe">4. The four disaster recovery strategies</h2>
+
+  <p data-ur="Exam yeh chaar naam se poochta hai. Farq sirf do cheezon ka hai: <strong>kitna mehnga</strong> aur <strong>kitni jaldi wapas aa jaoge</strong>. Upar se neeche: sasta aur dheema → mehnga aur foran.">The exam asks for these four by name. They differ on two things only: <strong>how expensive</strong> and <strong>how fast you recover</strong>. Top to bottom: cheap and slow → expensive and instant.</p>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Strategy</th><th>What's running in advance</th><th>Cost / speed</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Backup &amp; Restore</strong></td><td>Nothing — only backups exist</td><td>Cheapest, slowest (hours)</td></tr>
+        <tr><td><strong>Pilot Light</strong></td><td>Only the critical core (e.g. the database), switched off/small</td><td>Cheap, fairly fast</td></tr>
+        <tr><td><strong>Warm Standby</strong></td><td>A full but small copy, already running</td><td>Costlier, fast (minutes)</td></tr>
+        <tr><td><strong>Multi-Site / Hot Site</strong></td><td>A full-size copy running live</td><td>Most expensive, instant</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Roz ki misaal">Everyday analogy</span>
+    <span data-ur="Ghar ki bijli socho. <strong>Backup &amp; restore</strong> = mombatti daraz mein hai, dhoondni paregi. <strong>Pilot light</strong> = generator maujood hai magar band, sirf start karna hai. <strong>Warm standby</strong> = chhota generator pehle se chal raha hai, kuch bulb jal rahe hain. <strong>Multi-site</strong> = poora doosra connection pehle se chalu — bijli jaye to pata hi nahi chalta.">Think of your home electricity. <strong>Backup &amp; restore</strong> = there's a candle in a drawer; you'll have to find it. <strong>Pilot light</strong> = the generator is there but off; you just start it. <strong>Warm standby</strong> = a small generator already running, keeping some lights on. <strong>Multi-site</strong> = a second full supply already live — you never notice the cut.</span>
+  </div>
+
+  <h2 data-ur="5. Chhoti cheezein jo poochi jaati hain">5. Small things that get asked</h2>
+
+  <ul>
+    <li data-ur="<strong>Penetration testing</strong> — AWS 8 services par bina ijazat pen-test karne deta hai (EC2, RDS, CloudFront, Lambda waghera). Magar <strong>DDoS simulation ki ijazat nahi</strong> — us ke liye AWS se baat karni parti hai. Sawal ka jawab aksar: &quot;pre-approved services par bina permission kar sakte ho&quot;."><strong>Penetration testing</strong> — AWS permits pen-testing on 8 services without prior approval (EC2, RDS, CloudFront, Lambda and others). But <strong>DDoS simulation is not permitted</strong> without contacting AWS. The usual answer: &quot;allowed without approval on the pre-approved services&quot;.</li>
+    <li data-ur="<strong>IAM Credentials Report</strong> = poore account ke saare users aur unke credentials ki list (CSV). <strong>IAM Access Advisor</strong> = ek user ne kaunsi service <em>aakhri baar kab</em> use ki — is se ghair zaroori permissions hatate ho (least privilege)."><strong>IAM Credentials Report</strong> = an account-level CSV listing every user and the state of their credentials. <strong>IAM Access Advisor</strong> = shows which services a user last accessed and when — used to strip unused permissions (least privilege).</li>
+    <li data-ur="<strong>IAM password policy</strong> = minimum length, capital/number/symbol lazmi karna, aur password ki muddat (expiry) aur dobara istemaal ki paabandi. Root account is se mustasna nahi hota — usay MFA se bachao."><strong>IAM password policy</strong> = minimum length, requiring uppercase/numbers/symbols, password expiry and preventing reuse.</li>
+    <li data-ur="<strong>AWS Cost Anomaly Detection</strong> = machine learning se tumhara kharcha dekhta hai aur <em>ghair mamooli</em> barhotri par khud alert karta hai. Farq: <strong>Budgets</strong> = tum khud limit set karte ho; <strong>Cost Anomaly Detection</strong> = limit AWS khud seekhta hai."><strong>AWS Cost Anomaly Detection</strong> = uses machine learning to watch your spend and alerts you on <em>unusual</em> increases. The distinction: <strong>Budgets</strong> = you set the limit; <strong>Cost Anomaly Detection</strong> = AWS learns what normal looks like.</li>
+    <li data-ur="<strong>Service Control Policies (SCP)</strong> = AWS Organizations mein woh paabandi jo poore account ya OU par lagti hai — yeh tay karti hai ke us account mein <em>kya kiya hi nahi ja sakta</em>. Ahem baat: SCP permission <strong>deti nahi</strong>, sirf <strong>chheenti</strong> hai. Agar SCP kisi cheez ko mana kar de to account ka admin — balke root user bhi — woh nahi kar sakta. Misaal: &quot;koi bhi account us Region ko istemaal na kare&quot;."><strong>Service Control Policies (SCP)</strong> = in AWS Organizations, a restriction applied to a whole account or OU — it defines what simply <em>cannot be done</em> in that account. The key point: an SCP <strong>never grants</strong> permission, it only <strong>takes it away</strong>. If an SCP denies something, not even that account's administrator — or its root user — can do it. Example: &quot;no account may use that Region&quot;.</li>
+    <li data-ur="<strong>VPC Flow Logs</strong> = network traffic ka record (kaun kis se baat kar raha hai) — troubleshooting ke liye. <strong>VPC Peering</strong> = do VPC ko aapas mein jorna. <strong>VPC Endpoint</strong> = AWS services (jaise S3) tak private raaste se pohanchna, internet par nikle baghair."><strong>VPC Flow Logs</strong> = a record of network traffic (who talked to whom) — for troubleshooting. <strong>VPC Peering</strong> = connecting two VPCs together. <strong>VPC Endpoint</strong> = reaching AWS services such as S3 over a private route, without going out to the internet.</li>
+  </ul>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 1</span>
+    <p class="scenario">A company wants to deploy an application without managing operating systems, patching, or capacity. Developers want to upload code and have the platform run it. Which cloud computing model does this describe?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Infrastructure as a Service (IaaS)</button>
+      <button class="opt" data-correct="true">Platform as a Service (PaaS)</button>
+      <button class="opt" data-correct="false">Software as a Service (SaaS)</button>
+      <button class="opt" data-correct="false">On-premises deployment</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">An Amazon RDS database is slow because reporting queries compete with the main application. The company wants to improve read performance. What should it use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">A Multi-AZ deployment</button>
+      <button class="opt" data-correct="true">A read replica</button>
+      <button class="opt" data-correct="false">An automated snapshot</button>
+      <button class="opt" data-correct="false">A larger EBS volume</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A company keeps only a minimal copy of its critical database running in a second Region, ready to scale up if the primary Region fails. Which disaster recovery strategy is this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Backup and restore</button>
+      <button class="opt" data-correct="true">Pilot light</button>
+      <button class="opt" data-correct="false">Multi-site active-active</button>
+      <button class="opt" data-correct="false">Warm standby</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 4</span>
+    <p class="scenario">A company wants to be alerted automatically when its AWS spending increases in an unusual way, without having to define a specific dollar threshold in advance. Which service meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">AWS Budgets</button>
+      <button class="opt" data-correct="true">AWS Cost Anomaly Detection</button>
+      <button class="opt" data-correct="false">AWS Cost Explorer</button>
+      <button class="opt" data-correct="false">AWS Pricing Calculator</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Domain 1 ka woh hissa jo sab se sasta hai ab tumhare paas hai — IaaS/PaaS/SaaS, elasticity, aur deployment models. Saath mein woh chaar DR naam jo ratne se seedha number banta hai. Yeh sab &quot;samajhne&quot; wali cheezein nahi thin, sirf &quot;pehchanne&quot; wali — aur ab pehchan tumhare paas hai.">You now hold the cheapest part of Domain 1 — IaaS/PaaS/SaaS, elasticity, and deployment models — plus the four DR names, which convert straight into marks once memorised. None of this needed deep understanding, only recognition, and the recognition is now yours.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <span class="callout-label" data-ur="Mujh se poocho">Ask your teacher</span>
+    <span data-ur="Read replica banam Multi-AZ woh jorra hai jo sab se zyada logon ko ulajhata hai. Agar woh abhi bhi mila jula lage to mujhe bolo — main is par alag se 5 sawal bana deta hoon jab tak farq bilkul saaf na ho jaye.">Read replica vs Multi-AZ is the pair that trips most people up. If it still feels blurred, tell me — I'll write five more questions on that one distinction until it's completely clean.</span>
+  </div>
+
+  <div class="lesson-foot">
+    <p><strong>Lesson C9 (resilience &amp; vocabulary).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0063-clf-elb-monitoring-messaging.html">C8 · Four things the earlier lessons left out</a>. Next: <a href="../reference/clf-numbers.html">CLF numbers &amp; trigger words sheet</a>.</p>
+    <p><strong>Primary source to read:</strong> <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html" target="_blank">CLF-C02 Exam Guide — Domain 1</a>, task statement 1.1 (the value of the cloud) and 1.4 (cloud deployment models). Short — read only those two.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02-domain1.html" target="_blank">CLF-C02 Exam Guide — Domain 1: Cloud Concepts</a> (24%). Task statement 1.4 explicitly names cloud, hybrid and on-premises deployment models. Verified 12 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html" target="_blank">Amazon RDS User Guide — Multi-AZ deployments</a>, and <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html" target="_blank">read replicas</a> — Multi-AZ is for availability and failover, read replicas are for read scaling. Verified 12 Aug 2026.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html" target="_blank">AWS Whitepaper — Disaster recovery options in the cloud</a> — the four strategies in order of cost and recovery time. Verified 12 Aug 2026.</li>
+      <li id="s4"><a href="https://aws.amazon.com/security/penetration-testing/" target="_blank">AWS Customer Support Policy for Penetration Testing</a> — the permitted services and the prohibition on DDoS simulation without approval. Verified 12 Aug 2026.</li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.classList.contains('answered')) return;
+        quiz.classList.add('answered');
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Uploading code onto a platform that handles the OS, patching and capacity is Platform as a Service — AWS Elastic Beanstalk is the classic example. IaaS (EC2) would still leave the operating system to the company. SaaS is finished software you simply use, not somewhere you deploy your own code."
+                      : "Reconsider. The clue is \"upload code and have the platform run it\" while managing no operating system — that is PaaS (for example Elastic Beanstalk). With IaaS such as EC2 you still patch the OS yourself. SaaS is ready-made software, so there is no code of yours to deploy.",
+          q2: correct ? "Correct. Read replicas exist to serve read traffic, so reporting queries can hit the replica instead of competing with the application. Multi-AZ is the trap here: its standby is for automatic failover and availability, not for serving reads. Snapshots are backups, and a larger volume doesn't separate the competing workloads."
+                      : "Reconsider. The requirement is \"improve read performance\", which is exactly what a read replica does — reporting queries move to the copy. Multi-AZ looks similar but exists for availability and failover, not read scaling. Snapshots are backups; a bigger volume doesn't stop the two workloads competing. Hook: read replica = performance, Multi-AZ = availability.",
+          q3: correct ? "Correct. Keeping only the critical core running, ready to be scaled up, is the pilot light strategy — named after the small flame that stays lit to start a bigger fire. Backup and restore keeps nothing running at all. Warm standby keeps a full but scaled-down copy running, and multi-site runs a full-size copy live."
+                      : "Reconsider. \"Only a minimal copy of the critical database, ready to scale up\" is the pilot light — a small flame kept burning to light something bigger. Backup and restore would have nothing running. Warm standby runs a complete, scaled-down environment. Multi-site runs a full-size live copy.",
+          q4: correct ? "Correct. Detecting unusual spend without a predefined threshold is AWS Cost Anomaly Detection, which uses machine learning to learn your normal pattern. AWS Budgets requires you to set the limit yourself, which the question rules out. Cost Explorer visualises past spend, and the Pricing Calculator estimates future costs before you buy."
+                      : "Reconsider. The deciding phrase is \"without having to define a specific dollar threshold\" — that rules out AWS Budgets, where you set the limit. AWS Cost Anomaly Detection learns your normal spending pattern with machine learning and flags unusual increases. Cost Explorer analyses past spend; the Pricing Calculator estimates costs in advance."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>
