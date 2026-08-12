@@ -63,17 +63,17 @@
    "id": 4,
    "domain": 2,
    "multi": false,
-   "scenario": "Which statement about IAM groups is correct?",
+   "scenario": "A company is building a mobile app and needs to let its CUSTOMERS sign up and sign in, including with their Google accounts. Which service is designed for this?",
    "options": [
-    "Policies attached to a group apply to all users in that group",
-    "Groups can be nested inside other groups",
-    "A user can belong to only one group",
-    "Groups can be assigned to EC2 instances"
+    "Amazon Cognito",
+    "AWS IAM users and groups",
+    "AWS Directory Service",
+    "AWS Secrets Manager"
    ],
    "correct": [
     0
    ],
-   "explain": "Attaching a policy to a group applies it to every user in it, which is why groups are the recommended way to manage permissions. Groups cannot be nested, users may belong to several, and instances use roles rather than groups."
+   "explain": "Cognito handles identity for the end users of your own application — sign-up, sign-in and social logins. The distinction the exam tests is IAM versus Cognito: IAM is for your team working inside AWS, Cognito is for your customers using your app. Directory Service connects an existing corporate Active Directory, and Secrets Manager stores credentials, not user accounts."
   },
   {
    "id": 5,
