@@ -22,7 +22,7 @@ lifecycle) as sequences, not lists.
 AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
 way.
 
-**Coverage is complete:** CLF C1–C6 covers all 4 domains, AIF I1–I4 covers all 5,
+**Coverage is complete:** CLF C1–C7 covers all 4 domains and **all 112 services on AWS's official in-scope list** (verified by script; C7 is the gap-filler), AIF I1–I4 covers all 5,
 plus **17 question banks / 430 questions**, every one explained: 7 CLF quizzes,
 8 AIF quizzes (Quiz 8 drills ordering+matching), and a **65-question / 90-minute
 full mock for each certification**. Indexes: `clf-quizzes.html`, `aif-quizzes.html`.

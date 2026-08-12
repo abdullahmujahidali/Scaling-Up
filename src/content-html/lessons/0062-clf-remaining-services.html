@@ -1,0 +1,186 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS CLF-C02 · Lesson C7 · Domains 1–4 · gap-filler</p>
+    <h1 data-ur="Baaqi sab kuch: woh cheezein jo abhi tak nahi aayi">Everything else: the pieces not yet covered</h1>
+    <p class="subtitle" data-ur="Tum ne kaha ke tum Udemy ke bajaye yahin se parhoge. Is liye maine apne 6 lessons ko AWS ki poori official list se milaya aur dekha ke kya reh gaya hai. Yeh lesson wohi baaqi cheezein hai — taake koi cheez chhoote nahi.">You said you're studying from here rather than the course. So I checked my six lessons against AWS's full in-scope list and found what was left out. This lesson is exactly those leftovers — so nothing is missing.</p>
+    <div class="meta">
+      <span>~12 min</span>
+      <span>One concept: the last gaps, closed</span>
+      <span>Win: 100% of the in-scope list</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle C6 se yaad karo: high availability kaise milti hai? EBS aur EFS ka farq? Aur CloudFront kis liye hai?">From C6: how do you get high availability? EBS vs EFS? And what is CloudFront for?</div>
+    <div class="answer" data-ur="<strong>High availability = kai Availability Zones.</strong> <strong>EBS = ek instance ki disk (ek AZ); EFS = kai instances ka shared file system.</strong> <strong>CloudFront = CDN</strong>, content users ke qareeb. Aaj hum woh cheezein poori karenge jo baaqi reh gayi thin."><strong>High availability = multiple Availability Zones.</strong> <strong>EBS = one instance's disk (one AZ); EFS = a shared file system for many instances.</strong> <strong>CloudFront = the CDN</strong>, content near users. Today we close the remaining gaps.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Yeh lesson kyun hai">Why this lesson exists</span>
+    <span data-ur="Yeh lesson &quot;naya mauzu&quot; nahi hai — yeh <strong>safai (cleanup)</strong> hai. Maine apne lessons ko AWS ki official in-scope list se milaya aur jo cheezein reh gayi thin woh yahan hain.<br><br>In mein se zyada tar sirf <strong>ek jumle</strong> ki hain — exam in par gehra sawal nahi poochta, sirf pehchan maangta hai. Is liye ise yaad karne ki koshish mat karo. <strong>Ek baar parh lo</strong>, aur agar exam mein naam dikhe to woh ajnabi na lage. Bas itna kaafi hai."><strong>This lesson is not a new topic — it is a cleanup.</strong> I compared my lessons against AWS's official in-scope list and collected whatever was left out.<br><br>Most of these need only <strong>one sentence</strong> — the exam asks for recognition, not depth. So don't try to memorise this page. <strong>Read it once</strong>, so that if a name appears on exam day it isn't a stranger. That is genuinely enough.</span>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ EC2 ki woh tafseel jo abhi tak nahi aayi">⭐ The EC2 details not yet covered</span>
+    <ul>
+      <li data-ur="⭐ <strong>AMI (Amazon Machine Image)</strong> = ek server ki &quot;photo&quot; jis se bilkul wesa hi naya instance banaya ja sakta hai. Socho: ek laptop poori tarah set karke uska image bana lena, phir 10 laptop usi se banana. Sawal mein &quot;pre-configured server jaldi launch karna&quot; = AMI."><strong>⭐ AMI (Amazon Machine Image)</strong> = a snapshot-image of a whole server, used to launch identical new instances. Think of setting up one laptop perfectly, taking an image of it, then building ten more from that image. &quot;Quickly launch pre-configured servers&quot; = AMI.</li>
+      <li data-ur="⭐ <strong>EBS snapshot</strong> = disk ka backup, S3 mein rakha jata hai. Snapshot se naya volume banaya ja sakta hai — <strong>aur doosri AZ ya Region mein bhi</strong>. (Yaad rakho: EBS khud sirf ek AZ mein hoti hai, magar snapshot usay hilane ka tareeqa hai.)"><strong>⭐ EBS snapshot</strong> = a backup of a disk, stored in S3. A new volume can be created from it — <strong>including in another AZ or Region</strong>. (Remember: an EBS volume lives in one AZ, but a snapshot is how you move it.)</li>
+      <li data-ur="<strong>EC2 user data</strong> = woh script jo instance ke <em>pehli baar</em> shuru hone par khud chalti hai (software install karna waghera). Sirf pehli baar chalti hai."><strong>EC2 user data</strong> = a script that runs automatically the <em>first</em> time an instance boots (installing software and so on). It runs on first boot only.</li>
+      <li data-ur="<strong>Elastic IP</strong> = ek aisa public IP address jo tumhara hai aur badalta nahi, chahe instance band karke dobara chalao. (Warna har baar naya IP milta hai.)"><strong>Elastic IP</strong> = a fixed public IP address you own, which stays the same even if you stop and start the instance. (Otherwise you get a new IP each time.)</li>
+      <li data-ur="<strong>Scaling policies</strong> = Auto Scaling ko kab barhna/ghatna hai yeh batane wale qawaid. <strong>Dynamic</strong> = abhi ke load par (jaise CPU 70% se ooper). <strong>Scheduled</strong> = waqt par (jaise har Monday subah). <strong>Predictive</strong> = pichhle pattern se andaza laga kar."><strong>Scaling policies</strong> = the rules telling Auto Scaling when to grow or shrink. <strong>Dynamic</strong> = react to current load (e.g. CPU above 70%). <strong>Scheduled</strong> = by clock (e.g. every Monday morning). <strong>Predictive</strong> = forecast from past patterns.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ S3 ki baaqi baatein">⭐ The remaining S3 points</span>
+    <ul>
+      <li data-ur="⭐ <strong>S3 Versioning</strong> = har file ki purani copies mehfooz rakhna. Galti se delete ya overwrite ho jaye to wapas mil jati hai. Sawal mein &quot;accidental deletion se bachao&quot; = versioning."><strong>⭐ S3 Versioning</strong> = keeping previous copies of every object, so an accidental delete or overwrite can be recovered. &quot;Protect against accidental deletion&quot; = versioning.</li>
+      <li data-ur="<strong>S3 Transfer Acceleration</strong> = door se bari file upload karne ki raftaar barhana (CloudFront ke edge locations ke zariye)."><strong>S3 Transfer Acceleration</strong> = faster uploads of large files from far away, routed through CloudFront's edge locations.</li>
+      <li data-ur="<strong>Storage classes ki poori tarteeb</strong> (mehnga → sasta rakhna): <strong>Standard</strong> → <strong>Intelligent-Tiering</strong> (AWS khud faisla kare) → <strong>Standard-IA</strong> → <strong>One Zone-IA</strong> (sasta magar sirf ek AZ mein) → <strong>Glacier Instant</strong> → <strong>Glacier Flexible</strong> → <strong>Glacier Deep Archive</strong> (sab se sasta, nikalne mein ghante)."><strong>The full storage-class order</strong> (dearest to cheapest storage): <strong>Standard</strong> → <strong>Intelligent-Tiering</strong> (AWS decides for you) → <strong>Standard-IA</strong> → <strong>One Zone-IA</strong> (cheaper, but only one AZ) → <strong>Glacier Instant</strong> → <strong>Glacier Flexible</strong> → <strong>Glacier Deep Archive</strong> (cheapest, retrieval takes hours).</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="⭐ Savings Plans (Domain 4 — yeh zaroor aata hai)">⭐ Savings Plans (Domain 4 — this does get asked)</span>
+    <ul>
+      <li data-ur="⭐ <strong>Savings Plans</strong> = Reserved Instances jaisi bachat, magar zyada lachakdaar. Farq: Reserved mein tum <em>ek khaas instance</em> ka waada karte ho; Savings Plan mein tum <em>paise</em> ka waada karte ho — &quot;main 1 ya 3 saal tak itne $/ghanta kharch karunga&quot;.<br><br><strong>Compute Savings Plan = 66% tak</strong> (sab se lachakdaar — EC2, Fargate aur Lambda teenon par lagta hai, koi bhi region/instance family).<br><strong>EC2 Instance Savings Plan = 72% tak</strong> (kam lachak — ek instance family, ek region — magar zyada chhoot).<br><br>Sawal mein &quot;flexibility&quot; = Compute; &quot;maximum discount&quot; = EC2 Instance."><strong>⭐ Savings Plans</strong> = savings like Reserved Instances but more flexible. The difference: with Reserved you commit to <em>a specific instance</em>; with a Savings Plan you commit to <em>spend</em> — &quot;$X per hour for 1 or 3 years&quot;.<br><br><strong>Compute Savings Plan = up to 66%</strong> (most flexible — covers EC2, Fargate and Lambda, any Region or instance family).<br><strong>EC2 Instance Savings Plan = up to 72%</strong> (less flexible — one family in one Region — but a bigger discount).<br><br>&quot;Flexibility&quot; in a question = Compute; &quot;maximum discount&quot; = EC2 Instance.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Management aur governance ki baaqi services">The remaining management &amp; governance services</span>
+    <ul>
+      <li data-ur="<strong>AWS PrivateLink</strong> = do networks ko AWS ke andar hi joro, traffic internet par bheje baghair. Sawal mein &quot;data internet par nahi jana chahiye&quot; = PrivateLink. <strong>AWS Audit Manager</strong> = audit ke liye khud-ba-khud saboot (evidence) jama karta rehta hai. (Farq yaad rakho: <strong>Artifact</strong> = AWS ki apni compliance reports download karna; <strong>Audit Manager</strong> = TUMHARE apne audit ke liye saboot jama karna.)"><strong>AWS PrivateLink</strong> = connecting two networks privately inside AWS, without traffic crossing the internet. &quot;Data must not traverse the internet&quot; = PrivateLink. <strong>AWS Audit Manager</strong> = continuously collecting evidence for an audit. (Hold the difference: <strong>Artifact</strong> = downloading AWS's own compliance reports; <strong>Audit Manager</strong> = gathering evidence for YOUR audit.)</li>
+      <li data-ur="<strong>AWS Service Catalog</strong> = company ke manzoor-shuda templates ki list, taake team sirf wohi cheezein banaye jo IT ne ijazat di ho."><strong>AWS Service Catalog</strong> = a list of company-approved templates, so teams can only create what IT has sanctioned.</li>
+      <li data-ur="<strong>AWS License Manager</strong> = software licences (jaise Windows, Oracle) ka hisaab rakhna ke kitne istemaal ho rahe hain."><strong>AWS License Manager</strong> = tracking how many software licences (Windows, Oracle and so on) are in use.</li>
+      <li data-ur="<strong>AWS Well-Architected Tool</strong> = ek muft auzaar jo tumhare workload se sawal poochta hai aur batata hai ke 6 pillars ke hisaab se kahan kami hai. (Framework = usool; Tool = us se janch.)"><strong>AWS Well-Architected Tool</strong> = a free tool that asks questions about your workload and reports where it falls short of the six pillars. (The Framework is the principles; the Tool checks against them.)</li>
+      <li data-ur="<strong>Service Quotas</strong> = har service ki hadd (jaise kitne EC2 instances) dekhna aur barhane ki darkhwast dena."><strong>Service Quotas</strong> = viewing service limits (such as how many EC2 instances) and requesting increases.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="Migration aur hybrid ki baaqi services">The remaining migration &amp; hybrid services</span>
+    <ul>
+      <li data-ur="<strong>AWS Migration Hub</strong> = saari migrations ko ek jagah se dekhna. <strong>AWS Application Discovery Service</strong> = migration se pehle apne data centre ke servers dhoondna aur unka jaiza lena. <strong>Migration Evaluator</strong> = migration ka kharcha pehle se andaza lagana."><strong>AWS Migration Hub</strong> = tracking all migrations in one place. <strong>AWS Application Discovery Service</strong> = finding and assessing your on-premises servers before migrating. <strong>Migration Evaluator</strong> = estimating what a migration will cost.</li>
+      <li data-ur="<strong>AWS Elastic Disaster Recovery</strong> = kharabi ki soorat mein poore system ko AWS par bahal karna. <strong>AWS Local Zones</strong> = bare shehron ke qareeb AWS ka chhota hissa (bohot kam latency ke liye). <strong>AWS Wavelength</strong> = 5G network ke andar AWS (mobile apps ke liye sab se kam latency)."><strong>AWS Elastic Disaster Recovery</strong> = recovering entire systems into AWS after a failure. <strong>AWS Local Zones</strong> = small AWS deployments near large cities for very low latency. <strong>AWS Wavelength</strong> = AWS inside 5G networks, for the lowest latency to mobile users.</li>
+    </ul>
+  </div>
+
+  <div class="numbers">
+    <span class="callout-label" data-ur="AI/ML ki baaqi services (CLF par sirf pehchan chahiye)">The remaining AI/ML services (CLF needs recognition only)</span>
+    <ul>
+      <li data-ur="<strong>Amazon Forecast</strong> = aane wale waqt ka andaza (sales, demand). <strong>Amazon Personalize</strong> = tajweez/recommendations (&quot;yeh bhi khareedein&quot;). <strong>Amazon Fraud Detector</strong> = fraud pehchanna.<br><br><em>Yeh teenon tumhare AIF track mein tafseel se hain — CLF par sirf naam aur kaam kaafi hai.</em>"><strong>Amazon Forecast</strong> = predicting future values (sales, demand). <strong>Amazon Personalize</strong> = recommendations (&quot;customers also bought&quot;). <strong>Amazon Fraud Detector</strong> = identifying fraudulent activity.<br><br><em>All three are covered in depth in your AIF track — on CLF the name and its job is enough.</em></li>
+    </ul>
+  </div>
+
+  <div class="english">
+    <span class="callout-label" data-ur="Exam English — is lesson ke lafz">Exam English — words from this lesson</span>
+    <span data-ur="<strong>&quot;image&quot;</strong> (AMI mein) = server ki mukammal copy, na ke tasveer.<br><strong>&quot;snapshot&quot;</strong> = kisi lamhe ki mehfooz copy.<br><strong>&quot;provision&quot;</strong> = resource taiyaar karna.<br><strong>&quot;quota&quot; / &quot;limit&quot;</strong> = hadd.<br><strong>&quot;on-premises&quot;</strong> = tumhare apne data centre mein.<br><strong>&quot;disaster recovery&quot;</strong> = bari kharabi ke baad system wapas khara karna.<br><strong>&quot;approved&quot;</strong> = manzoor shuda (Service Catalog ke sawal mein).<br><strong>&quot;retrieval&quot;</strong> = archive se data wapas nikalna.">
+      <strong>&quot;image&quot;</strong> (as in AMI) = a complete copy of a server, not a picture.<br>
+      <strong>&quot;snapshot&quot;</strong> = a saved copy of something at one moment.<br>
+      <strong>&quot;provision&quot;</strong> = to set up a resource.<br>
+      <strong>&quot;quota&quot; / &quot;limit&quot;</strong> = a cap.<br>
+      <strong>&quot;on-premises&quot;</strong> = in your own data centre.<br>
+      <strong>&quot;disaster recovery&quot;</strong> = restoring systems after a major failure.<br>
+      <strong>&quot;approved&quot;</strong> = sanctioned in advance (appears in Service Catalog questions).<br>
+      <strong>&quot;retrieval&quot;</strong> = getting data back out of an archive.</span>
+  </div>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3 · AMI</span>
+    <p class="scenario" data-ur="Ek company chahti hai ke naye EC2 instances pehle se install shuda software ke saath foran launch hon, har baar setup dobara kiye baghair. Usay kya istemaal karna chahiye?">A company wants to launch new EC2 instances that already have its software installed, without repeating the setup each time. What should it use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Ek custom Amazon Machine Image (AMI)">A custom Amazon Machine Image (AMI)</button>
+      <button class="opt" data-correct="false" data-ur="Ek EBS snapshot">An EBS snapshot</button>
+      <button class="opt" data-correct="false" data-ur="Ek Elastic IP">An Elastic IP</button>
+      <button class="opt" data-correct="false" data-ur="Ek security group">A security group</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 3 · S3 versioning</span>
+    <p class="scenario" data-ur="Ek team ko fikar hai ke koi galti se S3 mein rakhi zaroori file delete kar dega. Kaunsi cheez is se bachati hai?">A team is worried someone will accidentally delete an important file in S3. What protects against this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="S3 Versioning on kar do">Enable S3 Versioning</button>
+      <button class="opt" data-correct="false" data-ur="S3 Transfer Acceleration on kar do">Enable S3 Transfer Acceleration</button>
+      <button class="opt" data-correct="false" data-ur="S3 Glacier Deep Archive istemaal karo">Use S3 Glacier Deep Archive</button>
+      <button class="opt" data-correct="false" data-ur="Bucket ko doosre region mein banao">Create the bucket in another Region</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 4 · Savings Plans</span>
+    <p class="scenario" data-ur="Ek company EC2, Fargate aur Lambda teenon istemaal karti hai aur bachat chahti hai, magar aage instance family badalne ki azadi bhi rakhna chahti hai. Kaunsa option <span class=&quot;qual&quot;>SAB SE MUNASIB</span> hai?">A company uses EC2, Fargate and Lambda, wants savings, but also wants the freedom to change instance families later. Which option is <span class="qual">MOST suitable</span>?</p>
+    <div class="opts">
+      <button class="opt" data-correct="true" data-ur="Compute Savings Plan">A Compute Savings Plan</button>
+      <button class="opt" data-correct="false" data-ur="EC2 Instance Savings Plan">An EC2 Instance Savings Plan</button>
+      <button class="opt" data-correct="false" data-ur="Standard Reserved Instances">Standard Reserved Instances</button>
+      <button class="opt" data-correct="false" data-ur="Spot Instances">Spot Instances</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Tumhare kaam se jor">Bridge to your work</span>
+    <span data-ur="<strong>AMI bilkul Docker image hai.</strong> Tum <code>Dockerfile</code> se image banate ho, phir usi image se 10 container chalate ho — har baar dobara install nahi karte. AMI wohi cheez hai, magar poore server ke liye.<br><br><strong>EBS snapshot</strong> tumhara <code>pg_dump</code> hai — kisi lamhe ki mehfooz copy, jis se baad mein bahal kar sakte ho.<br><br><strong>S3 versioning</strong> git hai. Purani copy hamesha maujood, galti wapas ho sakti hai.<br><br><strong>User data</strong> woh startup script hai jo tum Dockerfile ke <code>RUN</code> ya entrypoint mein likhte ho.">
+      <strong>An AMI is a Docker image.</strong> You build an image from a <code>Dockerfile</code>, then run ten containers from it rather than installing everything each time. An AMI is the same idea for a whole server.<br><br><strong>An EBS snapshot</strong> is your <code>pg_dump</code> — a saved copy from one moment that you can restore later.<br><br><strong>S3 versioning</strong> is git. The old copy is always there, and a mistake can be undone.<br><br><strong>User data</strong> is the startup script you'd put in a Dockerfile <code>RUN</code> line or entrypoint.</span>
+  </div>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Yaad se: AMI kis liye? Snapshot kis liye? S3 versioning kis liye? Aur Compute banam EC2 Instance Savings Plan?">From memory: what is an AMI for? A snapshot? S3 versioning? And Compute vs EC2 Instance Savings Plan?</div>
+    <div class="answer" data-ur="<strong>AMI</strong> = pehle se taiyaar server se naye instances launch karna (= Docker image). <strong>Snapshot</strong> = EBS disk ka backup, doosri AZ/Region mein bhi le jaya ja sakta hai. <strong>S3 versioning</strong> = galti se delete/overwrite se bachao (= git). <strong>Compute SP = 66%, zyada lachak</strong> (EC2+Fargate+Lambda); <strong>EC2 Instance SP = 72%, kam lachak</strong>. Chaaron aa gaye? To ab poori in-scope list tumhare paas hai."><strong>AMI</strong> = launching new instances from a prepared server (= a Docker image). <strong>Snapshot</strong> = a backup of an EBS disk, movable to another AZ or Region. <strong>S3 versioning</strong> = protection from accidental delete or overwrite (= git). <strong>Compute SP = 66%, more flexible</strong> (EC2+Fargate+Lambda); <strong>EC2 Instance SP = 72%, less flexible</strong>. All four? Then you now hold the complete in-scope list.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="Yeh lesson khatam karne ke baad, <strong>AWS ki official in-scope list ki har cheez tumhare lessons mein maujood hai</strong> — 100%. Ab koi aisa naam nahi jo exam mein aaye aur tum ne yahan na parha ho.<br><br>Aur yaad rakho: in mein se zyada tar cheezon par exam sirf ek chhota sa &quot;yeh service kya karti hai&quot; wala sawal poochta hai. Tumhein in ki gehrai nahi chahiye — sirf pehchan chahiye, jo ab tumhare paas hai.">With this lesson finished, <strong>every item on AWS's official in-scope list appears somewhere in your lessons</strong> — 100%. There is no longer a name that can show up on the exam which you haven't met here.<br><br>And remember: for most of these the exam asks only a small &quot;what does this service do&quot; question. You don't need depth on them — only recognition, which you now have.</span>
+  </div>
+
+  <h2 data-ur="Agar aur parhna chaho (marzi ki baat hai)">If you want to read more (optional)</h2>
+  <div class="key" style="border-color:var(--rule);"><span class="callout-label" data-ur="Yeh link kholna ZARURI nahi hai">You do NOT have to open this link</span><span data-ur="Neeche AWS ki official list hai jis se maine yeh lesson banaya — <strong>yeh sirf naamon ki list hai, koi lambi English tehreer nahi</strong>, is liye is ki English aasaan hai. Isay checklist ki tarah dekh sakte ho: agar koi naam bilkul ajnabi lage to <strong>mujhe batao, main us par ek jumla de doonga</strong>.">Below is the official AWS list I built this lesson from — <strong>it is just a list of names, not long prose</strong>, so its English is easy. Use it as a checklist: if any name looks completely unfamiliar, <strong>tell me and I'll give you one sentence for it</strong>.</span></div>
+  <p style="font-size:0.9rem;opacity:0.8">📖 <a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank" rel="noopener">CLF-C02 In-Scope AWS Services</a> — <span data-ur="AWS ka asal page (English).">AWS's own page (English).</span></p>
+
+  <div class="ask-teacher">
+    <strong>I'm your teacher — lean on me.</strong> This lesson has many names and that can feel heavy. Don't try to hold them all — read once, then let the quizzes surface whichever ones didn't stick. Tell me which names keep slipping and I'll tie each one to something you already use at work.
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson C7 (Everything else).</strong> Part of the <a href="../clf-index.html">CLF-C02 track</a>. Previous: <a href="0060-clf-core-services.html">C6 · The core AWS services</a>. Next: the <a href="../reference/clf-numbers.html">CLF numbers &amp; trigger words sheet</a>, then the <a href="../clf-quizzes.html">quizzes</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html" target="_blank">CLF-C02 In-Scope AWS Services</a> — the authoritative list of services that can appear on the exam. This lesson covers every entry not already taught in C1–C6. Verified 3 Aug 2026.</li>
+      <li id="s2"><a href="https://aws.amazon.com/savingsplans/compute-pricing/" target="_blank">AWS Savings Plans pricing</a> — Compute Savings Plans save up to 66% and apply across EC2, Fargate and Lambda regardless of instance family, size, Region or OS; EC2 Instance Savings Plans save up to 72% in exchange for committing to one instance family in one Region.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" target="_blank">Amazon Machine Images (AMI)</a> — an AMI provides the information required to launch an instance, including a template for the root volume and launch permissions.</li>
+    </ol>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.quiz, .exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback'); if(!fb) return;
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.dataset.done) return; quiz.dataset.done='1';
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. An AMI is a template of a fully configured server, so every instance launched from it already has the software installed. An EBS snapshot backs up a disk but does not launch instances by itself; an Elastic IP is a fixed address; a security group is a firewall."
+                      : "Reconsider. The requirement is launching instances that are already configured — that is exactly what a custom AMI is for, like a Docker image for a whole server. A snapshot backs up a volume, an Elastic IP is a static address, and a security group controls network access.",
+          q2: correct ? "Correct. Versioning keeps previous copies of every object, so an accidental delete or overwrite can be undone — it works like git. Transfer Acceleration only speeds uploads, Glacier is for cheap archival, and another Region does nothing to prevent deletion."
+                      : "Reconsider. The key phrase is \"accidentally delete\". S3 Versioning retains old versions so the mistake can be reversed. Transfer Acceleration affects upload speed, Glacier affects storage cost, and changing Region does not protect against someone deleting the object.",
+          q3: correct ? "Correct. Covering EC2, Fargate and Lambda together, plus the freedom to change instance families, describes a Compute Savings Plan (up to 66%). An EC2 Instance Savings Plan gives a bigger discount but locks you to one instance family in one Region, and Spot risks interruption."
+                      : "Reconsider. Two clues decide it: they use Fargate and Lambda as well as EC2, and they want flexibility. Only the Compute Savings Plan spans all three services and allows family changes. The EC2 Instance Savings Plan discounts more but is tied to one family in one Region; Spot can be interrupted."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

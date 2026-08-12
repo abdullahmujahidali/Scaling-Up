@@ -20,6 +20,7 @@
     { file: '0058-clf-cloud-concepts.html',        num: 'C4', title: 'Cloud Concepts & Well-Architected' },
     { file: '0059-clf-security-services.html',     num: 'C5', title: 'IAM & security services' },
     { file: '0060-clf-core-services.html',         num: 'C6', title: 'The core AWS services' },
+    { file: '0062-clf-remaining-services.html',    num: 'C7', title: 'Everything else (gap-filler)' },
     { ref: 'clf-numbers.html',                     num: '*',  title: 'CLF Numbers & Trigger Words' },
     { kind: 'clfquizzes' },
     { track: 'AIF', label: 'AI Practitioner', header: true, note: 'active' },
