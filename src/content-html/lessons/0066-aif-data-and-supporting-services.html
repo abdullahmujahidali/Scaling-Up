@@ -1,0 +1,193 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I5 · Domains 1–5 · gap-filler</p>
+    <h1 data-ur="Data ki services — AI ke neeche jo cheezein chalti hain">The data services underneath the AI</h1>
+    <p class="subtitle" data-ur="AIF exam sirf AI services nahi poochta. Uski official list mein 49 services hain, aur un mein data, storage aur security ki woh services bhi hain jo model ke <em>neeche</em> chalti hain. Meri pichli lessons mein in mein se 18 bilkul nahi thin. Achhi baat: yeh sab CLF wali services hain — tum inhein pehle se jaante ho. Yahan sirf yeh seekhna hai ke <strong>AI ke context mein</strong> inka kaam kya hai.">The AIF exam does not only ask about AI services. Its official list has 49 services, and many are the data, storage and security services that run <em>underneath</em> a model. Eighteen of them appeared in none of my earlier lessons. The good news: they are all CLF services you already know. The only new thing here is what each one does <strong>in an AI context</strong>.</p>
+    <div class="meta">
+      <span>~13 min</span>
+      <span>One concept: the data pipeline behind a model</span>
+      <span>Win: the other half of the in-scope list</span>
+    </div>
+  </header>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="Pehle I4 se yaad karo: RAG kya karta hai? Fine-tuning aur prompt engineering mein kaunsa sasta hai? Aur hallucination kya hai?">From I4: what does RAG do? Which is cheaper, fine-tuning or prompt engineering? And what is a hallucination?</div>
+    <div class="answer" data-ur="<strong>RAG</strong> = pehle apna data dhoondo, phir usay prompt mein daal do — model ko dobara train kiye baghair. <strong>Prompt engineering sab se sasta hai</strong>, fine-tuning sab se mehnga. <strong>Hallucination</strong> = model ne poore yaqeen se ghalat baat keh di. Aaj: woh services jo is data ko sambhalti hain."><strong>RAG</strong> = find your own data first, then paste it into the prompt — no retraining. <strong>Prompt engineering is cheapest</strong>, fine-tuning most expensive. <strong>Hallucination</strong> = the model states something false with full confidence. Today: the services that hold all that data.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="<strong>Har AI project pehle ek data project hota hai.</strong> Model ko data chahiye: kahin rakha hua (S3), saaf kiya hua (Glue), dhoonda ja sakne wala (OpenSearch), aur mehfooz (KMS). Exam yeh isi tarteeb se poochta hai — is liye in services ko &quot;AI ke sath kya kaam aata hai&quot; ke hisaab se yaad rakho, alag alag naam ki tarah nahi."><strong>Every AI project is a data project first.</strong> A model needs data that is stored (S3), cleaned (Glue), searchable (OpenSearch) and protected (KMS). The exam asks in exactly that order — so remember these services by their <em>role in the AI pipeline</em>, not as separate names.</span>
+  </div>
+
+  <h2 data-ur="1. Data ka safar: rakhna → saaf karna → dhoondna">1. The data journey: store → prepare → find</h2>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Roz ki misaal">Everyday analogy</span>
+    <span data-ur="Restaurant ka kitchen socho. <strong>S3</strong> = store room jahan kachcha maal para hai. <strong>Glue</strong> = woh banda jo sabzi kaat kar, dho kar, tayyar shakal mein rakhta hai. <strong>Glue DataBrew</strong> = wohi kaam magar bina code likhe, sirf click se. <strong>Lake Formation</strong> = store room ka taala aur register: kis ko kis almari tak pohanchne ki ijazat hai. <strong>Athena/Redshift/EMR</strong> = pakane ke alag alag tareeqe. Chef (model) tabhi acha khana banata hai jab maal saaf ho.">Picture a restaurant kitchen. <strong>S3</strong> is the store room holding raw ingredients. <strong>Glue</strong> is the person who chops, washes and prepares them. <strong>Glue DataBrew</strong> does the same job without writing code — point and click. <strong>Lake Formation</strong> is the lock and register on the store room: who may reach which shelf. <strong>Athena, Redshift and EMR</strong> are different ways of cooking. The chef (the model) only cooks well if the ingredients were cleaned.</span>
+  </div>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Service</th><th>Its job in an AI project</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Amazon S3</strong></td><td>Where training data, documents and model outputs live</td><td>&quot;store the training data&quot;, &quot;data lake&quot;</td></tr>
+        <tr><td><strong>AWS Glue</strong></td><td>ETL — extract, transform and load data into a usable shape</td><td>&quot;prepare data&quot;, &quot;ETL&quot;, &quot;data catalog&quot;</td></tr>
+        <tr><td><strong>AWS Glue DataBrew</strong></td><td>Cleaning and normalising data <em>visually, without code</em></td><td>&quot;no code&quot;, &quot;visually clean data&quot;</td></tr>
+        <tr><td><strong>AWS Lake Formation</strong></td><td>Building a governed data lake and controlling who sees what</td><td>&quot;data lake&quot; + &quot;permissions&quot;, &quot;fine-grained access&quot;</td></tr>
+        <tr><td><strong>Amazon EMR</strong></td><td>Big-data processing at scale (Spark, Hadoop)</td><td>&quot;Spark&quot;, &quot;Hadoop&quot;, &quot;petabytes&quot;</td></tr>
+        <tr><td><strong>Amazon Redshift</strong></td><td>The data warehouse — structured analytics over lots of history</td><td>&quot;data warehouse&quot;, &quot;SQL analytics&quot;, &quot;BI&quot;</td></tr>
+        <tr><td><strong>Amazon QuickSight</strong></td><td>Dashboards and charts for people to look at</td><td>&quot;dashboard&quot;, &quot;visualise&quot;, &quot;business intelligence&quot;</td></tr>
+        <tr><td><strong>AWS Data Exchange</strong></td><td>Buying third-party data sets to train or enrich with</td><td>&quot;third-party data&quot;, &quot;subscribe to a data set&quot;</td></tr>
+        <tr><td><strong>Amazon OpenSearch Service</strong></td><td>Search — and it can store <strong>vector embeddings</strong> for RAG</td><td>&quot;vector database&quot;, &quot;semantic search&quot;, &quot;log analytics&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="qual"><span class="callout-label" data-ur="RAG ka asal jorra">The pairing RAG depends on</span> <span data-ur="Yaad hai I4 mein RAG parha tha? Uske liye ek <strong>vector database</strong> chahiye. AIF ki list par woh <strong>Amazon OpenSearch Service</strong> hai (aur Aurora/DocumentDB bhi vectors rakh sakte hain). Sawal aksar yun aata hai: &quot;embeddings kahan rakhein taake semantic search ho sake?&quot; — jawab OpenSearch.">Remember RAG from I4? It needs a <strong>vector database</strong>. On the AIF list that is <strong>Amazon OpenSearch Service</strong> (Aurora and DocumentDB can also hold vectors). The question usually reads: &quot;where should the embeddings be stored for semantic search?&quot; — the answer is OpenSearch.</span></p>
+
+  <h2 data-ur="2. Databases — model ki apni memory">2. Databases — the model's own memory</h2>
+
+  <p data-ur="Yeh sab tum CLF se jaante ho. AIF sirf yeh dekhta hai ke tum <em>sahi</em> database chun sako:">You know these from CLF. AIF only checks that you can pick the <em>right</em> one:</p>
+
+  <ul>
+    <li data-ur="<strong>Amazon DynamoDB</strong> = NoSQL key-value, bohot tez. AI apps mein aksar chat history ya session state rakhne ke liye."><strong>Amazon DynamoDB</strong> = fast NoSQL key-value. In AI apps, commonly used to hold chat history or session state.</li>
+    <li data-ur="<strong>Amazon DocumentDB</strong> = MongoDB jaisa, JSON documents ke liye — aur vectors bhi rakh sakta hai."><strong>Amazon DocumentDB</strong> = MongoDB-compatible, for JSON documents — and it can hold vectors too.</li>
+    <li data-ur="<strong>Amazon ElastiCache</strong> = in-memory cache (Redis/Memcached). Bar bar wale sawal ka jawab cache karke inference ka kharcha bachaya jata hai."><strong>Amazon ElastiCache</strong> = in-memory cache (Redis/Memcached). Caching repeated answers is a standard way to cut inference cost.</li>
+    <li data-ur="<strong>Amazon MemoryDB</strong> = Redis jaisa magar <em>durable</em> — restart par data rehta hai. Yeh bhi vectors rakh sakta hai."><strong>Amazon MemoryDB</strong> = Redis-compatible but <em>durable</em>, so data survives a restart. It can also store vectors.</li>
+    <li data-ur="<strong>Amazon Kendra</strong> = AWS ki <em>intelligent search</em> service. Company ke andar ke documents (PDF, SharePoint, S3) mein se sawal ka jawab dhoondti hai — aur RAG ke liye tayyar-shuda retrieval bhi deti hai. Farq yaad rakho: <strong>OpenSearch</strong> = tum khud vectors sambhalte ho; <strong>Kendra</strong> = AWS yeh sab tumhare liye kar deta hai."><strong>Amazon Kendra</strong> = AWS's <em>intelligent search</em> service. It answers natural-language questions over your internal documents (PDFs, SharePoint, S3), and gives you ready-made retrieval for RAG. Remember the split: <strong>OpenSearch</strong> = you manage the vectors yourself; <strong>Kendra</strong> = AWS does it for you.</li>
+    <li data-ur="<strong>Amazon S3 Glacier</strong> = bohot sasta archive storage. AI ke context mein: purana training data ya audit records jo rakhne to lazmi hain magar roz nahi chahiye. Sawal mein &quot;archive&quot; ya &quot;rarely accessed&quot; = Glacier."><strong>Amazon S3 Glacier</strong> = very cheap archive storage. In an AI context: old training data or audit records you must retain but rarely touch. &quot;Archive&quot; or &quot;rarely accessed&quot; in a question means Glacier.</li>
+    <li data-ur="<strong>Amazon Neptune</strong> = graph database, juray hue data ke liye (kaun kis se juda hai)."><strong>Amazon Neptune</strong> = a graph database for highly connected data (who is linked to whom).</li>
+  </ul>
+
+  <h2 data-ur="3. Compute — model kahan chalta hai">3. Compute — where the model actually runs</h2>
+
+  <p data-ur="<strong>Amazon EC2</strong> (GPU instances par training), <strong>Amazon ECS</strong> aur <strong>Amazon EKS</strong> (containers mein model deploy karna). Exam gehrai nahi poochta — sirf yeh ke tum jaanto ho ke inference ko chalane ke liye compute chahiye, aur SageMaker yeh sab tumhare liye sambhal leta hai.">
+    <strong>Amazon EC2</strong> (training on GPU instances), <strong>Amazon ECS</strong> and <strong>Amazon EKS</strong> (deploying a model inside containers). The exam wants no depth here — only that you know inference needs compute, and that SageMaker manages this for you.</p>
+
+  <p class="qual"><span class="callout-label" data-ur="Kharche wala sawal">The cost question</span> <span data-ur="AIF Domain 3 kharche par sawal poochta hai. <strong>AWS Budgets</strong> = tum limit set karte ho aur alert aata hai. <strong>AWS Cost Explorer</strong> = guzra hua kharcha dekhna aur analyse karna. AI mein yeh ahem hai kyunke <em>inference ka kharcha har call par barhta hai</em> — token jitne zyada, bill utna bara.">AIF Domain 3 asks about cost. <strong>AWS Budgets</strong> = you set a limit and get alerted. <strong>AWS Cost Explorer</strong> = analyse spending that already happened. This matters in AI because <em>inference costs accrue per call</em> — more tokens, bigger bill.</span></p>
+
+  <h2 data-ur="4. Security aur governance (Domain 5 = 14%)">4. Security and governance (Domain 5 = 14%)</h2>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Service</th><th>Its job</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AWS KMS</strong></td><td>Managing the encryption keys that protect training data and model artefacts</td><td>&quot;encryption keys&quot;, &quot;encrypt at rest&quot;</td></tr>
+        <tr><td><strong>AWS Secrets Manager</strong></td><td>Storing and rotating API keys and database credentials</td><td>&quot;API key&quot;, &quot;rotate credentials&quot;</td></tr>
+        <tr><td><strong>Amazon VPC</strong></td><td>Keeping model traffic on a private network, off the internet</td><td>&quot;private&quot;, &quot;no internet&quot;, &quot;network isolation&quot;</td></tr>
+        <tr><td><strong>Amazon Macie</strong></td><td>Finding personal data (PII) in S3 <em>before</em> it is used for training</td><td>&quot;PII&quot;, &quot;sensitive data in S3&quot;</td></tr>
+        <tr><td><strong>Amazon CloudWatch</strong></td><td>Monitoring model performance, latency and invocation metrics</td><td>&quot;monitor&quot;, &quot;metrics&quot;, &quot;logs&quot;</td></tr>
+        <tr><td><strong>Amazon CloudFront</strong></td><td>Delivering an AI application's content close to users</td><td>&quot;low latency for global users&quot;, &quot;CDN&quot;</td></tr>
+        <tr><td><strong>AWS Well-Architected Tool</strong></td><td>Reviewing a workload against AWS best practices, including the ML lens</td><td>&quot;best practice review&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="english"><span class="callout-label" data-ur="Exam ki English">The English of the exam</span> <span data-ur="Domain 5 ka aam sawal: &quot;training data mein personal information hai — pehle kya karein?&quot; Jawab <strong>Macie</strong> (dhoondo), phir <strong>KMS</strong> (encrypt karo). Tarteeb yaad rakho: <em>pehle dhoondo, phir bachao</em>.">A standard Domain 5 question: &quot;the training data may contain personal information — what should be done first?&quot; The answer is <strong>Macie</strong> (find it), then <strong>KMS</strong> (encrypt it). Remember the order: <em>find first, then protect</em>.</span></p>
+
+  <h2 data-ur="5. Transformer — ek lafz jo reh gaya tha">5. Transformer — the one word left out</h2>
+
+  <p data-ur="<strong>Transformer</strong> woh design (architecture) hai jis par aaj ke qreeban tamam bare language models bane hain. Iski khaas baat &quot;attention&quot; hai: model jumle ke har lafz ko dekh kar faisla karta hai ke kaun se lafz ahem hain. Isi liye woh lambe jumle samajh pata hai. Exam se itna hi kaafi hai — GPT ka &quot;T&quot; isi Transformer ka hai.">
+    <strong>Transformer</strong> is the architecture nearly every modern large language model is built on. Its key idea is <em>attention</em>: the model looks at every word in the input and decides which ones matter for the word it is producing. That is why it handles long sentences well. For the exam that is enough — the &quot;T&quot; in GPT stands for Transformer.</p>
+
+  <h2 data-ur="Ab tum karo">Now you try</h2>
+
+  <div class="exam-q" id="q1">
+    <span class="exam-tag">Domain 3</span>
+    <p class="scenario">A company is building a Retrieval Augmented Generation (RAG) application and needs a service that can store vector embeddings and perform semantic similarity search over them. Which service meets this requirement?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Amazon Redshift</button>
+      <button class="opt" data-correct="true">Amazon OpenSearch Service</button>
+      <button class="opt" data-correct="false">Amazon QuickSight</button>
+      <button class="opt" data-correct="false">AWS Glue DataBrew</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q2">
+    <span class="exam-tag">Domain 1</span>
+    <p class="scenario">A data science team must clean and normalise a large raw data set before training, and wants to do this visually without writing code. Which service should the team use?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Amazon EMR</button>
+      <button class="opt" data-correct="true">AWS Glue DataBrew</button>
+      <button class="opt" data-correct="false">Amazon Athena</button>
+      <button class="opt" data-correct="false">AWS Lake Formation</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q3">
+    <span class="exam-tag">Domain 5</span>
+    <p class="scenario">Before using a data set stored in Amazon S3 to train a model, a company must identify whether it contains personally identifiable information (PII). Which service is designed for this?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">AWS Key Management Service (AWS KMS)</button>
+      <button class="opt" data-correct="true">Amazon Macie</button>
+      <button class="opt" data-correct="false">Amazon Inspector</button>
+      <button class="opt" data-correct="false">AWS Secrets Manager</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="exam-q" id="q4">
+    <span class="exam-tag">Domain 2</span>
+    <p class="scenario">Which architecture underpins most modern large language models and uses an attention mechanism to weigh the importance of different parts of the input?</p>
+    <div class="opts">
+      <button class="opt" data-correct="false">Convolutional neural network</button>
+      <button class="opt" data-correct="true">Transformer</button>
+      <button class="opt" data-correct="false">Decision tree ensemble</button>
+      <button class="opt" data-correct="false">Diffusion model</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Aaj ki tumhari win">Your win today</span>
+    <span data-ur="AIF ki official list ki baaqi aadhi services ab tumhare paas hain — aur woh sab CLF wali hain, is liye yeh tumhare liye <strong>dobara mehnat nahi</strong>, sirf nayi tarteeb hai. Yehi wajah hai ke dono exam sath dena faida deta hai: CLF ka Domain 3 seedha AIF ke Domain 5 mein kaam aata hai.">You now hold the other half of the AIF list — and because they are all CLF services, this was <strong>not new work</strong>, only a new arrangement. This is exactly why studying both exams together pays: CLF's Domain 3 feeds AIF's Domain 5 directly.</span>
+  </div>
+
+  <div class="ask-teacher">
+    <span class="callout-label" data-ur="Mujh se poocho">Ask your teacher</span>
+    <span data-ur="Agar &quot;kaunsa database kis liye&quot; wala hissa ulajhta hai to mujhe bolo — main sirf usi par ek chhota drill bana dunga. Yeh AIF aur CLF dono mein kaam aata hai.">If the &quot;which database for what&quot; part feels tangled, tell me — I'll build a short drill on just that. It pays off in both AIF and CLF.</span>
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I5 (the data services underneath the AI).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Previous: <a href="0061-aif-prompt-and-evaluation.html">I4 · Prompting &amp; evaluation</a>. Next: the <a href="../reference/aif-numbers.html">AIF terms &amp; trigger words sheet</a>.</p>
+    <p><strong>Primary source to read:</strong> <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01-domain5.html" target="_blank">AIF-C01 Exam Guide — Domain 5: Security, Compliance and Governance</a>. Short, and it is the domain these services belong to.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li id="s1"><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html" target="_blank">AIF-C01 Exam Guide — Appendix, in-scope AWS services and features</a>. The 49-service list this lesson completes; extracted to <code>scripts/aif-inscope-services.txt</code> and checked by <code>npm run check:aif</code>. Verified 13 Aug 2026.</li>
+      <li id="s2"><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/knn.html" target="_blank">Amazon OpenSearch Service — k-NN and vector search</a>, the vector store used for RAG on the AIF list. Verified 13 Aug 2026.</li>
+      <li id="s3"><a href="https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html" target="_blank">Amazon Macie User Guide</a> — discovering sensitive data such as PII in Amazon S3. Verified 13 Aug 2026.</li>
+    </ol>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.exam-q').forEach(function(quiz){
+    var fb = quiz.querySelector('.feedback');
+    quiz.querySelectorAll('button.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (quiz.classList.contains('answered')) return;
+        quiz.classList.add('answered');
+        var correct = btn.dataset.correct==='true';
+        btn.classList.add(correct?'correct':'wrong');
+        if(!correct) quiz.querySelectorAll('button.opt').forEach(function(b){ if(b.dataset.correct==='true') b.classList.add('correct'); });
+        var msg = {
+          q1: correct ? "Correct. Amazon OpenSearch Service can store vector embeddings and run semantic similarity search, which is what RAG needs to retrieve relevant context. Redshift is a data warehouse for structured SQL analytics. QuickSight builds dashboards. Glue DataBrew prepares and cleans data but does not serve vector search."
+                      : "Reconsider. The requirement is storing vector embeddings and doing semantic similarity search — that is Amazon OpenSearch Service. Redshift is a SQL data warehouse, QuickSight is for dashboards, and Glue DataBrew cleans data. Hook: vector database on the AIF list means OpenSearch.",
+          q2: correct ? "Correct. AWS Glue DataBrew is the visual, no-code tool for cleaning and normalising data, which matches the requirement exactly. Amazon EMR processes big data with Spark or Hadoop and requires code. Athena queries data in S3 using SQL. Lake Formation builds and governs a data lake rather than transforming individual data sets."
+                      : "Reconsider. The deciding words are visually and without writing code — that is AWS Glue DataBrew. EMR needs Spark or Hadoop code, Athena needs SQL, and Lake Formation is about building and permissioning a data lake rather than cleaning data.",
+          q3: correct ? "Correct. Amazon Macie discovers and classifies sensitive data such as PII in Amazon S3, which is the right first step before training. KMS manages the encryption keys that protect data but does not find PII. Inspector scans workloads for software vulnerabilities. Secrets Manager stores and rotates credentials. Remember the order: find first, then protect."
+                      : "Reconsider. The task is identifying whether PII is present in S3, which is Amazon Macie's purpose. KMS would encrypt the data afterwards but cannot discover PII. Inspector looks for software vulnerabilities, and Secrets Manager handles credentials. Hook: find with Macie, then protect with KMS.",
+          q4: correct ? "Correct. The transformer architecture, built around an attention mechanism, underpins nearly all modern large language models — the T in GPT. Convolutional neural networks are used mainly for images. Decision tree ensembles are classical machine learning, not deep learning. Diffusion models generate images by removing noise step by step."
+                      : "Reconsider. The clue is the attention mechanism weighing parts of the input, which defines the transformer architecture behind modern LLMs. CNNs are primarily for image tasks, decision tree ensembles are classical ML, and diffusion models generate images through iterative denoising."
+        }[quiz.id];
+        fb.textContent = msg; fb.classList.add('show', correct?'right':'nope');
+      });
+    });
+  });
+</script>

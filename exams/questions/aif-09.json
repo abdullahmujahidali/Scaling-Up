@@ -1,0 +1,335 @@
+{
+ "meta": {
+  "id": "aif-09",
+  "cert": "aif",
+  "title": "AIF Quiz 9",
+  "minutes": 30,
+  "focus": "lesson I5 — the data, compute and security services underneath the AI",
+  "kind": "20-question revision quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A data science team must clean, normalise, and transform a large raw data set before it is used to train a model, and wants to do this visually without writing code. Which service should the team use?",
+   "options": [
+    "Amazon EMR",
+    "AWS Glue DataBrew",
+    "Amazon Redshift",
+    "AWS Lake Formation"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AWS Glue DataBrew is the visual, no-code service for cleaning and normalising data, which matches the requirement exactly. Amazon EMR processes big data with frameworks such as Spark and Hadoop, which requires code. Redshift is a data warehouse for SQL analytics. Lake Formation builds and governs a data lake rather than transforming individual data sets."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company needs to run extract, transform, and load (ETL) jobs and maintain a central catalog of its data sets before training machine learning models. Which service is designed for this?",
+   "options": [
+    "AWS Glue",
+    "Amazon QuickSight",
+    "Amazon Neptune",
+    "AWS Budgets"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Glue is the managed ETL service and includes the Glue Data Catalog, which is a central metadata repository for data sets. QuickSight is a business intelligence tool for dashboards. Neptune is a graph database for connected data. AWS Budgets tracks and alerts on spending and has nothing to do with data preparation."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company wants to build a governed data lake on Amazon S3 and control which teams can access which tables and columns. Which service provides this?",
+   "options": [
+    "AWS Lake Formation",
+    "AWS Glue DataBrew",
+    "Amazon Redshift",
+    "Amazon S3 Glacier"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Lake Formation builds a data lake and applies fine-grained permissions down to table and column level, which is the governance described. Glue DataBrew cleans data visually. Redshift is a data warehouse rather than a lake governance layer. S3 Glacier is low-cost archive storage."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company must process petabytes of raw log data using Apache Spark before the data is used for model training. Which service is most appropriate?",
+   "options": [
+    "Amazon EMR",
+    "Amazon QuickSight",
+    "Amazon DynamoDB",
+    "AWS Secrets Manager"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon EMR runs big data frameworks such as Apache Spark and Hadoop at petabyte scale, which is precisely the requirement. QuickSight visualises data in dashboards. DynamoDB is a NoSQL key-value database for fast lookups, not batch processing. Secrets Manager stores and rotates credentials."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which architecture underpins most modern large language models and uses an attention mechanism to weigh the importance of different parts of the input?",
+   "options": [
+    "Convolutional neural network",
+    "Transformer",
+    "Decision tree ensemble",
+    "Diffusion model"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "The transformer architecture, built around the attention mechanism, is the basis of nearly all modern large language models; the T in GPT stands for transformer. Convolutional neural networks are used mainly for image tasks. Decision tree ensembles are classical machine learning rather than deep learning. Diffusion models generate images by iteratively removing noise."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company is building a Retrieval Augmented Generation application and needs a service that can store vector embeddings and run semantic similarity search over them. Which service meets this requirement?",
+   "options": [
+    "Amazon Redshift",
+    "Amazon OpenSearch Service",
+    "Amazon QuickSight",
+    "AWS Glue"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Amazon OpenSearch Service can store vector embeddings and perform semantic similarity search, which is the retrieval step in RAG. Redshift is a SQL data warehouse for structured analytics. QuickSight produces dashboards. AWS Glue prepares and catalogs data but does not serve vector queries."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company wants to reduce the cost of its generative AI application by avoiding repeated model invocations for identical, frequently repeated prompts. Which service can store those responses in memory for fast reuse?",
+   "options": [
+    "Amazon ElastiCache",
+    "Amazon S3 Glacier",
+    "AWS Lake Formation",
+    "Amazon Neptune"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon ElastiCache is an in-memory cache, so caching responses to repeated prompts avoids paying for the same inference twice. S3 Glacier is archive storage with retrieval delays, which is unsuitable for a live cache. Lake Formation governs a data lake. Neptune is a graph database. Caching repeated answers is a standard way to cut inference cost."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company needs a Redis-compatible in-memory database that is also durable, so that stored data survives a restart, and that can hold vector data for an AI application. Which service should it choose?",
+   "options": [
+    "Amazon MemoryDB",
+    "Amazon ElastiCache for Memcached",
+    "Amazon DocumentDB",
+    "Amazon Redshift"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon MemoryDB is Redis-compatible, in-memory and durable, so data survives a restart, and it supports vector storage. ElastiCache for Memcached is a cache without the same durability guarantee. DocumentDB is a document database compatible with MongoDB. Redshift is a data warehouse for analytics."
+  },
+  {
+   "id": 9,
+   "domain": 2,
+   "multi": false,
+   "scenario": "An AI chat application must store each user's conversation history so it can be retrieved quickly by user ID at very high request rates. Which database best fits this access pattern?",
+   "options": [
+    "Amazon DynamoDB",
+    "Amazon Redshift",
+    "Amazon EMR",
+    "Amazon QuickSight"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon DynamoDB is a NoSQL key-value database designed for fast lookups by key at high request rates, which matches retrieving a conversation by user ID. Redshift is a data warehouse built for analytical queries over large history rather than single-item lookups. EMR is a big data processing platform. QuickSight is a dashboard tool."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company wants a managed service that can answer natural-language questions using its own internal documents stored in Amazon S3 and SharePoint, without the company building its own retrieval pipeline. Which service should it use?",
+   "options": [
+    "Amazon Kendra",
+    "Amazon Comprehend",
+    "Amazon Polly",
+    "Amazon Textract"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon Kendra is an intelligent search service that indexes internal document repositories and answers natural-language questions, providing managed retrieval suitable for RAG. Comprehend extracts entities and sentiment from text. Polly converts text to speech. Textract extracts text and structure from scanned documents."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company wants to subscribe to third-party data sets, such as market data, to enrich the training data for its models. Which service provides this?",
+   "options": [
+    "AWS Data Exchange",
+    "AWS Glue",
+    "Amazon Redshift",
+    "Amazon Bedrock"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Data Exchange is the marketplace for finding and subscribing to third-party data sets. AWS Glue prepares and catalogs data you already have. Redshift stores and analyses data. Amazon Bedrock provides access to foundation models, not to data sets for training."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company must deploy a containerised inference application and wants a fully managed container orchestration service that does not require it to run Kubernetes. Which service should it choose?",
+   "options": [
+    "Amazon Elastic Container Service (Amazon ECS)",
+    "Amazon Elastic Kubernetes Service (Amazon EKS)",
+    "Amazon EMR",
+    "AWS Lake Formation"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon ECS is AWS's own container orchestration service and does not require Kubernetes expertise. Amazon EKS is the managed Kubernetes option, which the question explicitly excludes. EMR runs big data frameworks. Lake Formation governs data lakes and does not run containers."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company already runs Kubernetes on premises and wants to deploy its machine learning inference workloads on AWS using the same Kubernetes tooling. Which service should it use?",
+   "options": [
+    "Amazon Elastic Kubernetes Service (Amazon EKS)",
+    "Amazon Elastic Container Service (Amazon ECS)",
+    "Amazon EC2 Auto Scaling",
+    "AWS Glue"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon EKS is managed Kubernetes, so existing Kubernetes tooling and manifests carry across. Amazon ECS is AWS's proprietary orchestrator and would require changing tooling. EC2 Auto Scaling adjusts instance counts but is not a container orchestrator. AWS Glue is an ETL service."
+  },
+  {
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company's generative AI application has an unpredictable monthly bill driven by token usage. The team wants to analyse which services drove past spending and also be alerted when spending passes a defined limit. Which combination should it use?",
+   "options": [
+    "AWS Cost Explorer to analyse past spending, and AWS Budgets to alert on a defined limit",
+    "AWS Budgets to analyse past spending, and AWS Pricing Calculator to alert on a limit",
+    "Amazon CloudWatch to analyse past spending, and AWS Artifact to alert on a limit",
+    "AWS Trusted Advisor to analyse past spending, and Amazon Macie to alert on a limit"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Cost Explorer visualises and analyses spending that has already happened, broken down by service, while AWS Budgets alerts you when spending crosses a threshold you define. The other combinations misassign the tools: the Pricing Calculator estimates costs before you build, CloudWatch monitors operational metrics, Artifact provides compliance reports, Trusted Advisor gives best-practice checks, and Macie discovers sensitive data. This matters in AI because inference cost accrues per call.",
+   "id": 14
+  },
+  {
+   "id": 15,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company must archive several years of old training data that is rarely accessed but must be retained for compliance, at the lowest possible storage cost. Which option is most appropriate?",
+   "options": [
+    "Amazon S3 Glacier storage classes",
+    "Amazon S3 Standard",
+    "Amazon ElastiCache",
+    "Amazon MemoryDB"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon S3 Glacier storage classes provide the lowest-cost storage for archival data that is rarely accessed, which matches a compliance retention requirement. S3 Standard costs considerably more and is intended for frequently accessed data. ElastiCache and MemoryDB are in-memory services for fast access, which is the opposite of an archive use case."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Before using a data set stored in Amazon S3 to train a model, a company must identify whether it contains personally identifiable information. Which service is designed for this?",
+   "options": [
+    "Amazon Macie",
+    "AWS Key Management Service (AWS KMS)",
+    "Amazon Inspector",
+    "AWS Secrets Manager"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon Macie discovers and classifies sensitive data such as personally identifiable information in Amazon S3, which is the correct first step before training. KMS manages encryption keys and would protect the data afterwards but cannot discover PII. Inspector scans workloads for software vulnerabilities. Secrets Manager stores credentials. Remember the order: find first, then protect."
+  },
+  {
+   "id": 17,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company wants to review its machine learning workload against AWS best practices, including questions specific to machine learning. Which tool supports this review?",
+   "options": [
+    "AWS Well-Architected Tool",
+    "AWS Trusted Advisor",
+    "Amazon CloudWatch",
+    "AWS Config"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The AWS Well-Architected Tool guides a structured review of a workload against the framework's pillars and offers lenses, including one for machine learning. Trusted Advisor runs automated account-level checks rather than a guided workload review. CloudWatch monitors metrics and logs. AWS Config records and evaluates resource configurations."
+  },
+  {
+   "id": 18,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company wants to monitor the latency and invocation count of its deployed model endpoint and be alerted when latency exceeds a threshold. Which service provides this?",
+   "options": [
+    "Amazon CloudWatch",
+    "AWS CloudTrail",
+    "Amazon Macie",
+    "AWS Artifact"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon CloudWatch collects metrics such as latency and invocation counts and can raise alarms when a threshold is crossed. CloudTrail records who made API calls, which is auditing rather than performance monitoring. Macie discovers sensitive data. AWS Artifact provides compliance reports."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A company must control and audit the encryption keys used to protect its training data and model artifacts stored in Amazon S3. Which service should it use?",
+   "options": [
+    "AWS Key Management Service (AWS KMS)",
+    "AWS Secrets Manager",
+    "Amazon Macie",
+    "Amazon VPC"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS KMS creates and controls encryption keys and integrates with CloudTrail so key usage can be audited. Secrets Manager stores credentials such as API keys and database passwords rather than managing encryption keys. Macie discovers sensitive data. Amazon VPC provides network isolation, not key management."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An application calls a third-party model API and must store the API key securely, with automatic rotation, instead of hardcoding it in the application. Which service should be used?",
+   "options": [
+    "AWS Secrets Manager",
+    "AWS Key Management Service (AWS KMS)",
+    "AWS Artifact",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS Secrets Manager stores secrets such as API keys and database credentials and can rotate them automatically, which removes the need to embed them in code. KMS manages the encryption keys that protect data rather than storing the secrets themselves. AWS Artifact provides compliance documents. Inspector scans for vulnerabilities."
+  }
+ ]
+}

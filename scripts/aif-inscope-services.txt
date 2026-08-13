@@ -1,0 +1,49 @@
+AWS Artifact
+AWS Audit Manager
+AWS Budgets
+AWS CloudTrail
+AWS Config
+AWS Cost Explorer
+AWS Data Exchange
+AWS Glue
+AWS Glue DataBrew
+AWS Identity and Access Management (IAM)
+AWS Key Management Service (AWS KMS)
+AWS Lake Formation
+AWS Secrets Manager
+AWS Trusted Advisor
+AWS Well-Architected Tool
+Amazon Augmented AI (Amazon A2I)
+Amazon Bedrock
+Amazon CloudFront
+Amazon CloudWatch
+Amazon Comprehend
+Amazon DocumentDB (with MongoDB compatibility)
+Amazon DynamoDB
+Amazon EC2
+Amazon EMR
+Amazon ElastiCache
+Amazon Elastic Container Service (Amazon ECS)
+Amazon Elastic Kubernetes Service (Amazon EKS)
+Amazon Fraud Detector
+Amazon Inspector
+Amazon Kendra
+Amazon Lex
+Amazon Macie
+Amazon MemoryDB
+Amazon Neptune
+Amazon OpenSearch Service
+Amazon Personalize
+Amazon Polly
+Amazon Q
+Amazon QuickSight
+Amazon RDS
+Amazon Redshift
+Amazon Rekognition
+Amazon S3
+Amazon S3 Glacier
+Amazon SageMaker
+Amazon Textract
+Amazon Transcribe
+Amazon Translate
+Amazon VPC

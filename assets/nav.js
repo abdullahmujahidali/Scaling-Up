@@ -32,6 +32,7 @@
     { file: '0056-aif-aws-ai-services.html',  num: 'I2', title: 'Which AWS AI service?' },
     { file: '0057-aif-responsible-ai.html',   num: 'I3', title: 'Responsible AI & governance' },
     { file: '0061-aif-prompt-and-evaluation.html', num: 'I4', title: 'Prompting & evaluation' },
+    { file: '0066-aif-data-and-supporting-services.html', num: 'I5', title: 'The data services underneath' },
     { ref: 'aif-numbers.html',                num: '*',  title: 'AIF Terms & Trigger Words' },
     { kind: 'aifquizzes' },
     { track: 'AWS', label: 'Developer Associate', header: true, collapsed: true, note: 'later' },
@@ -199,7 +200,7 @@
     if (it.kind === 'aifquizzes') {
       var acur2 = (here === 'aif-quizzes.html' || /\/exams\/aif-/.test(location.pathname)) ? ' cnav-current' : '';
       return '<a class="cnav-ref' + acur2 + '" href="' + toRoot + 'aif-quizzes.html" ' +
-             'style="margin-top:0;border-top:none;padding-top:0.42rem;">8 quizzes + full mock</a>';
+             'style="margin-top:0;border-top:none;padding-top:0.42rem;">9 quizzes + full mock</a>';
     }
     if (it.kind === 'subhead') {
       return '<div class="cnav-subhead">' + it.label + '</div>';

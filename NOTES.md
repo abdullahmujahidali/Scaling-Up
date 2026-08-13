@@ -22,17 +22,18 @@ lifecycle) as sequences, not lists.
 AIF Domain 5 (14% of AIF is CLF content); the dependency does not run the other
 way.
 
-**Coverage: 100%, taught AND drilled — run `npm run check:clf`.** The old claim
-here ("112 services, verified by script") was wrong: the list has **127**
-services, no script existed, and 18 were missing. Audited and fixed 2026-08-12;
-lessons **C8, C9, C10** and quiz banks **clf-08/09/10** closed every gap. The
-checker (`scripts/check-clf-coverage.cjs`) reports 127/127 services, 22/22
-concepts, and 22/22 concepts actually **quizzed** — that last section is the one
-that caught the 7 Rs being taught but never asked, and SCPs being asked but never
-taught. **Re-run it after touching any CLF lesson or bank.** CLF now has
-**10 quizzes + 1 mock = 265 questions**. See
+**Coverage: 100% on BOTH certs, taught AND drilled — `npm run check:clf` and
+`npm run check:aif`.** The old claim here ("112 services, verified by script")
+was wrong: the list has **127**, no script existed, and 18 were missing. Audited
+2026-08-12/13. CLF gaps closed by lessons **C8/C9/C10** + banks **clf-08/09/10**;
+AIF was worse (**25/49 services taught**) and closed by lesson **I5** + bank
+**aif-09**. The checker reports CLF 127/127 services · 22/22 concepts · 22/22
+drilled, and AIF 49/49 · 39/39 · 39/39. The RETRIEVAL section is the one that
+catches "taught but never asked" — it found the 7 Rs (CLF) and Transformer,
+Kendra, Glacier (AIF). **Re-run both after touching any lesson or bank.**
+Totals: CLF 10 quizzes + mock = 265 q; AIF 9 quizzes + mock = 245 q. See
 [record 0011](./learning-records/0011-coverage-audit-against-maarek-deck.md).
-CLF C1–C10 covers all 4 domains, AIF I1–I4 covers all 5,
+CLF C1–C10 covers all 4 domains, AIF I1–I5 covers all 5,
 
 **Rule: never assert coverage without a committed script that reproduces it.**
 The "112 services, verified by script" line was asserted, propagated into

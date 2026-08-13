@@ -181,14 +181,51 @@ caught and the review names the miss. Explanations render under "Why:".
 **All three test attempts were cleared from localStorage afterwards** so his own
 score history stays clean.
 
+## Update 3: AIF audited the same way, and it had real gaps
+
+Leaving AIF as a "next step" was the same mistake in a new place, so it was
+audited immediately. The checker is now cert-aware — `npm run check:clf` and
+**`npm run check:aif`** — reading `scripts/{clf,aif}-inscope-services.txt`,
+both extracted verbatim from the official guides.
+
+**The AIF track was substantially less complete than CLF:**
+
+```
+before:  49 services -> 25 taught (51%), 18 ABSENT, 6 tested-but-untaught
+after :  49 services -> 49 taught (100%), 0 absent, 0 quiz-only
+         39 concepts -> 39 taught, 39 drilled
+```
+
+The 18 missing services were **not AI services** — they were the data, storage
+and security layer the exam expects underneath a model: Glue, Glue DataBrew,
+Lake Formation, EMR, Redshift, QuickSight, DynamoDB, DocumentDB, ElastiCache,
+MemoryDB, ECS, KMS, Secrets Manager, VPC, Budgets, Cost Explorer, Data Exchange,
+Well-Architected Tool. Easy to miss precisely because they don't look like AI.
+
+**Lesson I5** (`0066-aif-data-and-supporting-services.html`) teaches them as a
+pipeline — store → prepare → find → secure — rather than as a name list, and
+leans on the fact that every one is already known from CLF. That framing is the
+concrete payoff of the parallel-study plan: CLF Domain 3 *is* AIF Domain 5.
+
+Also caught: **Transformer** was tested but never taught, and **Kendra** and
+**S3 Glacier** likewise. All three now in I5.
+
+**Quiz bank `aif-09`** (20 questions, domains 4/5/6/3/2) drills the new
+material; 19 of the 31 tracked AIF service topics had never been asked about.
+AIF totals: **9 quizzes + 1 mock = 245 questions**.
+
+Verified in-browser: answered fully correct → **1000/1000, 20 of 20**, proving
+every key, with all five domain rows scoring. Test attempt cleared afterwards.
+
 ## Next
 
-Nothing outstanding on CLF coverage — services, concepts and retrieval all check
-clean, and `npm run check:clf` reproduces it.
+Both certifications now check clean on services, concepts and retrieval, and
+both results are reproducible (`npm run check:clf`, `npm run check:aif`).
 
-The remaining work is **evidence-driven, not gap-driven**: when he takes these
-quizzes and the mock, weak domains should drive the next questions. Do not
-pre-write more banks speculatively — record 0010's closing note still holds.
+Remaining work is **evidence-driven, not gap-driven**: his quiz and mock scores
+should decide what gets written next. Do not pre-write more banks speculatively —
+record 0010's closing note still holds.
 
-**AIF has not been audited this way.** The same script pattern should be run
-against `aif-*` banks and the AIF in-scope list before he books that exam.
+Still open from 0010, and none of it is content work: **neither exam is booked**,
+**ESL +30 minutes must be requested before booking**, and **whether the company
+pays the fees is still unasked**.
