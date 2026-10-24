@@ -28,6 +28,7 @@
     { kind: 'clfquizzes' },
     { track: 'AIF', label: 'AI Practitioner', header: true, note: 'active' },
     { kind: 'aifhub' },
+    { ref: 'aif-quick-review.html',           num: '★',  title: 'AIF Quick Review (start here)' },
     { file: '0055-aif-vocabulary.html',       num: 'I1', title: 'The language of AI' },
     { file: '0056-aif-aws-ai-services.html',  num: 'I2', title: 'Which AWS AI service?' },
     { file: '0057-aif-responsible-ai.html',   num: 'I3', title: 'Responsible AI & governance' },
