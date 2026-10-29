@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of the following BEST describes the AWS shared responsibility model?",
   "options": [
-   "AWS is responsible for security OF the cloud; the customer is responsible for security IN the cloud",
-   "AWS is responsible for all security",
+   "Responsibility is split evenly on every service",
    "The customer is responsible for all security",
-   "Responsibility is split evenly on every service"
+   "AWS is responsible for all security",
+   "AWS is responsible for security OF the cloud; the customer is responsible for security IN the cloud"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "AWS secures the infrastructure — hardware, software, networking and facilities — while customers secure what they put in it: their data, access control, and configuration. The split shifts by service but never becomes an even divide."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service would you use to investigate the root cause of a security finding by analysing related events?",
   "options": [
-   "Amazon Detective",
+   "AWS Artifact",
    "Amazon GuardDuty",
-   "AWS Shield",
-   "AWS Artifact"
+   "Amazon Detective",
+   "AWS Shield"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Detective analyses and visualises related events to determine the root cause of a finding. GuardDuty raises the finding in the first place; Detective is the follow-up investigation tool."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company needs a graph database to model highly connected data such as social relationships. Which service?",
   "options": [
+   "Amazon Redshift",
    "Amazon Neptune",
-   "Amazon DynamoDB",
    "Amazon Aurora",
-   "Amazon Redshift"
+   "Amazon DynamoDB"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Neptune is AWS's managed graph database, built for highly connected data and relationship queries. DynamoDB is key-value NoSQL, Aurora is relational, and Redshift is a data warehouse."
  },
@@ -129,9 +129,9 @@ var QUESTIONS = [
   "scenario": "Which service processes real-time streaming data such as clickstreams or IoT telemetry?",
   "options": [
    "Amazon Kinesis",
-   "AWS Glue",
    "Amazon Athena",
-   "Amazon QuickSight"
+   "Amazon QuickSight",
+   "AWS Glue"
   ],
   "correct": [
    0
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these is a benefit of using AWS global infrastructure for a worldwide user base?",
   "options": [
-   "Deploying close to users to reduce latency",
-   "Eliminating the need for security controls",
    "Removing all data transfer charges",
-   "Guaranteeing zero downtime"
+   "Deploying close to users to reduce latency",
+   "Guaranteeing zero downtime",
+   "Eliminating the need for security controls"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Deploying into Regions and edge locations near users reduces latency. The other options are absolutes: security remains a customer responsibility, transfer out is charged, and no provider guarantees zero downtime."
  },
@@ -160,15 +160,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "A startup wants to avoid large upfront hardware purchases while its user numbers are unpredictable. Which TWO cloud benefits apply MOST directly?",
   "options": [
-   "Trade capital expense for variable expense",
-   "Stop guessing capacity",
    "Data sovereignty compliance",
-   "Dedicated physical hardware",
-   "Fixed annual pricing"
+   "Stop guessing capacity",
+   "Fixed annual pricing",
+   "Trade capital expense for variable expense",
+   "Dedicated physical hardware"
   ],
   "correct": [
-   0,
-   1
+   1,
+   3
   ],
   "explain": "Avoiding upfront hardware is trading capital expense for variable expense, and unpredictable user numbers is precisely the 'stop guessing capacity' benefit. Data sovereignty is a legal concern, and dedicated hardware and fixed pricing run counter to what the startup wants."
  },
@@ -178,13 +178,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS Support plan is appropriate for a development and test environment requiring business-hours email support only?",
   "options": [
-   "Basic",
-   "Developer",
+   "Enterprise",
    "Business",
-   "Enterprise"
+   "Developer",
+   "Basic"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Developer Support provides business-hours email access to a single contact, intended for development and test environments. Basic offers no technical support, and Business and Enterprise are for production workloads."
  },
@@ -195,9 +195,9 @@ var QUESTIONS = [
   "scenario": "Which AWS service provides recommendations to reduce cost, improve performance, and increase security and fault tolerance?",
   "options": [
    "AWS Trusted Advisor",
-   "AWS Cost Explorer",
    "AWS Config",
-   "AWS Artifact"
+   "AWS Artifact",
+   "AWS Cost Explorer"
   ],
   "correct": [
    0
@@ -211,9 +211,9 @@ var QUESTIONS = [
   "scenario": "Which service allows an organisation to centrally create and manage multiple AWS accounts with consolidated billing?",
   "options": [
    "AWS Organizations",
+   "AWS Systems Manager",
    "AWS IAM Identity Center",
-   "AWS Control Tower",
-   "AWS Systems Manager"
+   "AWS Control Tower"
   ],
   "correct": [
    0
@@ -226,13 +226,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service connects an on-premises data centre to AWS over an encrypted tunnel across the public internet?",
   "options": [
-   "AWS Site-to-Site VPN",
    "AWS Direct Connect",
+   "AWS Site-to-Site VPN",
    "AWS Transit Gateway",
    "Amazon CloudFront"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Site-to-Site VPN creates an encrypted tunnel over the public internet — quick and inexpensive but with variable performance. Direct Connect is the dedicated private line alternative."
  },
@@ -242,13 +242,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which action helps protect against accidental deletion of objects in an Amazon S3 bucket?",
   "options": [
-   "Enable S3 Versioning",
    "Enable S3 Transfer Acceleration",
-   "Use S3 Intelligent-Tiering",
-   "Disable encryption"
+   "Enable S3 Versioning",
+   "Disable encryption",
+   "Use S3 Intelligent-Tiering"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Versioning retains previous versions so a deleted or overwritten object can be recovered. Transfer Acceleration affects upload speed and Intelligent-Tiering affects cost, neither protecting against deletion."
  },
@@ -258,13 +258,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides dedicated hardware security modules for regulatory compliance requiring exclusive key control?",
   "options": [
-   "AWS CloudHSM",
-   "AWS KMS",
    "AWS Certificate Manager",
-   "AWS Secrets Manager"
+   "AWS KMS",
+   "AWS Secrets Manager",
+   "AWS CloudHSM"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "CloudHSM provides single-tenant hardware security modules where you retain exclusive control of keys, required by certain regulations. KMS is the shared managed alternative that suits most use cases."
  },
@@ -274,13 +274,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about Availability Zones is correct?",
   "options": [
-   "They are physically separate locations within a Region with independent power and networking",
    "They are the same as edge locations",
    "Each Region contains exactly one",
+   "They are physically separate locations within a Region with independent power and networking",
    "They exist only in the United States"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Availability Zones are physically separate facilities within a Region with independent power, cooling and networking, so they do not share single points of failure. Edge locations are CloudFront caches, a different concept."
  },
@@ -290,13 +290,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service delivers intelligent enterprise search across an organisation's internal documents?",
   "options": [
-   "Amazon Kendra",
-   "Amazon Athena",
    "Amazon OpenSearch Service",
-   "Amazon Comprehend"
+   "Amazon Kendra",
+   "Amazon Comprehend",
+   "Amazon Athena"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Kendra provides intelligent, natural-language enterprise search across internal content. OpenSearch is a general search and log analytics engine, Athena queries structured data in S3, and Comprehend analyses text."
  },
@@ -306,13 +306,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An organisation wants to prevent a single account from exceeding a spending limit and be notified before it does. Which combination is appropriate?",
   "options": [
-   "AWS Budgets with notifications",
+   "AWS Trusted Advisor checks alone",
    "AWS Cost Explorer with forecasting only",
    "AWS Artifact reports",
-   "AWS Trusted Advisor checks alone"
+   "AWS Budgets with notifications"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Budgets sets thresholds and sends notifications as spending approaches or exceeds them. Cost Explorer analyses and forecasts but does not alert, and Artifact provides compliance documents."
  },
@@ -323,8 +323,8 @@ var QUESTIONS = [
   "scenario": "Which service should be used to build and deploy a continuous integration and delivery pipeline on AWS?",
   "options": [
    "AWS CodePipeline",
-   "AWS CloudFormation",
    "AWS Systems Manager",
+   "AWS CloudFormation",
    "Amazon EventBridge"
   ],
   "correct": [
@@ -338,8 +338,8 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO practices improve the security of an AWS account?",
   "options": [
-   "Enabling MFA on the root user",
    "Applying the principle of least privilege",
+   "Enabling MFA on the root user",
    "Sharing IAM user credentials across the team",
    "Using the root user for daily administration",
    "Making S3 buckets public by default"
@@ -357,8 +357,8 @@ var QUESTIONS = [
   "scenario": "Which describes the relationship between Regions, Availability Zones and edge locations?",
   "options": [
    "A Region contains multiple Availability Zones; edge locations are separate caching sites, typically far more numerous",
-   "Edge locations contain Availability Zones",
    "Availability Zones contain Regions",
+   "Edge locations contain Availability Zones",
    "All three terms mean the same thing"
   ],
   "correct": [
@@ -372,13 +372,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides a managed Kubernetes-compatible container registry for storing container images?",
   "options": [
-   "Amazon ECR",
-   "Amazon ECS",
    "Amazon EKS",
+   "Amazon ECS",
+   "Amazon ECR",
    "AWS Fargate"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "ECR stores and manages container images. ECS and EKS orchestrate running containers, and Fargate provides the serverless compute for them to run on."
  },
@@ -388,13 +388,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which pricing characteristic applies to AWS Lambda?",
   "options": [
-   "You pay per request and for compute duration, with no charge when idle",
-   "You pay a fixed monthly fee",
+   "You pay only for storage",
    "You must purchase Reserved capacity",
-   "You pay only for storage"
+   "You pay a fixed monthly fee",
+   "You pay per request and for compute duration, with no charge when idle"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Lambda charges per request and for the duration code actually runs, with nothing charged while idle. This pay-per-execution model is why it suits infrequent, event-driven workloads."
  }

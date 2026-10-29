@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides access to foundation models through an API without managing infrastructure?",
   "options": [
+   "Amazon EC2",
    "Amazon Bedrock",
    "Amazon SageMaker AI",
-   "Amazon EC2",
    "Amazon Comprehend"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Bedrock provides serverless API access to foundation models from multiple providers. SageMaker AI is for building and training your own models, which requires far more expertise and management."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A startup with no data scientists wants to build an application using an existing foundation model and manage no infrastructure. Which service?",
   "options": [
-   "Amazon Bedrock",
    "Train a custom model on Amazon SageMaker",
    "Self-host a model on Amazon EC2",
-   "Amazon Lex"
+   "Amazon Lex",
+   "Amazon Bedrock"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "No data scientists, no infrastructure, and using an existing foundation model all describe Bedrock. SageMaker and EC2 self-hosting require exactly the expertise they lack, and Lex builds intent-based chatbots rather than general content generation."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service extracts text and data from scanned documents and forms?",
   "options": [
-   "Amazon Textract",
    "Amazon Comprehend",
    "Amazon Rekognition",
+   "Amazon Textract",
    "Amazon Transcribe"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Textract extracts text, forms and tables from scanned documents — 'text' plus 'extract'. Comprehend analyses meaning in text that already exists, and Rekognition analyses images and video."
  },
@@ -129,12 +129,12 @@ var QUESTIONS = [
   "scenario": "Which service converts recorded speech into written text?",
   "options": [
    "Amazon Polly",
-   "Amazon Transcribe",
+   "Amazon Lex",
    "Amazon Translate",
-   "Amazon Lex"
+   "Amazon Transcribe"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "Transcribe converts speech to text; Polly does the reverse, generating speech from text. Remember Polly as the parrot that speaks."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS feature implements Retrieval Augmented Generation without building the retrieval pipeline yourself?",
   "options": [
+   "Amazon SageMaker Clarify",
    "Amazon Bedrock Knowledge Bases",
    "Amazon Bedrock Guardrails",
-   "Amazon SageMaker Clarify",
    "Amazon Bedrock Prompt Management"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Knowledge Bases is AWS's managed RAG implementation, handling chunking, embedding and retrieval. Guardrails handles safety, Clarify handles bias, and Prompt Management stores and versions prompts."
  },
@@ -160,13 +160,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which storage option is commonly used to hold embeddings for a RAG application on AWS?",
   "options": [
-   "Amazon OpenSearch Service",
    "Amazon S3 Glacier",
+   "Amazon Polly",
    "AWS CloudTrail",
-   "Amazon Polly"
+   "Amazon OpenSearch Service"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "OpenSearch Service is a vector store for embeddings, as are Aurora, Neptune and RDS for PostgreSQL. Glacier is archival storage, CloudTrail is auditing, and Polly generates speech."
  },
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which term describes a model that performs excellently on training data but poorly on new, unseen data?",
   "options": [
+   "Hallucination",
    "Underfitting",
    "Overfitting",
-   "Hallucination",
    "Drift"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Overfitting means the model memorised the training data rather than learning generalisable patterns. Underfitting means it learned too little and performs poorly everywhere."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides documentation about a model's intended use, training data and limitations?",
   "options": [
+   "Amazon Bedrock Guardrails",
    "Amazon SageMaker Model Cards",
    "Amazon SageMaker Clarify",
-   "Amazon Bedrock Guardrails",
    "Amazon A2I"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Model Cards document a model's purpose, data and limitations, supporting transparency. Clarify explains why decisions were made (explainability) — a related but distinct concept."
  },
@@ -209,8 +209,8 @@ var QUESTIONS = [
   "scenario": "Which service discovers personally identifiable information stored in Amazon S3?",
   "options": [
    "Amazon Macie",
-   "Amazon GuardDuty",
    "Amazon Inspector",
+   "Amazon GuardDuty",
    "AWS Artifact"
   ],
   "correct": [
@@ -224,13 +224,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service records who called which API and when, providing an audit trail for AI workloads?",
   "options": [
-   "AWS CloudTrail",
    "Amazon CloudWatch",
-   "AWS Config",
-   "AWS Artifact"
+   "AWS CloudTrail",
+   "AWS Artifact",
+   "AWS Config"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CloudTrail is the audit trail of API activity, answering 'who did what'. CloudWatch monitors performance metrics, and Config tracks resource configuration state."
  },
@@ -241,9 +241,9 @@ var QUESTIONS = [
   "scenario": "What is a token in the context of large language models?",
   "options": [
    "A small piece of text, roughly three-quarters of a word",
-   "A security credential",
+   "A unit of GPU memory",
    "A type of neural network",
-   "A unit of GPU memory"
+   "A security credential"
   ],
   "correct": [
    0
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these is a widely cited DISADVANTAGE of generative AI?",
   "options": [
-   "It can produce confident but factually incorrect output",
+   "It always produces identical output",
    "It cannot process text",
-   "It requires no data",
-   "It always produces identical output"
+   "It can produce confident but factually incorrect output",
+   "It requires no data"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Hallucination — confident but false output — is generative AI's best-known weakness, alongside limited interpretability and nondeterminism. The other options are simply untrue of GenAI."
  },
@@ -272,13 +272,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which prompting technique provides several worked examples inside the prompt to guide the model?",
   "options": [
-   "Zero-shot prompting",
-   "Few-shot prompting",
    "Chain-of-thought prompting",
-   "Negative prompting"
+   "Zero-shot prompting",
+   "Negative prompting",
+   "Few-shot prompting"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "Few-shot prompting includes several examples, improving consistency and format adherence. Zero-shot provides none, one-shot provides exactly one, and chain-of-thought asks for step-by-step reasoning."
  },
@@ -288,13 +288,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to reduce inference cost while keeping most of a large model's quality. Which technique applies?",
   "options": [
+   "Expanding the context window",
    "Model distillation",
    "Increasing temperature",
-   "Expanding the context window",
    "Adding more few-shot examples"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Distillation produces a smaller, cheaper model that approximates a larger one's behaviour, directly reducing inference cost. More examples and a bigger context window increase token usage and therefore cost."
  },
@@ -305,9 +305,9 @@ var QUESTIONS = [
   "scenario": "Which of these is an appropriate use case for traditional machine learning rather than generative AI?",
   "options": [
    "Predicting next month's product demand from historical sales",
-   "Writing a marketing email",
    "Generating a product image",
-   "Summarising a long document"
+   "Summarising a long document",
+   "Writing a marketing email"
   ],
   "correct": [
    0
@@ -321,8 +321,8 @@ var QUESTIONS = [
   "scenario": "Which service inserts human review into an AI workflow for low-confidence or high-risk predictions?",
   "options": [
    "Amazon Augmented AI (A2I)",
-   "Amazon SageMaker Clarify",
    "Amazon Bedrock Guardrails",
+   "Amazon SageMaker Clarify",
    "Amazon Comprehend"
   ],
   "correct": [
@@ -336,15 +336,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO AWS services help demonstrate regulatory compliance for AI workloads?",
   "options": [
+   "Amazon Polly",
    "AWS Artifact",
    "AWS Audit Manager",
-   "Amazon Polly",
-   "Amazon Rekognition",
-   "Amazon Lex"
+   "Amazon Lex",
+   "Amazon Rekognition"
   ],
   "correct": [
-   0,
-   1
+   1,
+   2
   ],
   "explain": "Artifact supplies AWS's compliance reports and Audit Manager collects evidence for your own audits. Polly, Rekognition and Lex are AI capabilities with no compliance-reporting function."
  },
@@ -355,9 +355,9 @@ var QUESTIONS = [
   "scenario": "Which factor should be considered when selecting a foundation model for a latency-sensitive application?",
   "options": [
    "Model size and inference speed",
-   "The colour of the console interface",
+   "The account's support plan",
    "The number of AWS Regions in total",
-   "The account's support plan"
+   "The colour of the console interface"
   ],
   "correct": [
    0
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does 'multi-modal' mean when describing a foundation model?",
   "options": [
-   "It can process more than one type of data, such as text and images",
    "It runs in multiple AWS Regions",
    "It supports multiple users at once",
+   "It can process more than one type of data, such as text and images",
    "It has multiple pricing tiers"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Multi-modal means handling several data types — commonly text plus images. Modality refers to the kind of data, not deployment or pricing."
  },
@@ -386,13 +386,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which metric measures, of all the genuinely positive cases, how many the model correctly identified?",
   "options": [
-   "Precision",
-   "Recall",
+   "F1 score",
    "Accuracy",
-   "F1 score"
+   "Recall",
+   "Precision"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Recall measures how many true positives were caught, so it matters when missing a case is costly — disease screening or fraud detection. Precision measures how many flagged cases were genuine."
  }

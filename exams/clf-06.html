@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides machine learning capabilities for building, training and deploying custom models?",
   "options": [
-   "Amazon SageMaker AI",
    "Amazon Rekognition",
-   "Amazon Polly",
-   "Amazon Comprehend"
+   "Amazon SageMaker AI",
+   "Amazon Comprehend",
+   "Amazon Polly"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "SageMaker AI is the platform for building, training and deploying your own models. Rekognition, Polly and Comprehend are pre-trained services for images, speech synthesis and text analysis respectively."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service converts text into lifelike speech?",
   "options": [
-   "Amazon Transcribe",
    "Amazon Polly",
+   "Amazon Transcribe",
    "Amazon Translate",
    "Amazon Comprehend"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Polly turns text into speech; Transcribe does the reverse, turning speech into text. Translate converts between languages and Comprehend analyses meaning in text."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service analyses text to determine sentiment and extract entities?",
   "options": [
-   "Amazon Comprehend",
    "Amazon Textract",
-   "Amazon Kendra",
-   "Amazon Lex"
+   "Amazon Comprehend",
+   "Amazon Lex",
+   "Amazon Kendra"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Comprehend performs natural language processing including sentiment analysis, entity extraction and PII detection. Textract extracts text from scanned documents, and Kendra provides intelligent search."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company is building a mobile app and needs to let its CUSTOMERS sign up and sign in, including with their Google accounts. Which service is designed for this?",
   "options": [
-   "Amazon Cognito",
    "AWS IAM users and groups",
-   "AWS Directory Service",
-   "AWS Secrets Manager"
+   "AWS Secrets Manager",
+   "Amazon Cognito",
+   "AWS Directory Service"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Cognito handles identity for the end users of your own application — sign-up, sign-in and social logins. The distinction the exam tests is IAM versus Cognito: IAM is for your team working inside AWS, Cognito is for your customers using your app. Directory Service connects an existing corporate Active Directory, and Secrets Manager stores credentials, not user accounts."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application running on-premises needs temporary AWS credentials. What is the recommended approach?",
   "options": [
-   "Use an IAM role with federation or AWS STS",
-   "Embed root access keys in the application",
    "Create a permanent IAM user and share the keys",
-   "Make the resources publicly accessible"
+   "Embed root access keys in the application",
+   "Make the resources publicly accessible",
+   "Use an IAM role with federation or AWS STS"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Temporary credentials via roles and STS avoid long-lived secrets that can leak. Root keys should not exist, shared permanent keys violate least privilege, and public access exposes data to everyone."
  },
@@ -160,10 +160,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these is NOT one of the six pillars of the AWS Well-Architected Framework?",
   "options": [
-   "Operational Excellence",
-   "Scalability",
    "Reliability",
-   "Sustainability"
+   "Scalability",
+   "Sustainability",
+   "Operational Excellence"
   ],
   "correct": [
    1
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to reduce the time taken to provision new environments from weeks to minutes. Which cloud benefit is this?",
   "options": [
-   "Increased speed and agility",
+   "Fault tolerance",
    "Data sovereignty",
-   "Consolidated billing",
-   "Fault tolerance"
+   "Increased speed and agility",
+   "Consolidated billing"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Provisioning in minutes rather than weeks is the speed and agility benefit. Data sovereignty concerns jurisdiction, consolidated billing concerns account structure, and fault tolerance concerns surviving failure."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about the AWS Free Tier is correct?",
   "options": [
+   "It requires an Enterprise Support plan",
    "It offers limited free usage of certain services, after which standard charges apply",
    "All AWS services are free indefinitely",
-   "It requires an Enterprise Support plan",
    "It applies only to Amazon S3"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "The Free Tier provides limited free usage of selected services, with normal charges once limits are exceeded. It is not unlimited, not restricted to one service, and requires no support plan."
  },
@@ -208,13 +208,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which feature of AWS Organizations allows costs to be tracked per department or project?",
   "options": [
-   "Cost allocation tags",
+   "Security groups",
    "Service control policies",
    "IAM roles",
-   "Security groups"
+   "Cost allocation tags"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Cost allocation tags label resources so billing reports can attribute spend to a team or project. They must be activated before appearing in billing reports. SCPs control permissions, not cost visibility."
  },
@@ -225,9 +225,9 @@ var QUESTIONS = [
   "scenario": "Which compute option is best suited to a workload requiring a dedicated physical server for software licensing compliance?",
   "options": [
    "Dedicated Hosts",
-   "Spot Instances",
+   "Amazon Lightsail",
    "AWS Lambda",
-   "Amazon Lightsail"
+   "Spot Instances"
   ],
   "correct": [
    0
@@ -240,13 +240,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which storage option offers the fastest performance but loses all data when the instance stops?",
   "options": [
-   "Instance store",
    "Amazon EBS",
-   "Amazon EFS",
-   "Amazon S3"
+   "Instance store",
+   "Amazon S3",
+   "Amazon EFS"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Instance store is physically attached local disk — very fast but ephemeral, losing data when the instance stops. EBS, EFS and S3 all persist data independently of the instance lifecycle."
  },
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used to centrally manage firewall rules across many AWS accounts?",
   "options": [
-   "AWS Firewall Manager",
-   "AWS WAF",
    "Amazon GuardDuty",
-   "AWS Config"
+   "AWS Config",
+   "AWS WAF",
+   "AWS Firewall Manager"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Firewall Manager applies and enforces firewall rules across accounts in an organisation. WAF protects an individual application, and GuardDuty detects threats rather than enforcing rules."
  },
@@ -272,13 +272,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the FIRST thing a company should do after creating a new AWS account?",
   "options": [
-   "Enable MFA on the root user and create IAM users for daily work",
-   "Delete the default VPC",
    "Purchase Reserved Instances",
-   "Enable AWS Shield Advanced"
+   "Delete the default VPC",
+   "Enable AWS Shield Advanced",
+   "Enable MFA on the root user and create IAM users for daily work"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Securing the root user with MFA and moving daily work to IAM identities is AWS's first recommended step. Purchasing commitments and advanced protections come later, once usage is understood."
  },
@@ -288,13 +288,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which term describes the practice of running workloads in both an on-premises data centre and AWS?",
   "options": [
-   "Hybrid cloud",
+   "Edge computing",
    "Multi-tenancy",
-   "Serverless",
-   "Edge computing"
+   "Hybrid cloud",
+   "Serverless"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "A hybrid deployment spans your own data centre and the cloud, often connected via Direct Connect or VPN. Services such as AWS Outposts and Storage Gateway specifically support this model."
  },
@@ -306,8 +306,8 @@ var QUESTIONS = [
   "options": [
    "AWS Cost Explorer",
    "AWS Budgets",
-   "AWS Pricing Calculator",
-   "AWS Artifact"
+   "AWS Artifact",
+   "AWS Pricing Calculator"
   ],
   "correct": [
    0
@@ -320,15 +320,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO of the following are serverless AWS services?",
   "options": [
-   "AWS Lambda",
    "AWS Fargate",
-   "Amazon EC2",
    "Amazon Lightsail",
-   "Amazon EMR"
+   "Amazon EMR",
+   "AWS Lambda",
+   "Amazon EC2"
   ],
   "correct": [
    0,
-   1
+   3
   ],
   "explain": "Lambda runs code and Fargate runs containers, both without servers to provision or manage. EC2 and Lightsail are virtual servers you manage, and EMR runs on a managed cluster of instances."
  },
@@ -338,13 +338,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS resource provides on-demand access to AWS compliance reports such as SOC 2 and PCI DSS?",
   "options": [
-   "AWS Artifact",
-   "AWS Audit Manager",
    "AWS Config",
+   "AWS Audit Manager",
+   "AWS Artifact",
    "AWS Trusted Advisor"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Artifact is the self-service portal for downloading AWS's compliance reports. Audit Manager helps you prepare your own audits by collecting evidence, which is a related but distinct purpose."
  },
@@ -355,9 +355,9 @@ var QUESTIONS = [
   "scenario": "What does 'undifferentiated heavy lifting' refer to in AWS terminology?",
   "options": [
    "Routine infrastructure work that provides no competitive advantage",
+   "Encrypting data at rest",
    "Migrating large datasets to the cloud",
-   "Training machine learning models",
-   "Encrypting data at rest"
+   "Training machine learning models"
   ],
   "correct": [
    0
@@ -372,8 +372,8 @@ var QUESTIONS = [
   "options": [
    "AWS Glue",
    "Amazon Athena",
-   "Amazon Kinesis",
-   "Amazon QuickSight"
+   "Amazon QuickSight",
+   "Amazon Kinesis"
   ],
   "correct": [
    0
@@ -386,13 +386,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service detects unusual account activity such as cryptocurrency mining or communication with known malicious IP addresses?",
   "options": [
-   "Amazon GuardDuty",
    "Amazon Inspector",
-   "AWS Shield",
-   "AWS WAF"
+   "AWS WAF",
+   "Amazon GuardDuty",
+   "AWS Shield"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "GuardDuty continuously analyses account and network logs to detect threats including crypto mining and malicious IP communication. Inspector looks for software vulnerabilities instead."
  }

@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company is evaluating a move to AWS. Which benefit describes paying only for the resources consumed rather than purchasing hardware in advance?",
   "options": [
-   "Trading capital expense for variable expense",
+   "Data sovereignty",
    "Economies of scale",
    "High availability",
-   "Data sovereignty"
+   "Trading capital expense for variable expense"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Paying for consumption rather than buying hardware up front is the capital-to-variable expense trade, the core cloud economic argument. Economies of scale is about AWS's bulk purchasing lowering prices."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS Well-Architected pillar focuses on the ability of a workload to perform its intended function correctly and consistently when expected?",
   "options": [
-   "Reliability",
+   "Cost Optimization",
    "Performance Efficiency",
-   "Operational Excellence",
-   "Cost Optimization"
+   "Reliability",
+   "Operational Excellence"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Reliability covers correct and consistent operation, including recovery from failure. Performance Efficiency is about using computing resources efficiently, a different concern."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement best describes elasticity in the AWS Cloud?",
   "options": [
+   "Data is replicated to every AWS Region",
    "Resources automatically increase and decrease to match demand",
    "Resources are purchased for three years in advance",
-   "Data is replicated to every AWS Region",
    "Servers are physically dedicated to one customer"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Elasticity is automatic scaling in both directions with demand. Scalability alone means only the ability to grow, so any question mentioning scaling down points to elasticity."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A startup cannot predict how many users it will have next month. Which AWS benefit addresses this directly?",
   "options": [
-   "Stop guessing capacity",
+   "Reduced compliance obligations",
    "Go global in minutes",
    "Increased governance",
-   "Reduced compliance obligations"
+   "Stop guessing capacity"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "'Stop guessing capacity' is AWS's phrasing for not needing to forecast hardware needs — you scale with real demand instead. Cloud does not reduce compliance obligations; those remain the customer's."
  },
@@ -160,13 +160,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which Well-Architected pillar covers minimising the environmental impact of running cloud workloads?",
   "options": [
-   "Sustainability",
    "Cost Optimization",
+   "Reliability",
    "Security",
-   "Reliability"
+   "Sustainability"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Sustainability is the sixth pillar, added most recently, and covers energy consumption and carbon footprint. Because it is newest it is asked about disproportionately often."
  },
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company runs some workloads in its own data centre and others on AWS, connected together. What is this called?",
   "options": [
-   "A hybrid deployment",
    "A cloud-native deployment",
+   "A hybrid deployment",
    "A multi-tenant deployment",
    "An edge deployment"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Running partly on-premises and partly in the cloud, connected, is a hybrid deployment. Services such as AWS Outposts, Storage Gateway and Direct Connect exist to support this model."
  },
@@ -193,8 +193,8 @@ var QUESTIONS = [
   "scenario": "What does the term 'rightsizing' describe?",
   "options": [
    "Matching resource capacity to actual workload requirements",
-   "Buying the largest instance available",
    "Committing to a three-year Reserved Instance",
+   "Buying the largest instance available",
    "Replicating data across Regions"
   ],
   "correct": [
@@ -208,13 +208,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of the following is a benefit of AWS's global infrastructure for an application with users in several continents?",
   "options": [
+   "Guaranteeing one hundred percent uptime",
    "Deploying near users to reduce latency",
    "Eliminating the need for encryption",
-   "Removing all outbound data transfer charges",
-   "Guaranteeing one hundred percent uptime"
+   "Removing all outbound data transfer charges"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Deploying into Regions and edge locations near users reduces latency. The other options are absolutes: encryption remains a customer responsibility, outbound transfer is charged, and no provider guarantees 100% uptime."
  },
@@ -224,13 +224,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS framework helps an organisation plan its overall journey to the cloud across business and technical perspectives?",
   "options": [
-   "AWS Cloud Adoption Framework (CAF)",
-   "AWS Well-Architected Framework",
+   "AWS Trusted Advisor",
    "AWS Shared Responsibility Model",
-   "AWS Trusted Advisor"
+   "AWS Well-Architected Framework",
+   "AWS Cloud Adoption Framework (CAF)"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "The Cloud Adoption Framework guides the migration journey across business and technical perspectives. The Well-Architected Framework evaluates the design of a specific workload — a related but different tool."
  },
@@ -240,13 +240,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which pillar of the Well-Architected Framework emphasises running and monitoring systems and continuously improving processes?",
   "options": [
-   "Operational Excellence",
+   "Performance Efficiency",
    "Reliability",
-   "Security",
-   "Performance Efficiency"
+   "Operational Excellence",
+   "Security"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Operational Excellence covers running workloads effectively, monitoring them, and improving procedures through automation and small frequent changes."
  },
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is meant by 'undifferentiated heavy lifting' in AWS terminology?",
   "options": [
-   "Routine infrastructure work that provides no competitive advantage",
+   "Encrypting data at rest",
    "Migrating petabytes of data",
-   "Training machine learning models",
-   "Encrypting data at rest"
+   "Routine infrastructure work that provides no competitive advantage",
+   "Training machine learning models"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "It refers to necessary but non-differentiating work such as racking servers, managing power and cooling — tasks AWS takes on so customers can focus on their applications."
  },
@@ -272,13 +272,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants a licence it already owns to be used on AWS infrastructure. What is this model called?",
   "options": [
+   "Reserved licensing",
    "Bring Your Own License (BYOL)",
    "Included licensing",
-   "Spot licensing",
-   "Reserved licensing"
+   "Spot licensing"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "BYOL means bringing a licence you already own to AWS, as opposed to an included licence where the cost is bundled into the hourly price. BYOL is often the reason to choose Dedicated Hosts."
  },
@@ -288,13 +288,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about high availability is correct?",
   "options": [
-   "It is achieved by deploying across multiple Availability Zones",
-   "It requires deploying to multiple Regions",
    "It is guaranteed automatically for all AWS services",
-   "It means the same as elasticity"
+   "It means the same as elasticity",
+   "It requires deploying to multiple Regions",
+   "It is achieved by deploying across multiple Availability Zones"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "High availability comes from spreading across multiple Availability Zones within a Region. Multiple Regions address disaster recovery, latency and data sovereignty — a different set of goals."
  },
@@ -304,13 +304,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A finance team wants to convert large upfront IT purchases into predictable monthly operating costs. Which AWS characteristic supports this?",
   "options": [
-   "Pay-as-you-go pricing",
    "Dedicated Hosts",
-   "Multi-Region replication",
-   "Edge locations"
+   "Pay-as-you-go pricing",
+   "Edge locations",
+   "Multi-Region replication"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Pay-as-you-go converts capital expenditure into operational expenditure billed by consumption. Dedicated Hosts and multi-Region replication increase cost rather than restructuring it."
  },
@@ -320,15 +320,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO are benefits of moving from an on-premises data centre to the AWS Cloud?",
   "options": [
-   "Reduced spending on running and maintaining data centres",
-   "Increased speed and agility in provisioning resources",
    "Complete elimination of security responsibilities",
+   "Reduced spending on running and maintaining data centres",
+   "No further need for backups",
    "Guaranteed lower cost for every possible workload",
-   "No further need for backups"
+   "Increased speed and agility in provisioning resources"
   ],
   "correct": [
-   0,
-   1
+   1,
+   4
   ],
   "explain": "Reduced data-centre spend and faster provisioning are both standard cloud benefits. Security responsibilities remain shared, cost savings are not universal, and backups remain essential."
  },
@@ -338,13 +338,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Under the AWS shared responsibility model, which task is always performed by AWS?",
   "options": [
-   "Securing the physical data centre facilities",
-   "Configuring security groups",
    "Managing IAM user permissions",
-   "Classifying customer data"
+   "Securing the physical data centre facilities",
+   "Classifying customer data",
+   "Configuring security groups"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Physical facility security is always AWS's responsibility — you cannot access a data centre. Security groups, IAM permissions and data classification are all customer configuration choices."
  },
@@ -355,8 +355,8 @@ var QUESTIONS = [
   "scenario": "A company wants an additional verification step beyond a password when users sign in to the AWS Management Console. What should be enabled?",
   "options": [
    "Multi-factor authentication (MFA)",
-   "AWS Shield Advanced",
    "Amazon Macie",
+   "AWS Shield Advanced",
    "AWS Config"
   ],
   "correct": [
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used to store a database password securely and rotate it automatically?",
   "options": [
+   "Amazon Inspector",
    "AWS Secrets Manager",
-   "Amazon S3",
    "AWS CloudTrail",
-   "Amazon Inspector"
+   "Amazon S3"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Secrets Manager stores credentials securely with built-in automatic rotation. Storing secrets in S3 or in application code is the practice it exists to replace."
  },
@@ -386,13 +386,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application running on Amazon EC2 needs permission to write to Amazon DynamoDB. What is the recommended approach?",
   "options": [
-   "Attach an IAM role to the EC2 instance",
-   "Store access keys in the application's configuration file",
    "Use the root user's credentials",
-   "Make the DynamoDB table public"
+   "Store access keys in the application's configuration file",
+   "Make the DynamoDB table public",
+   "Attach an IAM role to the EC2 instance"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "An IAM role provides temporary, automatically rotated credentials with no key to leak. Keys in configuration files end up in source control, and root credentials should never be used by applications."
  },
@@ -402,13 +402,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides automatic protection against common Distributed Denial of Service attacks at no additional charge?",
   "options": [
-   "AWS Shield Standard",
-   "AWS WAF",
    "Amazon GuardDuty",
+   "AWS WAF",
+   "AWS Shield Standard",
    "Amazon Detective"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Shield Standard is included for all customers at no cost and defends against common DDoS attacks. Shield Advanced is the paid tier with additional protections and support."
  },
@@ -419,9 +419,9 @@ var QUESTIONS = [
   "scenario": "A security team wants to be alerted when an AWS account shows signs of compromised credentials or unusual API activity. Which service?",
   "options": [
    "Amazon GuardDuty",
-   "Amazon Inspector",
    "AWS Artifact",
-   "AWS Config"
+   "AWS Config",
+   "Amazon Inspector"
   ],
   "correct": [
    0
@@ -436,8 +436,8 @@ var QUESTIONS = [
   "options": [
    "AWS Artifact",
    "AWS Audit Manager",
-   "AWS Trusted Advisor",
-   "Amazon Inspector"
+   "Amazon Inspector",
+   "AWS Trusted Advisor"
   ],
   "correct": [
    0
@@ -450,13 +450,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which principle states that users should be granted only the permissions required to perform their tasks?",
   "options": [
+   "The principle of eventual consistency",
    "The principle of least privilege",
-   "The principle of defence in depth",
    "The shared responsibility model",
-   "The principle of eventual consistency"
+   "The principle of defence in depth"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Least privilege means granting the minimum permissions necessary and nothing more. It is AWS's central access-control principle and is frequently the correct answer in security questions."
  },
@@ -468,8 +468,8 @@ var QUESTIONS = [
   "options": [
    "Closing the AWS account",
    "Creating an S3 bucket",
-   "Launching an EC2 instance",
-   "Creating an IAM role"
+   "Creating an IAM role",
+   "Launching an EC2 instance"
   ],
   "correct": [
    0
@@ -482,13 +482,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company must encrypt data as it travels between a user's browser and its application. Which term describes this?",
   "options": [
-   "Encryption in transit",
-   "Encryption at rest",
    "Tokenisation",
-   "Federation"
+   "Federation",
+   "Encryption in transit",
+   "Encryption at rest"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Encryption in transit protects data moving across a network, typically via TLS. Encryption at rest protects stored data. The exam commonly expects both to be enabled."
  },
@@ -514,13 +514,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service continuously scans Amazon EC2 instances and container images for known software vulnerabilities?",
   "options": [
-   "Amazon Inspector",
-   "Amazon GuardDuty",
    "AWS Shield",
+   "Amazon GuardDuty",
+   "Amazon Inspector",
    "AWS WAF"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Inspector scans for vulnerabilities — outdated packages and known CVEs. GuardDuty detects active malicious behaviour instead. Hook: Inspector = weak door, GuardDuty = intruder at the door."
  },
@@ -530,13 +530,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company needs to identify sensitive personal data stored in its Amazon S3 buckets. Which service?",
   "options": [
-   "Amazon Macie",
-   "Amazon Inspector",
+   "Amazon Detective",
    "AWS Config",
-   "Amazon Detective"
+   "Amazon Inspector",
+   "Amazon Macie"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Macie uses machine learning to discover and classify sensitive data such as PII in S3. Inspector scans compute resources, and Config tracks resource configuration."
  },
@@ -546,13 +546,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service allows users to sign in once and access multiple AWS accounts within an organisation?",
   "options": [
+   "AWS Directory Service",
    "AWS IAM Identity Center",
    "Amazon Cognito",
-   "AWS Directory Service",
    "AWS Organizations"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "IAM Identity Center (formerly AWS SSO) provides single sign-on across multiple accounts and applications. Cognito manages identity for your own application's end users, a different audience."
  },
@@ -562,13 +562,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service records API calls made within an account, including who made them and when?",
   "options": [
-   "AWS CloudTrail",
-   "Amazon CloudWatch",
    "AWS Config",
-   "AWS Trusted Advisor"
+   "AWS Trusted Advisor",
+   "AWS CloudTrail",
+   "Amazon CloudWatch"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "CloudTrail is the audit trail of API activity: who did what, when and from where. CloudWatch monitors performance metrics and logs, which answers a different question."
  },
@@ -578,13 +578,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A web application is being targeted by SQL injection attempts. Which service is designed to block these?",
   "options": [
-   "AWS WAF",
-   "AWS Shield",
+   "AWS Firewall Manager",
    "Amazon GuardDuty",
-   "AWS Firewall Manager"
+   "AWS Shield",
+   "AWS WAF"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "WAF is the web application firewall that filters malicious requests such as SQL injection and cross-site scripting. Shield defends against volumetric DDoS attacks instead."
  },
@@ -594,13 +594,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS resource provides a central view of security findings from services such as GuardDuty, Inspector and Macie?",
   "options": [
-   "AWS Security Hub",
-   "Amazon Detective",
    "AWS Artifact",
-   "AWS Config"
+   "AWS Config",
+   "Amazon Detective",
+   "AWS Security Hub"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Security Hub aggregates findings from multiple security services into a single dashboard. Detective helps investigate the root cause of a specific finding once you have it."
  },
@@ -610,13 +610,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Under the shared responsibility model, who is responsible for configuring an Amazon S3 bucket policy?",
   "options": [
-   "The customer",
-   "AWS",
    "The AWS Partner Network",
-   "Neither party"
+   "Neither party",
+   "AWS",
+   "The customer"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Access control is always the customer's responsibility on every service. AWS provides the mechanisms — bucket policies, IAM, Block Public Access — but configuring them correctly is yours."
  },
@@ -626,15 +626,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO practices help protect the AWS account root user?",
   "options": [
-   "Enabling multi-factor authentication on the root user",
    "Deleting the root user's access keys",
-   "Sharing root credentials with the operations team",
    "Using the root user for daily administration",
+   "Enabling multi-factor authentication on the root user",
+   "Sharing root credentials with the operations team",
    "Disabling CloudTrail logging"
   ],
   "correct": [
    0,
-   1
+   2
   ],
   "explain": "Enabling MFA and deleting root access keys are both standard AWS guidance. Sharing credentials, using root daily and disabling audit logging all weaken security and appear frequently as distractors."
  },
@@ -645,9 +645,9 @@ var QUESTIONS = [
   "scenario": "Which AWS service provides resizable virtual servers in the cloud?",
   "options": [
    "Amazon EC2",
-   "Amazon S3",
+   "AWS Lambda",
    "Amazon RDS",
-   "AWS Lambda"
+   "Amazon S3"
   ],
   "correct": [
    0
@@ -660,13 +660,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company needs object storage for user-uploaded images with very high durability. Which service?",
   "options": [
-   "Amazon S3",
-   "Amazon EBS",
    "Amazon EFS",
+   "Amazon EBS",
+   "Amazon S3",
    "Instance store"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "S3 is object storage designed for eleven nines of durability, suited to files and images. EBS is a disk for a single instance, EFS is a shared file system, and instance store is ephemeral."
  },
@@ -677,9 +677,9 @@ var QUESTIONS = [
   "scenario": "Which service provides a managed relational database supporting engines such as PostgreSQL and MySQL?",
   "options": [
    "Amazon RDS",
-   "Amazon DynamoDB",
    "Amazon Redshift",
-   "Amazon Neptune"
+   "Amazon Neptune",
+   "Amazon DynamoDB"
   ],
   "correct": [
    0
@@ -692,13 +692,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used for a workload requiring single-digit millisecond NoSQL performance at any scale?",
   "options": [
+   "Amazon ElastiCache",
    "Amazon DynamoDB",
    "Amazon RDS",
-   "Amazon Aurora",
-   "Amazon ElastiCache"
+   "Amazon Aurora"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "DynamoDB is the serverless NoSQL database delivering single-digit millisecond latency at scale. Aurora and RDS are relational, and ElastiCache is a cache rather than a primary datastore."
  },
@@ -708,13 +708,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service allows code to run without provisioning or managing servers, billed only while executing?",
   "options": [
-   "AWS Lambda",
    "Amazon EC2",
    "Amazon Lightsail",
+   "AWS Lambda",
    "AWS Batch"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Lambda runs code with no servers to manage and charges only for execution time. EC2 and Lightsail are virtual servers billed while running, whether or not they are doing work."
  },
@@ -724,13 +724,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team wants to run Docker containers without managing the underlying EC2 instances. Which service?",
   "options": [
-   "AWS Fargate",
-   "Amazon EC2",
    "Amazon ECR",
-   "AWS Batch"
+   "AWS Fargate",
+   "AWS Batch",
+   "Amazon EC2"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Fargate is the serverless compute engine for containers, removing the need to manage instances. ECR stores container images, and ECS or EKS orchestrate the containers themselves."
  },
@@ -740,13 +740,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides a managed Kubernetes control plane on AWS?",
   "options": [
-   "Amazon EKS",
    "Amazon ECS",
    "Amazon ECR",
+   "Amazon EKS",
    "AWS Fargate"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "EKS is AWS's managed Kubernetes service. ECS is AWS's own container orchestrator and is not Kubernetes, which is the distinction the exam tests."
  },
@@ -772,13 +772,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides Domain Name System resolution and domain registration?",
   "options": [
-   "Amazon Route 53",
-   "Amazon CloudFront",
    "Amazon VPC",
-   "AWS Direct Connect"
+   "AWS Direct Connect",
+   "Amazon CloudFront",
+   "Amazon Route 53"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Route 53 is AWS's DNS service, which also registers domains and performs health checks. The name references port 53, used by DNS."
  },
@@ -788,13 +788,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which storage service provides a file system that can be mounted by many EC2 instances simultaneously?",
   "options": [
-   "Amazon EFS",
-   "Amazon EBS",
    "Amazon S3",
-   "Instance store"
+   "Instance store",
+   "Amazon EFS",
+   "Amazon EBS"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "EFS is a shared file system multiple instances can mount at once, across Availability Zones. EBS attaches to a single instance in a single AZ."
  },
@@ -804,13 +804,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service automatically adjusts the number of EC2 instances in response to demand?",
   "options": [
-   "AWS Auto Scaling",
+   "AWS CloudFormation",
    "Elastic Load Balancing",
-   "Amazon CloudWatch",
-   "AWS CloudFormation"
+   "AWS Auto Scaling",
+   "Amazon CloudWatch"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Auto Scaling adds and removes instances as demand changes, delivering elasticity. Load balancing distributes traffic to whatever instances exist, a complementary but different function."
  },
@@ -820,13 +820,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service lets a company define its infrastructure in template files and provision it repeatably?",
   "options": [
+   "AWS Control Tower",
    "AWS CloudFormation",
    "AWS Systems Manager",
-   "AWS Config",
-   "AWS Control Tower"
+   "AWS Config"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CloudFormation is AWS's infrastructure-as-code service, building resources from templates. Config records configuration history rather than creating resources."
  },
@@ -837,9 +837,9 @@ var QUESTIONS = [
   "scenario": "Which service provides a private, dedicated network connection between an on-premises data centre and AWS?",
   "options": [
    "AWS Direct Connect",
+   "Amazon VPC",
    "AWS Site-to-Site VPN",
-   "AWS Transit Gateway",
-   "Amazon VPC"
+   "AWS Transit Gateway"
   ],
   "correct": [
    0
@@ -868,13 +868,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides a managed message queue where each message is processed by a single consumer?",
   "options": [
-   "Amazon SQS",
-   "Amazon SNS",
    "Amazon EventBridge",
-   "AWS Step Functions"
+   "Amazon SNS",
+   "AWS Step Functions",
+   "Amazon SQS"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "SQS is a queue where each message is retrieved and processed once. SNS is publish-subscribe, delivering one message to many subscribers."
  },
@@ -884,13 +884,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service is designed to publish a single notification to many subscribers at once?",
   "options": [
-   "Amazon SNS",
-   "Amazon SQS",
    "Amazon Kinesis",
-   "AWS Batch"
+   "Amazon SQS",
+   "AWS Batch",
+   "Amazon SNS"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "SNS is the publish-subscribe notification service, fanning one message out to many endpoints. SQS queues messages for individual processing instead."
  },
@@ -900,13 +900,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service allows SQL queries to be run directly against data stored in Amazon S3 without loading it elsewhere?",
   "options": [
+   "Amazon QuickSight",
    "Amazon Athena",
-   "Amazon Redshift",
    "AWS Glue",
-   "Amazon QuickSight"
+   "Amazon Redshift"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Athena runs serverless SQL queries directly over data in S3. Redshift requires loading into a warehouse, Glue performs ETL, and QuickSight visualises results."
  },
@@ -916,13 +916,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service ingests and processes streaming data such as application logs or IoT telemetry in real time?",
   "options": [
-   "Amazon Kinesis",
+   "Amazon EMR",
    "AWS Glue",
-   "Amazon Athena",
-   "Amazon EMR"
+   "Amazon Kinesis",
+   "Amazon Athena"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Kinesis handles real-time streaming ingestion and processing. Glue is batch ETL, Athena queries stored data, and EMR runs big-data frameworks such as Spark."
  },
@@ -932,13 +932,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to transfer 80 TB of data to AWS but has limited network bandwidth. Which option is most suitable?",
   "options": [
+   "AWS DataSync over the internet",
    "AWS Snow Family",
-   "AWS Direct Connect",
    "Amazon S3 Transfer Acceleration",
-   "AWS DataSync over the internet"
+   "AWS Direct Connect"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "The Snow Family ships physical devices for very large transfers that would take too long over a constrained network. The other options all still depend on the bandwidth the company lacks."
  },
@@ -949,9 +949,9 @@ var QUESTIONS = [
   "scenario": "Which service provides business intelligence dashboards and visualisations?",
   "options": [
    "Amazon QuickSight",
-   "Amazon Athena",
+   "Amazon Kinesis",
    "AWS Glue",
-   "Amazon Kinesis"
+   "Amazon Athena"
   ],
   "correct": [
    0
@@ -964,13 +964,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides virtual desktops to end users in the cloud?",
   "options": [
-   "Amazon WorkSpaces",
+   "AWS Amplify",
    "Amazon AppStream 2.0",
-   "Amazon Connect",
-   "AWS Amplify"
+   "Amazon WorkSpaces",
+   "Amazon Connect"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "WorkSpaces delivers persistent virtual desktops. AppStream 2.0 streams individual applications rather than a full desktop, which is the distinction usually tested."
  },
@@ -983,8 +983,8 @@ var QUESTIONS = [
    "AWS Elastic Beanstalk",
    "AWS Lambda",
    "Amazon VPC",
-   "Amazon Route 53",
-   "AWS Direct Connect"
+   "AWS Direct Connect",
+   "Amazon Route 53"
   ],
   "correct": [
    0,
@@ -1000,8 +1000,8 @@ var QUESTIONS = [
   "options": [
    "Enterprise",
    "Business",
-   "Enterprise On-Ramp",
-   "Developer"
+   "Developer",
+   "Enterprise On-Ramp"
   ],
   "correct": [
    0
@@ -1014,13 +1014,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to visualise and analyse its AWS spending over the past twelve months. Which tool?",
   "options": [
-   "AWS Cost Explorer",
    "AWS Budgets",
-   "AWS Pricing Calculator",
-   "AWS Artifact"
+   "AWS Cost Explorer",
+   "AWS Artifact",
+   "AWS Pricing Calculator"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Cost Explorer analyses and visualises historical spend and forecasts ahead. Budgets sets thresholds and alerts, and Pricing Calculator estimates costs before you build."
  },
@@ -1030,13 +1030,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which EC2 purchasing option provides the deepest discount for workloads that tolerate interruption?",
   "options": [
-   "Spot Instances",
-   "Reserved Instances",
    "On-Demand Instances",
-   "Dedicated Hosts"
+   "Spot Instances",
+   "Dedicated Hosts",
+   "Reserved Instances"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Spot uses spare capacity for up to 90% off but can be reclaimed with two minutes' notice, making it suitable only for interruptible workloads."
  },
@@ -1046,13 +1046,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which pricing option suits a steady workload running continuously for the next three years?",
   "options": [
-   "Reserved Instances",
-   "Spot Instances",
+   "Dedicated Instances",
    "On-Demand Instances",
-   "Dedicated Instances"
+   "Reserved Instances",
+   "Spot Instances"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Steady, predictable long-term usage is the Reserved Instance case, giving up to 72% off in exchange for a one- or three-year commitment."
  },
@@ -1062,13 +1062,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is a benefit of consolidated billing within AWS Organizations?",
   "options": [
-   "Aggregated usage can unlock volume discount tiers",
-   "AWS waives all support fees",
    "Data transfer becomes free between accounts",
-   "Each account receives Enterprise Support"
+   "AWS waives all support fees",
+   "Each account receives Enterprise Support",
+   "Aggregated usage can unlock volume discount tiers"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Consolidated billing aggregates usage across accounts so the organisation reaches volume discount tiers sooner, and shares Reserved Instance benefits. The other options are invented."
  },
@@ -1079,8 +1079,8 @@ var QUESTIONS = [
   "scenario": "Which AWS tool lets a company estimate the monthly cost of a proposed architecture before building it?",
   "options": [
    "AWS Pricing Calculator",
-   "AWS Cost Explorer",
    "AWS Budgets",
+   "AWS Cost Explorer",
    "AWS Cost and Usage Report"
   ],
   "correct": [
@@ -1094,13 +1094,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS Support plan is the lowest tier that includes 24/7 access to Cloud Support Engineers by phone and chat?",
   "options": [
-   "Business",
-   "Developer",
    "Basic",
-   "Enterprise"
+   "Enterprise",
+   "Developer",
+   "Business"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Business is the cheapest plan with 24/7 phone and chat support and the full set of Trusted Advisor checks. Developer is business-hours email only, and Basic has no technical support."
  },
@@ -1111,9 +1111,9 @@ var QUESTIONS = [
   "scenario": "Which statement about AWS data transfer pricing is correct?",
   "options": [
    "Inbound data transfer to AWS is generally free while outbound to the internet is charged",
+   "All transfer between Availability Zones is free",
    "Both directions cost the same",
-   "Outbound transfer is free",
-   "All transfer between Availability Zones is free"
+   "Outbound transfer is free"
   ],
   "correct": [
    0

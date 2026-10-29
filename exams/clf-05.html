@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service allows a developer to deploy an application without managing the underlying infrastructure, while still retaining control of the EC2 instances?",
   "options": [
-   "AWS Elastic Beanstalk",
-   "AWS Lambda",
    "Amazon S3",
-   "AWS Fargate"
+   "AWS Lambda",
+   "AWS Fargate",
+   "AWS Elastic Beanstalk"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Elastic Beanstalk provisions and manages EC2, load balancing and scaling from your uploaded code, while leaving the underlying resources visible and adjustable. Lambda and Fargate hide the servers entirely."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides a full, persistent virtual desktop in the cloud for end users?",
   "options": [
-   "Amazon WorkSpaces",
-   "Amazon WorkSpaces Web",
    "Amazon AppStream 2.0",
+   "Amazon WorkSpaces Web",
+   "Amazon WorkSpaces",
    "Amazon Connect"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Amazon WorkSpaces delivers full, persistent virtual desktops. Amazon WorkSpaces Web is the closest distractor: it provides secure browser-only access to internal websites and SaaS applications, not a complete desktop. AppStream 2.0 streams individual applications rather than a desktop. Amazon Connect is a cloud contact centre service."
  },
@@ -113,12 +113,12 @@ var QUESTIONS = [
   "scenario": "Which of the following is a customer responsibility under the shared responsibility model when using Amazon S3?",
   "options": [
    "Maintaining the physical storage hardware",
-   "Configuring bucket policies and enabling encryption",
+   "Managing S3's underlying network",
    "Patching the S3 service software",
-   "Managing S3's underlying network"
+   "Configuring bucket policies and enabling encryption"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "On a fully managed service like S3, the customer's remaining responsibilities are access control, encryption settings and the data itself. Hardware, service software and networking are all AWS's."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the purpose of AWS Organizations service control policies (SCPs)?",
   "options": [
+   "To monitor application performance",
    "To set maximum available permissions for accounts in an organisation",
    "To encrypt data at rest",
-   "To monitor application performance",
    "To provide DDoS protection"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "SCPs define the maximum permissions accounts in an organisation may have, acting as a guardrail above IAM. They do not grant permissions themselves — IAM still must allow the action."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which cloud benefit describes deploying an application to multiple geographic Regions within minutes?",
   "options": [
-   "Go global in minutes",
-   "Economies of scale",
    "Trade capital expense for variable expense",
+   "Economies of scale",
+   "Go global in minutes",
    "Stop guessing capacity"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "'Go global in minutes' refers to deploying into Regions worldwide almost instantly. The other options are genuine cloud benefits but describe cost and capacity rather than geographic reach."
  },
@@ -160,13 +160,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "When should a company use multiple AWS Regions rather than multiple Availability Zones?",
   "options": [
-   "For disaster recovery, lower latency for distant users, or data sovereignty requirements",
    "To achieve high availability within a single city",
    "To reduce the cost of EC2 instances",
-   "To avoid using load balancers"
+   "To avoid using load balancers",
+   "For disaster recovery, lower latency for distant users, or data sovereignty requirements"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Multiple AZs deliver high availability within a Region. Multiple Regions address disaster recovery, serving geographically distant users with low latency, and legal requirements that data stay in a country."
  },
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS Support plan provides a pool of Technical Account Managers and a 30-minute response for business-critical cases?",
   "options": [
-   "Business",
-   "Enterprise On-Ramp",
    "Enterprise",
-   "Developer"
+   "Developer",
+   "Enterprise On-Ramp",
+   "Business"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Enterprise On-Ramp sits between Business and Enterprise, offering a pool of TAMs and a 30-minute response. Only Enterprise provides a designated TAM with a 15-minute response."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these describes the Reserved Instance payment options ordered from largest to smallest discount?",
   "options": [
-   "All Upfront, Partial Upfront, No Upfront",
    "No Upfront, Partial Upfront, All Upfront",
+   "All Upfront, Partial Upfront, No Upfront",
    "Partial Upfront, All Upfront, No Upfront",
    "All options provide identical discounts"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "The more you pay up front, the larger the discount: All Upfront saves most, then Partial Upfront, then No Upfront. Reserved Instances are available only in one-year and three-year terms."
  },
@@ -208,10 +208,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service delivers a managed message queue where each message is processed by one consumer?",
   "options": [
-   "Amazon SNS",
+   "AWS Step Functions",
    "Amazon SQS",
    "Amazon EventBridge",
-   "AWS Step Functions"
+   "Amazon SNS"
   ],
   "correct": [
    1
@@ -224,13 +224,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service coordinates multiple AWS services into serverless workflows with steps and branching?",
   "options": [
-   "AWS Step Functions",
    "Amazon SQS",
+   "AWS Batch",
    "Amazon SNS",
-   "AWS Batch"
+   "AWS Step Functions"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Step Functions orchestrates multi-step workflows with branching, retries and error handling. SQS and SNS move individual messages, and Batch runs batch computing jobs."
  },
@@ -242,8 +242,8 @@ var QUESTIONS = [
   "options": [
    "AWS Trusted Advisor",
    "AWS Artifact",
-   "Amazon Inspector",
-   "AWS Config"
+   "AWS Config",
+   "Amazon Inspector"
   ],
   "correct": [
    0
@@ -257,12 +257,12 @@ var QUESTIONS = [
   "scenario": "A company must prove to auditors which user deleted an S3 bucket last month. Which service provides this?",
   "options": [
    "Amazon CloudWatch",
+   "Amazon Macie",
    "AWS CloudTrail",
-   "AWS Config",
-   "Amazon Macie"
+   "AWS Config"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "CloudTrail records API calls including the identity, time and source IP, making it the audit trail for 'who did what'. CloudWatch covers performance metrics rather than user actions."
  },
@@ -272,13 +272,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these is an example of the AWS Well-Architected Security pillar?",
   "options": [
-   "Applying least privilege and encrypting data",
    "Choosing the cheapest instance type",
-   "Reducing carbon footprint",
-   "Automating deployment pipelines"
+   "Automating deployment pipelines",
+   "Applying least privilege and encrypting data",
+   "Reducing carbon footprint"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Least privilege and encryption sit squarely in the Security pillar. Cheapest instance is Cost Optimization, carbon footprint is Sustainability, and deployment automation is Operational Excellence."
  },
@@ -289,9 +289,9 @@ var QUESTIONS = [
   "scenario": "Which service provides low-latency delivery of static and dynamic content by caching at edge locations?",
   "options": [
    "Amazon CloudFront",
-   "AWS Global Accelerator",
+   "AWS Direct Connect",
    "Amazon Route 53",
-   "AWS Direct Connect"
+   "AWS Global Accelerator"
   ],
   "correct": [
    0
@@ -304,13 +304,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which tool provides the most detailed, line-item breakdown of AWS charges for analysis?",
   "options": [
-   "AWS Cost and Usage Report",
-   "AWS Budgets",
    "AWS Pricing Calculator",
-   "AWS Trusted Advisor"
+   "AWS Cost and Usage Report",
+   "AWS Trusted Advisor",
+   "AWS Budgets"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "The Cost and Usage Report contains the most granular billing data available, suitable for detailed analysis. Budgets alerts on thresholds and Pricing Calculator estimates costs before you build."
  },
@@ -320,15 +320,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO options are valid ways to interact with AWS services?",
   "options": [
-   "AWS Management Console",
-   "AWS Command Line Interface (CLI)",
-   "AWS Artifact",
    "Amazon Macie",
+   "AWS Artifact",
+   "AWS Command Line Interface (CLI)",
+   "AWS Management Console",
    "AWS Shield"
   ],
   "correct": [
-   0,
-   1
+   2,
+   3
   ],
   "explain": "The Console (a web interface) and the CLI (programmatic access) are both ways to interact with AWS, as are the SDKs. Artifact, Macie and Shield are individual services, not access methods."
  },
@@ -355,9 +355,9 @@ var QUESTIONS = [
   "scenario": "What is a key characteristic of the pay-as-you-go pricing model?",
   "options": [
    "You pay only for the resources you consume, with no long-term commitment",
+   "You pay only when the application is idle",
    "You must sign a three-year contract",
-   "You pay a fixed annual fee regardless of usage",
-   "You pay only when the application is idle"
+   "You pay a fixed annual fee regardless of usage"
   ],
   "correct": [
    0
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service would identify EC2 instances that are over-provisioned and recommend smaller types?",
   "options": [
+   "Amazon Inspector",
    "AWS Compute Optimizer",
    "AWS Config",
-   "Amazon Inspector",
    "AWS CloudFormation"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Compute Optimizer analyses utilisation and recommends rightsized instance types. Config tracks configuration, Inspector scans for vulnerabilities, and CloudFormation provisions infrastructure."
  },
@@ -387,9 +387,9 @@ var QUESTIONS = [
   "scenario": "Which authentication approach allows users to sign in with an existing corporate directory rather than new IAM users?",
   "options": [
    "Federation",
+   "Bucket policies",
    "Access keys",
-   "Root user sharing",
-   "Bucket policies"
+   "Root user sharing"
   ],
   "correct": [
    0

@@ -81,9 +81,9 @@ var QUESTIONS = [
   "scenario": "A developer needs a Lambda function to process a Kinesis stream with higher throughput without adding shards. Which event source mapping setting should be increased?",
   "options": [
    "ParallelizationFactor",
+   "StartingPosition",
    "BatchSize only",
-   "MaximumRetryAttempts",
-   "StartingPosition"
+   "MaximumRetryAttempts"
   ],
   "correct": [
    0
@@ -98,8 +98,8 @@ var QUESTIONS = [
   "options": [
    "DynamoDB with a TTL attribute updated on each write",
    "DynamoDB with a scheduled Lambda that scans and deletes",
-   "S3 with versioning",
-   "RDS with a cron job"
+   "RDS with a cron job",
+   "S3 with versioning"
   ],
   "correct": [
    0
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach ensures a Lambda function invoked by API Gateway returns a proper CORS response to a browser?",
   "options": [
-   "Return Access-Control-Allow-Origin headers in the function response and enable CORS on the API",
    "Increase the function timeout",
-   "Disable the API authorizer",
-   "Enable API Gateway caching"
+   "Return Access-Control-Allow-Origin headers in the function response and enable CORS on the API",
+   "Enable API Gateway caching",
+   "Disable the API authorizer"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "With proxy integration the function must include CORS headers in its response, and the API must handle the preflight OPTIONS request — enabling CORS in API Gateway configures that. Timeouts, authorizers and caching are unrelated to the browser's cross-origin checks."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must guarantee that only one Lambda invocation processes a given order ID even if the event is delivered twice. Which approach is MOST reliable?",
   "options": [
-   "A conditional DynamoDB write on the order ID that fails if already processed",
-   "A shorter Lambda timeout",
+   "Longer SQS visibility timeout",
    "Reserved concurrency of 1",
-   "Longer SQS visibility timeout"
+   "A shorter Lambda timeout",
+   "A conditional DynamoDB write on the order ID that fails if already processed"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "A conditional put using attribute_not_exists on the order ID succeeds exactly once, making duplicate deliveries harmless — the standard idempotency pattern. Concurrency of 1 serialises processing but a duplicate would still be processed twice, and timeout settings only change timing rather than preventing duplicates."
  },
@@ -145,14 +145,14 @@ var QUESTIONS = [
   "scenario": "Which TWO characteristics distinguish Amazon SQS from Amazon SNS?",
   "options": [
    "SQS stores messages until a consumer retrieves and deletes them",
+   "SNS stores messages for up to 14 days",
    "SNS pushes each message to all subscribers immediately",
    "SQS pushes messages to multiple subscribers automatically",
-   "SNS stores messages for up to 14 days",
    "SQS guarantees delivery to every subscriber"
   ],
   "correct": [
    0,
-   1
+   2
   ],
   "explain": "SQS is pull-based: messages persist in the queue until a consumer receives and deletes them, and each message is processed by one consumer. SNS is push-based: it delivers each published message to all current subscribers immediately and does not durably store messages for offline subscribers, which is why SNS is often paired with SQS."
  },
@@ -162,13 +162,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which DynamoDB operation should be used to increment a counter atomically without reading the item first?",
   "options": [
-   "UpdateItem with an ADD or SET expression using a numeric increment",
-   "GetItem followed by PutItem",
    "BatchWriteItem",
+   "GetItem followed by PutItem",
+   "UpdateItem with an ADD or SET expression using a numeric increment",
    "Scan followed by UpdateItem"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "UpdateItem with an atomic counter expression such as SET count = count + :inc applies the increment server-side, so concurrent updates do not lose writes. Read-then-write introduces a race where two clients read the same value and one overwrites the other. BatchWriteItem replaces items, and scanning first is wasteful."
  },
@@ -180,8 +180,8 @@ var QUESTIONS = [
   "options": [
    "Content-based deduplication or an explicit MessageDeduplicationId",
    "MessageGroupId",
-   "Visibility timeout",
-   "Delay seconds"
+   "Delay seconds",
+   "Visibility timeout"
   ],
   "correct": [
    0
@@ -194,13 +194,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must trigger different Lambda functions depending on whether an EventBridge event's detail-type is OrderPlaced or OrderCancelled. What is the cleanest design?",
   "options": [
-   "Two rules on the same event bus, each with an event pattern matching one detail-type",
    "One rule targeting a router Lambda that inspects and re-invokes",
    "Two separate event buses",
+   "Two rules on the same event bus, each with an event pattern matching one detail-type",
    "A scheduled rule polling a database"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "EventBridge rules filter on event content, so one rule per detail-type routes directly to the correct target with no custom routing code and no extra invocation cost. A router function adds latency, cost and a failure point. Separate buses complicate publishing, and polling abandons event-driven design."
  },
@@ -210,13 +210,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which storage class should be used for objects accessed roughly once per quarter that must be retrieved within milliseconds when needed?",
   "options": [
-   "S3 Glacier Instant Retrieval",
-   "S3 Standard",
+   "S3 Express One Zone",
    "S3 Glacier Deep Archive",
-   "S3 Express One Zone"
+   "S3 Glacier Instant Retrieval",
+   "S3 Standard"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Glacier Instant Retrieval targets rarely accessed data that still requires millisecond retrieval, at far lower storage cost than Standard. Standard is priced for frequent access, Deep Archive retrieval takes hours, and Express One Zone is a high-performance class for very frequently accessed data in a single availability zone."
  },
@@ -226,13 +226,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A Lambda function must call an external HTTPS API that rate-limits to 10 requests per second. Which approach protects the external API?",
   "options": [
-   "Buffer requests through SQS and set reserved concurrency to limit the invocation rate",
-   "Increase the Lambda memory",
+   "Increase the Lambda timeout",
    "Enable provisioned concurrency",
-   "Increase the Lambda timeout"
+   "Buffer requests through SQS and set reserved concurrency to limit the invocation rate",
+   "Increase the Lambda memory"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Queuing decouples arrival rate from processing rate, and reserved concurrency caps how many invocations run simultaneously, holding the outbound call rate within the external limit. More memory, provisioned concurrency and longer timeouts all leave the request rate unchanged or make it worse."
  },
@@ -244,8 +244,8 @@ var QUESTIONS = [
   "options": [
    "Reads are eventually consistent unless ConsistentRead is set to true",
    "Reads are always strongly consistent",
-   "Reads always come from DAX",
-   "Reads bypass provisioned capacity"
+   "Reads bypass provisioned capacity",
+   "Reads always come from DAX"
   ],
   "correct": [
    0
@@ -258,13 +258,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must process files uploaded to S3 and the processing must not start until the entire multipart upload has completed. Which event type should trigger the function?",
   "options": [
+   "s3:ObjectRestore:*",
    "s3:ObjectCreated:CompleteMultipartUpload (or s3:ObjectCreated:*)",
    "s3:ObjectCreated:Post only",
-   "s3:ObjectRemoved:*",
-   "s3:ObjectRestore:*"
+   "s3:ObjectRemoved:*"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CompleteMultipartUpload fires only when all parts have been assembled into the final object, so processing never sees a partial upload; the wildcard s3:ObjectCreated:* also covers it. Post covers browser form uploads, and the removal and restore events relate to deletion and Glacier retrieval."
  },
@@ -274,13 +274,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used to run a containerised batch job that needs 32 GB of memory for two hours, with no cluster management?",
   "options": [
-   "AWS Batch on Fargate",
-   "AWS Lambda",
    "Amazon EC2 with manual scheduling",
-   "Amazon API Gateway"
+   "AWS Lambda",
+   "Amazon API Gateway",
+   "AWS Batch on Fargate"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "AWS Batch schedules containerised jobs and can run them on Fargate, handling queueing and provisioning with no cluster to manage, and supports large memory allocations and long runtimes. Lambda caps at 15 minutes and 10 GB of memory. Manual EC2 scheduling means managing infrastructure, and API Gateway is not a compute service."
  },
@@ -290,13 +290,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must reduce the number of DynamoDB read operations for a query whose results change at most once per hour. What is the simplest effective change?",
   "options": [
-   "Cache the query result in the application or in ElastiCache with a one-hour TTL",
    "Switch to strongly consistent reads",
-   "Add a local secondary index",
-   "Increase write capacity"
+   "Increase write capacity",
+   "Cache the query result in the application or in ElastiCache with a one-hour TTL",
+   "Add a local secondary index"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Caching results with a TTL matching the change frequency eliminates almost all repeated reads. Strongly consistent reads double read cost, an LSI serves alternative query patterns rather than reducing read volume, and write capacity does not affect reads."
  },
@@ -306,13 +306,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which HTTP method should an idempotent update to an existing resource use in a REST API?",
   "options": [
-   "PUT",
+   "CONNECT",
    "POST",
    "PATCH with non-idempotent semantics",
-   "CONNECT"
+   "PUT"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "PUT replaces a resource with the supplied representation, so repeating the same request produces the same final state — it is idempotent by definition. POST creates a new subordinate resource each time and is not idempotent. PATCH can be idempotent but depends on the patch semantics, and CONNECT establishes tunnels."
  },
@@ -322,13 +322,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must retrieve 200 items from DynamoDB by their primary keys in as few calls as possible. Which operation should be used?",
   "options": [
-   "BatchGetItem in pages of up to 100 items",
-   "GetItem in a loop 200 times",
    "Scan with a filter",
-   "Query without a key condition"
+   "Query without a key condition",
+   "BatchGetItem in pages of up to 100 items",
+   "GetItem in a loop 200 times"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "BatchGetItem retrieves up to 100 items (or 16 MB) per call, so 200 keys take two calls instead of 200 round trips. Looping GetItem is far slower, Scan reads the entire table, and Query requires a partition key condition and cannot fetch arbitrary unrelated keys."
  },
@@ -339,9 +339,9 @@ var QUESTIONS = [
   "scenario": "Which approach allows a Lambda function to be triggered by an Application Load Balancer?",
   "options": [
    "Register the function as a target in a Lambda target group",
-   "Attach the function to the ALB security group",
+   "Create a VPC endpoint for Lambda",
    "Add the function to an Auto Scaling group",
-   "Create a VPC endpoint for Lambda"
+   "Attach the function to the ALB security group"
   ],
   "correct": [
    0
@@ -354,13 +354,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must keep a DynamoDB table synchronised to an OpenSearch domain for full-text search. What is the recommended pattern?",
   "options": [
-   "DynamoDB Streams triggering a Lambda function that indexes documents in OpenSearch",
-   "A nightly Scan of the whole table",
    "Manual exports to S3",
-   "Enabling DAX"
+   "Enabling DAX",
+   "DynamoDB Streams triggering a Lambda function that indexes documents in OpenSearch",
+   "A nightly Scan of the whole table"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Streams deliver every change in near real time and a Lambda consumer keeps the search index current with minimal lag and cost. A nightly Scan is expensive and leaves the index stale all day, manual exports are neither timely nor automated, and DAX is a read cache with no search capability."
  },
@@ -371,9 +371,9 @@ var QUESTIONS = [
   "scenario": "Which setting controls how many messages a Lambda function receives per invocation from an SQS event source?",
   "options": [
    "BatchSize",
-   "VisibilityTimeout",
    "MaximumMessageSize",
-   "DelaySeconds"
+   "DelaySeconds",
+   "VisibilityTimeout"
   ],
   "correct": [
    0
@@ -387,9 +387,9 @@ var QUESTIONS = [
   "scenario": "An application must generate a unique, sortable identifier for records inserted at high rate across many nodes. Which approach is MOST suitable?",
   "options": [
    "A time-ordered identifier such as ULID or KSUID generated client-side",
+   "The current second as the primary key",
    "An auto-incrementing integer from a single counter row",
-   "A random UUIDv4 used as a sort key for ordering",
-   "The current second as the primary key"
+   "A random UUIDv4 used as a sort key for ordering"
   ],
   "correct": [
    0
@@ -402,13 +402,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides an in-memory data store that supports sorted sets, pub/sub and Lua scripting?",
   "options": [
-   "Amazon ElastiCache for Redis",
    "Amazon ElastiCache for Memcached",
+   "Amazon Neptune",
    "Amazon DynamoDB",
-   "Amazon Neptune"
+   "Amazon ElastiCache for Redis"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Redis supports rich data structures including sorted sets, plus pub/sub, transactions, Lua scripting and persistence. Memcached provides only simple key-value caching with no such features. DynamoDB is a managed NoSQL database rather than an in-memory store, and Neptune is a graph database."
  },
@@ -419,9 +419,9 @@ var QUESTIONS = [
   "scenario": "An application must allow a user to access AWS resources after authenticating with a corporate SAML identity provider. Which service enables this for AWS API access?",
   "options": [
    "AWS IAM Identity Center or IAM SAML federation with AssumeRoleWithSAML",
-   "Amazon Cognito user pools only",
    "AWS Secrets Manager",
-   "Amazon Macie"
+   "Amazon Macie",
+   "Amazon Cognito user pools only"
   ],
   "correct": [
    0
@@ -436,8 +436,8 @@ var QUESTIONS = [
   "options": [
    "Both the bucket policy in the resource account and an identity policy in the caller account must allow the action",
    "Only the bucket policy is required",
-   "Only the identity policy is required",
-   "Neither is required if the bucket is encrypted"
+   "Neither is required if the bucket is encrypted",
+   "Only the identity policy is required"
   ],
   "correct": [
    0
@@ -450,13 +450,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must ensure a KMS key can only be used by a specific Lambda function. Which condition is MOST appropriate in the key policy?",
   "options": [
-   "A condition restricting use to the function's execution role ARN",
-   "A condition on aws:SourceIp",
+   "No condition, granting the whole account",
    "A condition on aws:CurrentTime",
-   "No condition, granting the whole account"
+   "A condition restricting use to the function's execution role ARN",
+   "A condition on aws:SourceIp"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Scoping the key policy to the execution role's ARN ensures only that function can use the key, following least privilege. Source IP is meaningless for a managed service with dynamic addresses, time conditions restrict when rather than who, and granting the whole account allows every principal in it."
  },
@@ -466,13 +466,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which mechanism prevents an application from accepting an expired Cognito access token?",
   "options": [
-   "Validating the exp claim during token verification",
-   "Checking the token length",
    "Storing tokens in local storage",
-   "Refreshing tokens every request"
+   "Validating the exp claim during token verification",
+   "Refreshing tokens every request",
+   "Checking the token length"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Token verification must check the exp (expiry) claim along with the signature, issuer and audience; a token past its expiry must be rejected. Length reveals nothing, storage location does not affect validity, and refreshing on every request defeats the purpose of short-lived access tokens without validating anything."
  },
@@ -482,15 +482,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO practices reduce the risk of secrets leaking through a CI/CD pipeline?",
   "options": [
-   "Retrieve secrets at runtime from Secrets Manager rather than storing them in the pipeline",
-   "Mask or suppress secret values in build logs",
-   "Print secrets to the build log for debugging",
    "Commit a .env file so all builds share the same values",
-   "Email secrets to the team for convenience"
+   "Print secrets to the build log for debugging",
+   "Email secrets to the team for convenience",
+   "Mask or suppress secret values in build logs",
+   "Retrieve secrets at runtime from Secrets Manager rather than storing them in the pipeline"
   ],
   "correct": [
-   0,
-   1
+   3,
+   4
   ],
   "explain": "Fetching secrets at runtime keeps them out of pipeline configuration and source control, and masking prevents accidental exposure in build output that many people can read. Printing secrets, committing them to a repository and emailing them all create durable copies in places that are hard to revoke."
  },
@@ -500,13 +500,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service protects a public web application from common exploits such as SQL injection and cross-site scripting at the edge?",
   "options": [
-   "AWS WAF",
    "AWS Shield Standard",
-   "Amazon Inspector",
-   "AWS Config"
+   "AWS Config",
+   "AWS WAF",
+   "Amazon Inspector"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "AWS WAF inspects HTTP requests and blocks those matching rules for SQL injection, XSS, rate limits and custom patterns, and attaches to CloudFront, ALB and API Gateway. Shield Standard defends against network and transport layer DDoS, Inspector scans for software vulnerabilities, and Config evaluates resource configuration compliance."
  },
@@ -516,13 +516,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must ensure that data written to an S3 bucket is encrypted even if the client omits encryption headers. What should be enabled?",
   "options": [
-   "Default bucket encryption",
    "Object Lock",
+   "Default bucket encryption",
    "Requester Pays",
    "Transfer Acceleration"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Default bucket encryption applies server-side encryption automatically to objects uploaded without explicit encryption headers, so nothing lands unencrypted. Object Lock enforces retention, Requester Pays shifts billing, and Transfer Acceleration optimises upload paths."
  },
@@ -532,13 +532,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the correct way to allow an EC2 instance to read a specific Secrets Manager secret?",
   "options": [
+   "Grant the role secretsmanager:* on all secrets",
    "Attach an instance profile whose role allows secretsmanager:GetSecretValue on that secret ARN",
    "Store the secret in user data",
-   "Grant the role secretsmanager:* on all secrets",
    "Make the secret publicly readable"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "An instance role scoped to GetSecretValue on the specific secret ARN follows least privilege while providing temporary credentials automatically. User data is visible via instance metadata and is not a secret store, wildcard access over all secrets is excessive, and secrets can never be safely public."
  },
@@ -548,13 +548,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement describes the correct handling of an AccessDeniedException returned by an AWS SDK call?",
   "options": [
-   "It indicates missing or insufficient IAM permissions for that action or resource",
+   "It indicates the request payload was too large",
    "It indicates the service is unavailable and should be retried",
    "It indicates a network timeout",
-   "It indicates the request payload was too large"
+   "It indicates missing or insufficient IAM permissions for that action or resource"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "AccessDenied is an authorisation failure, meaning the principal lacks permission for the action or resource, or an explicit deny applies — retrying will not help and the policy must be corrected. Service unavailability returns 5xx errors, timeouts surface as connection errors, and oversized payloads produce specific size-related errors."
  },
@@ -564,13 +564,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must ensure that only encrypted connections are accepted by an Amazon RDS PostgreSQL database. What should be configured?",
   "options": [
-   "Set the rds.force_ssl parameter to 1 in the parameter group",
-   "Enable automated backups",
    "Enable Multi-AZ",
+   "Enable automated backups",
+   "Set the rds.force_ssl parameter to 1 in the parameter group",
    "Increase the instance size"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Setting rds.force_ssl to 1 makes the database reject any non-TLS connection attempt, enforcing encryption in transit at the server. Backups protect durability, Multi-AZ provides availability, and instance size affects performance — none of which enforce TLS."
  },
@@ -580,13 +580,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach should be used to store a private key that an application needs to sign requests?",
   "options": [
-   "AWS KMS with an asymmetric key, keeping the private key inside KMS",
    "A plaintext file in the deployment package",
-   "An environment variable in plaintext",
-   "A public S3 object"
+   "AWS KMS with an asymmetric key, keeping the private key inside KMS",
+   "A public S3 object",
+   "An environment variable in plaintext"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "An asymmetric KMS key never exposes the private key material — the application calls kms:Sign and KMS performs the operation internally, so the key cannot be exfiltrated. Files in packages, plaintext environment variables and public objects all place the private key where it can be copied."
  },
@@ -597,9 +597,9 @@ var QUESTIONS = [
   "scenario": "Which IAM feature allows testing whether a policy grants a specific action before deploying it?",
   "options": [
    "The IAM policy simulator",
-   "CloudTrail Insights",
    "AWS Config rules",
-   "Trusted Advisor"
+   "Trusted Advisor",
+   "CloudTrail Insights"
   ],
   "correct": [
    0
@@ -612,13 +612,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An API must reject requests whose body exceeds an expected schema, before invoking the backend. What should be configured in API Gateway?",
   "options": [
-   "Request validation against a JSON Schema model",
    "A usage plan",
    "A stage variable",
-   "A gateway response for 404"
+   "A gateway response for 404",
+   "Request validation against a JSON Schema model"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Request validators check the body against a JSON Schema model and reject non-conforming requests with 400 before any integration is invoked, saving cost and reducing attack surface. Usage plans throttle, stage variables carry configuration, and gateway responses customise error output."
  },
@@ -629,9 +629,9 @@ var QUESTIONS = [
   "scenario": "Which is true about IAM permission boundaries?",
   "options": [
    "They set the maximum permissions an identity-based policy can grant to a principal",
-   "They grant permissions directly",
+   "They replace the need for identity policies",
    "They apply only to resource-based policies",
-   "They replace the need for identity policies"
+   "They grant permissions directly"
   ],
   "correct": [
    0
@@ -644,13 +644,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach ensures that logs written by a Lambda function cannot be modified or deleted by the function's own role?",
   "options": [
+   "Disable CloudWatch Logs",
    "Grant only logs:CreateLogStream and logs:PutLogEvents, not delete permissions",
    "Grant logs:* to the role",
-   "Disable CloudWatch Logs",
    "Store logs in the function's /tmp directory"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Granting only the create-stream and put-events actions lets the function append logs while denying any ability to delete or alter them, preserving the audit trail. Wildcard logs permissions would allow deletion, disabling logging removes the trail entirely, and /tmp is ephemeral and vanishes with the environment."
  },
@@ -660,13 +660,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company must rotate an RDS master password without application downtime. Which Secrets Manager rotation strategy supports this?",
   "options": [
-   "The alternating users strategy, which maintains two users and switches between them",
-   "Deleting and recreating the database",
    "Rotating only once per year",
-   "Storing two passwords in one secret with no rotation function"
+   "Deleting and recreating the database",
+   "Storing two passwords in one secret with no rotation function",
+   "The alternating users strategy, which maintains two users and switches between them"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "The alternating users strategy keeps two database users and rotates one while the other remains active, so in-flight connections and applications caching the previous value keep working — this is the zero-downtime approach. Recreating the database causes an outage, and rare or manual rotation does not address downtime at all."
  },
@@ -676,13 +676,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about encrypting an existing unencrypted DynamoDB table is correct?",
   "options": [
-   "DynamoDB encrypts all tables at rest by default and the key type can be changed",
    "Encryption must be enabled at creation and can never change",
-   "DynamoDB does not support encryption at rest",
-   "Only global tables are encrypted"
+   "DynamoDB encrypts all tables at rest by default and the key type can be changed",
+   "Only global tables are encrypted",
+   "DynamoDB does not support encryption at rest"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "All DynamoDB tables are encrypted at rest by default, and the key can be switched between an AWS owned key, an AWS managed key and a customer managed key. There is therefore no such thing as an unencrypted DynamoDB table, and encryption is not limited to global tables."
  },
@@ -692,13 +692,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must ensure that a CodeBuild project can pull a private base image from Amazon ECR. What is required?",
   "options": [
-   "The CodeBuild service role needs ECR pull permissions, and the repository policy must allow it",
+   "The image must be copied into S3",
    "The image must be made public",
-   "CodeBuild must run on EC2",
-   "The image must be copied into S3"
+   "The CodeBuild service role needs ECR pull permissions, and the repository policy must allow it",
+   "CodeBuild must run on EC2"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "CodeBuild authenticates using its service role, so that role needs ecr:GetAuthorizationToken and image pull permissions, and the repository policy must permit the principal. Making images public is a security risk, CodeBuild is fully managed rather than run on your EC2 instances, and S3 is not a container registry."
  },
@@ -709,9 +709,9 @@ var QUESTIONS = [
   "scenario": "Which CloudFormation function retrieves an attribute such as the ARN of a resource created in the same template?",
   "options": [
    "Fn::GetAtt",
+   "Fn::Split",
    "Ref",
-   "Fn::Select",
-   "Fn::Split"
+   "Fn::Select"
   ],
   "correct": [
    0
@@ -725,9 +725,9 @@ var QUESTIONS = [
   "scenario": "An application deployed by CodeDeploy to EC2 must stop the running service before new files are copied. Which lifecycle hook should be used?",
   "options": [
    "ApplicationStop",
-   "AfterInstall",
+   "BeforeAllowTraffic",
    "ValidateService",
-   "BeforeAllowTraffic"
+   "AfterInstall"
   ],
   "correct": [
    0
@@ -740,13 +740,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which practice makes a CloudFormation template reusable across environments?",
   "options": [
-   "Parameterise environment-specific values and use Mappings or Conditions",
-   "Hard-code all resource names",
    "Create a separate template per environment",
-   "Use random names generated at deploy time only"
+   "Use random names generated at deploy time only",
+   "Hard-code all resource names",
+   "Parameterise environment-specific values and use Mappings or Conditions"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Parameters supply per-environment values at deploy time, while Mappings and Conditions adapt behaviour without duplicating templates, keeping one source of truth. Hard-coded names cause collisions and prevent reuse, separate templates drift apart, and purely random names make resources hard to identify."
  },
@@ -756,13 +756,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must roll back a Lambda deployment instantly if a post-deployment validation fails. Which CodeDeploy hook enables automated validation?",
   "options": [
-   "AfterAllowTraffic running a validation Lambda that can fail the deployment",
    "ApplicationStart",
+   "DownloadBundle",
    "BeforeInstall",
-   "DownloadBundle"
+   "AfterAllowTraffic running a validation Lambda that can fail the deployment"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "AfterAllowTraffic runs a validation function once traffic has shifted; if it reports failure, CodeDeploy rolls back automatically to the previous version. ApplicationStart, BeforeInstall and DownloadBundle are EC2 and on-premises lifecycle events, not Lambda hooks."
  },
@@ -772,13 +772,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about AWS SAM's implicit resources is correct?",
   "options": [
-   "Defining an Api event on a function implicitly creates an API Gateway API if none is declared",
-   "SAM never creates resources beyond those declared",
    "Implicit APIs cannot be customised",
-   "SAM requires a separate CloudFormation template for API Gateway"
+   "Defining an Api event on a function implicitly creates an API Gateway API if none is declared",
+   "SAM requires a separate CloudFormation template for API Gateway",
+   "SAM never creates resources beyond those declared"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "SAM creates an implicit AWS::Serverless::Api when a function declares Api events without referencing an explicit API, and its settings can be customised through the Globals section or by declaring the API explicitly. SAM transforms shorthand into many underlying resources, and no separate template is needed."
  },
@@ -790,9 +790,9 @@ var QUESTIONS = [
   "options": [
    "A CloudFormation deploy action creating or updating a stack",
    "A CodeDeploy action deploying to EC2, Lambda or ECS",
-   "A source action from CodeCommit",
+   "A CodeBuild action running unit tests",
    "A manual approval action",
-   "A CodeBuild action running unit tests"
+   "A source action from CodeCommit"
   ],
   "correct": [
    0,
@@ -807,9 +807,9 @@ var QUESTIONS = [
   "scenario": "A developer must ensure a new ECS task definition revision is used without changing the service definition each time. What should be referenced?",
   "options": [
    "The task definition family, allowing ECS to use the latest active revision",
-   "A hard-coded revision number forever",
    "The container image digest only",
-   "The cluster ARN"
+   "The cluster ARN",
+   "A hard-coded revision number forever"
   ],
   "correct": [
    0
@@ -822,13 +822,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which Elastic Beanstalk deployment policy briefly runs both old and new application versions on the same instances?",
   "options": [
+   "All at once",
    "Rolling",
    "Immutable",
-   "Blue/green with CNAME swap",
-   "All at once"
+   "Blue/green with CNAME swap"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Rolling updates instances in batches, so while a batch is being updated the remaining instances still run the previous version and both serve traffic simultaneously. Immutable and blue/green isolate versions on separate instances or environments, and all at once replaces everything with a brief outage."
  },
@@ -838,13 +838,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the recommended way to store environment-specific configuration for a containerised application on ECS?",
   "options": [
-   "Reference Systems Manager Parameter Store or Secrets Manager values in the task definition",
-   "Bake values into the container image",
    "Use a different Dockerfile per environment",
-   "Store values in the ECS cluster name"
+   "Store values in the ECS cluster name",
+   "Bake values into the container image",
+   "Reference Systems Manager Parameter Store or Secrets Manager values in the task definition"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "ECS task definitions can inject values from Parameter Store or Secrets Manager at container start, keeping one image usable across environments and secrets out of the image. Baking values in requires rebuilding per environment and risks leaking secrets, and cluster names are identifiers rather than configuration."
  },
@@ -854,13 +854,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which CloudFormation capability must be acknowledged when a template creates IAM resources?",
   "options": [
-   "CAPABILITY_IAM or CAPABILITY_NAMED_IAM",
    "CAPABILITY_AUTO_EXPAND only",
-   "CAPABILITY_RESOURCE_POLICY only",
-   "No capability is required"
+   "CAPABILITY_IAM or CAPABILITY_NAMED_IAM",
+   "No capability is required",
+   "CAPABILITY_RESOURCE_POLICY only"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Creating IAM resources requires explicitly acknowledging CAPABILITY_IAM, or CAPABILITY_NAMED_IAM when those resources have custom names, so privilege escalation cannot happen silently. CAPABILITY_AUTO_EXPAND applies to macros and transforms such as SAM, and resource policy capability covers a different set of resources."
  },
@@ -870,13 +870,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer wants a pipeline to run automatically whenever code is pushed to the main branch. What should be configured?",
   "options": [
-   "A source action with change detection, for example an EventBridge rule on the repository",
-   "A daily scheduled trigger",
    "A manual start every time",
+   "A daily scheduled trigger",
+   "A source action with change detection, for example an EventBridge rule on the repository",
    "A CloudWatch alarm on the repository size"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Change detection via EventBridge starts the pipeline within seconds of a push, which is the point of continuous integration. A daily schedule delays feedback dramatically, manual starts are unreliable, and repository size alarms have nothing to do with commits."
  },
@@ -886,13 +886,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach allows testing a new API version without affecting existing clients?",
   "options": [
-   "Deploy the new version to a separate stage or use a canary release on the stage",
-   "Overwrite the production stage immediately",
    "Delete the old API",
-   "Disable authorisation temporarily"
+   "Deploy the new version to a separate stage or use a canary release on the stage",
+   "Disable authorisation temporarily",
+   "Overwrite the production stage immediately"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "A separate stage gives the new version its own URL for testing, while API Gateway canary releases route a small percentage of production traffic to the new deployment for safe validation. Overwriting production or deleting the old API breaks existing clients, and disabling authorisation is a security regression."
  },
@@ -902,13 +902,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What happens when a CloudFormation stack creation fails and rollback is enabled?",
   "options": [
-   "All resources created during the failed operation are deleted and the stack ends in ROLLBACK_COMPLETE",
-   "The successfully created resources remain",
+   "The account is locked",
    "The stack retries automatically forever",
-   "The account is locked"
+   "The successfully created resources remain",
+   "All resources created during the failed operation are deleted and the stack ends in ROLLBACK_COMPLETE"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "On a failed create with rollback enabled, CloudFormation deletes the resources it created so no partial infrastructure is left behind, ending in ROLLBACK_COMPLETE — a state from which the stack must be deleted before retrying. It does not retry indefinitely, and nothing locks the account."
  },
@@ -918,13 +918,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which practice ensures a deployment can be rolled back quickly if a database migration is involved?",
   "options": [
-   "Make migrations backward compatible so the previous application version still works",
-   "Drop old columns in the same release that stops using them",
+   "Avoid migrations entirely",
    "Run migrations only after the new code is fully deployed everywhere",
-   "Avoid migrations entirely"
+   "Make migrations backward compatible so the previous application version still works",
+   "Drop old columns in the same release that stops using them"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Backward-compatible (expand-then-contract) migrations let the old and new application versions run against the same schema, so rolling back code does not require rolling back the database. Dropping columns immediately makes rollback impossible, and deferring or avoiding migrations does not address compatibility."
  },
@@ -934,13 +934,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which CloudWatch metric statistic is MOST appropriate for detecting occasional slow requests that affect a small fraction of users?",
   "options": [
-   "The p99 percentile of latency",
    "The average latency",
-   "The minimum latency",
-   "The sum of invocations"
+   "The sum of invocations",
+   "The p99 percentile of latency",
+   "The minimum latency"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Percentiles such as p99 expose the tail of the distribution where a small fraction of users experience slow responses, which averages hide entirely. Minimum latency shows the best case, and a sum of invocations counts traffic rather than measuring speed."
  },
@@ -950,13 +950,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application shows increased errors immediately after a deployment. Which is the FASTEST way to confirm the deployment is the cause?",
   "options": [
+   "Delete the CloudWatch alarms",
    "Correlate the error rate metric with the deployment time and roll back to compare",
-   "Increase log retention",
    "Add more memory to the function",
-   "Delete the CloudWatch alarms"
+   "Increase log retention"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Overlaying the error metric with the deployment timestamp shows whether the increase begins exactly at release, and rolling back confirms causation immediately while restoring service. Retention, memory and alarm deletion do not test the hypothesis, and removing alarms actively reduces visibility."
  },
@@ -967,8 +967,8 @@ var QUESTIONS = [
   "scenario": "Which technique reduces the payload size returned by an API to improve client performance?",
   "options": [
    "Enable content encoding such as gzip compression on the API",
-   "Increase the integration timeout",
    "Add more query parameters",
+   "Increase the integration timeout",
    "Disable caching"
   ],
   "correct": [
@@ -982,13 +982,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must determine whether a performance problem is in the application code or in a downstream AWS service. Which X-Ray view helps MOST?",
   "options": [
-   "The trace timeline showing segment and subsegment durations",
    "The CloudWatch billing dashboard",
    "The IAM credential report",
-   "The S3 inventory report"
+   "The S3 inventory report",
+   "The trace timeline showing segment and subsegment durations"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "The trace timeline breaks a request into segments and subsegments with durations, showing directly whether time is spent in your own code or waiting on a downstream call. Billing dashboards, credential reports and S3 inventories address cost, security posture and object listings respectively."
  },
@@ -998,13 +998,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which configuration reduces the number of Lambda invocations when processing a high-volume SQS queue?",
   "options": [
-   "Increase the batch size and configure a batching window",
-   "Decrease the batch size to 1",
    "Disable long polling",
-   "Reduce the function memory"
+   "Increase the batch size and configure a batching window",
+   "Reduce the function memory",
+   "Decrease the batch size to 1"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "A larger batch size processes more messages per invocation and a batching window lets Lambda wait briefly to fill batches, cutting invocation count and cost. A batch size of 1 maximises invocations, disabling long polling increases empty receives, and memory does not affect batching."
  },
@@ -1014,13 +1014,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application's CloudWatch alarm fires constantly due to brief metric spikes. What should be adjusted?",
   "options": [
-   "Increase the number of evaluation periods or datapoints required to alarm",
+   "Reduce the metric period to one second",
    "Delete the alarm",
-   "Lower the threshold",
-   "Reduce the metric period to one second"
+   "Increase the number of evaluation periods or datapoints required to alarm",
+   "Lower the threshold"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Requiring the threshold to be breached across several evaluation periods filters out transient spikes while still catching sustained problems. Deleting the alarm removes monitoring, lowering the threshold makes it fire more often, and a finer period increases sensitivity to noise."
  },
@@ -1030,13 +1030,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the MOST likely cause of a Lambda function reporting 'Task timed out after 3.00 seconds'?",
   "options": [
-   "The function's configured timeout is lower than the work it performs",
-   "The function has too much memory",
    "The IAM role is missing logs permissions",
-   "The deployment package is too small"
+   "The function's configured timeout is lower than the work it performs",
+   "The deployment package is too small",
+   "The function has too much memory"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "That message means execution reached the configured timeout, which defaults to 3 seconds, so either the timeout must be raised or the work made faster. Excess memory makes functions faster rather than slower, missing log permissions would prevent logs appearing at all, and package size does not cause timeouts."
  },
@@ -1046,13 +1046,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team wants to compare application performance before and after a change using consistent measurements. What should be implemented?",
   "options": [
-   "Custom CloudWatch metrics emitted for key operations, tracked over time",
+   "Increased log verbosity only",
    "Manual stopwatch timing during testing",
    "Screenshots of the console",
-   "Increased log verbosity only"
+   "Custom CloudWatch metrics emitted for key operations, tracked over time"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Custom metrics provide consistent, comparable time series across releases, enabling objective before-and-after analysis and alerting. Manual timing is inconsistent and unrepeatable, screenshots are not analysable, and more verbose logs add noise without structured measurement."
  },
@@ -1063,9 +1063,9 @@ var QUESTIONS = [
   "scenario": "Which action helps diagnose why an ECS task on Fargate cannot pull its container image?",
   "options": [
    "Check the task's stopped reason and confirm the execution role has ECR pull permissions and network egress",
-   "Increase the task memory",
    "Add more subnets to the cluster",
-   "Enable Container Insights only"
+   "Enable Container Insights only",
+   "Increase the task memory"
   ],
   "correct": [
    0
@@ -1078,13 +1078,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach provides the clearest signal that an asynchronous workflow has stalled?",
   "options": [
-   "An alarm on the age of the oldest message or the workflow's execution duration",
+   "Reviewing IAM policies",
    "Counting total invocations only",
    "Checking the AWS status page",
-   "Reviewing IAM policies"
+   "An alarm on the age of the oldest message or the workflow's execution duration"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Age of the oldest message, or execution duration exceeding an expected bound, directly indicates work is not progressing. Total invocation counts can look healthy while a backlog grows, the status page reports AWS-wide incidents rather than your workflow, and IAM policies relate to permissions."
  },
@@ -1094,13 +1094,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which CloudFront setting should be reviewed when dynamic content is being served stale to users?",
   "options": [
-   "The cache policy TTL and which headers, cookies and query strings form the cache key",
    "The distribution price class",
-   "The SSL certificate",
-   "The origin's storage class"
+   "The cache policy TTL and which headers, cookies and query strings form the cache key",
+   "The origin's storage class",
+   "The SSL certificate"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Stale dynamic content usually means the TTL is too long or the cache key omits a value that distinguishes responses, so different users share one cached object. Price class controls which edge locations are used, certificates handle TLS, and storage class affects origin cost rather than caching behaviour."
  },
@@ -1110,13 +1110,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must identify the most expensive contributor to a Lambda function's bill. Which combination is MOST useful?",
   "options": [
-   "Cost Explorer grouped by function tag, alongside Duration and Invocations metrics",
-   "The IAM credential report",
    "VPC Flow Logs",
-   "S3 inventory"
+   "The IAM credential report",
+   "S3 inventory",
+   "Cost Explorer grouped by function tag, alongside Duration and Invocations metrics"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Cost Explorer attributes spend by tag or service while Duration and Invocations reveal whether the driver is call volume or execution time, together pointing to the right optimisation. Credential reports cover security, Flow Logs cover network traffic, and S3 inventory lists objects."
  }

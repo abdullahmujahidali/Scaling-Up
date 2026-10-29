@@ -79,12 +79,12 @@ var QUESTIONS = [
   "scenario": "A company increases the size of a single Amazon EC2 instance from t3.medium to t3.2xlarge to handle more load. What is this an example of?",
   "options": [
    "Horizontal scaling",
-   "Vertical scaling",
    "Elasticity",
-   "Load balancing"
+   "Load balancing",
+   "Vertical scaling"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "Making one machine bigger is vertical scaling, sometimes called scaling up. Horizontal scaling, or scaling out, means adding more instances alongside the existing one, which is the pattern AWS generally recommends because it also improves availability. Elasticity refers to automatically matching capacity to demand in both directions. Load balancing distributes traffic across multiple instances.",
   "id": 1,
@@ -95,8 +95,8 @@ var QUESTIONS = [
   "scenario": "A startup wants free AWS credits and technical support to help it get established. Which AWS programme is intended for this?",
   "options": [
    "AWS Activate for Startups",
-   "AWS IQ",
    "AWS Marketplace",
+   "AWS IQ",
    "AWS Professional Services"
   ],
   "correct": [
@@ -112,8 +112,8 @@ var QUESTIONS = [
   "options": [
    "Scalability is the ability to grow to handle more load; elasticity adds automatically shrinking again when load falls",
    "Scalability applies only to storage, while elasticity applies only to compute",
-   "Scalability is available only in the largest AWS Regions",
-   "Elasticity requires a long-term commitment to a fixed capacity"
+   "Elasticity requires a long-term commitment to a fixed capacity",
+   "Scalability is available only in the largest AWS Regions"
   ],
   "correct": [
    0
@@ -126,13 +126,13 @@ var QUESTIONS = [
   "domain": 1,
   "scenario": "A company replaces a large upfront purchase of physical servers with monthly payments for only the AWS capacity it uses. Which cloud benefit does this represent?",
   "options": [
-   "Trading capital expense for variable operational expense",
-   "Increasing the speed of software development",
    "Improving application security automatically",
-   "Guaranteeing zero downtime for all workloads"
+   "Trading capital expense for variable operational expense",
+   "Guaranteeing zero downtime for all workloads",
+   "Increasing the speed of software development"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Replacing an upfront hardware purchase, a capital expense, with ongoing payments for what you consume is the benefit AWS describes as trading capital expense for variable expense. Faster development is a separate benefit associated with agility. Moving to AWS does not automatically improve security, which remains a shared responsibility. No provider guarantees zero downtime for all workloads.",
   "id": 4,
@@ -142,13 +142,13 @@ var QUESTIONS = [
   "domain": 1,
   "scenario": "Which cloud computing characteristic describes AWS serving many customers from a shared pool of underlying physical infrastructure?",
   "options": [
-   "Resource pooling",
    "Rapid elasticity",
-   "Measured service",
-   "Broad network access"
+   "Broad network access",
+   "Resource pooling",
+   "Measured service"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Resource pooling means the provider's computing resources are pooled to serve multiple consumers, with physical resources dynamically assigned according to demand. Rapid elasticity refers to scaling capacity in and out quickly. Measured service means usage is metered so you pay for what you consume. Broad network access means the services are reachable over the network from a wide range of devices.",
   "id": 5,
@@ -158,13 +158,13 @@ var QUESTIONS = [
   "domain": 2,
   "scenario": "A security team wants to know which AWS services a specific IAM role has actually accessed, and when it last used them, so unnecessary permissions can be removed. Which tool provides this?",
   "options": [
-   "IAM Access Advisor",
-   "The IAM credentials report",
+   "AWS Artifact",
    "AWS Trusted Advisor",
-   "AWS Artifact"
+   "The IAM credentials report",
+   "IAM Access Advisor"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "IAM Access Advisor shows the services an identity has permission to use along with when each was last accessed, which is exactly what you need to strip unused permissions and move toward least privilege. The credentials report is account-wide and covers credential status rather than service usage. Trusted Advisor gives general best-practice checks. AWS Artifact provides compliance reports such as SOC and ISO documents.",
   "id": 6,
@@ -174,13 +174,13 @@ var QUESTIONS = [
   "domain": 2,
   "scenario": "A company needs to record which network traffic is accepted and rejected in its VPC in order to troubleshoot a connectivity problem. What should it enable?",
   "options": [
-   "VPC Flow Logs",
    "AWS CloudTrail",
    "Amazon CloudWatch alarms",
+   "VPC Flow Logs",
    "VPC peering"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "VPC Flow Logs capture information about IP traffic going to and from network interfaces, including whether it was accepted or rejected, which is the standard tool for troubleshooting connectivity. CloudTrail records API calls made to AWS services, not packet-level network flows. CloudWatch alarms react to metric thresholds. VPC peering connects two VPCs and is not a logging feature.",
   "id": 7,
@@ -190,13 +190,13 @@ var QUESTIONS = [
   "domain": 2,
   "scenario": "A company wants its EC2 instances in a private subnet to reach Amazon S3 without sending traffic over the public internet. What should it use?",
   "options": [
-   "A VPC endpoint",
    "A NAT gateway",
    "An internet gateway",
+   "A VPC endpoint",
    "AWS Direct Connect"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "A VPC endpoint allows private connectivity to supported AWS services such as Amazon S3 without traversing the public internet. A NAT gateway does allow private instances to reach the internet, but the traffic still leaves over the internet, which the question excludes. An internet gateway exposes traffic to the internet directly. Direct Connect links an on-premises data centre to AWS, which is not what is being asked.",
   "id": 8,
@@ -206,13 +206,13 @@ var QUESTIONS = [
   "domain": 2,
   "scenario": "A company wants to detect when an Amazon S3 bucket policy has been changed so that the bucket becomes publicly accessible. Which service records the API call that made the change?",
   "options": [
+   "AWS Secrets Manager",
    "AWS CloudTrail",
-   "Amazon CloudWatch Logs",
    "AWS Trusted Advisor",
-   "AWS Secrets Manager"
+   "Amazon CloudWatch Logs"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "AWS CloudTrail records API activity across the account, including who changed a bucket policy, from what address and when, which is what identifies the change. CloudWatch Logs stores application and system log data rather than an audit trail of API calls. Trusted Advisor can flag publicly accessible buckets as a check but does not record who made the change. Secrets Manager stores and rotates credentials.",
   "id": 9,
@@ -223,9 +223,9 @@ var QUESTIONS = [
   "scenario": "Which of the following is a customer responsibility under the AWS shared responsibility model when using Amazon S3?",
   "options": [
    "Configuring bucket policies and access permissions",
-   "Replacing failed physical storage media",
    "Patching the storage service software",
-   "Maintaining physical security of the data centre"
+   "Maintaining physical security of the data centre",
+   "Replacing failed physical storage media"
   ],
   "correct": [
    0
@@ -238,13 +238,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "Reporting queries against an Amazon RDS database are slowing down the main application. The company wants to improve read performance without changing the application's write path. What should it implement?",
   "options": [
+   "A larger Amazon EBS volume",
    "A Multi-AZ deployment",
    "A read replica",
-   "An automated snapshot schedule",
-   "A larger Amazon EBS volume"
+   "An automated snapshot schedule"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Read replicas exist to serve read traffic, so reporting queries can be pointed at the replica instead of competing with the application. Multi-AZ is the trap: its standby exists for automatic failover and availability and does not serve read traffic. Snapshots are backups. A larger volume does not stop the two workloads competing. Hook: read replica means performance, Multi-AZ means availability.",
   "id": 11,
@@ -254,13 +254,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "A company must ensure its Amazon RDS database continues operating automatically if an entire Availability Zone becomes unavailable. Which feature should it enable?",
   "options": [
-   "Read replicas in the same Region",
    "A Multi-AZ deployment",
-   "Amazon RDS automated backups",
-   "Amazon DynamoDB Global Tables"
+   "Amazon DynamoDB Global Tables",
+   "Read replicas in the same Region",
+   "Amazon RDS automated backups"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "A Multi-AZ deployment maintains a synchronous standby in a second Availability Zone and fails over to it automatically, which is precisely the requirement. Read replicas improve read performance and are not designed as automatic failover targets. Automated backups allow recovery afterwards but do not keep the database running. DynamoDB Global Tables apply to DynamoDB, not to Amazon RDS.",
   "id": 12,
@@ -270,13 +270,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "An application built on Amazon DynamoDB needs microsecond read latency for frequently requested items, without changing to a different database. What should be added?",
   "options": [
-   "Amazon DynamoDB Accelerator (DAX)",
-   "Amazon RDS read replicas",
+   "Amazon CloudFront",
    "Amazon S3 Transfer Acceleration",
-   "Amazon CloudFront"
+   "Amazon RDS read replicas",
+   "Amazon DynamoDB Accelerator (DAX)"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "DynamoDB Accelerator, or DAX, is an in-memory cache purpose-built for DynamoDB and delivers microsecond read latency. RDS read replicas belong to Amazon RDS, a different service. S3 Transfer Acceleration speeds uploads to Amazon S3 over long distances. CloudFront caches content at edge locations for end users and is not the caching layer for DynamoDB item reads.",
   "id": 13,
@@ -302,13 +302,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "A company must keep a copy of its Amazon S3 objects in a second AWS Region to satisfy a regulatory requirement for geographic separation. Which feature should it enable?",
   "options": [
-   "S3 Cross-Region Replication",
    "S3 Same-Region Replication",
-   "S3 Versioning only",
-   "S3 Transfer Acceleration"
+   "S3 Cross-Region Replication",
+   "S3 Transfer Acceleration",
+   "S3 Versioning only"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Cross-Region Replication automatically copies objects into a bucket in a different AWS Region, which satisfies geographic separation requirements. Same-Region Replication copies objects within the same Region, useful for aggregating logs or populating a test environment. Versioning preserves earlier versions of an object but keeps them in the same bucket. Transfer Acceleration speeds up uploads and does not create a second copy.",
   "id": 15,
@@ -318,13 +318,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "A company has a database workload with unpredictable, intermittent traffic and does not want to manage or pay for capacity when the database is idle. Which option best fits?",
   "options": [
+   "Amazon Redshift",
    "Amazon Aurora Serverless",
    "Amazon RDS with Reserved Instances",
-   "Amazon Redshift",
    "Amazon EC2 with a self-managed database"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Aurora Serverless automatically starts, scales and stops database capacity based on demand, which suits unpredictable and intermittent workloads. RDS with Reserved Instances commits you to paying for capacity for one or three years, which is the opposite of the requirement. Redshift is a data warehouse for analytics. Running the database yourself on EC2 increases both cost and operational effort.",
   "id": 16,
@@ -334,13 +334,13 @@ var QUESTIONS = [
   "domain": 3,
   "scenario": "A global application uses Amazon DynamoDB and needs the same table to be readable and writable with low latency from several AWS Regions. Which feature should be used?",
   "options": [
-   "DynamoDB Global Tables",
-   "DynamoDB Accelerator (DAX)",
    "Amazon RDS Multi-AZ",
-   "Amazon S3 Cross-Region Replication"
+   "Amazon S3 Cross-Region Replication",
+   "DynamoDB Accelerator (DAX)",
+   "DynamoDB Global Tables"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "DynamoDB Global Tables replicate a table across multiple AWS Regions so users in each Region read and write locally. DAX is an in-memory cache that reduces read latency within a single Region. RDS Multi-AZ applies to Amazon RDS and provides failover within one Region. S3 Cross-Region Replication copies objects in Amazon S3, not DynamoDB tables.",
   "id": 17,
@@ -351,9 +351,9 @@ var QUESTIONS = [
   "scenario": "A development team wants to test its mobile application on many real physical devices hosted in the cloud rather than purchasing handsets. Which service should the team use?",
   "options": [
    "AWS Device Farm",
-   "Amazon AppStream 2.0",
+   "AWS Amplify",
    "Amazon WorkSpaces",
-   "AWS Amplify"
+   "Amazon AppStream 2.0"
   ],
   "correct": [
    0
@@ -366,13 +366,13 @@ var QUESTIONS = [
   "domain": 4,
   "scenario": "A managed service provider resells AWS to its own customers and needs to produce customised billing views for each of them. Which service is designed for this?",
   "options": [
-   "AWS Billing Conductor",
-   "AWS Cost Explorer",
    "AWS Budgets",
-   "AWS Pricing Calculator"
+   "AWS Pricing Calculator",
+   "AWS Billing Conductor",
+   "AWS Cost Explorer"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "AWS Billing Conductor produces customised billing data and invoices, which is specifically aimed at resellers and managed service providers who re-bill their own customers. Cost Explorer analyses and visualises your own spending. Budgets alerts you when spending passes a limit you set. The Pricing Calculator estimates costs for a workload before it is built.",
   "id": 19,
@@ -382,13 +382,13 @@ var QUESTIONS = [
   "domain": 4,
   "scenario": "A company wants to estimate the monthly cost of a proposed architecture before deploying any resources. Which tool should it use?",
   "options": [
-   "AWS Pricing Calculator",
+   "AWS Budgets",
    "AWS Cost Explorer",
    "AWS Cost and Usage Report",
-   "AWS Budgets"
+   "AWS Pricing Calculator"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "The AWS Pricing Calculator estimates the cost of an architecture in advance, before anything is deployed. Cost Explorer and the Cost and Usage Report both analyse spending that has already happened. AWS Budgets tracks spending against a limit you define and alerts you, which also requires resources to exist. Hook: before you build means Pricing Calculator.",
   "id": 20,

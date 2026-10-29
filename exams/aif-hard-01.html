@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Hard Quiz 1</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Hard Quiz 1</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question HARD quiz · exam-style scenarios · every option plausible · no length clues</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Hard Quiz 1</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-hard-01","title":"AIF Hard Quiz 1","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A bank trains a model to flag fraudulent card transactions. Only 0.5% of transactions are fraud. In testing the model reports 99.5% accuracy, yet it missed almost every real fraud case. Which metric should the team use to judge how many fraud cases the model actually catches?",
+  "options": [
+   "Root mean squared error (RMSE)",
+   "Accuracy on a larger test set",
+   "Precision",
+   "Recall"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Recall = of all the REAL fraud cases, how many did the model catch. A model that says 'not fraud' every time gets 99.5% accuracy here, which is why accuracy is the trap. Precision measures false alarms, not missed cases. RMSE is for regression (predicting numbers)."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A logistics company has millions of delivery records with no labels. It wants to discover natural groups of customers with similar delivery behaviour so it can design new service tiers. Which approach fits?",
+  "options": [
+   "Supervised classification of the records",
+   "Reinforcement learning with tier rewards",
+   "Unsupervised learning (clustering)",
+   "Regression to predict a tier score"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "No labels + 'discover groups' = unsupervised clustering. Supervised classification and regression both need labelled examples of the right answer, which the company does not have. Reinforcement learning learns actions from rewards in an environment, not groupings."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A media company must generate subtitles for an archive of 40,000 recorded videos. Results are not needed until next morning, and the company wants the lowest cost. Which SageMaker inference option fits BEST?",
+  "options": [
+   "A SageMaker real-time endpoint",
+   "SageMaker batch transform",
+   "SageMaker Asynchronous Inference",
+   "SageMaker Serverless Inference"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "A large dataset processed all at once, with no need for an immediate answer = batch transform. Real-time endpoints run (and bill) continuously for instant answers. Serverless suits unpredictable small requests. Asynchronous suits single large requests that queue for minutes, not a whole archive overnight."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A business analyst with no coding experience wants to build a customer-churn prediction model from a CSV file using a point-and-click interface. Which service should they use?",
+  "options": [
+   "Amazon Personalize",
+   "Amazon SageMaker Canvas",
+   "Amazon SageMaker Data Wrangler",
+   "SageMaker Studio notebooks"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Canvas = no-code ML: upload data, click, get predictions. Data Wrangler only prepares data, it does not build the model for a non-coder. Studio notebooks need code. Personalize is for recommendations, not churn prediction."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A law firm uses a foundation model to summarise contract clauses. Reviewers complain that the same clause produces noticeably different wording every time. Which change makes the output MORE consistent?",
+  "options": [
+   "Raise the temperature slightly",
+   "Increase the maximum output tokens",
+   "Raise the top-p value",
+   "Lower the temperature"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Lower temperature = less randomness = more consistent output. Raising top-p or temperature adds MORE randomness. Maximum output tokens only controls length."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A team pastes a 300-page technical manual into every prompt. The model returns an error saying the input is too large. Which limit has the team exceeded?",
+  "options": [
+   "The model's context window",
+   "The account's provisioned throughput",
+   "The model's maximum temperature",
+   "The embedding vector dimension"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "The context window is the maximum number of tokens a model can read (input) and write in one request. Provisioned throughput is about request capacity, not input size. Embedding dimension and temperature have nothing to do with input length. (The real fix here would be RAG: send only the relevant pages.)"
+ },
+ {
+  "id": 7,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An online store wants a search for 'running sneakers' to also return products described as 'jogging shoes', even though no words match. What makes this possible?",
+  "options": [
+   "Embeddings stored in a vector database",
+   "Amazon Comprehend key phrase extraction",
+   "Amazon Translate",
+   "Fine-tuning a text-generation model"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Embeddings turn text into numbers that capture MEANING, so 'running sneakers' and 'jogging shoes' land close together and a vector search finds both. Key phrase extraction only pulls out words that are already there. Fine-tuning changes how a model writes, not how search works. Translate changes language."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": true,
+  "scenario": "A customer-service chatbot built on a foundation model sometimes invents product prices that do not exist. Which TWO actions would MOST reduce this? (Select TWO)",
+  "options": [
+   "Switch to a model with a longer context window only",
+   "Raise the top-k value",
+   "Increase the maximum output tokens",
+   "Ground answers with RAG over the current price list",
+   "Lower the temperature"
+  ],
+  "correct": [
+   3,
+   4
+  ],
+  "explain": "Inventing facts = hallucination. RAG gives the model the real price list to answer from, and a lower temperature makes it stick closer to likely, grounded text. More output tokens, higher top-k (more randomness) and a longer context window with no new data do not stop invented facts."
+ },
+ {
+  "id": 9,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A startup is choosing between Amazon Bedrock on-demand pricing and hosting its own model on EC2. With Bedrock on-demand, what mainly determines the bill for text models?",
+  "options": [
+   "The number of parameters in the model",
+   "The number of users in the AWS account",
+   "The number of input and output tokens",
+   "The hours the model endpoint is running"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Bedrock on-demand charges per token: tokens you send in plus tokens the model writes back. Paying for hours is how self-hosted endpoints (EC2/SageMaker) are billed, and also Bedrock Provisioned Throughput. Parameter count and user count are not billing units."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A support team wants an assistant that answers questions from its product manuals. The manuals change several times a week, and every answer must show which manual section it came from. Which solution requires the LEAST ongoing effort?",
+  "options": [
+   "Amazon Bedrock Knowledge Bases",
+   "Fine-tune a Bedrock model on the manuals each week",
+   "Few-shot prompts with three example answers",
+   "Continued pre-training on all of the manuals"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Changing documents + cite the source = RAG, and Bedrock Knowledge Bases is AWS's managed RAG (it returns citations). Fine-tuning and continued pre-training would need retraining every week and cannot cite sources. Few-shot examples teach format, not the content of hundreds of pages."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A travel company wants an assistant that, in one conversation, checks flight availability by calling the company's booking API and then creates the reservation for the customer. Which Bedrock capability is designed for this?",
+  "options": [
+   "Bedrock model evaluation",
+   "Amazon Bedrock Knowledge Bases",
+   "Amazon Bedrock Agents",
+   "Amazon Bedrock Guardrails"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Agents plan multi-step tasks and CALL APIs (actions) to complete them. Knowledge Bases only retrieve documents to answer questions; they cannot book anything. Guardrails filter content. Model evaluation compares models."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company is testing a model that converts English product descriptions into Spanish. It wants an automatic score that compares the model's output with versions written by professional translators. Which metric fits?",
+  "options": [
+   "Perplexity",
+   "BLEU",
+   "F1 score",
+   "ROUGE"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "BLEU = Bilingual = translation. ROUGE = Reduce = summaries. F1 is for classification. Perplexity measures how 'surprised' a language model is by text; it does not compare against human translations."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company must sort millions of short support tickets into five categories every day, with the lowest cost and latency. In testing, a small model met the accuracy target. Which model choice is BEST?",
+  "options": [
+   "A multimodal model, to support images later",
+   "The smallest model that meets the accuracy target",
+   "The model with the longest context window",
+   "The largest model available, for best quality"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Bigger models cost more per token and respond more slowly. If a small model is accurate enough, it wins on cost and latency. A long context window is not needed for short tickets, and multimodal adds cost for a need that does not exist yet."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A model often gets multi-step maths word problems wrong. The team cannot retrain it. Which prompting technique is MOST likely to improve the answers?",
+  "options": [
+   "Negative prompting",
+   "Lowering the maximum output tokens",
+   "Zero-shot prompting",
+   "Chain-of-thought prompting"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Chain-of-thought asks the model to reason step by step ('think step by step'), which helps multi-step problems. Zero-shot gives no help at all. Fewer output tokens cuts the reasoning short. Negative prompting says what NOT to include and does not add reasoning."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "Before deploying a loan-approval model, a lender must check whether its training data under-represents some age groups. Which service should it use?",
+  "options": [
+   "Amazon Augmented AI (A2I)",
+   "Amazon SageMaker Clarify",
+   "Amazon SageMaker Model Monitor",
+   "Amazon SageMaker Model Cards"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Clarify detects BIAS, both in the training data (before training) and in predictions, and it explains predictions. Model Monitor watches a model that is ALREADY deployed. Model Cards only document a model. A2I sends predictions to humans for review."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A healthcare company's document model extracts values from medical forms. When the model's confidence is low, a person must check the result before it is released. Which service provides this?",
+  "options": [
+   "Amazon SageMaker Model Monitor",
+   "Amazon Bedrock Guardrails",
+   "Amazon Augmented AI (A2I)",
+   "Amazon SageMaker Clarify"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "A2I = human review loop: low-confidence predictions are sent to people automatically. Clarify finds bias and explains predictions, Model Monitor watches for drift, and Guardrails filter content. None of these sends work to a human."
+ },
+ {
+  "id": 17,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A bank's chatbot on Amazon Bedrock must refuse to give investment advice and must hide customer account numbers in its replies. Which service handles BOTH requirements?",
+  "options": [
+   "Amazon Bedrock Guardrails",
+   "AWS WAF",
+   "Amazon Macie",
+   "Amazon SageMaker Clarify"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Guardrails can block denied topics (investment advice) AND mask or block sensitive information (PII) in prompts and responses. Macie finds PII in S3 buckets, not in chatbot replies. WAF filters web traffic. Clarify checks bias."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A company builds an application on Amazon Bedrock. Under the shared responsibility model, which task belongs to the COMPANY rather than AWS?",
+  "options": [
+   "Maintaining the model hosting hardware",
+   "Patching the servers that run the models",
+   "Physical security of the data centres",
+   "Controlling which IAM users can invoke models"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Bedrock is a managed service, so AWS handles servers, patching, hardware and data centres (security OF the cloud). The customer always controls access, data and how the service is used (security IN the cloud): IAM permissions are yours."
+ },
+ {
+  "id": 19,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Before using datasets stored in Amazon S3 to fine-tune a model, the security team must find out whether any of the files contain credit card numbers. Which service should they use?",
+  "options": [
+   "Amazon Macie",
+   "Amazon GuardDuty",
+   "Amazon Bedrock Guardrails",
+   "Amazon Inspector"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Sensitive data (PII, card numbers) sitting in S3 = Macie. Guardrails filter prompts and responses in Bedrock, not files in S3. GuardDuty detects threats (suspicious activity). Inspector scans for software vulnerabilities."
+ },
+ {
+  "id": 20,
+  "domain": 5,
+  "multi": true,
+  "scenario": "An auditor asks two questions about an AI project: (1) Who changed the bucket policy on the training-data bucket last month? (2) Has that bucket's configuration stayed compliant with company rules over the past 90 days? Which TWO services answer these? (Select TWO)",
+  "options": [
+   "AWS CloudTrail",
+   "Amazon CloudWatch",
+   "AWS Artifact",
+   "AWS Trusted Advisor",
+   "AWS Config"
+  ],
+  "correct": [
+   0,
+   4
+  ],
+  "explain": "Who did what (API calls) = CloudTrail. Configuration history and compliance with rules over time = AWS Config. CloudWatch is metrics and logs for performance. Artifact provides AWS's own compliance reports. Trusted Advisor gives best-practice recommendations."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

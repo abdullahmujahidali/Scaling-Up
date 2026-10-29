@@ -81,8 +81,8 @@ var QUESTIONS = [
   "scenario": "A company must choose between RAG and fine-tuning for a support assistant. Product documentation changes weekly, and answers must reference specific documents. Which is correct and why?",
   "options": [
    "RAG, because it retrieves current documents at query time and enables citation",
-   "Fine-tuning, because it is cheaper than RAG",
    "Fine-tuning, because it guarantees accuracy",
+   "Fine-tuning, because it is cheaper than RAG",
    "Neither; only pre-training works"
   ],
   "correct": [
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which of these would MOST directly reduce the per-request cost of a high-volume GenAI application?",
   "options": [
-   "Shortening prompts and capping output tokens",
    "Raising the temperature",
-   "Adding more few-shot examples",
-   "Increasing the context window"
+   "Increasing the context window",
+   "Shortening prompts and capping output tokens",
+   "Adding more few-shot examples"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Cost is driven by tokens in and out, so shorter prompts and capped outputs reduce it directly. More examples and a bigger context window both increase token usage."
  },
@@ -113,9 +113,9 @@ var QUESTIONS = [
   "scenario": "Which statement about labelled and unlabelled data is correct?",
   "options": [
    "Supervised learning requires labelled data; unsupervised learning works with unlabelled data",
-   "Both approaches require labelled data",
+   "Unsupervised learning requires more labels",
    "Labels are only needed for image data",
-   "Unsupervised learning requires more labels"
+   "Both approaches require labelled data"
   ],
   "correct": [
    0
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service would convert a customer service call recording into searchable text?",
   "options": [
-   "Amazon Transcribe",
    "Amazon Polly",
+   "Amazon Personalize",
    "Amazon Kendra",
-   "Amazon Personalize"
+   "Amazon Transcribe"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Transcribe converts speech to text, which can then be searched or analysed. Polly generates speech, Kendra searches existing documents, and Personalize makes recommendations."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which describes the main advantage of using a managed AI service such as Amazon Comprehend over building a custom model?",
   "options": [
-   "Faster delivery with no ML expertise required",
    "It always produces more accurate results than any custom model",
-   "It removes the need for data governance",
-   "It is always free"
+   "Faster delivery with no ML expertise required",
+   "It is always free",
+   "It removes the need for data governance"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Managed services deliver quickly without ML expertise. A custom model can outperform them for specialised tasks, governance still applies, and usage is billed."
  },
@@ -160,13 +160,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does the term 'nondeterministic' mean when applied to generative AI?",
   "options": [
-   "The same input may produce different outputs on different runs",
    "The model cannot be deployed",
-   "The output is always identical",
-   "The model requires no data"
+   "The same input may produce different outputs on different runs",
+   "The model requires no data",
+   "The output is always identical"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Nondeterminism means repeated identical prompts can yield different responses, which complicates testing and reproducibility. Lowering temperature reduces but does not eliminate it."
  },
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the MOST appropriate first step when a GenAI application is found to produce occasional toxic language?",
   "options": [
-   "Configure Amazon Bedrock Guardrails to filter harmful content",
    "Retrain the foundation model from scratch",
-   "Increase the temperature",
-   "Remove all logging"
+   "Remove all logging",
+   "Configure Amazon Bedrock Guardrails to filter harmful content",
+   "Increase the temperature"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Guardrails filters harmful content and is the direct, proportionate control. Retraining a foundation model is wildly disproportionate, higher temperature worsens it, and removing logging hides the problem."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is a valid reason to prefer a more interpretable model over a more accurate but opaque one?",
   "options": [
-   "Regulatory requirements demand explanations for individual decisions",
-   "Interpretable models are always faster",
+   "Accuracy is never important",
    "Opaque models cannot be deployed on AWS",
-   "Accuracy is never important"
+   "Regulatory requirements demand explanations for individual decisions",
+   "Interpretable models are always faster"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "In regulated domains such as lending and healthcare, the ability to explain individual decisions can outweigh a marginal accuracy gain. This is the safety-versus-transparency trade-off the exam guide names."
  },
@@ -209,9 +209,9 @@ var QUESTIONS = [
   "scenario": "Which service provides evidence collection to support audits of AI workloads?",
   "options": [
    "AWS Audit Manager",
-   "Amazon Polly",
+   "Amazon Lex",
    "Amazon Forecast",
-   "Amazon Lex"
+   "Amazon Polly"
   ],
   "correct": [
    0
@@ -225,9 +225,9 @@ var QUESTIONS = [
   "scenario": "Which practice provides an audit trail of every interaction with a foundation model?",
   "options": [
    "Enabling logging of model invocations and API activity",
-   "Disabling CloudTrail to save cost",
+   "Using only the root user",
    "Raising the temperature",
-   "Using only the root user"
+   "Disabling CloudTrail to save cost"
   ],
   "correct": [
    0
@@ -240,13 +240,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which term describes providing exactly one example in the prompt?",
   "options": [
-   "One-shot (single-shot) prompting",
    "Zero-shot prompting",
+   "Chain-of-thought prompting",
    "Few-shot prompting",
-   "Chain-of-thought prompting"
+   "One-shot (single-shot) prompting"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "One-shot supplies a single example, zero-shot none, and few-shot several. Chain-of-thought is about step-by-step reasoning rather than the number of examples."
  },
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to measure whether its GenAI assistant is meeting business objectives. Which metric is MOST relevant?",
   "options": [
+   "Number of tokens in the vocabulary",
    "Cost per interaction and task completion rate",
    "GPU utilisation",
-   "Number of tokens in the vocabulary",
    "Model file size"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Business alignment is measured by outcomes such as cost per interaction, task completion rate and user satisfaction. GPU utilisation, vocabulary size and file size are technical details."
  },
@@ -272,13 +272,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which describes a diffusion model?",
   "options": [
-   "A model type commonly used to generate images",
+   "A billing model",
    "A relational database engine",
-   "A network routing protocol",
-   "A billing model"
+   "A model type commonly used to generate images",
+   "A network routing protocol"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Diffusion models generate images, whereas transformer-based LLMs generate text. Both are foundation model families named in the exam guide."
  },
@@ -288,13 +288,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used when a company wants full control to build, train and deploy a custom ML model?",
   "options": [
-   "Amazon SageMaker AI",
-   "Amazon Bedrock",
    "Amazon Comprehend",
+   "Amazon Bedrock",
+   "Amazon SageMaker AI",
    "Amazon Polly"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "SageMaker AI is the platform for building, training and deploying custom models with full control. Bedrock provides access to existing foundation models, and Comprehend and Polly are pre-built capabilities."
  },
@@ -304,13 +304,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which describes the effect of high variance in a machine learning model?",
   "options": [
-   "The model fits training data closely but generalises poorly to new data",
    "The model ignores the training data entirely",
    "The model cannot be deployed",
-   "The model requires no evaluation"
+   "The model requires no evaluation",
+   "The model fits training data closely but generalises poorly to new data"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "High variance corresponds to overfitting: excellent on training data, poor on unseen data. High bias corresponds to underfitting, where the model learns too little."
  },
@@ -320,15 +320,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO approaches help verify that a GenAI system's answers are grounded in real source material?",
   "options": [
-   "Retrieving and citing source documents through RAG",
-   "Applying confidence scoring and output validation",
+   "Removing human review",
    "Increasing the maximum token limit",
-   "Using a higher temperature",
-   "Removing human review"
+   "Applying confidence scoring and output validation",
+   "Retrieving and citing source documents through RAG",
+   "Using a higher temperature"
   ],
   "correct": [
-   0,
-   1
+   2,
+   3
   ],
   "explain": "Grounding is verified by retrieving and citing real sources and by validating output with confidence scoring. Token limits and temperature do not establish grounding, and removing human review weakens assurance."
  },
@@ -338,13 +338,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which best explains why prompt engineering is usually attempted before fine-tuning?",
   "options": [
-   "It is far cheaper and faster, and often sufficient",
    "It always produces better results than fine-tuning",
-   "Fine-tuning is not available on AWS",
-   "Prompt engineering permanently changes the model"
+   "It is far cheaper and faster, and often sufficient",
+   "Prompt engineering permanently changes the model",
+   "Fine-tuning is not available on AWS"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Prompt engineering costs nothing beyond tokens and is often enough, which is why it comes first in the cost order. It does not always outperform fine-tuning, and it never changes the model itself."
  },
@@ -354,13 +354,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which describes an appropriate use of Amazon Bedrock Guardrails in a regulated industry?",
   "options": [
-   "Blocking prohibited topics and masking personal data in responses",
    "Training a model from scratch",
+   "Blocking prohibited topics and masking personal data in responses",
    "Provisioning EC2 instances",
    "Managing DNS records"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Guardrails blocks denied topics, filters harmful content and masks PII — directly useful under regulation. It does not train models or manage infrastructure."
  },
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which stage of the AI/ML lifecycle involves checking model quality against held-out data before release?",
   "options": [
-   "Evaluation",
    "Data collection",
    "Deployment",
-   "Monitoring"
+   "Monitoring",
+   "Evaluation"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Evaluation tests the trained model against held-out data before release. Deployment follows it, and monitoring watches the model once it is live."
  },
@@ -387,8 +387,8 @@ var QUESTIONS = [
   "scenario": "A company deploys an AI system that affects access to financial services. Which responsible AI practice is MOST important?",
   "options": [
    "Assessing fairness across demographic groups and enabling explanation of decisions",
-   "Maximising response speed above all else",
    "Minimising documentation",
+   "Maximising response speed above all else",
    "Removing human oversight to reduce cost"
   ],
   "correct": [

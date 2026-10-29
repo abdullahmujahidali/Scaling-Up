@@ -18,6 +18,11 @@
     one is a diagnostic, not a verdict.
   </div>
 
+  <h2 style="margin-top:1.5rem;" data-ur="🔥 Mushkil quizzes — asli exam jaise">🔥 Hard quizzes — real-exam style</h2>
+  <p class="subtitle" style="margin-top:0;" data-ur="Lambe scenario sawal, har option mumkin lagta hai, aur <strong>sahi jawab aksar sab se lamba nahi hota</strong>. Sab se lamba option chun-na yahan kaam nahi karega — sawal ka <strong>keyword</strong> dhoondo.">Long scenario questions, every option sounds possible, and <strong>the right answer is usually NOT the longest one</strong>. Picking the longest option won't work here — find the <strong>keyword</strong> in the question.</p>
+  <div class="exam-grid" id="hard-grid"></div>
+
+  <h2 style="margin-top:2rem;" data-ur="📘 Revision quizzes">📘 Revision quizzes</h2>
   <div class="exam-grid" id="exam-grid"></div>
 
   <h2 style="margin-top:2rem;" data-ur="🎯 Poora mock exam">🎯 Full-length mock exam</h2>
@@ -54,6 +59,11 @@ var EXAMS = [
   { id:'aif-09', n:9, focus:'I5 — data, compute and security services' }
 ];
 
+var HARD = [
+  { id:'aif-hard-01', n:1, focus:'🔥 Exam-style scenarios · weak spots: metrics, Macie, Clarify vs A2I' },
+  { id:'aif-hard-02', n:2, focus:'🔥 Exam-style scenarios · overfitting, precision, Bedrock security' }
+];
+
 var MOCKS = [
   { id:'aif-mock-01', n:1, focus:'65 questions · 90 minutes · exam-day conditions' }
 ];
@@ -83,6 +93,28 @@ var MOCKS = [
              '<div class="escore">' + badge + sub + '</div>' +
            '</a>';
   }).join('');
+
+  var hardGrid = document.getElementById('hard-grid');
+  if (hardGrid) {
+    hardGrid.innerHTML = HARD.map(function (e) {
+      var r = results[e.id];
+      var badge, sub;
+      if (r) {
+        scores.push(r.best);
+        if (r.passed) passed++;
+        badge = '<span class="badge ' + (r.passed ? 'pass' : 'fail') + '">' + r.best + '</span>';
+        sub = ' best · ' + r.attempts + ' attempt' + (r.attempts > 1 ? 's' : '');
+      } else {
+        badge = '<span class="badge none">not taken</span>';
+        sub = '';
+      }
+      return '<a class="exam-card" href="exams/' + e.id + '.html">' +
+               '<span class="en">Hard Quiz ' + e.n + ' · 20 questions</span>' +
+               '<div class="et">' + e.focus + '</div>' +
+               '<div class="escore">' + badge + sub + '</div>' +
+             '</a>';
+    }).join('');
+  }
 
   var mockGrid = document.getElementById('mock-grid');
   if (mockGrid) {

@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A Lambda function runs 200 million times per month, completing in 20 ms at 256 MB. The team wants to reduce cost. Which analysis is correct?",
   "options": [
-   "Increase memory to reduce duration and therefore cost",
    "At 20 ms the function is likely dominated by the per-request charge, so reducing invocation count through batching would save more than memory tuning",
-   "Add provisioned concurrency",
-   "Increase the timeout"
+   "Increase memory to reduce duration and therefore cost",
+   "Increase the timeout",
+   "Add provisioned concurrency"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Lambda bills a per-request charge plus GB-seconds. At only 20 ms the compute component is tiny, so the request charge dominates at 200 million invocations and memory tuning yields little. Batching many items per invocation cuts the request count directly. Provisioned concurrency adds idle cost, and timeout is only a ceiling."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A DynamoDB table serves 1,000 reads per second of 2 KB items, all of which could tolerate slightly stale data. The team uses strongly consistent reads. What is the cost impact of switching to eventually consistent?",
   "options": [
+   "Consumption quadruples",
    "No change",
-   "Read capacity consumption halves, because eventually consistent reads cost half an RCU per 4 KB",
    "Consumption doubles",
-   "Consumption quadruples"
+   "Read capacity consumption halves, because eventually consistent reads cost half an RCU per 4 KB"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "A 2 KB item rounds up to one 4 KB unit, costing 1 RCU strongly consistent or 0.5 RCU eventually consistent. Switching therefore halves read capacity consumption and cost. Because the workload tolerates staleness, this is free money — one of the simplest DynamoDB optimisations."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application stores 50 TB of logs in S3 Standard, of which only the last 30 days are ever queried. What is the MOST cost-effective change that preserves access?",
   "options": [
-   "Delete everything older than 30 days",
    "A lifecycle policy transitioning objects to Standard-IA then Glacier classes by age",
-   "Move everything to Glacier Deep Archive immediately",
-   "Enable S3 Transfer Acceleration"
+   "Enable S3 Transfer Acceleration",
+   "Delete everything older than 30 days",
+   "Move everything to Glacier Deep Archive immediately"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Lifecycle transitions keep recent data instantly queryable in Standard while ageing the rest into progressively cheaper classes, preserving access at a fraction of the cost. Deleting loses the data, moving everything to Deep Archive makes the queried 30 days slow and expensive to retrieve, and Transfer Acceleration affects upload speed rather than storage cost."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An API receives 100 requests per second, of which 95 percent are identical GET requests for data that changes every 10 minutes. Which change reduces backend cost MOST?",
   "options": [
-   "Enable API Gateway stage caching with a TTL near 10 minutes",
    "Increase Lambda memory",
+   "Switch to on-demand DynamoDB",
    "Add a second Lambda function",
-   "Switch to on-demand DynamoDB"
+   "Enable API Gateway stage caching with a TTL near 10 minutes"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Caching identical GETs for close to the data's change interval eliminates roughly 95 percent of backend invocations and downstream reads, which is by far the largest lever here. Memory changes per-invocation cost rather than invocation count, an extra function adds cost, and capacity mode does not reduce the number of requests."
  },
@@ -144,15 +144,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO changes reduce DynamoDB cost for a write-heavy workload?",
   "options": [
-   "Remove unused global secondary indexes",
-   "Batch writes with BatchWriteItem to reduce request overhead",
    "Enable strongly consistent reads",
+   "Add more local secondary indexes",
+   "Remove unused global secondary indexes",
    "Increase item size by denormalising heavily",
-   "Add more local secondary indexes"
+   "Batch writes with BatchWriteItem to reduce request overhead"
   ],
   "correct": [
-   0,
-   1
+   2,
+   4
   ],
   "explain": "Every write must also update each GSI, so removing unused indexes cuts write capacity consumption proportionally, and batching reduces per-request overhead. Read consistency does not affect writes, larger items consume more WCU per write, and additional indexes increase write cost rather than reducing it."
  },
@@ -180,8 +180,8 @@ var QUESTIONS = [
   "options": [
    "Increase the batch size so each invocation processes multiple messages",
    "Increase memory",
-   "Enable provisioned concurrency",
-   "Switch to a FIFO queue"
+   "Switch to a FIFO queue",
+   "Enable provisioned concurrency"
   ],
   "correct": [
    0
@@ -194,13 +194,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must store 1 KB of state per user for 10 million users, read occasionally and written rarely. Which storage is MOST cost-effective?",
   "options": [
+   "Amazon RDS with a row per user",
    "Amazon ElastiCache for Redis",
    "Amazon DynamoDB with on-demand capacity",
-   "Amazon S3 with one object per user",
-   "Amazon RDS with a row per user"
+   "Amazon S3 with one object per user"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "DynamoDB stores 10 GB cheaply and charges per request, which suits infrequent access with no idle cost. ElastiCache would require holding all 10 GB in memory continuously, which is far more expensive for rarely-read data. Ten million tiny S3 objects incur high per-request costs, and RDS means paying for a running instance."
  },
@@ -210,9 +210,9 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must decide between Kinesis Data Streams provisioned mode and on-demand mode for a stream with unpredictable traffic between 1 and 20 MB per second. Which is BEST?",
   "options": [
-   "Provisioned with 20 shards permanently",
-   "On-demand, which scales automatically and avoids paying for peak capacity during quiet periods",
    "Provisioned with 1 shard",
+   "On-demand, which scales automatically and avoids paying for peak capacity during quiet periods",
+   "Provisioned with 20 shards permanently",
    "Replace Kinesis with SQS"
   ],
   "correct": [
@@ -226,13 +226,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application makes 1 million KMS Decrypt calls per day to decrypt the same data key repeatedly. What is the MOST effective optimisation?",
   "options": [
-   "Cache the decrypted data key in memory with a bounded lifetime and reuse it",
-   "Switch to a cheaper KMS key type",
    "Call kms:Encrypt instead",
+   "Switch to a cheaper KMS key type",
+   "Cache the decrypted data key in memory with a bounded lifetime and reuse it",
    "Disable encryption"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "KMS bills per API call, so caching a decrypted data key within bounded limits — as the AWS Encryption SDK does — collapses a million calls into a handful while keeping the plaintext key only in memory. Key type does not change per-call pricing, Encrypt is a different operation, and disabling encryption breaks the security requirement."
  },
@@ -242,13 +242,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A Lambda function is attached to a VPC and calls S3 100 million times per month through a NAT gateway. What is the MOST significant cost saving available?",
   "options": [
+   "Move to a larger subnet",
    "Replace the NAT gateway path with a gateway VPC endpoint for S3, which has no hourly or data-processing charge",
    "Increase Lambda memory",
-   "Reduce the function timeout",
-   "Move to a larger subnet"
+   "Reduce the function timeout"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "NAT gateways charge both hourly and per gigabyte processed, so routing high-volume S3 traffic through one is expensive. A gateway VPC endpoint for S3 carries no additional charge and keeps traffic on the AWS network. Memory, timeout and subnet sizing do not affect data-processing charges."
  },
@@ -258,13 +258,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application performs a DynamoDB Scan every minute over a 10 GB table to find items with a specific status. What is the cost problem and the correct fix?",
   "options": [
-   "Scans consume capacity for the entire table on every run; use a sparse GSI on the status attribute",
-   "Scans are free; no change needed",
    "Increase read capacity",
-   "Enable DAX to cache the scan"
+   "Enable DAX to cache the scan",
+   "Scans consume capacity for the entire table on every run; use a sparse GSI on the status attribute",
+   "Scans are free; no change needed"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Each Scan reads all 10 GB regardless of how few items match, so running it every minute is enormously wasteful. A sparse GSI containing only items with that status turns it into a tiny Query. Extra capacity pays more for the same waste, and DAX caches item reads rather than making full scans cheap."
  },
@@ -274,9 +274,9 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must choose between Fargate and Lambda for a workload running 200 times per day for 4 minutes each. Which is likely cheaper and why?",
   "options": [
-   "Fargate, because it has no per-request charge",
-   "Lambda, because it bills only for the 4 minutes of execution with no task startup overhead or minimum billing period",
    "They cost identically",
+   "Lambda, because it bills only for the 4 minutes of execution with no task startup overhead or minimum billing period",
+   "Fargate, because it has no per-request charge",
    "Neither can run this workload"
   ],
   "correct": [
@@ -290,13 +290,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application uses SNS to notify 5 SQS queues, but 4 of the consumers discard 90 percent of messages after inspecting them. What change reduces cost MOST?",
   "options": [
-   "Apply subscription filter policies so each queue receives only relevant messages",
-   "Increase consumer concurrency",
    "Switch to a single queue",
+   "Increase consumer concurrency",
+   "Apply subscription filter policies so each queue receives only relevant messages",
    "Increase SQS retention"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Filtering at SNS avoids paying for delivery, storage and consumption of messages that will be discarded anyway, cutting SQS request and Lambda invocation costs across four consumers. More concurrency processes waste faster, a single queue breaks the fan-out, and longer retention has no effect on volume."
  },
@@ -306,13 +306,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach reduces Lambda cost for a function that spends 90 percent of its duration waiting for a downstream HTTP response?",
   "options": [
-   "Batch multiple items per invocation so the wait is amortised, or restructure so waiting happens outside billed compute",
    "Increase memory to the maximum",
+   "Batch multiple items per invocation so the wait is amortised, or restructure so waiting happens outside billed compute",
    "Reduce the timeout",
    "Add more layers"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Because Lambda bills wall-clock time, waiting is billed the same as computing. Batching amortises a single wait across many items, and patterns such as Step Functions callbacks move the wait outside billed compute entirely. Maximum memory raises the per-millisecond price without shortening a remote call."
  },
@@ -324,8 +324,8 @@ var QUESTIONS = [
   "options": [
    "Maintain an index of object keys and metadata in DynamoDB and query that instead of listing S3",
    "Enable S3 Versioning",
-   "Increase the S3 request rate limit",
-   "Use S3 Standard-IA"
+   "Use S3 Standard-IA",
+   "Increase the S3 request rate limit"
   ],
   "correct": [
    0
@@ -338,13 +338,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application writes 5 KB items to DynamoDB 1,000 times per second. How much write capacity is required for the base table alone?",
   "options": [
-   "1,000 WCU",
    "5,000 WCU, because a 5 KB item consumes 5 WCU",
+   "500 WCU",
    "2,500 WCU",
-   "500 WCU"
+   "1,000 WCU"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "One WCU covers up to 1 KB per write with rounding up, so a 5 KB item costs 5 WCU and 1,000 writes per second requires 5,000 WCU on the base table — plus the same again for each GSI. Forgetting to multiply by item size is a common cause of unexpected throttling."
  },
@@ -354,13 +354,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which design reduces cost for an application that must respond within 50 ms to reads of data that changes once per day?",
   "options": [
+   "Add more database capacity",
    "Cache aggressively with a long TTL, since the data is nearly static",
    "Query the database on every request with strongly consistent reads",
-   "Add more database capacity",
    "Use a Scan with a filter"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Data that changes daily can be cached for hours, so nearly every read is served from cache at minimal cost and well within the latency budget. Querying on every request pays repeatedly for the same answer, strongly consistent reads double that cost, and scanning is the most expensive option of all."
  },
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team runs a Step Functions Standard workflow 5 million times per month with 20 states each. Costs are unexpectedly high. What is the MOST likely explanation and fix?",
   "options": [
-   "Standard workflows bill per state transition, so 100 million transitions is expensive; use Express workflows for high-volume short executions",
+   "State machines bill per definition; simplify the template",
    "Step Functions bills per hour; reduce the duration",
    "The Lambda functions are the cost; reduce their memory",
-   "State machines bill per definition; simplify the template"
+   "Standard workflows bill per state transition, so 100 million transitions is expensive; use Express workflows for high-volume short executions"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Standard workflows charge per state transition, so 5 million executions with 20 states each generates 100 million billed transitions. Express workflows bill by request count and duration instead, which is dramatically cheaper for high-volume executions completing within five minutes."
  },
@@ -387,12 +387,12 @@ var QUESTIONS = [
   "scenario": "An application must choose between storing 500 GB of infrequently accessed data in DynamoDB or S3. Which is MORE cost-effective for storage alone?",
   "options": [
    "DynamoDB, because it is optimised for large data",
+   "Neither can store 500 GB",
    "S3, because its per-gigabyte storage cost is far lower than DynamoDB's",
-   "They cost the same per gigabyte",
-   "Neither can store 500 GB"
+   "They cost the same per gigabyte"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "DynamoDB storage is priced for low-latency indexed access and costs far more per gigabyte than S3, which is designed for bulk object storage. The common pattern keeps large payloads in S3 with small indexed pointers in DynamoDB, combining cheap storage with fast lookup."
  },
@@ -402,13 +402,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which change is MOST likely to reduce the cost of an application making many small writes to S3?",
   "options": [
-   "Buffer records and write fewer, larger objects",
    "Enable versioning",
-   "Switch to Glacier immediately",
-   "Enable Transfer Acceleration"
+   "Buffer records and write fewer, larger objects",
+   "Enable Transfer Acceleration",
+   "Switch to Glacier immediately"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "S3 charges per PUT request, so many tiny objects incur high request costs and add listing overhead. Buffering into fewer larger objects — the approach Firehose automates — cuts request charges substantially. Versioning multiplies stored objects, Glacier adds retrieval cost and delay for active data, and Transfer Acceleration adds a premium."
  },
@@ -418,13 +418,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An organisation has 300 microservices, each needing a database credential. Cost review shows Secrets Manager charges are significant. Which change reduces cost while preserving security?",
   "options": [
-   "Move non-rotating configuration to Parameter Store and keep only genuinely rotating secrets in Secrets Manager",
    "Hard-code the credentials",
-   "Store all credentials in one shared secret",
-   "Disable encryption"
+   "Disable encryption",
+   "Move non-rotating configuration to Parameter Store and keep only genuinely rotating secrets in Secrets Manager",
+   "Store all credentials in one shared secret"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Secrets Manager charges per secret per month, so its cost is justified only where automatic rotation is genuinely required; everything else belongs in Parameter Store standard parameters, which are free and still support KMS encryption. Hard-coding and disabling encryption trade security for cost, and one shared secret destroys isolation between services."
  },
@@ -451,9 +451,9 @@ var QUESTIONS = [
   "scenario": "Which is the MOST cost-effective way to satisfy a requirement that all data be encrypted at rest in S3 with an audit trail of key usage?",
   "options": [
    "SSE-KMS with a customer managed key, using S3 Bucket Keys to reduce KMS request costs",
-   "SSE-S3 only",
+   "No encryption with a restrictive bucket policy",
    "Client-side encryption with a custom key store",
-   "No encryption with a restrictive bucket policy"
+   "SSE-S3 only"
   ],
   "correct": [
    0
@@ -466,13 +466,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must allow users to reset their own passwords without administrator involvement. Which Cognito feature provides this?",
   "options": [
-   "User pool self-service password reset with a verified email or phone",
-   "An identity pool unauthenticated role",
    "IAM password policy",
-   "AWS Directory Service"
+   "AWS Directory Service",
+   "An identity pool unauthenticated role",
+   "User pool self-service password reset with a verified email or phone"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Cognito user pools include self-service password reset flows using a verification code sent to a verified email or phone number, requiring no administrator action. Identity pools issue AWS credentials rather than managing passwords, IAM password policies apply to IAM users, and Directory Service manages Active Directory."
  },
@@ -482,15 +482,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO practices reduce the risk of over-privileged IAM roles accumulating over time?",
   "options": [
-   "Review IAM Access Analyzer findings and last-accessed data to remove unused permissions",
+   "Disable IAM auditing to reduce noise",
    "Generate policies from CloudTrail activity rather than starting with wildcards",
-   "Grant AdministratorAccess and monitor CloudTrail",
    "Create one shared role for all services",
-   "Disable IAM auditing to reduce noise"
+   "Review IAM Access Analyzer findings and last-accessed data to remove unused permissions",
+   "Grant AdministratorAccess and monitor CloudTrail"
   ],
   "correct": [
-   0,
-   1
+   1,
+   3
   ],
   "explain": "Access Analyzer and service last-accessed data identify permissions that are never used and can safely be removed, and generating policies from observed CloudTrail activity produces least-privilege policies grounded in real behaviour. Broad access with monitoring detects misuse without preventing it, shared roles blur boundaries, and disabling auditing removes the evidence needed to tighten policies."
  },
@@ -500,13 +500,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must ensure an application can read a KMS-encrypted SQS queue and an encrypted S3 bucket using different keys. What is required?",
   "options": [
-   "kms:Decrypt on both key ARNs, plus the relevant SQS and S3 permissions",
-   "kms:Decrypt on one key only",
+   "kms:CreateKey",
    "No KMS permissions, since the services decrypt automatically",
-   "kms:CreateKey"
+   "kms:Decrypt on one key only",
+   "kms:Decrypt on both key ARNs, plus the relevant SQS and S3 permissions"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Each KMS key requires its own permission grant, so the role needs kms:Decrypt on both key ARNs alongside the service-level SQS and S3 permissions. Services do not decrypt on a caller's behalf without the caller holding key permissions, and CreateKey is unrelated to using existing keys."
  },
@@ -516,13 +516,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach BEST limits the damage if an application's IAM role credentials are exfiltrated?",
   "options": [
-   "Least-privilege permissions plus conditions restricting use to expected sources such as a VPC endpoint",
-   "A longer session duration",
    "Storing credentials in environment variables",
-   "Granting broad permissions but enabling CloudTrail"
+   "A longer session duration",
+   "Granting broad permissions but enabling CloudTrail",
+   "Least-privilege permissions plus conditions restricting use to expected sources such as a VPC endpoint"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Narrow permissions limit what stolen credentials can do, and conditions such as aws:SourceVpce mean they are unusable from outside the expected network path. Longer sessions extend the window of misuse, environment variables are readable by the same compromised process, and CloudTrail records the damage without preventing it."
  },
@@ -532,13 +532,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An API must accept requests only from an allowlisted set of partner IP ranges, with the check applied before any compute is invoked. What should be used?",
   "options": [
-   "An API Gateway resource policy with an aws:SourceIp condition",
    "A check inside the Lambda function",
-   "A security group on the API",
-   "A Cognito authorizer"
+   "A Cognito authorizer",
+   "An API Gateway resource policy with an aws:SourceIp condition",
+   "A security group on the API"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "A resource policy is evaluated by API Gateway before the integration runs, so non-allowlisted requests are rejected without invoking any compute — saving cost and reducing attack surface. Checking inside the function means paying for every rejected request, API Gateway is a managed service without security groups, and Cognito authenticates users rather than filtering networks."
  },
@@ -548,13 +548,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about S3 Bucket Keys is correct?",
   "options": [
-   "They reduce KMS request costs by using a bucket-level key to generate data keys for many objects",
    "They replace KMS entirely",
    "They disable encryption",
+   "They reduce KMS request costs by using a bucket-level key to generate data keys for many objects",
    "They require client-side encryption"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "S3 Bucket Keys reduce the number of KMS API calls by deriving a short-lived bucket-level key used across many object operations, cutting SSE-KMS request costs substantially for high-volume workloads while retaining KMS key control. Encryption remains enabled and server-side throughout."
  },
@@ -564,13 +564,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must decide where to validate a JWT for an API with 50 endpoints. What is the BEST approach?",
   "options": [
-   "A single authorizer at the API Gateway level, with results cached",
    "Duplicate validation code in each of the 50 backend functions",
+   "No validation, relying on network controls",
    "Validation in the client only",
-   "No validation, relying on network controls"
+   "A single authorizer at the API Gateway level, with results cached"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "An authorizer validates once at the edge for every endpoint and caches the resulting policy, so unauthorised requests never reach compute and the logic exists in one place. Duplicating validation across 50 functions guarantees inconsistency, client-side validation is trivially bypassed, and network controls do not authenticate users."
  },
@@ -580,13 +580,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the correct interpretation of an S3 bucket policy that denies all actions unless aws:SecureTransport is true?",
   "options": [
-   "All requests must use HTTPS; plain HTTP requests are rejected",
-   "All requests must come from a VPC",
    "All requests must be authenticated with MFA",
-   "All objects must be encrypted"
+   "All requests must come from a VPC",
+   "All objects must be encrypted",
+   "All requests must use HTTPS; plain HTTP requests are rejected"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "aws:SecureTransport is true only when a request arrives over TLS, so denying when it is false enforces HTTPS and protects data in transit. It says nothing about network origin, MFA or object encryption, which are governed by other conditions entirely."
  },
@@ -596,13 +596,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must prevent a specific IAM role from ever deleting objects in a bucket, even if a future policy grants it. Which control is MOST durable?",
   "options": [
-   "An explicit Deny for s3:DeleteObject in the bucket policy or a service control policy",
    "Removing the delete permission from the role's current policy",
-   "Enabling versioning",
-   "Adding a tag"
+   "An explicit Deny for s3:DeleteObject in the bucket policy or a service control policy",
+   "Adding a tag",
+   "Enabling versioning"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "An explicit Deny overrides every present and future Allow, so it survives well-intentioned policy changes. Simply omitting the permission today leaves it available for someone to grant tomorrow. Versioning allows recovery after deletion rather than preventing it, and an unreferenced tag enforces nothing."
  },
@@ -612,13 +612,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach BEST secures an internal API called only by other services inside a VPC?",
   "options": [
-   "A private API Gateway endpoint with a resource policy restricting access to the VPC endpoint, plus IAM authorisation",
    "A public endpoint with an API key",
    "A public endpoint with IP allowlisting only",
+   "A private API Gateway endpoint with a resource policy restricting access to the VPC endpoint, plus IAM authorisation",
    "No authentication, relying on obscurity"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Combining a private endpoint with a resource policy and IAM authorisation gives both network isolation and authenticated authorisation — defence in depth for service-to-service traffic. API keys do not authenticate, IP allowlists alone leave the endpoint publicly reachable, and obscurity is not a control."
  },
@@ -628,13 +628,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A developer must ensure that credentials used by a CI/CD pipeline expire automatically. Which approach achieves this?",
   "options": [
+   "Use root credentials",
    "Use OIDC federation so the pipeline exchanges a signed token for temporary AWS credentials",
-   "Store long-lived access keys in the pipeline settings",
    "Rotate access keys manually every year",
-   "Use root credentials"
+   "Store long-lived access keys in the pipeline settings"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "OIDC federation lets the CI provider present a signed identity token that AWS exchanges for short-lived credentials, so no long-lived secret exists in the pipeline at all. Stored access keys persist until someone rotates them, annual rotation leaves a year-long exposure window, and root credentials must never be used."
  },
@@ -644,13 +644,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which practice correctly protects PII in an application's DynamoDB table?",
   "options": [
-   "Encrypt sensitive attributes client-side before writing, and restrict access with least-privilege IAM policies",
+   "Log all items for debugging",
    "Rely solely on DynamoDB's default encryption at rest",
-   "Store PII in the partition key for uniqueness",
-   "Log all items for debugging"
+   "Encrypt sensitive attributes client-side before writing, and restrict access with least-privilege IAM policies",
+   "Store PII in the partition key for uniqueness"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Default encryption at rest protects the underlying storage but any principal with table read access still sees plaintext, so genuinely sensitive attributes warrant client-side encryption plus tight IAM scoping. Putting PII in a partition key exposes it in keys, indexes and logs, and logging items broadcasts the data to anyone with log access."
  },
@@ -660,13 +660,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must allow a user to download only their own file from S3, with a link valid for 15 minutes. What is the correct implementation?",
   "options": [
-   "Server-side, verify the user owns the object and generate a 15-minute presigned URL for that specific key",
-   "Return a list of all object keys and let the client choose",
    "Make the bucket public with obscure key names",
-   "Give the client IAM credentials"
+   "Server-side, verify the user owns the object and generate a 15-minute presigned URL for that specific key",
+   "Give the client IAM credentials",
+   "Return a list of all object keys and let the client choose"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Authorising server-side and then issuing a short-lived presigned URL for exactly that key means the client never receives credentials and cannot reach other users' objects. Returning all keys leaks information, obscure names in a public bucket is security through obscurity, and handing IAM credentials to a client is a serious exposure."
  },
@@ -676,13 +676,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about IAM policy evaluation with a resource-based policy and a permission boundary is correct?",
   "options": [
-   "The request is allowed only if it passes the identity policy or resource policy, the permission boundary, and any service control policy, with no explicit deny anywhere",
+   "Explicit deny can be overridden by a resource policy",
    "Only the resource policy matters",
-   "Permission boundaries grant access directly",
-   "Explicit deny can be overridden by a resource policy"
+   "The request is allowed only if it passes the identity policy or resource policy, the permission boundary, and any service control policy, with no explicit deny anywhere",
+   "Permission boundaries grant access directly"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Every applicable policy type must permit the action — identity or resource policy, permission boundary and any SCP — and a single explicit deny anywhere is final. Boundaries and SCPs cap permissions without ever granting them, and no policy type can override an explicit deny."
  },
@@ -692,13 +692,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must reduce CodeBuild costs for a pipeline running 500 builds per day. Which change is MOST effective?",
   "options": [
+   "Run builds on a schedule instead of on commit",
    "Enable dependency caching and choose the smallest compute type that meets the build's needs",
    "Always use the largest compute type",
-   "Disable all tests",
-   "Run builds on a schedule instead of on commit"
+   "Disable all tests"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CodeBuild bills per build minute by compute type, so caching dependencies shortens builds and right-sizing compute lowers the rate — together cutting cost without weakening the pipeline. The largest compute type raises the rate, disabling tests trades correctness for cost, and scheduled builds delay feedback while still incurring build minutes."
  },
@@ -708,13 +708,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which CloudFormation practice reduces the risk and cost of a failed production deployment MOST?",
   "options": [
-   "Deploy to a staging stack from the same template first, then review a production change set before executing",
+   "Use different templates per environment",
    "Deploy directly to production and fix forward",
-   "Skip change sets to save time",
-   "Use different templates per environment"
+   "Deploy to a staging stack from the same template first, then review a production change set before executing",
+   "Skip change sets to save time"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Exercising the same template in staging catches template errors before production, and the change set then reveals exactly what will be added, modified or replaced. Deploying straight to production discovers problems with real users, skipping change sets removes the preview, and divergent templates mean staging no longer proves anything."
  },
@@ -724,13 +724,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team wants to reduce the blast radius of deployments across 40 microservices. Which approach is BEST?",
   "options": [
-   "Independent pipelines and stacks per service, deployed with canary or blue/green strategies",
    "One pipeline deploying all 40 simultaneously",
    "Manual deployment of all services together",
-   "One CloudFormation stack containing all 40"
+   "One CloudFormation stack containing all 40",
+   "Independent pipelines and stacks per service, deployed with canary or blue/green strategies"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Independent pipelines and stacks mean a failure affects one service rather than forty, and gradual rollout limits exposure further. Deploying everything at once — whether by pipeline, by hand, or in a single stack — couples all services into one failure domain and makes rollback all-or-nothing."
  },
@@ -741,9 +741,9 @@ var QUESTIONS = [
   "scenario": "Which is the MOST cost-effective way to run integration tests that need a database, in a pipeline running 50 times per day?",
   "options": [
    "Spin up an ephemeral test environment per run and tear it down afterwards, or use a shared small test instance",
-   "Run tests against production",
    "Maintain a permanently running production-sized test environment",
-   "Skip integration tests"
+   "Skip integration tests",
+   "Run tests against production"
   ],
   "correct": [
    0
@@ -756,13 +756,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An ECS service on Fargate runs 10 tasks continuously at 20 percent CPU utilisation. What is the MOST effective cost optimisation?",
   "options": [
+   "Switch to EC2 launch type without changing sizing",
    "Right-size the task CPU and memory to actual usage, and use service auto scaling to match demand",
    "Increase the task size",
-   "Add more tasks",
-   "Switch to EC2 launch type without changing sizing"
+   "Add more tasks"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Fargate bills for the CPU and memory reserved rather than used, so 20 percent utilisation means paying roughly five times what the workload needs. Right-sizing plus auto scaling aligns cost with demand. Larger or more tasks increase spend, and changing launch type without resizing keeps the same over-provisioning while adding server management."
  },
@@ -773,9 +773,9 @@ var QUESTIONS = [
   "scenario": "Which practice MOST reduces the time to recover from a bad deployment?",
   "options": [
    "Keeping the previous version deployable and rollback automated, for example via aliases or task definition revisions",
+   "Waiting for the next scheduled release",
    "Investigating fully before taking any action",
-   "Rebuilding from source during the incident",
-   "Waiting for the next scheduled release"
+   "Rebuilding from source during the incident"
   ],
   "correct": [
    0
@@ -789,14 +789,14 @@ var QUESTIONS = [
   "scenario": "Which TWO reduce the cost of a development environment that is only used during working hours?",
   "options": [
    "Schedule non-production resources to stop outside working hours",
-   "Use serverless services that cost nothing when idle",
-   "Provision the same capacity as production",
+   "Enable Multi-AZ on development databases",
    "Run all environments continuously for convenience",
-   "Enable Multi-AZ on development databases"
+   "Use serverless services that cost nothing when idle",
+   "Provision the same capacity as production"
   ],
   "correct": [
    0,
-   1
+   3
   ],
   "explain": "Stopping instances outside working hours can remove roughly two thirds of runtime cost, and serverless components charge nothing while idle. Matching production capacity, running continuously and enabling Multi-AZ all add cost for availability guarantees a development environment does not need."
  },
@@ -806,13 +806,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A CloudFormation stack takes 45 minutes to deploy because resources are created sequentially. What is the MOST effective improvement?",
   "options": [
-   "Remove unnecessary DependsOn attributes so independent resources are created in parallel",
    "Increase the stack timeout",
-   "Deploy at night",
-   "Add more parameters"
+   "Remove unnecessary DependsOn attributes so independent resources are created in parallel",
+   "Add more parameters",
+   "Deploy at night"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CloudFormation parallelises resource creation automatically except where dependencies exist, so unnecessary DependsOn attributes serialise work that could run concurrently. Timeouts, deployment timing and parameters do not change creation order or duration."
  },
@@ -822,13 +822,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach BEST balances deployment safety and speed for a service with 1,000 requests per second?",
   "options": [
-   "Canary deployment with automated alarm-based rollback",
    "Manual approval before every deployment with no automated checks",
    "All-at-once deployment with manual verification",
-   "Deploying only once per quarter"
+   "Deploying only once per quarter",
+   "Canary deployment with automated alarm-based rollback"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "At that traffic level a canary exposes a small percentage of users while alarms decide automatically within minutes, giving both safety and speed. Manual gates without automated checks depend on a human noticing, all-at-once exposes everyone immediately, and quarterly releases make each change larger and riskier."
  },
@@ -839,9 +839,9 @@ var QUESTIONS = [
   "scenario": "Which is true about ECR image storage costs?",
   "options": [
    "Storage is billed per gigabyte per month, so lifecycle policies removing untagged and old images reduce cost",
+   "Images are deleted automatically after 30 days",
    "Image storage is free",
-   "Only pulls are billed",
-   "Images are deleted automatically after 30 days"
+   "Only pulls are billed"
   ],
   "correct": [
    0
@@ -854,13 +854,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must deploy the same infrastructure to development, staging and production with different sizing. What is the MOST maintainable approach?",
   "options": [
-   "One template with parameters or mappings controlling sizing per environment",
-   "Three separate templates",
+   "Identical sizing everywhere",
    "Manual resizing after each deployment",
-   "Identical sizing everywhere"
+   "One template with parameters or mappings controlling sizing per environment",
+   "Three separate templates"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "A single parameterised template keeps one reviewed source of truth while allowing per-environment sizing, so a change applies everywhere consistently. Separate templates drift apart, manual resizing is forgotten and undone by the next deployment, and identical sizing either overspends in development or under-provisions production."
  },
@@ -871,8 +871,8 @@ var QUESTIONS = [
   "scenario": "Which statement about Lambda provisioned concurrency cost is correct?",
   "options": [
    "You pay for provisioned capacity whether or not it is used, so it suits predictable traffic rather than sporadic workloads",
-   "It is free",
    "It reduces cost for all workloads",
+   "It is free",
    "It only bills during invocations"
   ],
   "correct": [
@@ -886,13 +886,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which practice reduces the risk that a pipeline deploys an untested dependency change?",
   "options": [
+   "Update all dependencies manually in production",
    "Commit lockfiles and fail the build on unexpected dependency drift or known vulnerabilities",
-   "Always install the latest versions at build time",
    "Ignore dependency updates",
-   "Update all dependencies manually in production"
+   "Always install the latest versions at build time"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Lockfiles pin exact versions so builds are reproducible, and failing on drift or known vulnerabilities catches unexpected changes before deployment. Installing latest at build time means the artifact differs from what was tested, ignoring updates accumulates unpatched vulnerabilities, and manual production changes bypass all testing."
  },
@@ -902,13 +902,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team must ensure that a rollback is possible even if the container registry loses the previous image tag. What practice helps MOST?",
   "options": [
-   "Use immutable tags and lifecycle policies that retain a defined number of recent images",
-   "Always overwrite the latest tag",
    "Delete old images immediately after deployment",
-   "Store images only on developer machines"
+   "Store images only on developer machines",
+   "Use immutable tags and lifecycle policies that retain a defined number of recent images",
+   "Always overwrite the latest tag"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Immutable tags guarantee a given reference always resolves to the same image, and retention policies keep enough recent versions to roll back to. Overwriting a shared tag destroys the previous artifact, deleting images immediately removes the rollback target, and local-only storage is not available to the deployment platform."
  },
@@ -920,8 +920,8 @@ var QUESTIONS = [
   "options": [
    "Parallelise the test suite and run only affected tests where safe, keeping a full run before production",
    "Delete half the tests",
-   "Increase the CodeBuild timeout",
-   "Run tests after deployment"
+   "Run tests after deployment",
+   "Increase the CodeBuild timeout"
   ],
   "correct": [
    0
@@ -934,13 +934,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application's CloudWatch bill is dominated by custom metrics. There are 50,000 unique metric combinations because a user ID is used as a dimension. What is the correct fix?",
   "options": [
-   "Remove high-cardinality dimensions such as user ID; keep them in logs and query with Logs Insights instead",
-   "Increase the metric resolution",
    "Add more dimensions",
-   "Delete all metrics"
+   "Delete all metrics",
+   "Increase the metric resolution",
+   "Remove high-cardinality dimensions such as user ID; keep them in logs and query with Logs Insights instead"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "CloudWatch bills per unique metric, and each distinct dimension value creates a separate metric, so a user ID dimension generates one per user. High-cardinality attributes belong in structured logs where they can be queried on demand. Higher resolution and extra dimensions increase cost further, and deleting all metrics removes monitoring."
  },
@@ -950,13 +950,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the MOST cost-effective way to keep 90 days of detailed request logs searchable while retaining 2 years for compliance?",
   "options": [
-   "90 days in CloudWatch Logs, with older data exported to S3 and transitioned through cheaper storage classes",
-   "2 years entirely in CloudWatch Logs",
    "90 days only, deleting the rest",
-   "Everything in DynamoDB"
+   "2 years entirely in CloudWatch Logs",
+   "Everything in DynamoDB",
+   "90 days in CloudWatch Logs, with older data exported to S3 and transitioned through cheaper storage classes"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Recent logs stay in CloudWatch for interactive querying while older data moves to far cheaper S3 storage, satisfying both requirements at a fraction of the cost. Two years of CloudWatch retention is expensive, deleting breaks compliance, and DynamoDB is an unsuitable and costly log archive."
  },
@@ -982,13 +982,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach BEST reduces the cost of investigating rare errors in a high-volume application?",
   "options": [
-   "Log at a low level normally but capture full context for error paths, and sample traces with a higher rate for errors",
    "Log everything at debug level",
    "Log nothing and rely on user reports",
+   "Log at a low level normally but capture full context for error paths, and sample traces with a higher rate for errors",
    "Trace 100 percent of requests"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Detailed capture only where it matters keeps ingestion and trace costs low while preserving the diagnostic detail needed for the rare failures. Debug logging everything and tracing every request are both prohibitively expensive at high volume, and relying on user reports means most errors are never seen."
  },
@@ -999,9 +999,9 @@ var QUESTIONS = [
   "scenario": "An application's p99 latency improved after enabling provisioned concurrency, but costs rose sharply. What analysis should guide the decision?",
   "options": [
    "Compare the business value of the latency improvement against the provisioned capacity cost, and consider provisioning only for predictable peak periods",
-   "Always keep provisioned concurrency at maximum",
    "Disable it regardless of the latency benefit",
-   "Increase memory instead"
+   "Increase memory instead",
+   "Always keep provisioned concurrency at maximum"
   ],
   "correct": [
    0
@@ -1014,13 +1014,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which metric BEST indicates whether an ElastiCache cluster is correctly sized?",
   "options": [
-   "Cache hit rate together with eviction count and memory utilisation",
    "Total request count only",
    "The number of nodes",
-   "The cluster name"
+   "The cluster name",
+   "Cache hit rate together with eviction count and memory utilisation"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "A falling hit rate alongside rising evictions and high memory utilisation shows the working set no longer fits and the cluster needs more memory. Request counts measure traffic rather than fit, and node count and naming are configuration details rather than health signals."
  },
@@ -1030,13 +1030,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A team discovers that 60 percent of Lambda cost comes from one function that runs on a schedule every minute but usually finds nothing to do. What is the BEST optimisation?",
   "options": [
-   "Replace polling with an event-driven trigger so the function runs only when there is work",
-   "Increase the schedule to every 10 minutes and accept the delay",
    "Increase the function memory",
-   "Add provisioned concurrency"
+   "Add provisioned concurrency",
+   "Increase the schedule to every 10 minutes and accept the delay",
+   "Replace polling with an event-driven trigger so the function runs only when there is work"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Polling pays for 1,440 invocations a day regardless of whether work exists, whereas an event-driven trigger such as an S3 notification, DynamoDB stream or EventBridge rule invokes only when something actually happens — removing the waste and reducing latency. Reducing frequency trades cost for delay, and memory and provisioned concurrency increase spend."
  },
@@ -1046,13 +1046,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which is the MOST reliable indicator that a database index is missing for a frequently executed query?",
   "options": [
-   "High read capacity or CPU consumption relative to the number of rows actually returned",
    "A high total request count",
-   "A large table size",
-   "A long table name"
+   "High read capacity or CPU consumption relative to the number of rows actually returned",
+   "A long table name",
+   "A large table size"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Reading far more data than is returned is the signature of a missing index — a Scan in DynamoDB or a full table scan in a relational database. Request volume and table size describe scale rather than efficiency, and naming is irrelevant."
  },
@@ -1062,13 +1062,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "An application must reduce data transfer costs between services in the same region. Which change helps MOST?",
   "options": [
-   "Keep traffic within the same availability zone where possible and use VPC endpoints instead of NAT gateways for AWS service calls",
-   "Move services to different regions",
    "Route all traffic through the public internet",
-   "Increase instance sizes"
+   "Increase instance sizes",
+   "Move services to different regions",
+   "Keep traffic within the same availability zone where possible and use VPC endpoints instead of NAT gateways for AWS service calls"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Cross-availability-zone traffic and NAT gateway data processing both carry per-gigabyte charges, so keeping traffic zone-local and using VPC endpoints for AWS service calls removes much of that cost. Cross-region traffic and public internet routing are more expensive, and instance sizing does not affect transfer pricing."
  },
@@ -1079,9 +1079,9 @@ var QUESTIONS = [
   "scenario": "Which practice MOST improves the signal-to-noise ratio of alerts?",
   "options": [
    "Alert on user-facing symptoms with appropriate evaluation periods, rather than on every internal metric",
+   "Disable alerting entirely",
    "Create an alarm for every available metric",
-   "Set all thresholds very low",
-   "Disable alerting entirely"
+   "Set all thresholds very low"
   ],
   "correct": [
    0
@@ -1096,8 +1096,8 @@ var QUESTIONS = [
   "options": [
    "Database read capacity or query count before and after, alongside the cache hit rate",
    "Application log volume",
-   "The number of deployments",
-   "Instance uptime"
+   "Instance uptime",
+   "The number of deployments"
   ],
   "correct": [
    0
@@ -1110,13 +1110,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach BEST identifies the single most impactful performance improvement in a complex application?",
   "options": [
-   "Use X-Ray and profiling data to find the largest contributor to end-to-end latency, then optimise that first",
-   "Optimise the code that is easiest to change",
    "Increase memory everywhere",
-   "Rewrite the application"
+   "Use X-Ray and profiling data to find the largest contributor to end-to-end latency, then optimise that first",
+   "Rewrite the application",
+   "Optimise the code that is easiest to change"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Measuring where time is actually spent directs effort at the dominant bottleneck, which is where optimisation pays off most. Optimising whatever is convenient often improves something irrelevant, blanket memory increases raise cost without targeting the cause, and a rewrite is disproportionate and risky before the bottleneck is even known."
  }

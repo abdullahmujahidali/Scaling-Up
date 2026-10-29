@@ -315,13 +315,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company's support assistant must answer from documentation that is updated weekly and cite the source document. Which approach is correct?",
   "options": [
-   "Retrieval Augmented Generation (RAG)",
-   "Fine-tuning weekly",
+   "Raising the temperature",
    "Pre-training a new model",
-   "Raising the temperature"
+   "Fine-tuning weekly",
+   "Retrieval Augmented Generation (RAG)"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Weekly updates plus a citation requirement both point to RAG, which reads live documents at query time and can reference them. Fine-tuning absorbs knowledge into weights, cannot cite sources, and would need repeating every week."
  },
@@ -331,13 +331,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement about tokens is correct?",
   "options": [
+   "A token is always exactly one word",
    "A token is roughly three-quarters of a word, and you are billed for both input and output tokens",
    "Tokens are only counted during training",
-   "A token is always exactly one word",
    "Tokens apply only to image models"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Tokens are the units models read and generate — roughly three-quarters of a word — and both the prompt and the response are billed. This is why concise prompts and capped output lengths reduce cost."
  },
@@ -347,13 +347,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to group customers by purchasing behaviour without any predefined categories. Which approach?",
   "options": [
+   "Reinforcement learning",
    "Unsupervised learning (clustering)",
    "Supervised classification",
-   "Generative AI",
-   "Reinforcement learning"
+   "Generative AI"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "No predefined categories means no labels, which is unsupervised learning — clustering finds the groupings itself. Supervised classification would require labelled examples of each category up front."
  },
@@ -363,13 +363,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A model performs excellently on its training data but poorly on new data. What is this called?",
   "options": [
-   "Overfitting",
-   "Underfitting",
+   "Drift",
    "Hallucination",
-   "Drift"
+   "Overfitting",
+   "Underfitting"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Overfitting means the model memorised the training data rather than learning generalisable patterns. Underfitting is the opposite — it learned too little and performs poorly everywhere. Drift is degradation over time after deployment."
  },
@@ -379,13 +379,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which practice best prevents confidential information from appearing in a chatbot's responses?",
   "options": [
-   "Bedrock Guardrails with PII masking plus output filtering",
    "Increasing the temperature",
    "Using a larger context window",
-   "Disabling CloudTrail logging"
+   "Disabling CloudTrail logging",
+   "Bedrock Guardrails with PII masking plus output filtering"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Guardrails can detect and mask PII, and output filtering validates responses before delivery. Temperature and context window do not affect data leakage, and disabling logging would remove the audit trail you need."
  },
@@ -395,13 +395,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides serverless API access to foundation models from multiple providers?",
   "options": [
-   "Amazon Bedrock",
    "Amazon SageMaker AI",
-   "Amazon EC2",
-   "Amazon Comprehend"
+   "Amazon Bedrock",
+   "Amazon Comprehend",
+   "Amazon EC2"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Bedrock gives serverless API access to foundation models with no infrastructure to manage. SageMaker AI is for building and training your own models, which requires far more expertise."
  },
@@ -428,9 +428,9 @@ var QUESTIONS = [
   "scenario": "Under the shared responsibility model, which is the customer's responsibility when using Amazon Bedrock?",
   "options": [
    "The data and prompts they supply, and IAM access control",
+   "Maintaining the foundation model's weights",
    "Patching the Bedrock service infrastructure",
-   "Securing the physical data centre",
-   "Maintaining the foundation model's weights"
+   "Securing the physical data centre"
   ],
   "correct": [
    0
@@ -445,8 +445,8 @@ var QUESTIONS = [
   "options": [
    "SageMaker Clarify and SageMaker Model Cards",
    "Amazon Polly and Amazon Translate",
-   "Amazon Macie and AWS Shield",
-   "Amazon Forecast and Amazon Personalize"
+   "Amazon Forecast and Amazon Personalize",
+   "Amazon Macie and AWS Shield"
   ],
   "correct": [
    0
@@ -459,13 +459,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service would extract text and data from scanned invoices?",
   "options": [
-   "Amazon Textract",
-   "Amazon Comprehend",
    "Amazon Rekognition",
-   "Amazon Kendra"
+   "Amazon Kendra",
+   "Amazon Textract",
+   "Amazon Comprehend"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Textract extracts text, forms and tables from scanned documents — 'text' plus 'extract'. Comprehend analyses the meaning of text that already exists, and Rekognition analyses images rather than reading documents."
  }

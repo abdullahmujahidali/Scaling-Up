@@ -22,3 +22,6 @@ yarn-error.log*
 # Copyrighted course slide decks — marked "NOT FOR DISTRIBUTION" by the author.
 # Kept locally as a study source; never committed or published.
 *.pdf
+
+# Generated lecture videos — rebuild with: python3 scripts/make_aif_videos.py
+public/videos/

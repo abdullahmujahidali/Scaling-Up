@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company needs a NoSQL database with single-digit millisecond performance and no servers to manage. Which service?",
   "options": [
-   "Amazon RDS",
    "Amazon DynamoDB",
+   "Amazon ElastiCache",
    "Amazon Redshift",
-   "Amazon ElastiCache"
+   "Amazon RDS"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "DynamoDB is the serverless NoSQL database offering single-digit millisecond latency at any scale. RDS is relational, Redshift is a data warehouse for analytics, and ElastiCache is an in-memory cache."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service reduces database load by caching frequently accessed data in memory?",
   "options": [
-   "Amazon ElastiCache",
-   "Amazon S3",
+   "AWS Glue",
    "Amazon EBS",
-   "AWS Glue"
+   "Amazon S3",
+   "Amazon ElastiCache"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "ElastiCache provides in-memory caching with Redis or Memcached, reducing repeated database reads. S3 is object storage, EBS is block storage for an instance, and Glue is an ETL service."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does the principle of least privilege mean?",
   "options": [
-   "Granting only the permissions required to perform a task",
    "Giving every user administrator access for simplicity",
    "Using the root user for all administrative work",
+   "Granting only the permissions required to perform a task",
    "Granting permissions only to groups, never to roles"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Least privilege means granting the minimum permissions needed and nothing more. It is AWS's central security principle and is frequently the correct answer in Domain 2 questions."
  },
@@ -129,12 +129,12 @@ var QUESTIONS = [
   "scenario": "Which service protects web applications from common exploits such as SQL injection and cross-site scripting?",
   "options": [
    "AWS Shield",
-   "AWS WAF",
    "Amazon GuardDuty",
-   "Amazon Macie"
+   "Amazon Macie",
+   "AWS WAF"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "AWS WAF is the web application firewall filtering malicious requests such as SQL injection and XSS. Shield defends against DDoS floods, GuardDuty detects threats from logs, and Macie discovers sensitive data in S3."
  },
@@ -146,8 +146,8 @@ var QUESTIONS = [
   "options": [
    "AWS Shield Standard",
    "AWS WAF",
-   "Amazon Inspector",
-   "AWS Firewall Manager"
+   "AWS Firewall Manager",
+   "Amazon Inspector"
   ],
   "correct": [
    0
@@ -160,9 +160,9 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which purchasing option offers the largest discount for a fault-tolerant workload that can be interrupted?",
   "options": [
-   "On-Demand Instances",
-   "Spot Instances",
    "Reserved Instances",
+   "Spot Instances",
+   "On-Demand Instances",
    "Dedicated Hosts"
   ],
   "correct": [
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A production database runs 24/7 and cannot be interrupted, with usage known for the next three years. Which purchasing option is MOST cost-effective?",
   "options": [
+   "Dedicated Hosts",
    "Spot Instances",
-   "3-year Reserved Instances",
    "On-Demand Instances",
-   "Dedicated Hosts"
+   "3-year Reserved Instances"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "'Cannot be interrupted' eliminates Spot regardless of price. Steady, predictable, long-term usage is exactly the Reserved Instance case, giving up to 72% off. Always eliminate the impossible before comparing cost."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which Well-Architected pillar focuses on avoiding unnecessary costs and rightsizing resources?",
   "options": [
-   "Operational Excellence",
    "Cost Optimization",
-   "Reliability",
-   "Security"
+   "Security",
+   "Operational Excellence",
+   "Reliability"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Cost Optimization covers eliminating waste, rightsizing and choosing the correct pricing model. Operational Excellence concerns running and improving systems, Reliability concerns recovery, Security concerns protection."
  },
@@ -208,13 +208,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which Well-Architected pillar was added most recently and concerns environmental impact?",
   "options": [
-   "Performance Efficiency",
    "Sustainability",
    "Reliability",
+   "Performance Efficiency",
    "Operational Excellence"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Sustainability is the sixth and newest pillar, covering environmental impact such as energy use and carbon footprint. Because it is newest it is asked about disproportionately often."
  },
@@ -224,10 +224,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service lets you run containers without managing the underlying servers?",
   "options": [
-   "Amazon EC2",
-   "AWS Fargate",
    "Amazon EBS",
-   "AWS Batch"
+   "AWS Fargate",
+   "AWS Batch",
+   "Amazon EC2"
   ],
   "correct": [
    1
@@ -241,12 +241,12 @@ var QUESTIONS = [
   "scenario": "A company wants to run Kubernetes on AWS. Which service?",
   "options": [
    "Amazon ECS",
-   "Amazon EKS",
    "Amazon ECR",
+   "Amazon EKS",
    "AWS Lambda"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "EKS is AWS's managed Kubernetes service. ECS is AWS's own container orchestrator (not Kubernetes), ECR is the container image registry, and Lambda runs functions rather than clusters."
  },
@@ -256,10 +256,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service records API calls made in an AWS account for auditing purposes?",
   "options": [
-   "Amazon CloudWatch",
-   "AWS CloudTrail",
    "AWS Config",
-   "AWS Trusted Advisor"
+   "AWS CloudTrail",
+   "AWS Trusted Advisor",
+   "Amazon CloudWatch"
   ],
   "correct": [
    1
@@ -273,12 +273,12 @@ var QUESTIONS = [
   "scenario": "Which service monitors metrics, collects logs and triggers alarms?",
   "options": [
    "AWS CloudTrail",
-   "Amazon CloudWatch",
+   "Amazon Inspector",
    "AWS Artifact",
-   "Amazon Inspector"
+   "Amazon CloudWatch"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "CloudWatch handles metrics, logs and alarms — how the system is performing. CloudTrail answers who did what. This pair appears on virtually every exam, so keep them distinct."
  },
@@ -288,13 +288,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the main financial benefit of consolidated billing in AWS Organizations?",
   "options": [
+   "Every account gets Enterprise Support free",
    "Every account receives a flat 20% discount",
    "Usage is aggregated across accounts, unlocking volume discounts and sharing Reserved Instance benefits",
-   "All data transfer becomes free",
-   "Every account gets Enterprise Support free"
+   "All data transfer becomes free"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Consolidated billing aggregates usage so the organisation reaches volume discount tiers sooner, and unused Reserved Instance and Savings Plans capacity is shared. AWS offers no flat percentage discount, free transfer or bundled support."
  },
@@ -304,13 +304,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does 'rightsizing' mean in the context of cloud cost management?",
   "options": [
-   "Matching resource size to actual workload requirements",
-   "Always choosing the largest instance available",
    "Buying three-year Reserved Instances for everything",
-   "Moving all workloads to Spot Instances"
+   "Moving all workloads to Spot Instances",
+   "Matching resource size to actual workload requirements",
+   "Always choosing the largest instance available"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Rightsizing means adjusting resources to fit real usage — typically shrinking oversized instances to cut cost without harming performance. It is a key term in the Cost Optimization pillar."
  },
@@ -320,13 +320,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides DNS and domain registration?",
   "options": [
-   "Amazon CloudFront",
    "Amazon Route 53",
    "AWS Direct Connect",
-   "Amazon VPC"
+   "Amazon VPC",
+   "Amazon CloudFront"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Route 53 is AWS's DNS service, and also registers domains and performs health checks. CloudFront is the CDN, Direct Connect is a private line, and VPC is your isolated network."
  },
@@ -336,10 +336,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which storage class should be used for data with unknown or changing access patterns, without manual tier management?",
   "options": [
-   "S3 Standard",
+   "S3 One Zone-IA",
    "S3 Intelligent-Tiering",
-   "S3 Glacier Deep Archive",
-   "S3 One Zone-IA"
+   "S3 Standard",
+   "S3 Glacier Deep Archive"
   ],
   "correct": [
    1
@@ -352,14 +352,14 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO actions can ONLY be performed by the AWS account root user?",
   "options": [
-   "Closing the AWS account",
    "Creating an IAM user",
    "Changing the AWS Support plan",
+   "Closing the AWS account",
    "Launching an EC2 instance",
    "Creating an S3 bucket"
   ],
   "correct": [
-   0,
+   1,
    2
   ],
   "explain": "Only the root user can close the account and change the support plan. Creating IAM users, launching instances and creating buckets can all be delegated to IAM identities with appropriate permissions."
@@ -371,12 +371,12 @@ var QUESTIONS = [
   "scenario": "Which statement about AWS data transfer costs is TRUE?",
   "options": [
    "Data transfer in and out cost the same",
+   "Data transfer in is charged and out is free",
    "Data transfer into AWS is generally free; data transfer out to the internet is charged",
-   "All data transfer within AWS is free",
-   "Data transfer in is charged and out is free"
+   "All data transfer within AWS is free"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Inbound data transfer is generally free while outbound to the internet is charged. Traffic across Availability Zones or Regions is also charged, which is why 'all transfer within AWS is free' is wrong. Hook: in is free, out is expensive."
  },
@@ -386,13 +386,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which benefit describes AWS's ability to provision resources in minutes rather than weeks?",
   "options": [
+   "Consolidated billing",
    "Agility",
    "Durability",
-   "Data sovereignty",
-   "Consolidated billing"
+   "Data sovereignty"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Agility is the ability to move and change quickly, including provisioning resources in minutes. Durability is the guarantee data is not lost, and data sovereignty concerns which laws govern the data."
  }

@@ -16,6 +16,53 @@
     <span data-ur="1. <strong>Ek waqt mein ek hissa.</strong> Poora page ek saath mat parho.<br>2. Har hisse ke aakhir mein <strong>&quot;Check yourself&quot;</strong> hai. Jawab <strong>pehle bol kar</strong> do, phir click kar ke dekho.<br>3. Jo galat ho, use <code>MISTAKES-AIF.md</code> mein likh do.<br>4. Saare 10 hisse khatam? Phir quizzes shuru karo.">1. <strong>One part at a time.</strong> Don't read the whole page at once.<br>2. Each part ends with <strong>&quot;Check yourself&quot;</strong>. Say the answer <strong>out loud first</strong>, then click to see it.<br>3. Anything you get wrong goes in <code>MISTAKES-AIF.md</code>.<br>4. Finished all 10 parts? Then start the quizzes.</span>
   </div>
 
+  <h2 data-ur="🎬 Video lectures — har hisse ki ek video (~3 min)">🎬 Video lectures — one per part (~3 min)</h2>
+  <p data-ur="Har video mein points ek ek kar ke highlight hote hain. Aakhir mein 3 sawal — video 5 second rukti hai, <strong>jawab bol kar do</strong>. Ek video, phir neeche us hisse ke notes. Phone par bhi chalti hain. <strong>Awaz:</strong> neeche English ya Urdu chuno.">Each video highlights the points one at a time. At the end come 3 questions — the video pauses 5 seconds so you can <strong>say your answer out loud</strong>. Watch one video, then read that part's notes below. Works on your phone too. <strong>Voice:</strong> choose English or Urdu below.</p>
+  <div id="aif-videos" style="max-width:44rem">
+    <div style="display:flex;gap:.5rem;margin:.4rem 0">
+      <button type="button" class="aif-vlang" data-lang="en" style="flex:1;font-size:1rem;padding:.45rem;cursor:pointer">🇬🇧 English voice</button>
+      <button type="button" class="aif-vlang" data-lang="ur" style="flex:1;font-size:1rem;padding:.45rem;cursor:pointer">🇵🇰 اردو آواز (Urdu voice)</button>
+    </div>
+    <select id="aif-vsel" style="font-size:1rem;padding:.4rem;margin:.2rem 0 .6rem;width:100%"></select>
+    <video id="aif-vid" controls playsinline preload="metadata" style="width:100%;border-radius:6px;background:#0f172a"></video>
+  </div>
+  <script>
+  (function () {
+    var titles = ['The basic language of AI', 'The ML journey and its problems', 'How models are measured',
+      'The language of generative AI', 'The AWS AI services map', 'Customising a model (RAG vs fine-tuning)',
+      'Prompting and inference settings', 'Inside Bedrock and SageMaker', 'Responsible AI', 'Security, compliance and governance'];
+    var sel = document.getElementById('aif-vsel'), vid = document.getElementById('aif-vid');
+    var base = (document.querySelector('link[href*="/assets/"]') || {}).href || '';
+    var root = base ? base.slice(0, base.indexOf('/assets/')) : '';
+    var lang = 'en';
+    try { lang = localStorage.getItem('aif-video-lang') || 'en'; } catch (e) {}
+    var src = function (n) { return root + '/videos/aif/part-' + String(n).padStart(2, '0') + (lang === 'ur' ? '-ur' : '') + '.mp4'; };
+    var btns = document.querySelectorAll('.aif-vlang');
+    var paint = function () {
+      btns.forEach(function (b) {
+        var on = b.getAttribute('data-lang') === lang;
+        b.style.background = on ? '#f59e0b' : ''; b.style.color = on ? '#111827' : ''; b.style.fontWeight = on ? '700' : '';
+      });
+    };
+    btns.forEach(function (b) {
+      b.onclick = function () {
+        lang = b.getAttribute('data-lang'); paint();
+        try { localStorage.setItem('aif-video-lang', lang); } catch (e) {}
+        vid.src = src(sel.value);
+      };
+    });
+    paint();
+    titles.forEach(function (t, i) {
+      var o = document.createElement('option'); o.value = i + 1; o.textContent = 'Part ' + (i + 1) + ' · ' + t; sel.appendChild(o);
+    });
+    var start = 1;
+    try { start = +localStorage.getItem('aif-video-part') || 1; } catch (e) {}
+    sel.value = start; vid.src = src(start);
+    sel.onchange = function () { vid.src = src(sel.value); vid.play(); try { localStorage.setItem('aif-video-part', sel.value); } catch (e) {} };
+    vid.onended = function () { if (+sel.value < 10) { sel.value = +sel.value + 1; try { localStorage.setItem('aif-video-part', sel.value); } catch (e) {} vid.src = src(sel.value); } };
+  })();
+  </script>
+
   <table class="nums">
     <thead><tr><th data-ur="Hissa">Part</th><th data-ur="Mauzu">Topic</th><th>Domain</th></tr></thead>
     <tbody>

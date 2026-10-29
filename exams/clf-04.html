@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Under the shared responsibility model, which of these is ALWAYS the customer's responsibility regardless of the service used?",
   "options": [
-   "Physical data centre security",
    "Customer data and who can access it",
-   "Hypervisor patching",
-   "The global network infrastructure"
+   "Physical data centre security",
+   "The global network infrastructure",
+   "Hypervisor patching"
   ],
   "correct": [
-   1
+   0
   ],
   "explain": "Customer data, its classification, its encryption and access to it are always the customer's responsibility on every service. Physical security, the hypervisor and the network are always AWS's."
  },
@@ -96,13 +96,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service tracks configuration changes to AWS resources over time?",
   "options": [
-   "AWS CloudTrail",
-   "AWS Config",
    "Amazon CloudWatch",
-   "AWS Trusted Advisor"
+   "AWS CloudTrail",
+   "AWS Trusted Advisor",
+   "AWS Config"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "Config records what state a resource is in and how that changed over time. CloudTrail records who made the change. The pair is commonly confused: Config = what it looks like, CloudTrail = who did it."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which database service is a fully managed relational database supporting PostgreSQL and MySQL?",
   "options": [
-   "Amazon DynamoDB",
-   "Amazon RDS",
    "Amazon Neptune",
-   "Amazon DocumentDB"
+   "Amazon DynamoDB",
+   "Amazon DocumentDB",
+   "Amazon RDS"
   ],
   "correct": [
-   1
+   3
   ],
   "explain": "RDS is the managed relational database service supporting engines including PostgreSQL and MySQL. DynamoDB is NoSQL, Neptune is a graph database, and DocumentDB is MongoDB-compatible."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service is a managed data warehouse for running analytics over large datasets?",
   "options": [
-   "Amazon Redshift",
    "Amazon RDS",
+   "Amazon Redshift",
    "Amazon ElastiCache",
    "Amazon Athena"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Redshift is AWS's data warehouse for large-scale analytics. RDS serves transactional relational workloads, ElastiCache is an in-memory cache, and Athena queries data directly in S3."
  },
@@ -144,10 +144,10 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement BEST describes the difference between scalability and elasticity?",
   "options": [
-   "They are identical terms",
+   "Scalability applies only to databases",
    "Scalability is the ability to grow; elasticity is automatic growing and shrinking with demand",
    "Elasticity applies only to storage",
-   "Scalability applies only to databases"
+   "They are identical terms"
   ],
   "correct": [
    1
@@ -161,9 +161,9 @@ var QUESTIONS = [
   "scenario": "A company wants to reduce its carbon footprint from cloud workloads. Which Well-Architected pillar applies?",
   "options": [
    "Sustainability",
-   "Cost Optimization",
+   "Security",
    "Reliability",
-   "Security"
+   "Cost Optimization"
   ],
   "correct": [
    0
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS Support plan provides NO technical support, only billing and account assistance?",
   "options": [
-   "Basic",
    "Developer",
+   "Basic",
    "Business",
    "Enterprise On-Ramp"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Basic Support is free and includes billing and account questions, documentation, forums and core Trusted Advisor checks, but no technical support. Any question requiring technical support rules Basic out."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which two Savings Plans types does AWS offer, and which provides the most flexibility?",
   "options": [
-   "Compute Savings Plans, which apply across EC2, Fargate and Lambda",
+   "Network Savings Plans, which apply to data transfer",
    "EC2 Instance Savings Plans, which apply to any service",
    "Storage Savings Plans, which apply to S3",
-   "Network Savings Plans, which apply to data transfer"
+   "Compute Savings Plans, which apply across EC2, Fargate and Lambda"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Compute Savings Plans are the most flexible, applying across EC2, Fargate and Lambda regardless of instance family or Region, at up to 66% off. EC2 Instance Savings Plans give a bigger discount (up to 72%) but are tied to one instance family in one Region."
  },
@@ -209,12 +209,12 @@ var QUESTIONS = [
   "scenario": "Which component of a VPC allows resources in a private subnet to reach the internet for updates without being reachable from the internet?",
   "options": [
    "Internet gateway",
+   "Transit gateway",
    "NAT gateway",
-   "Virtual private gateway",
-   "Transit gateway"
+   "Virtual private gateway"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "A NAT gateway lets private-subnet resources make outbound connections while remaining unreachable from the internet. An internet gateway provides two-way connectivity for public subnets."
  },
@@ -224,13 +224,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement correctly distinguishes a security group from a network ACL?",
   "options": [
-   "Security groups are stateful and operate at the instance level; network ACLs are stateless and operate at the subnet level",
-   "Security groups are stateless; network ACLs are stateful",
    "Both operate at the subnet level",
-   "Security groups support deny rules; network ACLs do not"
+   "Security groups are stateful and operate at the instance level; network ACLs are stateless and operate at the subnet level",
+   "Security groups support deny rules; network ACLs do not",
+   "Security groups are stateless; network ACLs are stateful"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Security groups guard the instance, are stateful (return traffic is automatically allowed) and support allow rules only. Network ACLs guard the subnet, are stateless, and support both allow and deny rules."
  },
@@ -241,9 +241,9 @@ var QUESTIONS = [
   "scenario": "Which service provides and manages SSL/TLS certificates for use with AWS services at no cost?",
   "options": [
    "AWS Certificate Manager",
-   "AWS KMS",
    "AWS CloudHSM",
-   "AWS Secrets Manager"
+   "AWS Secrets Manager",
+   "AWS KMS"
   ],
   "correct": [
    0
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service creates and controls the encryption keys used to encrypt data across AWS services?",
   "options": [
-   "AWS KMS",
    "AWS Artifact",
-   "Amazon Macie",
-   "AWS Config"
+   "AWS Config",
+   "AWS KMS",
+   "Amazon Macie"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "KMS creates and manages encryption keys and integrates with most AWS services. Artifact supplies compliance reports, Macie finds sensitive data, and Config tracks configuration."
  },
@@ -273,12 +273,12 @@ var QUESTIONS = [
   "scenario": "Which is an example of a capital expense (CapEx) rather than an operational expense (OpEx)?",
   "options": [
    "Paying monthly for EC2 usage",
+   "Paying per Lambda invocation",
    "Purchasing physical servers for a data centre",
-   "Paying per GB of S3 storage used",
-   "Paying per Lambda invocation"
+   "Paying per GB of S3 storage used"
   ],
   "correct": [
-   1
+   2
   ],
   "explain": "Buying physical servers is a large up-front capital expense. All the AWS examples are usage-based operational expenses, which is precisely the trade cloud offers."
  },
@@ -288,9 +288,9 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service should be used to run a simple website with a predictable low monthly price and minimal configuration?",
   "options": [
-   "Amazon EC2",
-   "Amazon Lightsail",
    "AWS Fargate",
+   "Amazon Lightsail",
+   "Amazon EC2",
    "Amazon EKS"
   ],
   "correct": [
@@ -320,15 +320,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO services help a company analyse data already stored in Amazon S3?",
   "options": [
-   "Amazon Athena",
    "Amazon QuickSight",
-   "Amazon EBS",
    "AWS Direct Connect",
-   "Amazon Route 53"
+   "Amazon Athena",
+   "Amazon Route 53",
+   "Amazon EBS"
   ],
   "correct": [
    0,
-   1
+   2
   ],
   "explain": "Athena runs SQL queries directly against data in S3, and QuickSight builds dashboards and visualisations from it. EBS is block storage, Direct Connect is private connectivity, and Route 53 is DNS."
  },
@@ -354,13 +354,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does 'economies of scale' mean in the context of AWS pricing?",
   "options": [
-   "AWS's large purchasing volume lowers costs, and those savings are passed to customers",
-   "Customers must commit to three-year terms",
    "Larger instances always cost less per hour",
-   "Costs increase as usage grows"
+   "Customers must commit to three-year terms",
+   "Costs increase as usage grows",
+   "AWS's large purchasing volume lowers costs, and those savings are passed to customers"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Because AWS buys hardware and capacity at enormous volume, its per-unit costs fall and those savings reach customers as lower prices. It is one of the six standard cloud benefits."
  },
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service would you use to migrate a database to AWS with minimal downtime?",
   "options": [
-   "AWS Database Migration Service (DMS)",
-   "AWS Snowball",
+   "AWS Glue",
    "Amazon RDS",
-   "AWS Glue"
+   "AWS Database Migration Service (DMS)",
+   "AWS Snowball"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "DMS migrates databases to AWS while the source stays operational, minimising downtime. Snowball moves bulk data physically, RDS is the destination service, and Glue performs ETL."
  },
@@ -386,13 +386,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to grant a partner temporary access to a specific S3 bucket without creating a permanent user. What should it use?",
   "options": [
-   "An IAM role assumed by the partner",
    "The root user's credentials",
-   "A publicly readable bucket policy",
-   "A shared IAM user password"
+   "A shared IAM user password",
+   "An IAM role assumed by the partner",
+   "A publicly readable bucket policy"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "An IAM role grants temporary, scoped access without permanent credentials — the correct pattern for third parties. Sharing root credentials or a user password violates least privilege, and a public bucket exposes data to everyone."
  }

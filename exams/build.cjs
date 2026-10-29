@@ -220,6 +220,64 @@ function validate(file, qs, cert) {
   return { errs, byDomain };
 }
 
+// The banks were authored with the correct answer first (~88% of AIF answers
+// were option A), which a learner absorbs without noticing. Shuffle options at
+// build time, seeded by exam + question id so the page is stable between
+// builds (saved progress keeps pointing at the same options). Questions with
+// "all/none of the above"-style options keep their authored order.
+function seededRandom(seed) {
+  let h = 2166136261;
+  for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+// A plain shuffle can still cluster by luck (one bank landed 11 of 19 answers
+// on D), so single-answer questions are dealt target positions round-robin
+// (A, B, C, D, A, ...) in a seeded order: every letter is used about equally.
+function shuffleOptions(examId, q, target) {
+  const type = q.type || (q.multi ? 'multi' : 'single');
+  if (type !== 'single' && type !== 'multi') return q;
+  if (q.options.some(o => /\b(all|none) of the above\b|\bboth [A-E]\b/i.test(o))) return q;
+  const rand = seededRandom(`${examId}#${q.id}`);
+  const order = q.options.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  if (type === 'single' && target !== undefined && target < order.length) {
+    const from = order.indexOf(q.correct[0]);
+    [order[from], order[target]] = [order[target], order[from]];
+  }
+  return { ...q, options: order.map(i => q.options[i]),
+           correct: q.correct.map(c => order.indexOf(c)).sort((a, b) => a - b) };
+}
+function shuffleBank(examId, qs) {
+  const rand = seededRandom(`${examId}#targets`);
+  const singles = qs.filter(q => (q.type || (q.multi ? 'multi' : 'single')) === 'single');
+  const targets = singles.map((_, i) => i % 4);
+  for (let i = targets.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [targets[i], targets[j]] = [targets[j], targets[i]];
+  }
+  return qs.map(q => shuffleOptions(examId, q, targets[singles.indexOf(q)]));
+}
+
+// "Pick the longest option" should be no better than chance. Hard banks
+// (meta.hard) must keep the correct answer the strictly-longest option in at
+// most 30% of single-answer questions; other banks only report the rate.
+function longestRate(qs) {
+  const singles = qs.filter(q => (q.type || (q.multi ? 'multi' : 'single')) === 'single');
+  const hits = singles.filter(q => {
+    const L = q.options.map(o => o.length);
+    const c = L[q.correct[0]];
+    return L.every((l, i) => i === q.correct[0] || l < c);
+  }).length;
+  return singles.length ? hits / singles.length : 0;
+}
+
 // Track every scenario across every exam so a question can never silently appear
 // in two papers — the learner explicitly asked that all questions be unique.
 const seenScenarios = new Map();
@@ -238,6 +296,10 @@ fs.readdirSync(QDIR).filter(f => f.endsWith('.json')).sort().forEach(f => {
       seenScenarios.set(key, data.meta.id);
     }
   });
+  const longest = longestRate(data.questions);
+  if (data.meta.hard && longest > 0.3) {
+    errs.push(`correct answer is the longest option in ${Math.round(longest * 100)}% of questions (max 30% for a hard bank)`);
+  }
   // AIF has five domains, DVA and CLF four — report whichever the bank uses.
   const dist = Object.keys(byDomain).map(Number).sort((a, b) => a - b)
     .map(d => byDomain[d]).join('/');
@@ -247,9 +309,9 @@ fs.readdirSync(QDIR).filter(f => f.endsWith('.json')).sort().forEach(f => {
     return;
   }
   const out = path.join(DIR, data.meta.id + '.html');
-  fs.writeFileSync(out, page(data.meta, data.questions));
+  fs.writeFileSync(out, page(data.meta, shuffleBank(data.meta.id, data.questions)));
   built++;
-  console.log(`✔ ${data.meta.id}.html  ${data.questions.length} questions  domains ${dist}`);
+  console.log(`✔ ${data.meta.id}.html  ${data.questions.length} questions  domains ${dist}  longest-is-correct ${Math.round(longest * 100)}%`);
 });
 console.log(`\n${built} exam(s) built${failed ? `, ${failed} failed` : ''}.`);
 if (failed) process.exit(1);

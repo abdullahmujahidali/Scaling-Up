@@ -80,13 +80,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which statement correctly describes the relationship between artificial intelligence, machine learning and deep learning?",
   "options": [
-   "Deep learning is a subset of machine learning, which is a subset of artificial intelligence",
-   "Artificial intelligence is a subset of deep learning",
    "Machine learning and artificial intelligence are unrelated",
-   "Deep learning is broader than artificial intelligence"
+   "Deep learning is a subset of machine learning, which is a subset of artificial intelligence",
+   "Deep learning is broader than artificial intelligence",
+   "Artificial intelligence is a subset of deep learning"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "AI is the widest field, machine learning sits within it, and deep learning sits within machine learning. Generative AI in turn sits within deep learning."
  },
@@ -112,13 +112,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service transcribes recorded audio into text?",
   "options": [
-   "Amazon Transcribe",
    "Amazon Polly",
    "Amazon Translate",
+   "Amazon Transcribe",
    "Amazon Comprehend"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Transcribe converts speech to text. Polly performs the reverse, generating speech from text — remember Polly as the parrot that speaks."
  },
@@ -128,13 +128,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service detects objects, scenes and faces in images and video?",
   "options": [
-   "Amazon Rekognition",
-   "Amazon Textract",
    "Amazon Kendra",
-   "Amazon Comprehend"
+   "Amazon Comprehend",
+   "Amazon Rekognition",
+   "Amazon Textract"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Rekognition analyses images and video. Textract extracts text from scanned documents, and Comprehend analyses the meaning of text."
  },
@@ -144,13 +144,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which inference type is most cost-effective for scoring a large batch of records overnight?",
   "options": [
-   "Batch inference",
    "Real-time inference",
    "Streaming inference",
-   "Provisioned throughput"
+   "Provisioned throughput",
+   "Batch inference"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Batch inference processes large volumes at once with results available later, avoiding the cost of a continuously running real-time endpoint."
  },
@@ -160,13 +160,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which metric measures the proportion of genuine positive cases that a model successfully identified?",
   "options": [
-   "Recall",
    "Precision",
    "Accuracy",
-   "F1 score"
+   "F1 score",
+   "Recall"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Recall measures how many real positive cases were caught, so it matters most when missing a case is costly — disease screening or fraud detection."
  },
@@ -176,13 +176,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service produces time-series forecasts such as future product demand?",
   "options": [
-   "Amazon Forecast",
-   "Amazon Personalize",
    "Amazon Fraud Detector",
-   "Amazon Lex"
+   "Amazon Forecast",
+   "Amazon Lex",
+   "Amazon Personalize"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Forecast is the managed time-series forecasting service. Personalize produces recommendations and Fraud Detector identifies fraudulent activity."
  },
@@ -192,13 +192,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which task is an example of regression rather than classification?",
   "options": [
-   "Predicting a property's sale price",
-   "Deciding whether an email is spam",
    "Identifying the language of a document",
-   "Detecting whether an image contains a cat"
+   "Deciding whether an email is spam",
+   "Detecting whether an image contains a cat",
+   "Predicting a property's sale price"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Regression predicts a continuous numeric value such as price. The other three assign a discrete category, which is classification."
  },
@@ -208,13 +208,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "When is a machine learning solution generally NOT appropriate?",
   "options": [
+   "When predictions can tolerate some uncertainty",
    "When a guaranteed, exact outcome defined by fixed rules is required",
-   "When large volumes of historical data exist",
    "When patterns are too complex to code by hand",
-   "When predictions can tolerate some uncertainty"
+   "When large volumes of historical data exist"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "ML produces probabilistic predictions, not guarantees. Where an exact outcome is defined by clear rules, conventional deterministic logic is the correct tool — a point the exam guide makes explicitly."
  },
@@ -240,13 +240,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does MLOps refer to?",
   "options": [
-   "Applying repeatable, monitored engineering practices to machine learning systems",
-   "A type of neural network architecture",
+   "A method of encrypting training data",
    "A billing model for AI services",
-   "A method of encrypting training data"
+   "Applying repeatable, monitored engineering practices to machine learning systems",
+   "A type of neural network architecture"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "MLOps covers experimentation, repeatable processes, scalable systems, monitoring and retraining — engineering discipline applied to ML rather than a model type."
  },
@@ -256,13 +256,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides recommendations such as 'customers who bought this also bought'?",
   "options": [
-   "Amazon Personalize",
+   "Amazon Comprehend",
    "Amazon Forecast",
    "Amazon Kendra",
-   "Amazon Comprehend"
+   "Amazon Personalize"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Personalize is the managed recommendation service. Kendra provides intelligent enterprise search, which is a different retrieval problem."
  },
@@ -272,15 +272,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO characteristics describe unstructured data?",
   "options": [
-   "Free-text documents with no predefined schema",
    "Images and audio recordings",
-   "Rows and columns in a relational table",
    "A CSV file with fixed headers",
+   "Free-text documents with no predefined schema",
+   "Rows and columns in a relational table",
    "A normalised database schema"
   ],
   "correct": [
    0,
-   1
+   2
   ],
   "explain": "Free text, images and audio have no predefined schema and are unstructured. Tables, CSVs with fixed headers and normalised schemas all impose structure."
  },
@@ -290,13 +290,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service provides API access to foundation models from several providers without managing infrastructure?",
   "options": [
-   "Amazon Bedrock",
-   "Amazon SageMaker AI",
    "Amazon EC2",
-   "AWS Lambda"
+   "AWS Lambda",
+   "Amazon SageMaker AI",
+   "Amazon Bedrock"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Bedrock provides serverless API access to foundation models. SageMaker AI is the platform for building and training your own models, requiring far more expertise."
  },
@@ -306,13 +306,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is a token in the context of a large language model?",
   "options": [
-   "A small unit of text, roughly three-quarters of a word",
    "A security credential",
-   "A type of GPU",
-   "A unit of storage"
+   "A unit of storage",
+   "A small unit of text, roughly three-quarters of a word",
+   "A type of GPU"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Tokens are the units of text models read and generate, and are the unit of billing. The security meaning of 'token' is unrelated in this context."
  },
@@ -322,13 +322,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which term describes a model producing confident but factually incorrect output?",
   "options": [
-   "Hallucination",
-   "Overfitting",
    "Drift",
+   "Overfitting",
+   "Hallucination",
    "Underfitting"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Hallucination is confident falsehood and is generative AI's best-known weakness. Overfitting and underfitting are training problems, and drift is degradation over time."
  },
@@ -338,13 +338,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What are embeddings used for in a generative AI application?",
   "options": [
+   "Scheduling training jobs",
    "Representing text as vectors so semantically similar items are numerically close",
    "Encrypting data before storage",
-   "Compressing model weights",
-   "Scheduling training jobs"
+   "Compressing model weights"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Embeddings turn text into vectors where similar meanings are close together, which is what makes semantic search and retrieval-augmented generation possible."
  },
@@ -355,9 +355,9 @@ var QUESTIONS = [
   "scenario": "A team notices its Amazon Bedrock costs rising sharply after adding a long standing instruction to every request. Which change would MOST directly reduce this cost?",
   "options": [
    "Shorten the repeated instruction or enable prompt caching",
+   "Add more few-shot examples to the prompt",
    "Increase the temperature setting",
-   "Switch the application to a different AWS Region",
-   "Add more few-shot examples to the prompt"
+   "Switch the application to a different AWS Region"
   ],
   "correct": [
    0
@@ -370,13 +370,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does 'multi-modal' mean when applied to a foundation model?",
   "options": [
-   "It can process more than one type of data, such as text and images",
-   "It runs in more than one Region",
    "It supports multiple concurrent users",
+   "It runs in more than one Region",
+   "It can process more than one type of data, such as text and images",
    "It offers multiple pricing tiers"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Multi-modal means handling several data types. Modality refers to the kind of data — text, image, audio — not deployment or pricing."
  },
@@ -403,8 +403,8 @@ var QUESTIONS = [
   "scenario": "What role does the Model Context Protocol (MCP) play in agentic AI?",
   "options": [
    "It provides a standard way for agents to connect to external systems and tools",
-   "It compresses model weights",
    "It encrypts data in transit",
+   "It compresses model weights",
    "It measures model accuracy"
   ],
   "correct": [
@@ -420,8 +420,8 @@ var QUESTIONS = [
   "options": [
    "Nondeterminism — the same prompt can produce different outputs",
    "They cannot process natural language",
-   "They require no evaluation",
-   "They are always factually accurate"
+   "They are always factually accurate",
+   "They require no evaluation"
   ],
   "correct": [
    0
@@ -434,13 +434,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS service is an AI-powered assistant for business and development questions?",
   "options": [
-   "Amazon Q",
    "Amazon Polly",
    "Amazon Macie",
-   "Amazon Neptune"
+   "Amazon Neptune",
+   "Amazon Q"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Amazon Q is AWS's AI assistant for business users and developers. The others are speech synthesis, data discovery and graph database services."
  },
@@ -450,13 +450,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What does 'chunking' refer to when preparing documents for retrieval?",
   "options": [
+   "Encrypting documents at rest",
    "Splitting documents into smaller pieces that can be embedded and retrieved",
    "Compressing files to save storage",
-   "Removing duplicate records",
-   "Encrypting documents at rest"
+   "Removing duplicate records"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Chunking splits large documents into retrievable pieces before embedding. Chunk size affects retrieval quality directly — too large returns noise, too small loses context."
  },
@@ -466,13 +466,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which model family is typically used to generate images?",
   "options": [
-   "Diffusion models",
+   "Linear regression models",
    "Transformer-based language models",
-   "Decision trees",
-   "Linear regression models"
+   "Diffusion models",
+   "Decision trees"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Diffusion models generate images, whereas transformer-based LLMs generate text. Both are foundation model families named in the exam guide."
  },
@@ -482,13 +482,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which business metric would best indicate that a generative AI assistant is delivering value?",
   "options": [
-   "Task completion rate and user satisfaction",
-   "Number of GPUs provisioned",
    "Size of the model in gigabytes",
-   "Length of the system prompt"
+   "Length of the system prompt",
+   "Task completion rate and user satisfaction",
+   "Number of GPUs provisioned"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Business alignment is measured by outcomes such as task completion rate, user satisfaction, cost per interaction and ROI. The other options are technical inputs."
  },
@@ -498,13 +498,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which stage of the foundation model lifecycle immediately follows evaluation?",
   "options": [
-   "Deployment",
+   "Fine-tuning",
    "Data selection",
-   "Pre-training",
-   "Fine-tuning"
+   "Deployment",
+   "Pre-training"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "The lifecycle runs data selection, model selection, pre-training, fine-tuning, evaluation, deployment, then feedback. Deployment follows evaluation."
  },
@@ -514,13 +514,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the main advantage of a smaller foundation model over a larger one?",
   "options": [
-   "Lower latency and lower cost per request",
    "Guaranteed absence of bias",
-   "An unlimited context window",
-   "No need for evaluation"
+   "No need for evaluation",
+   "Lower latency and lower cost per request",
+   "An unlimited context window"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Smaller models generally respond faster and cost less, which matters for latency-sensitive or high-volume applications. They do not eliminate bias or the need for evaluation."
  },
@@ -530,15 +530,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO factors should be considered when selecting a foundation model for a production application?",
   "options": [
+   "The colour scheme of the console",
    "Inference cost per token",
-   "Latency requirements",
    "The number of Availability Zones in the Region",
    "The account's support plan tier",
-   "The colour scheme of the console"
+   "Latency requirements"
   ],
   "correct": [
-   0,
-   1
+   1,
+   4
   ],
   "explain": "Cost, latency, modality, model size, customisability and language support are the documented selection criteria. Availability Zone count, support plan and console appearance are irrelevant to model choice."
  },
@@ -549,9 +549,9 @@ var QUESTIONS = [
   "scenario": "A company needs a chatbot to answer from internal documents that change daily, with citations. Which approach?",
   "options": [
    "Retrieval Augmented Generation",
-   "Fine-tuning daily",
+   "Raising the temperature",
    "Pre-training a custom model",
-   "Raising the temperature"
+   "Fine-tuning daily"
   ],
   "correct": [
    0
@@ -565,9 +565,9 @@ var QUESTIONS = [
   "scenario": "Which customisation approach changes a model's writing style and tone permanently?",
   "options": [
    "Fine-tuning",
+   "Increasing max tokens",
    "Retrieval Augmented Generation",
-   "Prompt caching",
-   "Increasing max tokens"
+   "Prompt caching"
   ],
   "correct": [
    0
@@ -580,13 +580,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which inference parameter primarily controls randomness in generated output?",
   "options": [
-   "Temperature",
+   "Batch size",
    "Max tokens",
-   "Context window",
-   "Batch size"
+   "Temperature",
+   "Context window"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Temperature governs randomness — low values give consistent output, high values more variety. Max tokens limits length and the context window limits input size."
  },
@@ -596,13 +596,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which prompting technique supplies several worked examples within the prompt?",
   "options": [
-   "Few-shot prompting",
    "Zero-shot prompting",
+   "Negative prompting",
    "Chain-of-thought prompting",
-   "Negative prompting"
+   "Few-shot prompting"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Few-shot prompting includes several examples to guide format and style. Zero-shot supplies none and chain-of-thought requests step-by-step reasoning."
  },
@@ -612,13 +612,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which technique most improves accuracy on multi-step reasoning problems?",
   "options": [
-   "Chain-of-thought prompting",
    "Raising the temperature",
-   "Shortening the prompt",
-   "Reducing max tokens"
+   "Chain-of-thought prompting",
+   "Reducing max tokens",
+   "Shortening the prompt"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Chain-of-thought elicits intermediate reasoning steps, substantially improving multi-step arithmetic and logic. Higher temperature adds randomness rather than rigour."
  },
@@ -629,9 +629,9 @@ var QUESTIONS = [
   "scenario": "Which metric is used to evaluate the quality of machine-generated summaries?",
   "options": [
    "ROUGE",
-   "BLEU",
    "F1 score",
-   "Latency"
+   "Latency",
+   "BLEU"
   ],
   "correct": [
    0
@@ -644,13 +644,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which metric evaluates machine translation quality?",
   "options": [
-   "BLEU",
    "ROUGE",
-   "Recall",
-   "Accuracy"
+   "BLEU",
+   "Accuracy",
+   "Recall"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "BLEU is the translation metric; ROUGE is for summarisation. Recall and accuracy are classification metrics rather than generation metrics."
  },
@@ -660,13 +660,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which AWS feature provides managed retrieval-augmented generation without building the pipeline yourself?",
   "options": [
-   "Amazon Bedrock Knowledge Bases",
-   "Amazon Bedrock Guardrails",
+   "Amazon Bedrock Prompt Management",
    "Amazon SageMaker Clarify",
-   "Amazon Bedrock Prompt Management"
+   "Amazon Bedrock Guardrails",
+   "Amazon Bedrock Knowledge Bases"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Knowledge Bases is AWS's managed RAG implementation, handling chunking, embedding and retrieval. Prompt Management stores and versions prompts instead."
  },
@@ -677,9 +677,9 @@ var QUESTIONS = [
   "scenario": "Which AWS service can store vector embeddings for a retrieval application?",
   "options": [
    "Amazon OpenSearch Service",
-   "Amazon S3 Glacier",
    "AWS CloudTrail",
-   "Amazon Polly"
+   "Amazon Polly",
+   "Amazon S3 Glacier"
   ],
   "correct": [
    0
@@ -692,13 +692,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company wants to reduce inference cost while retaining most of a large model's capability. Which technique?",
   "options": [
-   "Model distillation",
-   "Increasing temperature",
    "Widening the context window",
+   "Increasing temperature",
+   "Model distillation",
    "Adding more few-shot examples"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Distillation produces a smaller, cheaper model approximating a larger one. Extra examples and a wider context window both increase token usage and therefore cost."
  },
@@ -708,13 +708,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which approach supplies examples at inference time without changing the model's weights?",
   "options": [
+   "Model distillation",
    "In-context learning",
-   "Fine-tuning",
    "Continuous pre-training",
-   "Model distillation"
+   "Fine-tuning"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "In-context learning — zero-, one- and few-shot prompting — guides the model through the prompt alone. The other approaches all modify the model itself."
  },
@@ -724,13 +724,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which technique reduces cost when a long, unchanging instruction is sent with every request?",
   "options": [
-   "Prompt caching",
    "Raising the temperature",
    "Adding negative prompts",
+   "Prompt caching",
    "Increasing max tokens"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Prompt caching reuses the repeated portion of a prompt, reducing both cost and latency for requests that share a long preamble."
  },
@@ -740,13 +740,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which evaluation approach uses one language model to grade another's output?",
   "options": [
+   "Latency measurement",
    "LLM-as-a-judge",
    "BLEU scoring",
-   "Benchmark datasets",
-   "Latency measurement"
+   "Benchmark datasets"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "LLM-as-a-judge scales evaluation by having a model assess responses. Human evaluation is more reliable for subjective quality but does not scale as well."
  },
@@ -756,13 +756,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the purpose of reinforcement learning from human feedback (RLHF)?",
   "options": [
-   "Aligning model behaviour with human preferences",
    "Compressing the model for faster inference",
+   "Distributing the model across Regions",
    "Encrypting the training dataset",
-   "Distributing the model across Regions"
+   "Aligning model behaviour with human preferences"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "RLHF uses human preference judgements to make model behaviour more helpful and aligned. Compression is distillation, a separate technique."
  },
@@ -773,9 +773,9 @@ var QUESTIONS = [
   "scenario": "Which characteristic should training data have when fine-tuning a model for a specialist domain?",
   "options": [
    "Curated, representative and well governed with documented provenance",
+   "Entirely unlabelled",
    "As large as possible regardless of quality",
-   "Drawn from a single narrow source",
-   "Entirely unlabelled"
+   "Drawn from a single narrow source"
   ],
   "correct": [
    0
@@ -788,13 +788,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A RAG application returns irrelevant passages. Which change is most likely to help?",
   "options": [
-   "Improving how documents are chunked and embedded",
-   "Raising the temperature",
    "Increasing max output tokens",
-   "Switching to a smaller model"
+   "Switching to a smaller model",
+   "Raising the temperature",
+   "Improving how documents are chunked and embedded"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Retrieval quality depends on chunking and embedding — poor chunking retrieves the wrong passages. Temperature and token limits affect generation, not retrieval."
  },
@@ -804,13 +804,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which Amazon Bedrock capability compares foundation models against defined criteria?",
   "options": [
+   "Amazon SageMaker Ground Truth",
    "Amazon Bedrock Model Evaluation",
    "Amazon Bedrock Guardrails",
-   "Amazon SageMaker Ground Truth",
    "AWS Config"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Model Evaluation compares models using automatic metrics and human review. Ground Truth labels data and Guardrails filters content."
  },
@@ -820,15 +820,15 @@ var QUESTIONS = [
   "multi": true,
   "scenario": "Which TWO approaches supply a model with current, organisation-specific information at query time?",
   "options": [
-   "Retrieval Augmented Generation over a document store",
-   "Amazon Bedrock Knowledge Bases",
-   "Increasing the temperature setting",
    "Reducing the maximum output tokens",
-   "Using a larger batch size"
+   "Using a larger batch size",
+   "Amazon Bedrock Knowledge Bases",
+   "Retrieval Augmented Generation over a document store",
+   "Increasing the temperature setting"
   ],
   "correct": [
-   0,
-   1
+   2,
+   3
   ],
   "explain": "RAG and its managed AWS implementation, Knowledge Bases, both retrieve current organisational content at query time. Temperature, token limits and batch size do not add information."
  },
@@ -839,9 +839,9 @@ var QUESTIONS = [
   "scenario": "Which AWS service detects bias in a model and explains individual predictions?",
   "options": [
    "Amazon SageMaker Clarify",
-   "Amazon Bedrock Guardrails",
+   "Amazon Macie",
    "Amazon SageMaker JumpStart",
-   "Amazon Macie"
+   "Amazon Bedrock Guardrails"
   ],
   "correct": [
    0
@@ -854,13 +854,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which capability blocks a generative AI application from discussing prohibited topics?",
   "options": [
-   "Amazon Bedrock Guardrails",
-   "Amazon SageMaker Clarify",
    "Amazon Comprehend",
-   "Amazon Textract"
+   "Amazon Textract",
+   "Amazon SageMaker Clarify",
+   "Amazon Bedrock Guardrails"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Guardrails supports denied topics and harmful content filtering. Clarify measures fairness and explainability, which is a different concern."
  },
@@ -870,13 +870,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "What is the most likely root cause when a model consistently disadvantages one demographic group?",
   "options": [
+   "An undersized context window",
    "Bias present in the training data",
-   "Insufficient compute capacity",
    "A temperature setting that is too low",
-   "An undersized context window"
+   "Insufficient compute capacity"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Models reproduce patterns in their training data, so demographic unfairness almost always originates there. Inference settings and compute do not create it."
  },
@@ -902,13 +902,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service routes low-confidence predictions to human reviewers?",
   "options": [
-   "Amazon Augmented AI (A2I)",
-   "Amazon SageMaker Clarify",
    "Amazon Rekognition",
-   "Amazon Kendra"
+   "Amazon Kendra",
+   "Amazon Augmented AI (A2I)",
+   "Amazon SageMaker Clarify"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "A2I inserts human review into workflows for uncertain or high-risk predictions, implementing the human-in-the-loop principle."
  },
@@ -918,13 +918,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which term describes a model that memorises its training data and generalises poorly?",
   "options": [
-   "Overfitting",
    "Underfitting",
+   "Overfitting",
    "Drift",
    "Hallucination"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Overfitting means excellent training performance but poor results on new data. Underfitting means the model learned too little and performs poorly everywhere."
  },
@@ -935,9 +935,9 @@ var QUESTIONS = [
   "scenario": "Which legal risk is specifically associated with generative AI output?",
   "options": [
    "Intellectual property infringement claims",
-   "Exceeding an EC2 service quota",
+   "Instance type incompatibility",
    "Cross-Region data transfer charges",
-   "Instance type incompatibility"
+   "Exceeding an EC2 service quota"
   ],
   "correct": [
    0
@@ -950,13 +950,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Six months after deployment, a fraud model's accuracy has fallen because customer behaviour has shifted. What is this phenomenon called?",
   "options": [
-   "Model drift",
    "Overfitting at training time",
-   "Prompt injection",
-   "Token exhaustion"
+   "Model drift",
+   "Token exhaustion",
+   "Prompt injection"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Drift is degradation after deployment as real-world data diverges from the training data, and is detected with SageMaker Model Monitor. Overfitting is a training-time fault, visible before deployment rather than months later."
  },
@@ -966,13 +966,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which responsible AI characteristic describes a model performing reliably under unexpected or adversarial input?",
   "options": [
-   "Robustness",
-   "Modality",
    "Latency",
-   "Elasticity"
+   "Modality",
+   "Elasticity",
+   "Robustness"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Robustness means holding up under difficult or adversarial conditions, and is listed alongside fairness, inclusivity, safety and veracity."
  },
@@ -982,13 +982,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A user embeds hidden instructions in a chatbot message to override its original instructions. What is this attack called?",
   "options": [
-   "Prompt injection",
-   "Data drift",
    "Overfitting",
-   "Model distillation"
+   "Prompt injection",
+   "Model distillation",
+   "Data drift"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Prompt injection hijacks a model through crafted input — the AI equivalent of SQL injection. Defences are input validation, output filtering and Guardrails."
  },
@@ -998,13 +998,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "A company must confirm that no customer national identity numbers have been uploaded into the S3 bucket used to build its training dataset. Which service should it use?",
   "options": [
-   "Amazon Macie",
-   "AWS Config",
    "Amazon Rekognition",
-   "AWS Audit Manager"
+   "Amazon Macie",
+   "AWS Audit Manager",
+   "AWS Config"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "Macie scans S3 and classifies sensitive data such as national identity numbers and other PII. Config tracks resource configuration rather than object contents, and Audit Manager collects audit evidence rather than scanning data."
  },
@@ -1014,13 +1014,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service provides an audit trail of API calls made against Amazon Bedrock?",
   "options": [
+   "AWS Artifact",
    "AWS CloudTrail",
    "Amazon CloudWatch",
-   "AWS Config",
-   "AWS Artifact"
+   "AWS Config"
   ],
   "correct": [
-   0
+   1
   ],
   "explain": "CloudTrail records who called which API and when. CloudWatch monitors performance metrics, and Config records resource configuration state."
  },
@@ -1031,9 +1031,9 @@ var QUESTIONS = [
   "scenario": "Which approach ensures traffic to AWS AI services does not traverse the public internet?",
   "options": [
    "AWS PrivateLink",
+   "Amazon Route 53",
    "Amazon CloudFront",
-   "AWS Global Accelerator",
-   "Amazon Route 53"
+   "AWS Global Accelerator"
   ],
   "correct": [
    0
@@ -1046,13 +1046,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Under the shared responsibility model, who is responsible for the prompts and data submitted to a foundation model?",
   "options": [
-   "The customer",
-   "AWS",
    "The model provider",
-   "Neither party"
+   "Neither party",
+   "AWS",
+   "The customer"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Customer data and prompts are always the customer's responsibility. AWS secures the infrastructure, the service and the model itself."
  },
@@ -1062,13 +1062,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which combination best reduces hallucinations in a production GenAI application?",
   "options": [
-   "RAG grounding together with output validation",
-   "Raising the temperature and shortening prompts",
    "Using a larger context window only",
-   "Disabling logging"
+   "Disabling logging",
+   "Raising the temperature and shortening prompts",
+   "RAG grounding together with output validation"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Grounding answers in real sources and validating output before delivery is the documented approach. Temperature changes randomness and does not improve factual accuracy."
  },
@@ -1078,13 +1078,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which governance requirement determines which country an organisation's training data may be stored in?",
   "options": [
-   "Data residency",
-   "Model temperature",
    "Token limits",
-   "Instance family selection"
+   "Instance family selection",
+   "Model temperature",
+   "Data residency"
   ],
   "correct": [
-   0
+   3
   ],
   "explain": "Data residency dictates the geographic location where data may be held, usually for legal reasons. It is a governance constraint rather than a technical setting."
  },
@@ -1094,13 +1094,13 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Which service helps collect evidence continuously to support compliance audits?",
   "options": [
-   "AWS Audit Manager",
+   "Amazon Detective",
    "AWS Artifact",
-   "Amazon Inspector",
-   "Amazon Detective"
+   "AWS Audit Manager",
+   "Amazon Inspector"
   ],
   "correct": [
-   0
+   2
   ],
   "explain": "Audit Manager continuously collects evidence for your own audits. Artifact provides AWS's own compliance reports, which is the complementary half."
  },
@@ -1112,8 +1112,8 @@ var QUESTIONS = [
   "options": [
    "Data lineage and cataloging",
    "Prompt caching",
-   "Model distillation",
-   "Batch inference"
+   "Batch inference",
+   "Model distillation"
   ],
   "correct": [
    0

@@ -1,0 +1,156 @@
+{
+ "meta": {
+  "id": "aif-hard-01",
+  "title": "AIF Hard Quiz 1",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "exam-style scenarios · every option plausible · no length clues",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1, "domain": 1, "multi": false,
+   "scenario": "A bank trains a model to flag fraudulent card transactions. Only 0.5% of transactions are fraud. In testing the model reports 99.5% accuracy, yet it missed almost every real fraud case. Which metric should the team use to judge how many fraud cases the model actually catches?",
+   "options": ["Recall", "Accuracy on a larger test set", "Precision", "Root mean squared error (RMSE)"],
+   "correct": [0],
+   "explain": "Recall = of all the REAL fraud cases, how many did the model catch. A model that says 'not fraud' every time gets 99.5% accuracy here, which is why accuracy is the trap. Precision measures false alarms, not missed cases. RMSE is for regression (predicting numbers)."
+  },
+  {
+   "id": 2, "domain": 1, "multi": false,
+   "scenario": "A logistics company has millions of delivery records with no labels. It wants to discover natural groups of customers with similar delivery behaviour so it can design new service tiers. Which approach fits?",
+   "options": ["Supervised classification of the records", "Unsupervised learning (clustering)", "Reinforcement learning with tier rewards", "Regression to predict a tier score"],
+   "correct": [1],
+   "explain": "No labels + 'discover groups' = unsupervised clustering. Supervised classification and regression both need labelled examples of the right answer, which the company does not have. Reinforcement learning learns actions from rewards in an environment, not groupings."
+  },
+  {
+   "id": 3, "domain": 1, "multi": false,
+   "scenario": "A media company must generate subtitles for an archive of 40,000 recorded videos. Results are not needed until next morning, and the company wants the lowest cost. Which SageMaker inference option fits BEST?",
+   "options": ["SageMaker Asynchronous Inference", "A SageMaker real-time endpoint", "SageMaker batch transform", "SageMaker Serverless Inference"],
+   "correct": [2],
+   "explain": "A large dataset processed all at once, with no need for an immediate answer = batch transform. Real-time endpoints run (and bill) continuously for instant answers. Serverless suits unpredictable small requests. Asynchronous suits single large requests that queue for minutes, not a whole archive overnight."
+  },
+  {
+   "id": 4, "domain": 1, "multi": false,
+   "scenario": "A business analyst with no coding experience wants to build a customer-churn prediction model from a CSV file using a point-and-click interface. Which service should they use?",
+   "options": ["Amazon SageMaker Data Wrangler", "Amazon SageMaker Canvas", "Amazon Personalize", "SageMaker Studio notebooks"],
+   "correct": [1],
+   "explain": "Canvas = no-code ML: upload data, click, get predictions. Data Wrangler only prepares data, it does not build the model for a non-coder. Studio notebooks need code. Personalize is for recommendations, not churn prediction."
+  },
+  {
+   "id": 5, "domain": 2, "multi": false,
+   "scenario": "A law firm uses a foundation model to summarise contract clauses. Reviewers complain that the same clause produces noticeably different wording every time. Which change makes the output MORE consistent?",
+   "options": ["Raise the top-p value", "Lower the temperature", "Increase the maximum output tokens", "Raise the temperature slightly"],
+   "correct": [1],
+   "explain": "Lower temperature = less randomness = more consistent output. Raising top-p or temperature adds MORE randomness. Maximum output tokens only controls length."
+  },
+  {
+   "id": 6, "domain": 2, "multi": false,
+   "scenario": "A team pastes a 300-page technical manual into every prompt. The model returns an error saying the input is too large. Which limit has the team exceeded?",
+   "options": ["The account's provisioned throughput", "The embedding vector dimension", "The model's context window", "The model's maximum temperature"],
+   "correct": [2],
+   "explain": "The context window is the maximum number of tokens a model can read (input) and write in one request. Provisioned throughput is about request capacity, not input size. Embedding dimension and temperature have nothing to do with input length. (The real fix here would be RAG: send only the relevant pages.)"
+  },
+  {
+   "id": 7, "domain": 2, "multi": false,
+   "scenario": "An online store wants a search for 'running sneakers' to also return products described as 'jogging shoes', even though no words match. What makes this possible?",
+   "options": ["Amazon Comprehend key phrase extraction", "Fine-tuning a text-generation model", "Embeddings stored in a vector database", "Amazon Translate"],
+   "correct": [2],
+   "explain": "Embeddings turn text into numbers that capture MEANING, so 'running sneakers' and 'jogging shoes' land close together and a vector search finds both. Key phrase extraction only pulls out words that are already there. Fine-tuning changes how a model writes, not how search works. Translate changes language."
+  },
+  {
+   "id": 8, "domain": 2, "multi": true,
+   "scenario": "A customer-service chatbot built on a foundation model sometimes invents product prices that do not exist. Which TWO actions would MOST reduce this? (Select TWO)",
+   "options": ["Increase the maximum output tokens", "Ground answers with RAG over the current price list", "Lower the temperature", "Raise the top-k value", "Switch to a model with a longer context window only"],
+   "correct": [1, 2],
+   "explain": "Inventing facts = hallucination. RAG gives the model the real price list to answer from, and a lower temperature makes it stick closer to likely, grounded text. More output tokens, higher top-k (more randomness) and a longer context window with no new data do not stop invented facts."
+  },
+  {
+   "id": 9, "domain": 2, "multi": false,
+   "scenario": "A startup is choosing between Amazon Bedrock on-demand pricing and hosting its own model on EC2. With Bedrock on-demand, what mainly determines the bill for text models?",
+   "options": ["The hours the model endpoint is running", "The number of input and output tokens", "The number of parameters in the model", "The number of users in the AWS account"],
+   "correct": [1],
+   "explain": "Bedrock on-demand charges per token: tokens you send in plus tokens the model writes back. Paying for hours is how self-hosted endpoints (EC2/SageMaker) are billed, and also Bedrock Provisioned Throughput. Parameter count and user count are not billing units."
+  },
+  {
+   "id": 10, "domain": 3, "multi": false,
+   "scenario": "A support team wants an assistant that answers questions from its product manuals. The manuals change several times a week, and every answer must show which manual section it came from. Which solution requires the LEAST ongoing effort?",
+   "options": ["Fine-tune a Bedrock model on the manuals each week", "Continued pre-training on all of the manuals", "Amazon Bedrock Knowledge Bases", "Few-shot prompts with three example answers"],
+   "correct": [2],
+   "explain": "Changing documents + cite the source = RAG, and Bedrock Knowledge Bases is AWS's managed RAG (it returns citations). Fine-tuning and continued pre-training would need retraining every week and cannot cite sources. Few-shot examples teach format, not the content of hundreds of pages."
+  },
+  {
+   "id": 11, "domain": 3, "multi": false,
+   "scenario": "A travel company wants an assistant that, in one conversation, checks flight availability by calling the company's booking API and then creates the reservation for the customer. Which Bedrock capability is designed for this?",
+   "options": ["Amazon Bedrock Knowledge Bases", "Amazon Bedrock Guardrails", "Amazon Bedrock Agents", "Bedrock model evaluation"],
+   "correct": [2],
+   "explain": "Agents plan multi-step tasks and CALL APIs (actions) to complete them. Knowledge Bases only retrieve documents to answer questions; they cannot book anything. Guardrails filter content. Model evaluation compares models."
+  },
+  {
+   "id": 12, "domain": 3, "multi": false,
+   "scenario": "A company is testing a model that converts English product descriptions into Spanish. It wants an automatic score that compares the model's output with versions written by professional translators. Which metric fits?",
+   "options": ["ROUGE", "F1 score", "BLEU", "Perplexity"],
+   "correct": [2],
+   "explain": "BLEU = Bilingual = translation. ROUGE = Reduce = summaries. F1 is for classification. Perplexity measures how 'surprised' a language model is by text; it does not compare against human translations."
+  },
+  {
+   "id": 13, "domain": 3, "multi": false,
+   "scenario": "A company must sort millions of short support tickets into five categories every day, with the lowest cost and latency. In testing, a small model met the accuracy target. Which model choice is BEST?",
+   "options": ["The largest model available, for best quality", "The model with the longest context window", "The smallest model that meets the accuracy target", "A multimodal model, to support images later"],
+   "correct": [2],
+   "explain": "Bigger models cost more per token and respond more slowly. If a small model is accurate enough, it wins on cost and latency. A long context window is not needed for short tickets, and multimodal adds cost for a need that does not exist yet."
+  },
+  {
+   "id": 14, "domain": 3, "multi": false,
+   "scenario": "A model often gets multi-step maths word problems wrong. The team cannot retrain it. Which prompting technique is MOST likely to improve the answers?",
+   "options": ["Zero-shot prompting", "Chain-of-thought prompting", "Lowering the maximum output tokens", "Negative prompting"],
+   "correct": [1],
+   "explain": "Chain-of-thought asks the model to reason step by step ('think step by step'), which helps multi-step problems. Zero-shot gives no help at all. Fewer output tokens cuts the reasoning short. Negative prompting says what NOT to include and does not add reasoning."
+  },
+  {
+   "id": 15, "domain": 4, "multi": false,
+   "scenario": "Before deploying a loan-approval model, a lender must check whether its training data under-represents some age groups. Which service should it use?",
+   "options": ["Amazon SageMaker Model Monitor", "Amazon SageMaker Clarify", "Amazon SageMaker Model Cards", "Amazon Augmented AI (A2I)"],
+   "correct": [1],
+   "explain": "Clarify detects BIAS, both in the training data (before training) and in predictions, and it explains predictions. Model Monitor watches a model that is ALREADY deployed. Model Cards only document a model. A2I sends predictions to humans for review."
+  },
+  {
+   "id": 16, "domain": 4, "multi": false,
+   "scenario": "A healthcare company's document model extracts values from medical forms. When the model's confidence is low, a person must check the result before it is released. Which service provides this?",
+   "options": ["Amazon SageMaker Clarify", "Amazon Bedrock Guardrails", "Amazon SageMaker Model Monitor", "Amazon Augmented AI (A2I)"],
+   "correct": [3],
+   "explain": "A2I = human review loop: low-confidence predictions are sent to people automatically. Clarify finds bias and explains predictions, Model Monitor watches for drift, and Guardrails filter content. None of these sends work to a human."
+  },
+  {
+   "id": 17, "domain": 4, "multi": false,
+   "scenario": "A bank's chatbot on Amazon Bedrock must refuse to give investment advice and must hide customer account numbers in its replies. Which service handles BOTH requirements?",
+   "options": ["Amazon Macie", "AWS WAF", "Amazon Bedrock Guardrails", "Amazon SageMaker Clarify"],
+   "correct": [2],
+   "explain": "Guardrails can block denied topics (investment advice) AND mask or block sensitive information (PII) in prompts and responses. Macie finds PII in S3 buckets, not in chatbot replies. WAF filters web traffic. Clarify checks bias."
+  },
+  {
+   "id": 18, "domain": 5, "multi": false,
+   "scenario": "A company builds an application on Amazon Bedrock. Under the shared responsibility model, which task belongs to the COMPANY rather than AWS?",
+   "options": ["Patching the servers that run the models", "Controlling which IAM users can invoke models", "Physical security of the data centres", "Maintaining the model hosting hardware"],
+   "correct": [1],
+   "explain": "Bedrock is a managed service, so AWS handles servers, patching, hardware and data centres (security OF the cloud). The customer always controls access, data and how the service is used (security IN the cloud): IAM permissions are yours."
+  },
+  {
+   "id": 19, "domain": 5, "multi": false,
+   "scenario": "Before using datasets stored in Amazon S3 to fine-tune a model, the security team must find out whether any of the files contain credit card numbers. Which service should they use?",
+   "options": ["Amazon Bedrock Guardrails", "Amazon GuardDuty", "Amazon Macie", "Amazon Inspector"],
+   "correct": [2],
+   "explain": "Sensitive data (PII, card numbers) sitting in S3 = Macie. Guardrails filter prompts and responses in Bedrock, not files in S3. GuardDuty detects threats (suspicious activity). Inspector scans for software vulnerabilities."
+  },
+  {
+   "id": 20, "domain": 5, "multi": true,
+   "scenario": "An auditor asks two questions about an AI project: (1) Who changed the bucket policy on the training-data bucket last month? (2) Has that bucket's configuration stayed compliant with company rules over the past 90 days? Which TWO services answer these? (Select TWO)",
+   "options": ["AWS CloudTrail", "Amazon CloudWatch", "AWS Config", "AWS Artifact", "AWS Trusted Advisor"],
+   "correct": [0, 2],
+   "explain": "Who did what (API calls) = CloudTrail. Configuration history and compliance with rules over time = AWS Config. CloudWatch is metrics and logs for performance. Artifact provides AWS's own compliance reports. Trusted Advisor gives best-practice recommendations."
+  }
+ ]
+}
