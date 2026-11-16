@@ -143,9 +143,9 @@
    "id": 9,
    "domain": 5,
    "multi": false,
-   "scenario": "Which service would detect a compromised set of credentials being used to call AI services unexpectedly?",
+   "scenario": "Which service records every API call made to Amazon Bedrock, including which IAM user made it and when, so the security team can investigate unexpected use of AI services?",
    "options": [
-    "Amazon GuardDuty",
+    "AWS CloudTrail",
     "Amazon Polly",
     "Amazon Personalize",
     "AWS Artifact"
@@ -153,7 +153,7 @@
    "correct": [
     0
    ],
-   "explain": "GuardDuty detects anomalous and malicious activity including suspicious credential use. Polly and Personalize are AI capabilities, and Artifact provides compliance documents."
+   "explain": "Who called which API, and when = CloudTrail (the audit trail). Polly turns text into speech, Personalize makes recommendations, and Artifact provides AWS's compliance reports."
   },
   {
    "id": 10,

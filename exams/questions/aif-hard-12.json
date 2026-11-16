@@ -1,0 +1,358 @@
+{
+ "meta": {
+  "id": "aif-hard-12",
+  "title": "AIF Hard Quiz 12",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "gap pack · agents, MCP, AgentCore, Kiro, Transform, business metrics, responsible AI practices",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company spent $100,000 building an AI support assistant. In the first year it saves $250,000 of staff time. The finance director wants one number that shows whether the money spent paid off. Which metric fits BEST?",
+   "options": [
+    "F1 score",
+    "Return on investment (ROI)",
+    "ROUGE score",
+    "Average revenue per user (ARPU)"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Money back compared with money spent = ROI: (250,000 − 100,000) ÷ 100,000 = 150%. F1 and ROUGE measure the MODEL, not the business. Average revenue per user measures income per customer, not whether a project paid off."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company gives an AI writing assistant to its 5,000 employees. Finance wants to know how much the assistant costs to run for each employee every month, to compare it with a paid alternative. Which metric is this?",
+   "options": [
+    "Customer lifetime value",
+    "Cost per user",
+    "Conversion rate",
+    "Return on investment"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Total running cost ÷ number of users = cost per user. Customer lifetime value is how much one CUSTOMER brings in over time. Conversion rate is how many visitors buy. ROI compares the total benefit with the total cost, not the cost of each person."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A startup with two developers wants to add text generation to its app this week. It does not want to choose instances, manage scaling or patch servers. Which way of using a model fits BEST?",
+   "options": [
+    "A self-hosted model on EC2 GPU instances",
+    "A managed API service such as Amazon Bedrock",
+    "A SageMaker endpoint that the team scales",
+    "A new model trained by the team from scratch"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "No servers, no scaling, fastest start = a managed API service (Amazon Bedrock: AWS runs everything, you pay per token). Self-hosting on EC2 or a SageMaker endpoint means YOU manage instances and scaling. Training from scratch takes months and millions."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A bank runs hundreds of old .NET Framework applications on Windows servers. It wants AI agents to analyse the code and help move the apps to modern .NET on Linux, with much less manual work. Which service is built for this?",
+   "options": [
+    "Kiro",
+    "AWS Transform",
+    "Strands Agents",
+    "Amazon SageMaker JumpStart"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Modernizing OLD systems (.NET, mainframe, VMware) with AI agents = AWS Transform. Kiro is an AI IDE for writing new code from specs. Strands Agents is an SDK for building your own agents. JumpStart gives pre-trained models to deploy. Trick: Transform = transform the old into new."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A travel company builds one main agent that receives every customer request. It splits the work and hands parts to a flights agent, a hotels agent and a payments agent, then combines their results. What is this design called?",
+   "options": [
+    "RAG with three knowledge bases",
+    "A multi-agent system with a supervisor",
+    "Few-shot prompting with three examples",
+    "Chain-of-thought prompting"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Several agents working together, with one supervisor splitting the work among specialist agents = a multi-agent system (supervisor pattern). RAG retrieves documents; it does not split work. Few-shot and chain-of-thought are ways of writing ONE prompt."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Inside one chat, a booking assistant remembers everything the user says. But every time the user starts a NEW chat, it has forgotten their seat preference and home airport. What should the team add?",
+   "options": [
+    "A larger context window for the model",
+    "Long-term agent memory",
+    "A lower temperature setting",
+    "More few-shot examples in the prompt"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Remembering things BETWEEN conversations = long-term agent memory (short-term memory only covers the current chat). A larger context window is still emptied when a new chat starts. Temperature and few-shot examples do not store anything about the user."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team wants its agent to connect to many outside tools, such as a ticketing system, a calendar and a database, using one open, standard protocol instead of writing custom connection code for each tool. What should it use?",
+   "options": [
+    "Amazon Bedrock Knowledge Bases",
+    "Model Context Protocol (MCP)",
+    "Amazon Bedrock Prompt Management",
+    "AWS PrivateLink endpoints"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "An open standard that connects agents to external tools and data = MCP (think of it like USB: one plug, many devices). Knowledge Bases do RAG over documents. Prompt Management stores prompt versions. PrivateLink keeps network traffic private; it does not connect agents to tools."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "An agent gives poor answers. Its context window is filled with long old chat history and unrelated tool output, while the one policy document it needs is missing. Which practice fixes this problem?",
+   "options": [
+    "Fine-tuning the model on the chat history",
+    "Context engineering",
+    "Raising the temperature",
+    "Continued pre-training on the tool output"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Deciding WHAT information goes into the context window (instructions, the right documents, useful memory, relevant tool results) = context engineering. Training the model will not remove the noise from each request. A higher temperature only adds randomness."
+  },
+  {
+   "id": 9,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Developers want an open-source SDK from AWS so they can build an agent in Python code by giving it a model, a list of tools and a prompt, in only a few lines. Which option fits?",
+   "options": [
+    "Kiro",
+    "Strands Agents",
+    "Amazon Bedrock AgentCore",
+    "Amazon Quick"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Open-source SDK to BUILD agents in code = Strands Agents. AgentCore is the managed platform to RUN agents in production (runtime, memory, identity). Kiro is an AI IDE. Amazon Quick is a workspace for business users. Trick: Strands = build, AgentCore = run."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A marketing team sends the same prompt structure thousands of times, changing only the product name and the target audience. It wants to save this prompt with blanks for those values and keep track of each version. What should it use?",
+   "options": [
+    "Fine-tuning on past marketing prompts",
+    "A prompt template in Prompt Management",
+    "A Bedrock Knowledge Base of old prompts",
+    "Provisioned Throughput for the model"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "A reusable prompt with blanks ({product}, {audience}) = a prompt template; Amazon Bedrock Prompt Management saves and versions it. Fine-tuning changes the model, not the prompt. A Knowledge Base is for RAG documents. Provisioned Throughput buys capacity."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A development team wants an AI-powered IDE in which the agent first writes the requirements and a design specification, and then generates the code and tests from that specification. Which tool fits?",
+   "options": [
+    "Strands Agents",
+    "Kiro",
+    "AWS Transform",
+    "Amazon SageMaker Canvas"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AI IDE + spec first, then code (spec-driven development) = Kiro. Strands Agents is an SDK for building agents. AWS Transform modernizes OLD applications. Canvas is no-code ML for analysts."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company built an agent with an open-source framework. It now needs to run it in production with secure, isolated sessions, managed memory and monitoring, without building all of that infrastructure itself. Which service fits BEST?",
+   "options": [
+    "Kiro",
+    "Amazon Bedrock AgentCore",
+    "Amazon SageMaker Ground Truth",
+    "Amazon Quick"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Run agents in production, securely and at scale (runtime, memory, identity, gateway, observability) = Amazon Bedrock AgentCore. It works with agents built in any framework. Kiro is an IDE. Ground Truth labels training data. Quick is for business users."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": true,
+   "scenario": "Which TWO tasks are the BEST fit for agentic AI? (Select TWO)",
+   "options": [
+    "Handling a refund: check the order, check the policy, then issue the refund through APIs",
+    "Booking a business trip across separate flight, hotel and expense systems",
+    "Calculating payroll tax with a fixed legal formula",
+    "Storing old log files cheaply for seven years",
+    "Predicting a house price from a table of features"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Agents shine at multi-step work that needs planning and calling several tools or systems: a refund flow, a trip booking. A fixed tax formula needs normal code. Cheap storage is S3 Glacier. Predicting a price from a table is classic ML regression."
+  },
+  {
+   "id": 14,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company wants to know whether its customer-service agent actually solves customers' problems from start to finish without a human stepping in. Which metric fits BEST?",
+   "options": [
+    "BLEU score",
+    "Task completion rate",
+    "Perplexity",
+    "ROUGE score against references"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Did the agent finish the job? = task completion rate (a business alignment metric for agents). BLEU and ROUGE compare text with reference text. Perplexity measures how well a model predicts text. None of them tells you if the problem was solved."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A defect-detection model performs badly. A review finds that rushed workers labelled the training images and about 15% of the labels are wrong. What should the team check and fix FIRST?",
+   "options": [
+    "Quality of the training labels",
+    "The number of training epochs",
+    "The size of the context window",
+    "The instance type of the endpoint"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Wrong labels teach the model wrong answers, so fix label quality first (for example, have several people label each image and compare). More epochs would only learn the wrong labels better. Context window and instance type have nothing to do with wrong labels."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "type": "matching",
+   "scenario": "Match each responsible AI practice to what it does.",
+   "options": [
+    "Shows users why the AI decided, and lets them give feedback or ask a human to change it",
+    "Checks that the model is not worse for one age group, gender or country",
+    "People regularly take samples of the model's outputs and review them",
+    "Confirms that an open-source model may be used for commercial products"
+   ],
+   "correct": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "prompts": [
+    "Human-centered design",
+    "Subgroup analysis",
+    "Human audits",
+    "Model licensing review"
+   ],
+   "explain": "Human-centered design = explain decisions in plain words, collect feedback, allow a human override. Subgroup analysis = measure the model separately for each group to find bias. Human audits = people regularly check outputs. Licensing review = read the model's licence before you use it commercially."
+  },
+  {
+   "id": 17,
+   "domain": 4,
+   "multi": true,
+   "scenario": "A company wants to reduce the environmental impact of its AI workloads without hurting results. Which TWO choices help MOST? (Select TWO)",
+   "options": [
+    "Choose the smallest model that meets the requirements",
+    "Use energy-efficient AI chips such as AWS Inferentia",
+    "Retrain the model from scratch every week",
+    "Always choose the largest model available",
+    "Run identical endpoints in many Regions with no need"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Sustainability = use less energy: a smaller model that is good enough, and efficient hardware (Inferentia for inference, Trainium for training). Needless retraining, the largest models and duplicate endpoints all burn more energy."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "type": "matching",
+   "scenario": "Match each data security practice to its description.",
+   "options": [
+    "Masking names and ID numbers so data can be used without revealing the person",
+    "Making sure the training data was not changed or tampered with",
+    "Spotting strange API activity early from logs and alarms",
+    "Deciding that the model risk review happens every three months"
+   ],
+   "correct": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "prompts": [
+    "Privacy-enhancing technologies",
+    "Data integrity",
+    "Threat detection",
+    "Review cadence"
+   ],
+   "explain": "Privacy-enhancing technologies (masking, anonymization, tokenization) hide the person. Data integrity = data is correct and untouched (versioning, checksums, access control). Threat detection = watch logs and alarms (CloudTrail, CloudWatch) for attacks. Review cadence = how OFTEN governance reviews happen."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A company's agent must sign in to each user's Google Calendar on that user's behalf. The security team must control which credentials and permissions each agent is allowed to use. Which feature is built for this?",
+   "options": [
+    "Amazon Bedrock AgentCore Identity",
+    "Amazon Bedrock Guardrails PII filters",
+    "Amazon Macie",
+    "AWS Artifact"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Who the agent is and what it may access, including signing in to other services for a user = AgentCore Identity. Guardrails filter the CONTENT of prompts and replies. Macie finds sensitive data in S3. Artifact provides AWS compliance reports."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A company wants a firm rule that stops its agent from calling the refund tool for any amount over $500. The rule must be enforced outside the model, so a clever prompt cannot talk the agent past it. Which option fits BEST?",
+   "options": [
+    "A sentence in the agent's system prompt",
+    "Policy in Amazon Bedrock AgentCore",
+    "A Bedrock Guardrails denied topic",
+    "An Amazon CloudWatch alarm on refunds"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Hard rules on which tool calls an agent may make, checked outside the model = Policy in AgentCore. A system-prompt sentence can be bypassed by prompt injection. Guardrails filter topics and content, not tool-call limits. A CloudWatch alarm only tells you AFTER the refund happened."
+  }
+ ]
+}

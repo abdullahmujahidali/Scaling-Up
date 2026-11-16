@@ -111,9 +111,9 @@
    "id": 7,
    "domain": 1,
    "multi": false,
-   "scenario": "Which AWS service produces time-series forecasts such as future product demand?",
+   "scenario": "A business analyst with no coding skills needs time-series forecasts of future product demand. Which AWS service fits?",
    "options": [
-    "Amazon Forecast",
+    "Amazon SageMaker Canvas",
     "Amazon Personalize",
     "Amazon Fraud Detector",
     "Amazon Lex"
@@ -121,7 +121,7 @@
    "correct": [
     0
    ],
-   "explain": "Forecast is the managed time-series forecasting service. Personalize produces recommendations and Fraud Detector identifies fraudulent activity."
+   "explain": "Time-series forecasting with no code = SageMaker Canvas. (Amazon Forecast was closed to new customers in 2024 and is not in the current exam guide.) Personalize produces recommendations, Fraud Detector finds fraud, and Lex builds chatbots."
   },
   {
    "id": 8,

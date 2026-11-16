@@ -181,7 +181,7 @@
    "id": 11,
    "domain": 3,
    "multi": false,
-   "scenario": "A company has fine-tuned a model in Amazon Bedrock and now wants to use this custom model in production. What must it purchase to run inference on the custom model?",
+   "scenario": "A company has fine-tuned a model in Amazon Bedrock and now wants to use this custom model in production with steady traffic. Which purchase option is the standard way to run inference on the custom model?",
    "options": [
     "On-demand pricing per token",
     "Provisioned Throughput",
@@ -191,7 +191,7 @@
    "correct": [
     1
    ],
-   "explain": "Custom (fine-tuned or continued pre-trained) models on Bedrock are served with Provisioned Throughput: dedicated model units bought for a time period. On-demand per-token pricing is for base models. Spot Instances and SageMaker Savings Plans are not how Bedrock is billed."
+   "explain": "Custom (fine-tuned or continued pre-trained) models on Bedrock are usually served with Provisioned Throughput: dedicated model units bought for a time period. (AWS now also offers on-demand inference for some custom models, but Provisioned Throughput is the classic exam answer.) Spot Instances and SageMaker Savings Plans are not how Bedrock is billed."
   },
   {
    "id": 12,
@@ -207,7 +207,7 @@
    "correct": [
     2
    ],
-   "explain": "OpenSearch Serverless is the default vector store for Bedrock Knowledge Bases (others include Aurora PostgreSQL with pgvector). Athena queries files in S3 with SQL, Glue Data Catalog stores table metadata, and Kinesis streams real-time data. None of them performs vector search."
+   "explain": "OpenSearch Serverless is the default vector store for Bedrock Knowledge Bases (others include Aurora PostgreSQL with pgvector and Neptune Analytics). DAX is a cache for DynamoDB, Glue Data Catalog stores table metadata, and Kinesis streams real-time data. None of them performs vector search."
   },
   {
    "id": 13,

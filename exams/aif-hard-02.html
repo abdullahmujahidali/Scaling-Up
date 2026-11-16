@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AIF-C01 AIF Hard Quiz 2</title>
 <link rel="stylesheet" href="../assets/lesson.css?v=17">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
 </head>
 <body>
 <div class="exam-shell">
@@ -39,7 +39,8 @@
       </p>
 
       <div style="margin-top:1.3rem;">
-        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
         <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
         <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
       </div>
@@ -243,7 +244,7 @@ var QUESTIONS = [
   "id": 11,
   "domain": 3,
   "multi": false,
-  "scenario": "A company has fine-tuned a model in Amazon Bedrock and now wants to use this custom model in production. What must it purchase to run inference on the custom model?",
+  "scenario": "A company has fine-tuned a model in Amazon Bedrock and now wants to use this custom model in production with steady traffic. Which purchase option is the standard way to run inference on the custom model?",
   "options": [
    "An Amazon EC2 Spot Instance",
    "Provisioned Throughput",
@@ -253,7 +254,7 @@ var QUESTIONS = [
   "correct": [
    1
   ],
-  "explain": "Custom (fine-tuned or continued pre-trained) models on Bedrock are served with Provisioned Throughput: dedicated model units bought for a time period. On-demand per-token pricing is for base models. Spot Instances and SageMaker Savings Plans are not how Bedrock is billed."
+  "explain": "Custom (fine-tuned or continued pre-trained) models on Bedrock are usually served with Provisioned Throughput: dedicated model units bought for a time period. (AWS now also offers on-demand inference for some custom models, but Provisioned Throughput is the classic exam answer.) Spot Instances and SageMaker Savings Plans are not how Bedrock is billed."
  },
  {
   "id": 12,
@@ -269,7 +270,7 @@ var QUESTIONS = [
   "correct": [
    1
   ],
-  "explain": "OpenSearch Serverless is the default vector store for Bedrock Knowledge Bases (others include Aurora PostgreSQL with pgvector). Athena queries files in S3 with SQL, Glue Data Catalog stores table metadata, and Kinesis streams real-time data. None of them performs vector search."
+  "explain": "OpenSearch Serverless is the default vector store for Bedrock Knowledge Bases (others include Aurora PostgreSQL with pgvector and Neptune Analytics). DAX is a cache for DynamoDB, Glue Data Catalog stores table metadata, and Kinesis streams real-time data. None of them performs vector search."
  },
  {
   "id": 13,
@@ -401,7 +402,7 @@ var QUESTIONS = [
  }
 ];
 </script>
-<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/exam-engine.js?v=18"></script>
 <script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>

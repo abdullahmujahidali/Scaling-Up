@@ -48,7 +48,7 @@
 /* Reads the same localStorage record the exam engine writes, so scores appear
    here automatically after each attempt. */
 var EXAMS = [
-  { id:'aif-01', n:1, focus:'Balanced — all domains' },
+  { id:'aif-01', n:1, focus:'Balanced — all domains (early quizzes 1–9: easier, the longest answer is often correct)' },
   { id:'aif-02', n:2, focus:'Balanced — all domains' },
   { id:'aif-03', n:3, focus:'Balanced — all domains' },
   { id:'aif-04', n:4, focus:'Balanced — all domains' },
@@ -61,11 +61,30 @@ var EXAMS = [
 
 var HARD = [
   { id:'aif-hard-01', n:1, focus:'🔥 Exam-style scenarios · weak spots: metrics, Macie, Clarify vs A2I' },
-  { id:'aif-hard-02', n:2, focus:'🔥 Exam-style scenarios · overfitting, precision, Bedrock security' }
+  { id:'aif-hard-02', n:2, focus:'🔥 Exam-style scenarios · overfitting, precision, Bedrock security' },
+  { id:'aif-hard-03', n:3, focus:'🔥 Underfitting, Ground Truth vs A2I, Q Business, Inspector vs GuardDuty vs Secrets Manager' },
+  { id:'aif-hard-04', n:4, focus:'🔥 Top-p vs top-k, Textract, fine-tuning data, Artifact vs Audit Manager, CloudWatch vs CloudTrail' },
+  { id:'aif-hard-05', n:5, focus:'🎯 Retest of my mistakes — watch “My mistakes 1” video first' },
+  { id:'aif-hard-06', n:6, focus:'💀 Extreme · F1/recall, inference options, Textract vs Comprehend, few-shot vs RAG' },
+  { id:'aif-hard-07', n:7, focus:'💀 Extreme · underfitting, RMSE, top-k, embeddings, fine-tuning vs few-shot, CloudTrail' },
+  { id:'aif-hard-08', n:8, focus:'💀 Extreme · RAG vs fine-tuning vs few-shot, chunking, Agents, Guardrails, Ground Truth' },
+  { id:'aif-hard-09', n:9, focus:'💀 Extreme · continued pre-training, BERTScore, Serverless, data poisoning, PrivateLink' },
+  { id:'aif-hard-10', n:10, focus:'💀 Extreme · Responsible AI, bias drift, Amazon Nova, matching: security services' },
+  { id:'aif-hard-11', n:11, focus:'💀 Extreme · data residency + KMS, Trusted Advisor, matching: CloudWatch vs CloudTrail' },
+  { id:'aif-hard-12', n:12, focus:'🧩 Gap pack · agents, MCP, AgentCore, Kiro, Transform, ROI/CLV, responsible AI practices' },
+  { id:'aif-hard-13', n:13, focus:'🧩 Gap pack 2 · AI value, FM lifecycle order, Quick, Lambda, RAG evaluation, variance, Service Cards' },
+  { id:'aif-hard-14', n:14, focus:'🧩 Gap pack 3 · MLOps, multi-agent patterns, Nova, pgvector, invocation logging, Scoping Matrix scopes' },
+  { id:'aif-hard-15', n:15, focus:'🎯 Retest of my mistakes 2 — watch “My mistakes 2” video first' }
 ];
 
 var MOCKS = [
-  { id:'aif-mock-01', n:1, focus:'65 questions · 90 minutes · exam-day conditions' }
+  { id:'aif-mock-01', n:1, focus:'⚠️ Old version: the longest answer is often correct, so the score is too high. Use Mock 2.' },
+  { id:'aif-mock-02', n:2, focus:'65 questions · 90 minutes · no length tell · exam-day conditions' },
+    { id:'aif-mock-03', n:3, focus:'🎯 Your own mistakes, new stories · exam difficulty · no length tell' },
+    { id:'aif-mock-04', n:4, focus:'🎯 Your own mistakes, new stories · exam difficulty · no length tell' },
+    { id:'aif-mock-05', n:5, focus:'Covers every exam objective · exam difficulty · no length tell' },
+    { id:'aif-mock-06', n:6, focus:'Covers every exam objective · exam difficulty · no length tell' },
+    { id:'aif-mock-07', n:7, focus:'Covers every exam objective · exam difficulty · no length tell' }
 ];
 
 (function () {

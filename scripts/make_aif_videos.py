@@ -13,15 +13,19 @@ set EDGE_TTS to the binary if it isn't on PATH). Lines: aif_video_script_ur.py.
 Usage:  python3 scripts/make_aif_videos.py            # all parts, English voice
         python3 scripts/make_aif_videos.py 6 7        # only parts 6 and 7
         python3 scripts/make_aif_videos.py --ur       # Urdu voice
+        python3 scripts/make_aif_videos.py --mistakes # "My mistakes" videos (aif_mistakes_script.py)
 Output: public/videos/aif/part-NN.mp4, part-NN-ur.mp4  (gitignored — regenerate, don't commit)
+        A part may override `file`, `top`, `foot`, `bye`/`bye_ur` and carry its own
+        Urdu lines in `ur_lines`; the mistakes videos use this.
 """
-import html, json, os, re, shutil, subprocess, sys, tempfile
+import html, json, os, re, shutil, subprocess, sys, tempfile, time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from aif_video_script import PARTS
 from aif_video_script_ur import UR, FIXED
+from aif_mistakes_script import MISTAKES
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "public/videos/aif"
@@ -61,13 +65,13 @@ def md(s):
 def page(body, part, frac):
     return (f"<!doctype html><meta charset=utf-8><style>{CSS}</style><body>{body}"
             f"<div class=bar style='width:{frac*100:.1f}%'></div>"
-            f"<div class=foot>AIF Quick Review · Part {part['n']} of 10</div></body>")
+            f"<div class=foot>{part.get('foot') or 'AIF Quick Review · Part %d of 10' % part['n']}</div></body>")
 
 
 def steps_for(part, lang="en"):
     """Yield (html_body, narration_or_None, silence_secs) for every frame of a part."""
-    ur = UR[part["n"]] if lang == "ur" else None
-    top = f"<div class=top>Part {part['n']} · {html.escape(part['domain'])}</div>"
+    ur = (part.get("ur_lines") or UR[part["n"]]) if lang == "ur" else None
+    top = f"<div class=top>{html.escape(part.get('top') or 'Part %d · %s' % (part['n'], part['domain']))}</div>"
     yield (f"<div class=center>{top}<div class=big>{md(part['title'])}</div>"
            f"<div class=h1ur>{md(part['ur'])}</div></div>", ur["intro"] if ur else part["intro"], 0)
     for si, sl in enumerate(part["slides"]):
@@ -94,13 +98,15 @@ def steps_for(part, lang="en"):
         yield (qhtml + "<div class=pause>⏸ Say your answer out loud…</div>", None, PAUSE_SECS)
         yield (qhtml + f"<div class=ans>✅ {md(a)}</div>",
                (FIXED["answer"] if ur else "The answer: ") + a_say, 0)
-    if ur:
+    if "bye" in part:
+        bye = part["bye_ur"] if ur else part["bye"]
+    elif ur:
         nxt = FIXED["next"].format(n=part["n"] + 1) if part["n"] < 10 else FIXED["last"]
         bye = FIXED["outro"].format(n=part["n"]) + nxt
     else:
         nxt = f"Next, part {part['n'] + 1}." if part["n"] < 10 else "That was the last part. Now you are ready for the quizzes."
         bye = f"Well done. That is the end of part {part['n']}. Take a short break. {nxt}"
-    yield (f"<div class=center>{top}<div class=big>Done — Part {part['n']} ✅</div>"
+    yield (f"<div class=center>{top}<div class=big>Done — {html.escape(part['title'] if 'file' in part else 'Part %d' % part['n'])} ✅</div>"
            f"<div class=h1ur>Shabash! Break lo, phir agla hissa.</div></div>",
            bye, 0)
 
@@ -127,7 +133,15 @@ def build_part(part, lang="en"):
         if say:
             if lang == "ur":
                 clip = work / f"{i:03}.mp3"
-                run([EDGE_TTS, "--voice", UR_VOICE, f"--rate={UR_RATE}", "--text", say, "--write-media", str(clip)])
+                # edge-tts is an online service and occasionally drops a request.
+                for attempt in range(5):
+                    try:
+                        run([EDGE_TTS, "--voice", UR_VOICE, f"--rate={UR_RATE}", "--text", say, "--write-media", str(clip)])
+                        break
+                    except subprocess.CalledProcessError:
+                        if attempt == 4:
+                            raise
+                        time.sleep(3 * (attempt + 1))
             else:
                 clip = work / f"{i:03}.aiff"
                 run(["say", "-v", VOICE, "-r", RATE, "-o", str(clip), say])
@@ -143,23 +157,24 @@ def build_part(part, lang="en"):
         segs.append(seg)
     lst = work / "list.txt"
     lst.write_text("".join(f"file '{s}'\n" for s in segs))
-    out = OUT / f"part-{part['n']:02}{'-ur' if lang == 'ur' else ''}.mp4"
+    out = OUT / f"{part.get('file') or 'part-%02d' % part['n']}{'-ur' if lang == 'ur' else ''}.mp4"
     run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy",
          "-movflags", "+faststart", str(out)])
     shutil.rmtree(work, ignore_errors=True)
-    return part["n"], len(steps), duration(out)
+    return out.name, len(steps), duration(out)
 
 
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     lang = "ur" if "--ur" in sys.argv else "en"
-    want = {int(a) for a in sys.argv[1:] if a.isdigit()} or {p["n"] for p in PARTS}
-    todo = [p for p in PARTS if p["n"] in want]
+    want = {int(a) for a in sys.argv[1:] if a.isdigit()}
+    pool = MISTAKES if "--mistakes" in sys.argv else PARTS
+    todo = [p for p in pool if p["n"] in want] if any(a.isdigit() for a in sys.argv[1:]) else pool
     if lang == "ur":  # every Urdu line must line up with an on-screen item
         for p in todo:
-            u = UR[p["n"]]
+            u = p.get("ur_lines") or UR[p["n"]]
             assert [len(s["items"]) for s in p["slides"]] == [len(x) for x in u["slides"]], f"part {p['n']} slide mismatch"
             assert len(u["check"]) == len(p["check"]), f"part {p['n']} check mismatch"
     with ThreadPoolExecutor(max_workers=4) as ex:
-        for n, k, d in ex.map(lambda p: build_part(p, lang), todo):
-            print(f"part-{n:02}{'-ur' if lang == 'ur' else ''}.mp4  {k} frames  {int(d // 60)}:{int(d % 60):02}", flush=True)
+        for name, k, d in ex.map(lambda p: build_part(p, lang), todo):
+            print(f"{name}  {k} frames  {int(d // 60)}:{int(d % 60):02}", flush=True)

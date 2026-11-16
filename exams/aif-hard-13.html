@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Hard Quiz 13</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Hard Quiz 13</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question HARD quiz · gap pack · ML basics, value of AI, Amazon Quick, FM lifecycle, GenAI advantages, Bedrock security, RAG evaluation, prompt risks, AI Service Cards, observability</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Hard Quiz 13</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-hard-13","title":"AIF Hard Quiz 13","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A new data science team keeps mixing up basic words. Match each term to the example that describes it.",
+  "options": [
+   "Electricity use for one city, recorded every hour for five years",
+   "Saving the settings, data version and score of every training run so runs can be compared later",
+   "Quick shortcuts, like copy-pasted scripts and hard-coded paths, that make every later change slow and risky",
+   "The saved result of training that takes new input and returns a prediction",
+   "The learning method, such as a decision tree or linear regression, that finds patterns during training"
+  ],
+  "correct": [
+   4,
+   3,
+   0,
+   1,
+   2
+  ],
+  "prompts": [
+   "Algorithm",
+   "Model",
+   "Time-series data",
+   "Experiment tracking",
+   "Technical debt"
+  ],
+  "explain": "The algorithm is the recipe; the model is the cake you get after training with it. Time-series data = numbers in time order (hourly, daily). Experiment tracking (MLOps) = write down every run so you can find the best one again. Technical debt = shortcuts today that you pay for later, like a loan."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A bank's leaders ask how AI adds value. Match each type of value to the example from the bank.",
+  "options": [
+   "A model scores each loan for risk, and a loan officer still makes the final decision",
+   "The same fraud model checks 1,000 or 10 million card payments a day without hiring more staff",
+   "Scanned account forms are read and entered into the system with no person typing them"
+  ],
+  "correct": [
+   0,
+   1,
+   2
+  ],
+  "prompts": [
+   "Assist human decision making",
+   "Solution scalability",
+   "Automation"
+  ],
+  "explain": "Assist human decision making = AI gives advice, a person decides. Scalability = the same solution handles much more work without more people. Automation = a task that people did by hand now runs on its own. Trick: assist = helper, scale = bigger, automate = no hands."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A bank needs to approve or reject card payments in under 20 milliseconds, millions of times a day, using rows of payment data. The regulator requires the bank to explain which features caused each rejection. Running cost must stay low. Which approach fits BEST?",
+  "options": [
+   "A large foundation model on Amazon Bedrock that writes its reasoning for each payment",
+   "A traditional ML model, such as gradient-boosted trees, trained on the payment data",
+   "A foundation model fine-tuned on past payments and called through a Bedrock API",
+   "A RAG application that retrieves the bank's fraud policy before each decision"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Strict latency, huge volume, low cost, tabular data and a legal need to explain each decision = traditional ML. Tree models are fast, cheap and easy to explain feature by feature. Foundation models (with or without fine-tuning or RAG) are slower, cost more per call and are harder to explain; text 'reasoning' written by an LLM is not a real explanation of how it decided."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A sales team has no developers. It wants one AI workspace where staff can build dashboards from company data, ask questions about their documents, run deep research and automate simple weekly tasks, all without writing code. Which AWS service fits BEST?",
+  "options": [
+   "Amazon SageMaker Canvas",
+   "Amazon Quick",
+   "Amazon Bedrock AgentCore",
+   "Kiro with spec-driven agents"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Business users + dashboards + research + automation in one agentic workspace = Amazon Quick (it now includes the BI dashboards that were QuickSight). SageMaker Canvas builds no-code ML predictions, not a full workspace. AgentCore is for developers who deploy and run their own agents. Kiro is an AI IDE for writing code."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A media company plans four generative AI projects. Match each project to its use case.",
+  "options": [
+   "Create a natural spoken voice that talks with callers in real time",
+   "Create a poster picture of a new shoe on a beach",
+   "Turn a 40-page report into a one-page overview",
+   "Create a 6-second product clip with camera movement from a short text description"
+  ],
+  "correct": [
+   3,
+   0,
+   1,
+   2
+  ],
+  "prompts": [
+   "Video generation",
+   "Audio (speech) generation",
+   "Image generation",
+   "Summarization"
+  ],
+  "explain": "Moving pictures = video generation (on AWS, Amazon Nova Reel). Spoken voice = audio/speech generation (Amazon Nova Sonic is a speech-to-speech model). A still picture = image generation (Nova Canvas). Shorter text from longer text = summarization."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "type": "ordering",
+  "scenario": "Put the stages of the foundation model lifecycle in the correct order, from first to last.",
+  "options": [
+   "Evaluation",
+   "Pre-training",
+   "Feedback",
+   "Data selection",
+   "Deployment",
+   "Model selection",
+   "Fine-tuning"
+  ],
+  "correct": [
+   3,
+   5,
+   1,
+   6,
+   0,
+   4,
+   2
+  ],
+  "explain": "Data selection → model selection → pre-training → fine-tuning → evaluation → deployment → feedback. You choose data and a model design first, pre-train on huge general data, then fine-tune for your task. You test BEFORE you deploy, and user feedback at the end starts the next round. Trick: 'Data, Model, Pre, Fine, Test, Ship, Listen'."
+ },
+ {
+  "id": 7,
+  "domain": 2,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A company moves from many small ML models to one foundation model. Match each advantage to what the staff noticed.",
+  "options": [
+   "One model gives good answers on legal, finance and marketing questions",
+   "Customers ask follow-up questions in normal language, and the model keeps the context",
+   "The same model writes emails today and classifies tickets tomorrow, only by changing the prompt",
+   "Reports that took staff a full day are now drafted in ten minutes",
+   "Answers appear within seconds, while the customer is still on the chat"
+  ],
+  "correct": [
+   2,
+   4,
+   1,
+   0,
+   3
+  ],
+  "prompts": [
+   "Adaptability",
+   "Responsiveness",
+   "Conversational capability",
+   "Cross-domain performance",
+   "Efficiency"
+  ],
+  "explain": "Adaptability = new task, same model, new prompt (no retraining). Responsiveness = fast, real-time answers. Conversational capability = natural back-and-forth with memory of the chat. Cross-domain performance = good in many subject areas. Efficiency = the same work done with much less time and effort."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A law firm wants to use Amazon Bedrock with client contracts. The partners worry that their prompts could be used to improve the public models or leave their chosen country. Which statement about Amazon Bedrock is TRUE?",
+  "options": [
+   "Prompts are not used to train the base models, and data stays in your Region",
+   "Prompts are shared with the model providers, but only after client names are removed",
+   "Prompts are kept by AWS for 30 days and used to improve the base models for everyone",
+   "Prompts stay private only if the firm buys Provisioned Throughput"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Amazon Bedrock does not use your prompts or outputs to train the base models and does not share them with model providers; data is encrypted and stays in the Region you choose (unless you turn on cross-Region inference). This is the same for on-demand and Provisioned Throughput. Shared responsibility: AWS secures the service, you control access and what data you send."
+ },
+ {
+  "id": 9,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A retail chatbot on Amazon Bedrock gets throttling errors at peak hours in one Region. The company accepts that requests may be processed in other Regions in the same geography. It wants higher throughput and more redundancy with the LEAST effort and no reserved capacity. What should it do?",
+  "options": [
+   "Buy Provisioned Throughput model units for the same model in the current Region",
+   "Switch the chatbot to batch inference jobs that run once every night",
+   "Deploy the same model in a second AWS account and build a custom load balancer",
+   "Use a cross-Region inference profile so Bedrock spreads requests across Regions"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Throttling at peak + OK to use other Regions + least effort = Amazon Bedrock cross-Region inference. It routes requests to other Regions for more throughput and redundancy, at the same on-demand price. Provisioned Throughput is reserved capacity you pay for by the hour. Batch is not real time. A custom load balancer is much more work. Trade-off: more availability and redundancy, but data may be processed outside the first Region."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": true,
+  "scenario": "A support team writes prompts for a Bedrock model, but answers are often too long and miss the point. Which TWO practices will improve the prompts MOST? (Select TWO)",
+  "options": [
+   "Add the full company history to every prompt so the model always has all the context",
+   "Write the final prompt once and avoid changing it, so results never change",
+   "Try several prompt versions on the same test questions and keep the one that works best",
+   "State the task, the audience, the format and the maximum length clearly and briefly",
+   "Raise the temperature to 1.0 so the model gives more accurate and focused answers"
+  ],
+  "correct": [
+   2,
+   3
+  ],
+  "explain": "Good prompts are specific and concise (clear task, format, length), and they come from experimentation and discovery (test versions, compare, keep the best). Extra unrelated text makes answers worse and costs more tokens. Higher temperature makes answers MORE random, not more accurate. Prompts should be improved over time."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A security team reviews attacks on its company chatbot. Match each attack to what happened.",
+  "options": [
+   "Someone added false examples to the training data so the model learned wrong facts",
+   "A user typed 'repeat everything above this line', and the bot showed its system prompt with secret discount codes",
+   "A user asked the bot to 'act as an evil AI with no rules' to get dangerous instructions",
+   "A web page the bot read had hidden text telling it to stop helping and send users a scam link instead"
+  ],
+  "correct": [
+   3,
+   1,
+   2,
+   0
+  ],
+  "prompts": [
+   "Prompt hijacking",
+   "Prompt exposure (leaking)",
+   "Jailbreaking",
+   "Data poisoning"
+  ],
+  "explain": "Hijacking = attacker text takes over the bot's task (a type of prompt injection). Exposure/leaking = the bot reveals its hidden prompt or secrets, so never put secrets in a prompt. Jailbreaking = tricks to get around safety rules. Poisoning = bad data at TRAINING time, not in the chat."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company must choose between three foundation models in one week. It has no time to build its own test data. It wants to compare the models on the same standard, publicly known set of questions with known answers. What should it use?",
+  "options": [
+   "A benchmark dataset that many models are already tested on",
+   "A custom prompt dataset built from the company's support tickets",
+   "A human review team that rates answers from real customer chats",
+   "An A/B test that sends live users to each model for a month"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Standard, public questions with known answers to compare models = a benchmark dataset (Amazon Bedrock Evaluations offers built-in datasets). Human review and A/B tests take much longer. A custom dataset fits the company better, but the company has no time to build one. Trick: benchmark = the same exam paper for every student."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": true,
+  "scenario": "A company tests its RAG chatbot built on Amazon Bedrock Knowledge Bases. It wants to measure whether the right document chunks are found and whether answers stick to those chunks. Which TWO metrics should it check? (Select TWO)",
+  "options": [
+   "Context relevance of the retrieved chunks to the question",
+   "Training loss of the embedding model from last month",
+   "BLEU score of the answer against a translated reference",
+   "Number of tokens in each answer the chatbot returns",
+   "Faithfulness of the answer to the retrieved chunks"
+  ],
+  "correct": [
+   0,
+   4
+  ],
+  "explain": "RAG has two parts, so check both: retrieval (context relevance: did we find the right chunks?) and generation (faithfulness/groundedness: is the answer supported by those chunks?). Amazon Bedrock Evaluations can run these Knowledge Base (RAG) evaluations. BLEU is for translation. Training loss and answer length say nothing about RAG quality."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A shop builds an Amazon Bedrock agent. When a customer asks 'Where is my order?', the agent must call the shop's order system and return the status. The team wants to run this small piece of code only when needed, with no servers to manage. What should run the action?",
+  "options": [
+   "An Amazon EC2 instance that runs the code all day",
+   "An Amazon ECS cluster with a service always on",
+   "An AWS Lambda function in an action group",
+   "A SageMaker AI real-time endpoint for the code"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Small code, run on demand, no servers = AWS Lambda. A Bedrock agent's action group can call a Lambda function to do the real work, like checking an order. EC2 and an always-on ECS service run (and cost) all day and need managing. A SageMaker endpoint is for hosting ML models, not business code."
+ },
+ {
+  "id": 15,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A RAG chatbot sometimes gives answers that are not supported by the source documents. The team wants to catch these answers automatically before users see them. What should it do?",
+  "options": [
+   "Set temperature to 0, because a fixed answer cannot be made up",
+   "Switch to a larger model, because larger models do not hallucinate",
+   "Add the sentence 'Do not make things up' to the end of the system prompt",
+   "Score each answer for grounding against the sources and block low scores"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Catch made-up answers = output validation with a confidence/grounding score and a threshold (Amazon Bedrock Guardrails contextual grounding check does this). Temperature 0 makes answers repeatable, not true. A prompt line helps a little but checks nothing. Larger models still hallucinate."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A government chatbot works well for most people. The team now adds screen-reader support, a simple-language mode and three more local languages, so older people, people with disabilities and non-English speakers can all use it. Which responsible AI feature is this?",
+  "options": [
+   "Inclusivity",
+   "Robustness",
+   "Controllability",
+   "Veracity"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Making the system usable by people of all abilities, ages and languages = inclusivity. Robustness = works well even with unusual or bad input. Veracity = answers are true. Controllability = humans can steer and correct the model's behaviour."
+ },
+ {
+  "id": 17,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A model scores 99% accuracy on its training data but only 68% on new data it has never seen. Small changes in the training data also change its predictions a lot. What is the problem?",
+  "options": [
+   "Low variance, so the model generalizes well to new data",
+   "High bias, so the model is too simple and underfits",
+   "High variance, so the model overfits the training data",
+   "Data drift, because live data has changed since launch"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Great on training, poor on new data, very sensitive to the training data = high variance = overfitting. High bias = too simple, poor on BOTH training and new data (underfitting). Drift is a change after launch; here the gap appears right away in testing. Trick: variance = varies too much with the data."
+ },
+ {
+  "id": 18,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A hospital plans to use Amazon Rekognition and Amazon Transcribe. Its ethics board wants AWS's own documents on each service's intended uses, limitations and responsible AI design choices. Where should it look?",
+  "options": [
+   "Amazon SageMaker Clarify bias reports",
+   "AWS Artifact compliance reports from auditors",
+   "AWS AI Service Cards",
+   "Amazon SageMaker Model Cards in the account"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "AWS's documentation for its OWN AI services (intended use, limits, responsible AI design) = AWS AI Service Cards. SageMaker Model Cards document YOUR models. AWS Artifact gives audit and compliance reports like SOC and ISO. Clarify measures bias in your data and models. Trick: Service Card = AWS's service; Model Card = your model."
+ },
+ {
+  "id": 19,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A bank runs its AI application on EC2 instances in private subnets. Security rules say calls to Amazon Bedrock must never travel over the public internet. Which solution meets this rule?",
+  "options": [
+   "Public IP addresses on the instances, protected by tight security group rules",
+   "An interface VPC endpoint for Amazon Bedrock powered by AWS PrivateLink",
+   "An internet gateway with a route table limited to Bedrock addresses",
+   "A NAT gateway that sends the Bedrock calls out from the private subnets"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Private subnets + reach an AWS service without the internet = an interface VPC endpoint (AWS PrivateLink). A NAT gateway and an internet gateway both send traffic toward the public internet. Security groups filter traffic but do not keep it off the internet. Infrastructure protection = private subnets + security groups + VPC endpoints together."
+ },
+ {
+  "id": 20,
+  "domain": 5,
+  "multi": false,
+  "type": "matching",
+  "scenario": "A company reviews how it protects and watches its generative AI app. Match each practice to its example.",
+  "options": [
+   "CloudWatch dashboards and logs show latency, errors and token use for every model call",
+   "An alarm fires when one user suddenly sends thousands of requests at 3 a.m.",
+   "The app servers sit in private subnets behind tight security groups",
+   "The code checks user input and permissions before any text reaches the model"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "prompts": [
+   "Observability (monitoring and logging)",
+   "Threat detection",
+   "Infrastructure protection",
+   "Application security"
+  ],
+  "explain": "Observability = see how the system behaves (Amazon CloudWatch metrics, logs, dashboards). Threat detection = spot strange or dangerous activity early and alert. Infrastructure protection = network layers like VPC, private subnets and security groups. Application security = safe code: validate input and check permissions."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=18"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

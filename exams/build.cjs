@@ -45,7 +45,7 @@ function page(meta, questions) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${cert.code} ${meta.title}</title>
 <link rel="stylesheet" href="../assets/lesson.css?v=17">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
 </head>
 <body>
 <div class="exam-shell">
@@ -79,7 +79,8 @@ function page(meta, questions) {
       </p>
 
       <div style="margin-top:1.3rem;">
-        <button class="btn-primary" id="start-btn">Start ${meta.noun || 'exam'}</button>
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
         <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
         <a class="btn-secondary" href="../${meta.backTo || 'exams.html'}">${meta.backLabel || 'Back to all exams'}</a>
       </div>
@@ -119,7 +120,7 @@ var EXAM_META = ${JSON.stringify({
 })};
 var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 </script>
-<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/exam-engine.js?v=18"></script>
 <script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>
@@ -239,7 +240,9 @@ function seededRandom(seed) {
 // (A, B, C, D, A, ...) in a seeded order: every letter is used about equally.
 function shuffleOptions(examId, q, target) {
   const type = q.type || (q.multi ? 'multi' : 'single');
-  if (type !== 'single' && type !== 'multi') return q;
+  // Ordering answers ARE the sequence, so its options are authored scrambled.
+  // Matching options are a pool; shuffle them too, or prompt i ↔ option i leaks.
+  if (type === 'ordering') return q;
   if (q.options.some(o => /\b(all|none) of the above\b|\bboth [A-E]\b/i.test(o))) return q;
   const rand = seededRandom(`${examId}#${q.id}`);
   const order = q.options.map((_, i) => i);
@@ -251,8 +254,10 @@ function shuffleOptions(examId, q, target) {
     const from = order.indexOf(q.correct[0]);
     [order[from], order[target]] = [order[target], order[from]];
   }
+  const correct = q.correct.map(c => order.indexOf(c));
   return { ...q, options: order.map(i => q.options[i]),
-           correct: q.correct.map(c => order.indexOf(c)).sort((a, b) => a - b) };
+           // a matching answer is per prompt, so its order must be kept
+           correct: type === 'matching' ? correct : correct.sort((a, b) => a - b) };
 }
 function shuffleBank(examId, qs) {
   const rand = seededRandom(`${examId}#targets`);

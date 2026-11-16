@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "exams": "node exams/build.cjs",
     "check:clf": "node scripts/check-clf-coverage.cjs",
-    "check:aif": "node scripts/check-clf-coverage.cjs aif"
+    "check:aif": "node scripts/check-clf-coverage.cjs aif",
+    "check:aif-guide": "node scripts/check-aif-guide.cjs"
   },
   "dependencies": {
     "astro": "^5.18.2"

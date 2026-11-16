@@ -30,13 +30,19 @@
   (function () {
     var titles = ['The basic language of AI', 'The ML journey and its problems', 'How models are measured',
       'The language of generative AI', 'The AWS AI services map', 'Customising a model (RAG vs fine-tuning)',
-      'Prompting and inference settings', 'Inside Bedrock and SageMaker', 'Responsible AI', 'Security, compliance and governance'];
+      'Prompting and inference settings', 'Inside Bedrock and SageMaker', 'Responsible AI', 'Security, compliance and governance',
+      'New 2026 topics: agents and the last gaps', 'The last gaps: every remaining line of the guide'];
     var sel = document.getElementById('aif-vsel'), vid = document.getElementById('aif-vid');
     var base = (document.querySelector('link[href*="/assets/"]') || {}).href || '';
     var root = base ? base.slice(0, base.indexOf('/assets/')) : '';
     var lang = 'en';
     try { lang = localStorage.getItem('aif-video-lang') || 'en'; } catch (e) {}
-    var src = function (n) { return root + '/videos/aif/part-' + String(n).padStart(2, '0') + (lang === 'ur' ? '-ur' : '') + '.mp4'; };
+    // Values 1–10 are the review parts; 'm1', 'm2'... are the "My mistakes" videos.
+    var src = function (n) {
+      var name = String(n).charAt(0) === 'm' ? 'mistakes-' + String(n).slice(1).padStart(2, '0') : 'part-' + String(n).padStart(2, '0');
+      return root + '/videos/aif/' + name + (lang === 'ur' ? '-ur' : '') + '.mp4';
+    };
+    var mistakes = ['Round 1 · Hard Quizzes 1–4', 'Round 2 · Hard Quizzes 7–14'];
     var btns = document.querySelectorAll('.aif-vlang');
     var paint = function () {
       btns.forEach(function (b) {
@@ -55,11 +61,14 @@
     titles.forEach(function (t, i) {
       var o = document.createElement('option'); o.value = i + 1; o.textContent = 'Part ' + (i + 1) + ' · ' + t; sel.appendChild(o);
     });
+    mistakes.forEach(function (t, i) {
+      var o = document.createElement('option'); o.value = 'm' + (i + 1); o.textContent = '⚠️ My mistakes ' + (i + 1) + ' · ' + t; sel.appendChild(o);
+    });
     var start = 1;
-    try { start = +localStorage.getItem('aif-video-part') || 1; } catch (e) {}
+    try { start = localStorage.getItem('aif-video-part') || 1; } catch (e) {}
     sel.value = start; vid.src = src(start);
     sel.onchange = function () { vid.src = src(sel.value); vid.play(); try { localStorage.setItem('aif-video-part', sel.value); } catch (e) {} };
-    vid.onended = function () { if (+sel.value < 10) { sel.value = +sel.value + 1; try { localStorage.setItem('aif-video-part', sel.value); } catch (e) {} vid.src = src(sel.value); } };
+    vid.onended = function () { if (+sel.value && +sel.value < titles.length) { sel.value = +sel.value + 1; try { localStorage.setItem('aif-video-part', sel.value); } catch (e) {} vid.src = src(sel.value); } };
   })();
   </script>
 
@@ -76,6 +85,8 @@
       <tr><td>8</td><td data-ur="Bedrock aur SageMaker ke andar">Inside Bedrock and SageMaker</td><td>3</td></tr>
       <tr><td>9</td><td>Responsible AI</td><td>4 · 14%</td></tr>
       <tr><td>10</td><td data-ur="Security, compliance aur governance">Security, compliance and governance</td><td>5 · 14%</td></tr>
+      <tr><td>11</td><td data-ur="2026 ke naye topics: agents, business metrics, baqi gaps">New 2026 topics: agents, business metrics, last gaps</td><td>all</td></tr>
+      <tr><td>12</td><td data-ur="Aakhri gaps — guide ki har line">The last gaps — every remaining line of the guide</td><td>all</td></tr>
     </tbody>
   </table>
 
@@ -414,7 +425,7 @@
     <tbody>
       <tr><td><strong>On-demand</strong></td><td data-ur="Har token ka bill. Kam ya ghair-yaqeeni traffic. Koi wada nahi.">Pay per token. Low or unpredictable traffic. No commitment.</td></tr>
       <tr><td><strong>Batch</strong></td><td data-ur="Bohat sare prompts ek saath, jawab baad mein. <strong>Sasta</strong>.">Many prompts at once, results later. <strong>Cheaper</strong>.</td></tr>
-      <tr class="star"><td><strong>Provisioned Throughput</strong></td><td data-ur="Pakki capacity khareedo (wada). <strong>Exam mein: custom (fine-tuned) model chalane ke liye yahi jawab.</strong>">Buy guaranteed capacity (a commitment). <strong>On the exam: the answer for running a custom (fine-tuned) model.</strong></td></tr>
+      <tr class="star"><td><strong>Provisioned Throughput</strong></td><td data-ur="Pakki capacity khareedo (wada). <strong>Exam mein: custom (fine-tuned) model chalane ke liye aksar yahi jawab</strong> (AWS ab kuch custom models on-demand bhi chalata hai).">Buy guaranteed capacity (a commitment). <strong>On the exam: usually the answer for running a custom (fine-tuned) model</strong> (AWS now also runs some custom models on demand).</td></tr>
     </tbody>
   </table>
 
@@ -557,6 +568,204 @@
   <div class="recall" onclick="this.classList.toggle('revealed')">
     <div class="prompt" data-ur="✋ Check yourself: (1) Auditor ko AWS ki ISO certificate report chahiye? (2) Bedrock ko kis user ne kab call kiya — record kahan? (3) Company ko shak hai ke S3 buckets mein customers ke credit card numbers hain?">✋ Check yourself: (1) An auditor needs AWS's ISO certificate report? (2) Which user called Bedrock and when — where is that recorded? (3) A company suspects its S3 buckets contain customers' credit card numbers?</div>
     <div class="answer" data-ur="(1) <strong>AWS Artifact</strong>. (2) <strong>AWS CloudTrail</strong>. (3) <strong>Amazon Macie</strong>.">(1) <strong>AWS Artifact</strong>. (2) <strong>AWS CloudTrail</strong>. (3) <strong>Amazon Macie</strong>.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <h2 id="p11" data-ur="Hissa 11 · 2026 ke naye topics: agents, business metrics, aur baqi gaps">Part 11 · New 2026 topics: agents, business metrics and the last gaps</h2>
+  <p data-ur="Yeh hissa official exam guide (v1.2) ke un topics ke liye hai jo pehle 10 hisson mein nahi thay. Sab exam mein aa sakte hain.">This part covers the topics from the official exam guide (v1.2) that Parts 1–10 did not. All of them can appear on the exam.</p>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Ek qaida">The one rule</span>
+    <span data-ur="<strong>Agent = model + tools + memory + plan.</strong> Chatbot sirf jawab deta hai. Agent <strong>kaam karta hai</strong>: plan banata hai, tools (APIs) chalata hai, aur yaad rakhta hai.">
+      <strong>Agent = model + tools + memory + a plan.</strong> A chatbot only answers. An agent <strong>does the work</strong>: it plans, calls tools (APIs) and remembers.</span>
+  </div>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Agent ke lafz">Agent words</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td><strong>Agentic AI</strong></td><td data-ur="AI jo khud <strong>steps plan kare aur kaam kare</strong> (sirf jawab nahi).">AI that <strong>plans steps and takes actions</strong> by itself, not only answers.</td></tr>
+      <tr class="star"><td><strong>Tool use</strong></td><td data-ur="Agent <strong>API ya function</strong> chalata hai — jaise order check karna, email bhejna.">The agent <strong>calls an API or function</strong>, e.g. check an order, send an email.</td></tr>
+      <tr class="star"><td><strong>MCP (Model Context Protocol)</strong></td><td data-ur="Ek <strong>open standard</strong> jis se agent bahar ke tools aur data se <strong>jurta</strong> hai. Jaise USB: ek plug, bohat devices.">An <strong>open standard</strong> that <strong>connects</strong> agents to outside tools and data. Like USB: one plug, many devices.</td></tr>
+      <tr><td><strong>Agent memory</strong></td><td data-ur="<strong>Short-term</strong> = isi baat cheet ki yaad. <strong>Long-term</strong> = pichli baat cheet bhi yaad (user ki pasand).">Short-term = remembers <strong>this conversation</strong>. Long-term = remembers <strong>past conversations</strong> too (user preferences).</td></tr>
+      <tr class="star"><td><strong>Multi-agent system</strong></td><td data-ur="Kai agents mil kar kaam karte hain. Aam pattern: ek <strong>supervisor</strong> agent kaam baant-ta hai, chhote <strong>specialist</strong> agents karte hain.">Several agents work together. Common pattern: a <strong>supervisor</strong> agent splits the work, <strong>specialist</strong> agents do the parts.</td></tr>
+      <tr><td><strong>Workflow orchestration</strong></td><td data-ur="Steps ki <strong>tarteeb</strong> sambhalna — pehle kya, phir kya, ghalti ho to kya.">Managing the <strong>order of steps</strong>: what first, what next, what if something fails.</td></tr>
+      <tr class="star"><td><strong>Context engineering</strong></td><td data-ur="Model ke context window mein <strong>sahi cheezein</strong> daalna: instructions, RAG ke documents, memory, tool ke results. Prompt engineering se bara: sirf alfaaz nahi, <strong>poori maloomat</strong> chunna.">Choosing <strong>what goes into the context window</strong>: instructions, retrieved documents, memory, tool results. Bigger than prompt engineering: not just the wording, but <strong>all the information</strong> the model sees.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Sawal mein">If the question says</th><th>Service</th></tr></thead>
+    <tbody>
+      <tr class="star"><td data-ur="Agents ko <strong>production mein chalana</strong>, mehfooz aur bara scale (runtime, memory, identity, gateway)">Run agents <strong>in production</strong>, securely, at scale (runtime, memory, identity, gateway)</td><td><strong>Amazon Bedrock AgentCore</strong></td></tr>
+      <tr class="star"><td data-ur="Agent <strong>kaun hai</strong> aur kis cheez tak <strong>access</strong> hai (users ki taraf se login)">Who the agent <strong>is</strong> and what it may <strong>access</strong> (sign in on behalf of users)</td><td><strong>AgentCore Identity</strong></td></tr>
+      <tr class="star"><td data-ur="Agent ke tool calls par <strong>qawaid</strong>: kya allowed hai, kya nahi">Rules on the agent's tool calls: what is <strong>allowed</strong>, what is not</td><td><strong>Policy in AgentCore</strong></td></tr>
+      <tr><td data-ur="Agents banane ke liye AWS ka <strong>open-source SDK</strong> (code)">AWS's <strong>open-source SDK</strong> for building agents in code</td><td><strong>Strands Agents</strong></td></tr>
+      <tr class="star"><td data-ur="Developers ke liye <strong>AI wala IDE</strong> — pehle spec, phir code (spec-driven)">An <strong>AI IDE</strong> for developers: write the spec first, then the code (spec-driven)</td><td><strong>Kiro</strong></td></tr>
+      <tr class="star"><td data-ur="<strong>Purane systems ko naya</strong> banana AI agents se (.NET, mainframe, VMware)"><strong>Modernize old systems</strong> with AI agents (.NET, mainframe, VMware)</td><td><strong>AWS Transform</strong></td></tr>
+      <tr><td data-ur="Business users ke liye <strong>AI workspace</strong>: dashboards, research, automation">An <strong>AI workspace</strong> for business users: dashboards, research, automation</td><td><strong>Amazon Quick</strong></td></tr>
+      <tr><td data-ur="Chhota code jo <strong>event par chale</strong>, server ke baghair — aksar agent ka <strong>tool</strong>">Small code that <strong>runs on an event</strong>, no servers — often an agent's <strong>tool</strong></td><td><strong>AWS Lambda</strong></td></tr>
+    </tbody>
+  </table>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Model kaise use karein">How to use a model in production</th><th data-ur="Kab">When</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Managed API</strong> (Amazon Bedrock)</td><td data-ur="Server <strong>AWS sambhale</strong>. Jaldi shuru, kam kaam. Per token pay.">AWS <strong>runs the servers</strong>. Fast to start, least work. Pay per token.</td></tr>
+      <tr><td><strong>Self-hosted</strong> (SageMaker endpoint / EC2)</td><td data-ur="Server <strong>tum sambhalo</strong>: instance chuno, scale karo. Zyada control, zyada kaam.">You <strong>run the servers</strong>: choose instances, scale them. More control, more work.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Business metrics">Business metrics</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td><strong>ROI</strong> (return on investment)</td><td data-ur="Jitna lagaya, us se <strong>kitna wapas mila</strong>. (Fayda − kharcha) ÷ kharcha.">How much you <strong>got back</strong> for what you spent. (Benefit − cost) ÷ cost.</td></tr>
+      <tr><td><strong>Cost per user</strong> / <strong>cost per interaction</strong></td><td data-ur="Har user / har sawal-jawab par <strong>kitna kharcha</strong>.">How much each user / each conversation <strong>costs</strong>.</td></tr>
+      <tr class="star"><td><strong>Customer lifetime value (CLV)</strong></td><td data-ur="Ek customer <strong>poori zindagi</strong> mein company ko kitna paisa dega.">Total money one customer brings in over their <strong>whole relationship</strong>.</td></tr>
+      <tr class="star"><td><strong>Average revenue per user (ARPU)</strong></td><td data-ur="Kul kamai ÷ users. <strong>Har user se ausat kamai</strong>.">Total revenue ÷ users. <strong>Average money per user</strong>.</td></tr>
+      <tr><td><strong>Conversion rate</strong> · <strong>task completion rate</strong> · <strong>user satisfaction</strong></td><td data-ur="Kitne log khareedte hain · kitne kaam poore hue · log kitne khush hain.">How many buy · how many tasks finish · how happy users are.</td></tr>
+    </tbody>
+  </table>
+  <p data-ur="<strong>Trick:</strong> ROUGE, BLEU, F1 = <strong>model</strong> ki quality. ROI, CLV, ARPU, conversion = <strong>business</strong> ka fayda. Sawal &quot;business value&quot; pooche to model metric mat chuno."><strong>Trick:</strong> ROUGE, BLEU, F1 measure the <strong>model</strong>. ROI, CLV, ARPU, conversion measure the <strong>business</strong>. If the question asks for business value, don't pick a model metric.</p>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Responsible AI ke kaam">Responsible AI practices</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td><strong>Subgroup analysis</strong></td><td data-ur="Model ko <strong>har group ke liye alag</strong> check karo (umar, gender, mulk). Kisi group par kharab? = bias.">Check the model <strong>separately for each group</strong> (age, gender, country). Worse for one group = bias.</td></tr>
+      <tr><td><strong>Label quality</strong></td><td data-ur="Training data ke <strong>labels sahi</strong> hain? Ghalat labels = ghalat model.">Are the training <strong>labels correct</strong>? Wrong labels = wrong model.</td></tr>
+      <tr><td><strong>Human audits</strong></td><td data-ur="<strong>Insaan</strong> waqt waqt par model ke jawab check karte hain.">People <strong>regularly check</strong> the model's outputs.</td></tr>
+      <tr class="star"><td><strong>Open-source models / licensing</strong></td><td data-ur="Model ka <strong>license</strong> parho: commercial use allowed hai? Open model = andar dekh sakte ho (zyada transparent).">Read the model's <strong>licence</strong>: is commercial use allowed? Open models can be inspected (more transparent).</td></tr>
+      <tr><td><strong>Human-centered design</strong></td><td data-ur="AI ka faisla user ko <strong>aasaan alfaaz</strong> mein samjhao, user <strong>feedback</strong> de sake, aur insaan <strong>faisla badal</strong> sake.">Explain AI decisions in <strong>plain words</strong>, let users give <strong>feedback</strong>, and let a human <strong>override</strong>.</td></tr>
+      <tr class="star"><td><strong>Sustainability</strong></td><td data-ur="Kam bijli: <strong>chhota model</strong> jo kaam kar de, efficient chips (Inferentia, Trainium), bila wajah dobara training nahi.">Less energy: the <strong>smallest model</strong> that does the job, efficient chips (Inferentia, Trainium), no needless retraining.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="nums">
+    <thead><tr><th data-ur="Data security ke lafz">Data security words</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td><strong>Privacy-enhancing technologies</strong></td><td data-ur="Data use karo magar <strong>shakhs chhupa</strong> rahe: masking, anonymization, tokenization, encryption.">Use data while <strong>hiding the person</strong>: masking, anonymization, tokenization, encryption.</td></tr>
+      <tr><td><strong>Data integrity</strong></td><td data-ur="Data <strong>sahi aur bina chhed-chhaad</strong> ke hai. (versioning, checksums, access control)">Data is <strong>correct and not tampered with</strong> (versioning, checksums, access control).</td></tr>
+      <tr><td><strong>Threat detection</strong></td><td data-ur="<strong>Hamla</strong> ya ajeeb harkat jaldi pakarna — logs aur alarms dekh kar (CloudTrail, CloudWatch).">Spotting <strong>attacks</strong> or strange activity early, by watching logs and alarms (CloudTrail, CloudWatch).</td></tr>
+      <tr><td><strong>Review cadence</strong></td><td data-ur="Governance review <strong>kitni baar</strong> hota hai — jaise har 3 mahine model ka review.">How <strong>often</strong> governance reviews happen, e.g. a model review every 3 months.</td></tr>
+      <tr><td><strong>Prompt templates</strong></td><td data-ur="Dobara use hone wala prompt jis mein <strong>khaali jagah</strong> ho: &quot;Summarize {document} for {audience}&quot;. Versions <strong>Bedrock Prompt Management</strong> mein.">A reusable prompt with <strong>blanks</strong>: "Summarize {document} for {audience}". Store versions in <strong>Bedrock Prompt Management</strong>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="✋ Check yourself: (1) Agent ko bahar ke tools se jorne ka open standard? (2) Ek supervisor agent kaam chhote agents mein baant-ta hai — isay kya kehte hain? (3) Purane .NET aur mainframe apps ko AI agents se naya banana? (4) Model ko har umar ke group ke liye alag check karna?">✋ Check yourself: (1) The open standard that connects agents to outside tools? (2) A supervisor agent splits work among smaller agents — what is this called? (3) Modernize old .NET and mainframe apps with AI agents? (4) Checking the model separately for each age group?</div>
+    <div class="answer" data-ur="(1) <strong>MCP</strong>. (2) <strong>Multi-agent system</strong>. (3) <strong>AWS Transform</strong>. (4) <strong>Subgroup analysis</strong>.">(1) <strong>MCP</strong>. (2) <strong>Multi-agent system</strong>. (3) <strong>AWS Transform</strong>. (4) <strong>Subgroup analysis</strong>.</div>
+    <div class="hint">click to reveal — say it out loud first</div>
+  </div>
+
+  <h2 id="p12" data-ur="Hissa 12 · Aakhri gaps — guide ki har line ke liye">Part 12 · The last gaps — every remaining line of the guide</h2>
+  <p data-ur="Ek alag audit ne official guide (v1.2) ki 362 lines check kin. Jo cheezein kamzor ya ghayab thin, woh sab yahan hain. Har table chhota hai — ek waqt mein ek table.">An independent audit checked all 362 lines of the official guide (v1.2). Everything that was thin or missing is here. Each table is short — one table at a time.</p>
+
+  <h3 data-ur="A · AI kyun, aur kab nahi">A · Why AI, and when not</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Assist human decisions</strong></td><td data-ur="AI mashwara de, <strong>faisla insaan</strong> kare (doctor, loan officer).">AI suggests, a <strong>human decides</strong> (doctor, loan officer).</td></tr>
+      <tr><td><strong>Scalability</strong> · <strong>automation</strong></td><td data-ur="Lakhon kaam ek saath · bore karne wale kaam khud ho jayein.">Handle millions of cases at once · do boring repeated work automatically.</td></tr>
+      <tr class="star"><td><strong>Cost-benefit analysis</strong></td><td data-ur="AI ka kharcha (data, training, chalana) <strong>fayde se zyada</strong>? To AI mat lagao.">If AI's cost (data, training, running) is <strong>more than the benefit</strong>, don't use AI.</td></tr>
+      <tr class="star"><td data-ur="<strong>Traditional ML ya FM?</strong>"><strong>Traditional ML or a foundation model?</strong></td><td data-ur="Qanoon mein <strong>wazahat</strong> chahiye, bohat <strong>tez</strong>, phone par <strong>offline</strong>, ya <strong>sasta</strong> chahiye → chhota traditional ML model. Text/tasveer banana, baat cheet → FM.">Needs <strong>explanations</strong> for regulators, very <strong>low latency</strong>, runs <strong>on-device</strong>, or must be <strong>cheap</strong> → small traditional ML model. Generate text/images, chat → foundation model.</td></tr>
+      <tr><td><strong>Algorithm</strong> vs <strong>model</strong></td><td data-ur="Algorithm = seekhne ka <strong>tareeqa</strong> (recipe). Model = seekhne ke baad ka <strong>nateeja</strong> (pakka hua khana).">Algorithm = the <strong>method</strong> of learning (the recipe). Model = the <strong>result</strong> after learning (the cooked dish).</td></tr>
+      <tr><td><strong>Time-series data</strong></td><td data-ur="Waqt ke saath numbers: roz ki sales, har ghante ka temperature.">Numbers over time: daily sales, hourly temperature.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="B · FM ki zindagi aur MLOps">B · The FM lifecycle and MLOps</h3>
+  <p data-ur="<strong>FM lifecycle (tarteeb yaad karo):</strong> data chunna → model chunna → pre-training → fine-tuning → evaluation → deployment → <strong>feedback</strong> (phir wapas shuru).">
+    <strong>FM lifecycle (learn the order):</strong> data selection → model selection → pre-training → fine-tuning → evaluation → deployment → <strong>feedback</strong> (and round again).</p>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td data-ur="<strong>FM kahan se aaye</strong>"><strong>Where FMs come from</strong></td><td data-ur="<strong>Open-source pre-trained</strong> model le lo (sasta, jaldi — license parho) ya <strong>khud train</strong> karo (bohat mehnga).">Take an <strong>open-source pre-trained</strong> model (cheap, fast — read the licence) or <strong>train your own</strong> (very expensive).</td></tr>
+      <tr><td><strong>Experimentation</strong></td><td data-ur="Kai tajurbe chalao aur <strong>record</strong> rakho: kaunsa data, kaunsi settings, kya result.">Run many experiments and <strong>record</strong> them: which data, which settings, which result.</td></tr>
+      <tr><td><strong>Repeatable processes</strong></td><td data-ur="<strong>Pipeline</strong>: har baar wohi steps khud chalein (SageMaker Pipelines).">A <strong>pipeline</strong>: the same steps run the same way every time (SageMaker Pipelines).</td></tr>
+      <tr><td><strong>Scalable systems</strong> · <strong>production readiness</strong></td><td data-ur="Zyada users aayein to bhi chale · live karne se pehle testing, monitoring, security tayyar.">Keeps working when users grow · testing, monitoring and security ready before going live.</td></tr>
+      <tr class="star"><td><strong>Technical debt</strong></td><td data-ur="Jaldi mein kiye shortcuts jo baad mein <strong>mehngay</strong> padte hain (hard-coded steps, koi documentation nahi).">Quick shortcuts that cost you <strong>later</strong> (hard-coded steps, no documentation).</td></tr>
+      <tr><td><strong>Monitoring → re-training</strong></td><td data-ur="Model Monitor drift pakre → naye data par dobara train.">Model Monitor spots drift → retrain on new data.</td></tr>
+      <tr><td data-ur="Business metrics (aur)">More business metrics</td><td data-ur="<strong>Development cost</strong> (banane ka kharcha) · <strong>customer feedback</strong> (users kya kehte hain).">Development cost (cost to build) · customer feedback (what users say).</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="C · GenAI ke fayde, Nova aur model chunna">C · GenAI advantages, Amazon Nova and choosing a model</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td data-ur="GenAI ke fayde">GenAI advantages</td><td data-ur="<strong>Adaptability</strong> (ek model, bohat kaam) · <strong>responsiveness</strong> (foran jawab) · <strong>conversational</strong> (insaan jaisi baat) · naya content banana.">Adaptability (one model, many tasks) · responsiveness (instant answers) · conversational (talks like a person) · creates new content.</td></tr>
+      <tr><td data-ur="Use cases">Use cases</td><td data-ur="Text, code, tasveer, <strong>video</strong> aur <strong>awaz</strong> banana; summary, tarjuma, search, assistants.">Generate text, code, images, <strong>video</strong> and <strong>audio</strong>; summarise, translate, search, assistants.</td></tr>
+      <tr class="star"><td><strong>Amazon Nova</strong></td><td data-ur="Amazon ki apni FM family: <strong>Micro/Lite/Pro</strong> = text · <strong>Canvas</strong> = tasveer · <strong>Reel</strong> = video · <strong>Sonic</strong> = awaz. Bedrock par milti hai.">Amazon's own FM family: Micro/Lite/Pro = text · <strong>Canvas</strong> = images · <strong>Reel</strong> = video · <strong>Sonic</strong> = speech. On Bedrock.</td></tr>
+      <tr class="star"><td data-ur="Model chunne ke factors (poori list)">Model selection factors (full list)</td><td data-ur="Cost · modality · latency · multi-lingual · size · complexity · <strong>customization</strong> (fine-tune ho sakta hai?) · input/output length · prompt caching · <strong>compliance</strong> (qanoon/region) · license.">Cost · modality · latency · multi-lingual · size · complexity · <strong>customization</strong> (can it be fine-tuned?) · input/output length · prompt caching · <strong>compliance</strong> (laws, Region) · licence.</td></tr>
+      <tr><td><strong>Cross-domain performance</strong> · <strong>efficiency</strong></td><td data-ur="Ek model kai alag shobon mein achha chale · kam waqt/kharche mein zyada kaam.">One model works well across many different areas · more work in less time and cost.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="D · AWS par GenAI kyun, aur kharche ke trade-offs">D · Why GenAI on AWS, and cost trade-offs</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td data-ur="AWS GenAI services ke fayde">Advantages of AWS GenAI services</td><td data-ur="<strong>Accessibility</strong> (har koi use kare) · kam rukawat · efficiency · <strong>cost-effective</strong> (per use pay) · jaldi market · business goals poore.">Accessibility (anyone can use them) · lower barrier to entry · efficiency · <strong>cost-effective</strong> (pay per use) · speed to market · meets business goals.</td></tr>
+      <tr class="star"><td data-ur="AWS infrastructure ke fayde">Benefits of AWS infrastructure</td><td data-ur="<strong>Security</strong> (encryption, IAM, PrivateLink) · <strong>compliance</strong> (certifications) · <strong>responsibility</strong> (shared model) · <strong>safety</strong> (Guardrails). Bedrock tumhare prompts se base models <strong>train nahi</strong> karta; data tumhare chune hue <strong>Region</strong> mein rehta hai.">Security (encryption, IAM, PrivateLink) · compliance (certifications) · responsibility (shared model) · safety (Guardrails). Bedrock does <strong>not</strong> use your prompts to train base models; data stays in the <strong>Region</strong> you choose.</td></tr>
+      <tr class="star"><td data-ur="Kharche ke trade-offs">Cost trade-offs</td><td data-ur="Zyada <strong>availability/redundancy</strong> (kai Regions) = zyada kharcha · <strong>regional coverage</strong>: har model har Region mein nahi; <strong>cross-Region inference</strong> requests doosre Regions mein bhej kar zyada throughput deta hai · tez jawab (bara/provisioned) = mehnga · <strong>custom model</strong> = mehnga.">More <strong>availability/redundancy</strong> (several Regions) = more cost · <strong>regional coverage</strong>: not every model is in every Region; <strong>cross-Region inference</strong> spreads requests to other Regions for more throughput · faster responses (bigger or provisioned) = more cost · <strong>custom models</strong> cost more.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="E · Vector stores aur prompts">E · Vector stores and prompts</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td data-ur="Embeddings kahan rakhein">Where to store embeddings</td><td data-ur="<strong>OpenSearch</strong> (default) · <strong>Aurora PostgreSQL</strong> / <strong>RDS for PostgreSQL</strong> (pgvector — pehle se Postgres hai to) · <strong>Neptune</strong> (graph + vectors) · DocumentDB.">OpenSearch (the default) · <strong>Aurora PostgreSQL</strong> / <strong>RDS for PostgreSQL</strong> (pgvector — if you already use Postgres) · <strong>Neptune</strong> (graph + vectors) · DocumentDB.</td></tr>
+      <tr><td data-ur="Prompt ke achhe tareeqe">Prompt best practices</td><td data-ur="<strong>Specific aur chhota</strong> likho · <strong>experiment</strong> karo, badal badal kar test · <strong>discovery</strong>: model kya kar sakta hai dhoondo · instructions ko <strong>alag hisson</strong> mein likho · guardrails lagao.">Be <strong>specific and concise</strong> · <strong>experiment</strong>: change and test · <strong>discovery</strong>: find out what the model can do · split instructions into <strong>separate parts</strong> · add guardrails.</td></tr>
+      <tr class="star"><td data-ur="Prompt ke khatre">Prompt risks</td><td data-ur="<strong>Exposure</strong> = secrets ya system prompt leak · <strong>poisoning</strong> = ghalat data andar daalna · <strong>hijacking</strong> = model ka kaam badal dena (injection) · <strong>jailbreaking</strong> = safety rules torna.">Exposure = secrets or the system prompt leak · poisoning = bad data slipped in · hijacking = taking over the model's task (injection) · jailbreaking = breaking safety rules.</td></tr>
+      <tr><td><strong>Bedrock Prompt Management</strong></td><td data-ur="Prompts ke <strong>versions</strong> save karo, <strong>variants</strong> ek saath compare karo.">Save prompt <strong>versions</strong> and compare <strong>variants</strong> side by side.</td></tr>
+      <tr><td><strong>Instruction tuning</strong></td><td data-ur="Fine-tuning jis mein data = <strong>instruction → sahi jawab</strong> ke jore.">Fine-tuning where the data is <strong>instruction → ideal response</strong> pairs.</td></tr>
+      <tr><td><strong>Self-supervised learning</strong></td><td data-ur="Data khud label banata hai (agla lafz chhupa kar andaza) — FM pre-training aise hoti hai.">The data makes its own labels (hide the next word, guess it) — how FMs are pre-trained.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="F · Apps ko kaise jaanchein">F · How to evaluate apps</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Kya jaanchna">What to evaluate</th><th data-ur="Kaise">How</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Benchmark datasets</strong></td><td data-ur="Sab ke liye ek jaise standard test sets — models ka muqabla.">Standard test sets everyone uses to compare models.</td></tr>
+      <tr class="star"><td data-ur="<strong>RAG app</strong>"><strong>RAG app</strong></td><td data-ur="Do hisse: <strong>retrieval</strong> (sahi documents mile? relevance) + <strong>generation</strong> (jawab documents ke mutabiq? faithfulness). Bedrock Evaluations RAG/Knowledge Base check karta hai.">Two parts: <strong>retrieval</strong> (were the right documents found? relevance) + <strong>generation</strong> (is the answer true to those documents? faithfulness). Bedrock Evaluations can check RAG / Knowledge Bases.</td></tr>
+      <tr><td data-ur="<strong>Agent</strong> / <strong>workflow</strong>"><strong>Agent</strong> / <strong>workflow</strong></td><td data-ur="Kaam poora hua? (task completion) · sahi tool chuna? · kitne steps, kitna kharcha/waqt?">Was the task completed? · right tool chosen? · how many steps, how much cost and time?</td></tr>
+      <tr><td data-ur="Business objective poora?">Meets business objectives?</td><td data-ur="<strong>Productivity</strong> (zyada kaam kam waqt mein) · <strong>user engagement</strong> (log istemaal karte rehte hain?) · task completion · cost per interaction.">Productivity (more work in less time) · user engagement (do people keep using it?) · task completion · cost per interaction.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="G · Responsible AI — baqi lafz">G · Responsible AI — remaining words</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr class="star"><td><strong>Bias</strong> vs <strong>variance</strong></td><td data-ur="<strong>Bias</strong> zyada = model bohat saada, sab jagah ghalat → <strong>underfitting</strong>. <strong>Variance</strong> zyada = training data ke chhote farq par bhi badal jaye → <strong>overfitting</strong>.">High <strong>bias</strong> = model too simple, wrong everywhere → <strong>underfitting</strong>. High <strong>variance</strong> = too sensitive to the training data → <strong>overfitting</strong>.</td></tr>
+      <tr><td><strong>Inclusivity</strong></td><td data-ur="AI <strong>sab logon</strong> ke liye kaam kare — har zubaan, accent, umar, maazoori.">AI works for <strong>everyone</strong> — every language, accent, age, disability.</td></tr>
+      <tr><td data-ur="Qanooni khatre (aur)">More legal risks</td><td data-ur="<strong>Customer ka bharosa khona</strong> · <strong>end-user risk</strong> (AI ka ghalat mashwara user ko nuqsan de).">Loss of customer trust · end-user risk (bad AI advice harms the user).</td></tr>
+      <tr class="star"><td><strong>AWS AI Service Cards</strong></td><td data-ur="AWS ki <strong>apni</strong> AI services (Rekognition, Textract…) ki documentation: use, hadood, fairness. <strong>Tumhara</strong> model → SageMaker Model Cards.">AWS's documentation for its <strong>own</strong> AI services (Rekognition, Textract…): uses, limits, fairness. <strong>Your</strong> model → SageMaker Model Cards.</td></tr>
+      <tr><td data-ur="Transparency ke tools">Transparency tools</td><td data-ur="Model Cards · <strong>Bedrock Model Evaluations</strong> (results dikhao) · <strong>open-source</strong> models (andar dekh sakte ho) · training <strong>data</strong> ki maloomat · <strong>license</strong>.">Model Cards · <strong>Bedrock Model Evaluations</strong> (publish results) · <strong>open-source</strong> models (you can look inside) · facts about the training <strong>data</strong> · <strong>licence</strong>.</td></tr>
+      <tr><td><strong>Clarify</strong> · <strong>Model Monitor</strong></td><td data-ur="Clarify = bias + <strong>SHAP</strong> (kaunse inputs ne faisla kiya). Model Monitor = drift, aur <strong>bias drift</strong> (waqt ke saath fairness kharab).">Clarify = bias + <strong>SHAP</strong> (which inputs drove a decision). Model Monitor = drift, including <strong>bias drift</strong> (fairness getting worse over time).</td></tr>
+    </tbody>
+  </table>
+
+  <h3 data-ur="H · Security aur governance — baqi lafz">H · Security and governance — remaining words</h3>
+  <table class="nums">
+    <thead><tr><th data-ur="Lafz">Term</th><th data-ur="Aasaan matlab">Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Application security</strong> · <strong>infrastructure protection</strong></td><td data-ur="App ko mehfooz banana (input check, login) · network ko mehfooz (VPC, private subnets, security groups, PrivateLink).">Secure the app itself (check inputs, sign-in) · protect the network (VPC, private subnets, security groups, PrivateLink).</td></tr>
+      <tr class="star"><td><strong>Bedrock model invocation logging</strong> vs <strong>CloudTrail</strong></td><td data-ur="Invocation logging = <strong>poora prompt aur jawab</strong> CloudWatch Logs ya S3 mein. CloudTrail = <strong>kis ne</strong> kaunsa API kab call kiya (text nahi).">Invocation logging = the <strong>full prompt and response text</strong> to CloudWatch Logs or S3. CloudTrail = <strong>who</strong> called which API and when (not the text).</td></tr>
+      <tr><td data-ur="Hallucination pakarna">Catch hallucinations</td><td data-ur="<strong>RAG grounding</strong> · <strong>output validation</strong> (jawab check karo) · <strong>confidence scoring</strong> (kam yaqeen → insaan ko) · Guardrails <strong>contextual grounding check</strong>.">RAG grounding · <strong>output validation</strong> (check the answer) · <strong>confidence scoring</strong> (low confidence → send to a human) · Guardrails <strong>contextual grounding check</strong>.</td></tr>
+      <tr><td><strong>Observability</strong></td><td data-ur="System ke andar <strong>kya ho raha hai</strong> dekhna: logs, metrics, traces (CloudWatch).">Seeing <strong>what is happening</strong> inside the system: logs, metrics, traces (CloudWatch).</td></tr>
+      <tr><td><strong>Data lifecycle</strong></td><td data-ur="<strong>S3 Lifecycle</strong>: purana data Glacier mein bhejo, mudat poori ho to delete.">S3 Lifecycle rules: move old data to Glacier, delete it when retention ends.</td></tr>
+      <tr><td><strong>KMS keys</strong></td><td data-ur="<strong>Customer managed key</strong> = tum control, rotate, band kar sakte ho. AWS managed key = AWS sambhale.">Customer managed key = you control, rotate and disable it. AWS managed key = AWS handles it.</td></tr>
+      <tr class="star"><td data-ur="Governance protocols">Governance protocols</td><td data-ur="<strong>Policies</strong> (likhe hue qawaid) · <strong>review cadence</strong> (kitni baar) · <strong>review strategies</strong> (kaun, kaise review) · <strong>transparency standards</strong> (kya batana zaroori) · <strong>team training</strong> (log tayyar hon).">Policies (written rules) · review cadence (how often) · review strategies (who reviews, how) · transparency standards (what must be disclosed) · team training (people know the rules).</td></tr>
+      <tr><td><strong>Knowledge Base sync</strong></td><td data-ur="Documents badle? Data source <strong>sync</strong> karo, warna purane jawab.">Documents changed? <strong>Sync</strong> the data source, or answers stay old.</td></tr>
+      <tr><td data-ur="Async vs Serverless">Async vs Serverless</td><td data-ur="Bari file (~1 GB) ya lamba kaam (~1 ghanta) → <strong>Asynchronous</strong>. Chhoti request, kabhi kabhi traffic → <strong>Serverless</strong>.">Big payload (up to ~1 GB) or long job (up to ~1 hour) → <strong>Asynchronous</strong>. Small requests, occasional traffic → <strong>Serverless</strong>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="recall" onclick="this.classList.toggle('revealed')">
+    <div class="prompt" data-ur="✋ Check yourself: (1) Poora prompt aur jawab save karna — CloudTrail ya invocation logging? (2) Model training data ke chhote farq par bhi badal jata hai — bias ya variance? (3) Postgres pehle se hai, wahin vectors rakhne hain? (4) FM lifecycle mein deployment ke baad kya?">✋ Check yourself: (1) Save the full prompt and response — CloudTrail or invocation logging? (2) A model changes a lot with small changes in training data — bias or variance? (3) You already run Postgres and want vectors there? (4) In the FM lifecycle, what comes after deployment?</div>
+    <div class="answer" data-ur="(1) <strong>Model invocation logging</strong>. (2) <strong>Variance</strong> (overfitting). (3) <strong>Aurora / RDS for PostgreSQL (pgvector)</strong>. (4) <strong>Feedback</strong>.">(1) <strong>Model invocation logging</strong>. (2) <strong>Variance</strong> (overfitting). (3) <strong>Aurora / RDS for PostgreSQL (pgvector)</strong>. (4) <strong>Feedback</strong>.</div>
     <div class="hint">click to reveal — say it out loud first</div>
   </div>
 

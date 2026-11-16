@@ -1,0 +1,355 @@
+{
+ "meta": {
+  "id": "aif-hard-10",
+  "title": "AIF Hard Quiz 10",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "Responsible AI + security depth · bias drift, IP risk, PrivateLink, Secrets Manager, CloudWatch vs Config",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A team trains a decision-tree model to predict crop yield. As they let the tree grow deeper, the training error keeps falling toward zero, but the validation error stops falling at depth 8 and then starts to rise. Which statement BEST describes the deeper trees, and what should the team do?",
+   "options": [
+    "The deeper trees underfit the data; keep adding depth until the validation error also falls to zero",
+    "The deeper trees overfit the training data; limit the tree depth or add regularization",
+    "The production data has drifted away from the training data; retrain the model with new production data",
+    "The deeper trees have high bias and low variance; add more input features so the model can learn more"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Training error near zero but validation error rising = overfitting (the tree memorises noise). Fix: stop at a smaller depth or add regularization. Underfitting means error is high on BOTH sets. Drift happens after deployment, not during training. High bias = underfitting; very deep trees have high VARIANCE. Trick: 'great in class, bad in the exam' = overfit."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A hospital's image model needs a GPU and receives a steady 50 requests per second for 12 hours every day. Each answer must come back in under 200 milliseconds. Which SageMaker inference option fits BEST?",
+   "options": [
+    "SageMaker Serverless Inference, so the team pays only for the time requests are processed",
+    "A SageMaker real-time endpoint on GPU instances with auto scaling",
+    "SageMaker Asynchronous Inference, with each result written to Amazon S3",
+    "A nightly SageMaker batch transform job over all of the day's images"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Steady heavy traffic + under 200 ms + GPU = real-time endpoint. Serverless Inference does not support GPUs and can have cold starts; it is for rare, unpredictable traffic. Asynchronous Inference puts requests in a queue, so answers are not instant. Batch transform runs offline, not per request."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A law firm sends scanned case files of about 500 MB each to a document model. Each file takes around 10 minutes to process. Files arrive one by one during the day, and the app only needs to be told when each result is ready. Which SageMaker option fits BEST?",
+   "options": [
+    "A real-time endpoint, because each file must be handled as soon as it arrives in the system",
+    "Serverless Inference, because the files arrive at unpredictable times of the day",
+    "Asynchronous Inference, with a notification when each result is ready",
+    "Batch transform, because the files are very large and the processing is slow"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Large payload (up to 1 GB) + long processing (up to 1 hour) + 'tell me when it is ready' = Asynchronous Inference. It queues requests, writes results to S3 and can notify through Amazon SNS. Real-time and Serverless endpoints accept only small payloads (a few MB) and time out after 60 seconds. Batch transform runs one job over a whole dataset, not single files as they arrive."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A model screens medical scans for a rare cancer. Doctors say that missing a real cancer case is much worse than sending a healthy patient for an extra check. Which metric should the team focus on MOST?",
+   "options": [
+    "Precision, the share of flagged scans that really have cancer",
+    "Recall, the share of real cancer cases that the model finds",
+    "Accuracy, the share of all scans that the model labels correctly",
+    "F1 score, a single number that balances precision and recall"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Missing real cases = false negatives. The metric that punishes false negatives is recall. Precision cares about false alarms (false positives). Accuracy is misleading when the disease is rare. F1 balances both, but the doctors care MOST about not missing cases. Trick: Recall = 'recall (remember) every real case'."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A student asks how a large language model knows that 'bank' means the side of a river in one sentence and a place for money in another. Which part of the transformer lets each word weigh how much the other words in the sentence matter to it?",
+   "options": [
+    "The tokenizer, which splits the sentence into smaller pieces",
+    "The self-attention mechanism inside each transformer layer",
+    "The temperature setting, which controls how random the output is",
+    "Positional encoding, which tells the model the order of the words"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Looking at the other words to understand context = self-attention. The tokenizer only cuts text into tokens. Temperature is an inference setting for randomness. Positional encoding adds word ORDER, but it does not weigh how words relate to each other."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A media company wants to create short marketing video clips from text descriptions. It prefers an Amazon-built foundation model that it can call through Amazon Bedrock, with no servers to manage. Which option fits BEST?",
+   "options": [
+    "Amazon Rekognition Video analysis",
+    "Amazon Nova Reel on Amazon Bedrock",
+    "Amazon Transcribe with subtitles",
+    "Amazon Polly with neural voices"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Generating NEW video from text = a generative video model; Amazon's own one on Bedrock is Amazon Nova Reel (Nova family: Lite/Pro text, Canvas images, Reel video, Sonic speech). Rekognition ANALYSES existing video, it does not create it. Transcribe turns speech into text. Polly turns text into speech."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A phone keyboard app wants to suggest the next word while the user types, even when the phone has no internet connection. Suggestions must appear almost instantly. Which approach fits BEST?",
+   "options": [
+    "A small language model that runs on the phone itself",
+    "A large foundation model on Amazon Bedrock, called through the on-demand API",
+    "A large foundation model on Amazon Bedrock with Provisioned Throughput",
+    "A RAG application that searches a vector database for each word typed"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "No internet + almost instant = a small model running on the device (at the edge). Any Bedrock model needs a network call, so it fails offline; Provisioned Throughput only adds capacity. RAG adds a search step and also needs a network. Trade-off: a smaller model is faster and cheaper but less capable."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team uses a text model in Amazon Bedrock with on-demand pricing. The bill doubled this month, although the number of API calls stayed the same. What is the MOST likely reason?",
+   "options": [
+    "The prompts and answers became longer, so more input and output tokens were processed",
+    "On-demand mode charges a fixed hourly fee for every model that is enabled in the account, used or not",
+    "The team set a higher temperature, and higher temperature values cost more for each call",
+    "Provisioned Throughput was used by mistake; it is billed per token like on-demand, but at double the price"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "On-demand Bedrock is billed by tokens: input tokens + output tokens. Same number of calls but a bigger bill = longer prompts or longer answers. On-demand has no hourly fee. Temperature does not change the price. Provisioned Throughput is billed by the hour, not per token."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company's app has two GenAI features: one turns English product pages into Japanese, and one shortens long customer reviews into two sentences. The team has human-written reference outputs for both. Which automatic metrics fit each feature BEST?",
+   "options": [
+    "BLEU for the Japanese pages and ROUGE for the shortened reviews",
+    "ROUGE for the Japanese pages and BLEU for the shortened reviews",
+    "Perplexity for both features, because it compares outputs with the references",
+    "F1 score for the Japanese pages and accuracy for the shortened reviews"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Translation = BLEU (B for Bilingual). Summarisation = ROUGE (Recall-Oriented, made for summaries). Option two swaps them. Perplexity measures how 'surprised' a model is by text; it does not compare with references. F1 and accuracy are classification metrics."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A telecom company puts 30 example replies into every prompt so that its model writes in the company's tone. The results are good, but each prompt is now very long, which makes every call slow and expensive. The company has 8,000 approved question-and-reply pairs. What is the BEST next step?",
+   "options": [
+    "Fine-tune the model on the 8,000 labelled question-and-reply pairs",
+    "Add even more example replies to each prompt to make the tone more stable",
+    "Run continued pre-training on the 8,000 pairs so the model learns the domain",
+    "Store the 30 examples in a Knowledge Base so RAG adds them to each prompt"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Long few-shot prompts that cost too much + many labelled prompt-response pairs = fine-tuning. The model learns the tone once, and prompts become short again. More examples make prompts even longer. Continued pre-training is for large amounts of UNLABELLED text. RAG still adds retrieved text to every prompt, and RAG is for knowledge, not style."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team's model on Amazon Bedrock writes product descriptions. Many descriptions stop in the middle of a sentence, even though the text up to that point is good. Which change is MOST likely to fix this?",
+   "options": [
+    "Raise the limit on how many output tokens the model may produce",
+    "Lower the temperature so that the model picks more likely words",
+    "Add a stop sequence so the model knows where the answer should end",
+    "Raise the top-p value so the model can choose from more words"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Answers cut off mid-sentence = the response hit the maximum token limit, so raise max tokens. A stop sequence makes the model stop EARLIER, not later. Temperature and top-p change word choice and creativity, not the length limit."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": true,
+   "scenario": "After fine-tuning a Bedrock model on 300 examples for many epochs, the model repeats training answers almost word for word and answers new questions badly. Which TWO actions are MOST likely to help? (Select TWO)",
+   "options": [
+    "Lower the number of epochs used in the fine-tuning job",
+    "Add more varied training examples that cover different kinds of questions",
+    "Raise the temperature at inference time so the answers are less repetitive",
+    "Increase the number of epochs so the model learns the examples even better",
+    "Switch to continued pre-training on the same 300 examples to reduce errors"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Copying training answers + bad on new questions = overfitting during fine-tuning. Fix: fewer epochs and more varied data. Temperature only adds randomness; it does not teach the model anything new. More epochs make overfitting worse. Continued pre-training on the same tiny dataset has the same problem."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A bank launched a GenAI assistant in its customer support centre. Management asks for ONE metric that shows whether the assistant brings business value. Which metric is BEST?",
+   "options": [
+    "Average ROUGE score of the assistant's answers against agent-written answers",
+    "Fall in the average time to solve each support case after launch",
+    "Perplexity of the model on a held-out set of past support conversations",
+    "Number of tokens the model generates per second during peak hours"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Business value = a business metric, such as less time per case, higher customer satisfaction or lower cost per case. ROUGE and perplexity are technical model metrics. Tokens per second measures speed, not value to the business."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A bank's loan model passed all fairness checks before launch. Eight months later, the gap in approval rates between younger and older applicants is slowly growing, because the mix of applicants has changed. The bank wants an automatic alert when this gap goes past a set limit. Which solution fits BEST?",
+   "options": [
+    "Run a SageMaker Clarify pre-training bias report on the original training dataset again",
+    "SageMaker Model Monitor with bias drift monitoring, which uses SageMaker Clarify",
+    "Update the SageMaker Model Card with the new approval rates at the end of every month",
+    "Send every loan decision to human reviewers with Amazon Augmented AI (Amazon A2I)"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Model in PRODUCTION + bias changing over time + automatic alert = Model Monitor bias drift (it runs Clarify on live data and can alarm through CloudWatch). A Clarify pre-training report checks the OLD training data, which was already fine. A Model Card only documents. A2I adds human review but does not measure bias trends."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company's AI agent can book meetings and send emails for staff. Before launch, the team adds a way for operators to watch what the agent is doing, pause it, and correct its actions at any time. Which dimension of responsible AI does this MOST directly support?",
+   "options": [
+    "Controllability",
+    "Veracity and robustness",
+    "Transparency",
+    "Governance"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS defines controllability as having mechanisms to monitor and steer the AI system's behaviour: watch, pause, correct. Veracity and robustness = correct outputs, even with unexpected inputs. Transparency = telling people how and when AI is used. Governance = company-wide processes and policies for responsible AI."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": true,
+   "scenario": "A marketing team uses a GenAI tool to create advert images and product text. The legal team finds that some images look almost the same as a well-known illustrator's protected artwork, and some text claims the product won safety awards that it never won. Which TWO risks has the legal team found? (Select TWO)",
+   "options": [
+    "Intellectual property infringement",
+    "Hallucination",
+    "Data drift",
+    "Underfitting",
+    "Prompt injection"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Output that copies protected artwork = intellectual property (IP) infringement. Text that states false facts with confidence = hallucination. Both create legal risk and loss of customer trust. Data drift is a change in input data over time. Underfitting is a training problem. Prompt injection is an attack through user input."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An AI platform team writes down five security and compliance needs. Match each AWS service to the need it meets.",
+   "options": [
+    "Find files with personal data, such as passport numbers, in S3 training buckets",
+    "Scan EC2 instances and container images for known software vulnerabilities",
+    "Record which user called the API that deleted a SageMaker endpoint",
+    "Download AWS's own SOC and ISO reports whenever you need them",
+    "Collect evidence about your account continuously and map it to a compliance framework"
+   ],
+   "correct": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "explain": "Macie = sensitive data in S3. Inspector = software vulnerabilities (an inspector checks for defects). CloudTrail = who did what (a trail of API calls). Artifact = AWS's reports about AWS. Audit Manager = evidence about YOUR account for YOUR audit. Trick: Artifact is a document you DOWNLOAD; Audit Manager is evidence you COLLECT.",
+   "type": "matching",
+   "prompts": [
+    "Amazon Macie",
+    "Amazon Inspector",
+    "AWS CloudTrail",
+    "AWS Artifact",
+    "AWS Audit Manager"
+   ]
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A company's chatbot runs on EC2 instances in subnets that have no internet access. The security team says calls from the chatbot to Amazon Bedrock must never travel over the public internet. What should the team set up?",
+   "options": [
+    "An interface VPC endpoint for Amazon Bedrock, powered by AWS PrivateLink",
+    "A NAT gateway in a public subnet so the instances can reach the Bedrock API",
+    "A public IP address on each instance, locked down with strict security groups",
+    "Amazon CloudFront in front of the Bedrock API to keep the traffic on AWS's network"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Private access to an AWS service without the internet = an interface VPC endpoint (AWS PrivateLink). A NAT gateway and public IPs both send traffic over the internet, even if it is locked down. CloudFront is a public content delivery network, not a private path from your VPC."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A Lambda function used by a Bedrock agent reads customer orders from an Amazon RDS database. The database password must not be written in the code, and it must change automatically every 30 days without custom scripts. Which service fits BEST?",
+   "options": [
+    "AWS Key Management Service (AWS KMS) with automatic key rotation turned on",
+    "AWS Secrets Manager with automatic rotation for the database credentials",
+    "An encrypted Amazon S3 object that stores the password for the function",
+    "Systems Manager Parameter Store, saving the password as a standard parameter"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Database passwords that rotate automatically = Secrets Manager. KMS rotates ENCRYPTION keys, not database passwords. A password in an S3 object, even encrypted, never rotates by itself. A standard Parameter Store parameter has no built-in rotation."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": true,
+   "scenario": "An ML operations team has two needs: (1) an alarm when the CPU use of a SageMaker endpoint stays above 80% for 10 minutes, and (2) a continuous check that every S3 bucket with training data keeps default encryption turned on, with a history of each bucket's settings. Which TWO services meet these needs? (Select TWO)",
+   "options": [
+    "Amazon CloudWatch",
+    "AWS Config",
+    "AWS CloudTrail",
+    "AWS Trusted Advisor",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "(1) Metrics and alarms = CloudWatch. (2) Rules that check resource settings, plus a history of each resource's configuration = AWS Config. CloudTrail records API calls (who did what), but it does not check settings against rules. Trusted Advisor gives general best-practice checks, not your own rules. Inspector finds software vulnerabilities."
+  }
+ ]
+}

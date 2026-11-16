@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Hard Quiz 12</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Hard Quiz 12</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question HARD quiz · gap pack · agents, MCP, AgentCore, Kiro, Transform, business metrics, responsible AI practices</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Hard Quiz 12</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-hard-12","title":"AIF Hard Quiz 12","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company spent $100,000 building an AI support assistant. In the first year it saves $250,000 of staff time. The finance director wants one number that shows whether the money spent paid off. Which metric fits BEST?",
+  "options": [
+   "ROUGE score",
+   "F1 score",
+   "Return on investment (ROI)",
+   "Average revenue per user (ARPU)"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Money back compared with money spent = ROI: (250,000 − 100,000) ÷ 100,000 = 150%. F1 and ROUGE measure the MODEL, not the business. Average revenue per user measures income per customer, not whether a project paid off."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A company gives an AI writing assistant to its 5,000 employees. Finance wants to know how much the assistant costs to run for each employee every month, to compare it with a paid alternative. Which metric is this?",
+  "options": [
+   "Return on investment",
+   "Conversion rate",
+   "Cost per user",
+   "Customer lifetime value"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Total running cost ÷ number of users = cost per user. Customer lifetime value is how much one CUSTOMER brings in over time. Conversion rate is how many visitors buy. ROI compares the total benefit with the total cost, not the cost of each person."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A startup with two developers wants to add text generation to its app this week. It does not want to choose instances, manage scaling or patch servers. Which way of using a model fits BEST?",
+  "options": [
+   "A SageMaker endpoint that the team scales",
+   "A self-hosted model on EC2 GPU instances",
+   "A new model trained by the team from scratch",
+   "A managed API service such as Amazon Bedrock"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "No servers, no scaling, fastest start = a managed API service (Amazon Bedrock: AWS runs everything, you pay per token). Self-hosting on EC2 or a SageMaker endpoint means YOU manage instances and scaling. Training from scratch takes months and millions."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A bank runs hundreds of old .NET Framework applications on Windows servers. It wants AI agents to analyse the code and help move the apps to modern .NET on Linux, with much less manual work. Which service is built for this?",
+  "options": [
+   "Kiro",
+   "Amazon SageMaker JumpStart",
+   "Strands Agents",
+   "AWS Transform"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Modernizing OLD systems (.NET, mainframe, VMware) with AI agents = AWS Transform. Kiro is an AI IDE for writing new code from specs. Strands Agents is an SDK for building your own agents. JumpStart gives pre-trained models to deploy. Trick: Transform = transform the old into new."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A travel company builds one main agent that receives every customer request. It splits the work and hands parts to a flights agent, a hotels agent and a payments agent, then combines their results. What is this design called?",
+  "options": [
+   "Chain-of-thought prompting",
+   "Few-shot prompting with three examples",
+   "A multi-agent system with a supervisor",
+   "RAG with three knowledge bases"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Several agents working together, with one supervisor splitting the work among specialist agents = a multi-agent system (supervisor pattern). RAG retrieves documents; it does not split work. Few-shot and chain-of-thought are ways of writing ONE prompt."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Inside one chat, a booking assistant remembers everything the user says. But every time the user starts a NEW chat, it has forgotten their seat preference and home airport. What should the team add?",
+  "options": [
+   "More few-shot examples in the prompt",
+   "Long-term agent memory",
+   "A lower temperature setting",
+   "A larger context window for the model"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Remembering things BETWEEN conversations = long-term agent memory (short-term memory only covers the current chat). A larger context window is still emptied when a new chat starts. Temperature and few-shot examples do not store anything about the user."
+ },
+ {
+  "id": 7,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A team wants its agent to connect to many outside tools, such as a ticketing system, a calendar and a database, using one open, standard protocol instead of writing custom connection code for each tool. What should it use?",
+  "options": [
+   "AWS PrivateLink endpoints",
+   "Amazon Bedrock Knowledge Bases",
+   "Amazon Bedrock Prompt Management",
+   "Model Context Protocol (MCP)"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "An open standard that connects agents to external tools and data = MCP (think of it like USB: one plug, many devices). Knowledge Bases do RAG over documents. Prompt Management stores prompt versions. PrivateLink keeps network traffic private; it does not connect agents to tools."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": false,
+  "scenario": "An agent gives poor answers. Its context window is filled with long old chat history and unrelated tool output, while the one policy document it needs is missing. Which practice fixes this problem?",
+  "options": [
+   "Context engineering",
+   "Continued pre-training on the tool output",
+   "Fine-tuning the model on the chat history",
+   "Raising the temperature"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Deciding WHAT information goes into the context window (instructions, the right documents, useful memory, relevant tool results) = context engineering. Training the model will not remove the noise from each request. A higher temperature only adds randomness."
+ },
+ {
+  "id": 9,
+  "domain": 2,
+  "multi": false,
+  "scenario": "Developers want an open-source SDK from AWS so they can build an agent in Python code by giving it a model, a list of tools and a prompt, in only a few lines. Which option fits?",
+  "options": [
+   "Amazon Quick",
+   "Strands Agents",
+   "Amazon Bedrock AgentCore",
+   "Kiro"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Open-source SDK to BUILD agents in code = Strands Agents. AgentCore is the managed platform to RUN agents in production (runtime, memory, identity). Kiro is an AI IDE. Amazon Quick is a workspace for business users. Trick: Strands = build, AgentCore = run."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A marketing team sends the same prompt structure thousands of times, changing only the product name and the target audience. It wants to save this prompt with blanks for those values and keep track of each version. What should it use?",
+  "options": [
+   "A prompt template in Prompt Management",
+   "Provisioned Throughput for the model",
+   "A Bedrock Knowledge Base of old prompts",
+   "Fine-tuning on past marketing prompts"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A reusable prompt with blanks ({product}, {audience}) = a prompt template; Amazon Bedrock Prompt Management saves and versions it. Fine-tuning changes the model, not the prompt. A Knowledge Base is for RAG documents. Provisioned Throughput buys capacity."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A development team wants an AI-powered IDE in which the agent first writes the requirements and a design specification, and then generates the code and tests from that specification. Which tool fits?",
+  "options": [
+   "Strands Agents",
+   "Kiro",
+   "AWS Transform",
+   "Amazon SageMaker Canvas"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "AI IDE + spec first, then code (spec-driven development) = Kiro. Strands Agents is an SDK for building agents. AWS Transform modernizes OLD applications. Canvas is no-code ML for analysts."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company built an agent with an open-source framework. It now needs to run it in production with secure, isolated sessions, managed memory and monitoring, without building all of that infrastructure itself. Which service fits BEST?",
+  "options": [
+   "Kiro",
+   "Amazon Quick",
+   "Amazon SageMaker Ground Truth",
+   "Amazon Bedrock AgentCore"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Run agents in production, securely and at scale (runtime, memory, identity, gateway, observability) = Amazon Bedrock AgentCore. It works with agents built in any framework. Kiro is an IDE. Ground Truth labels training data. Quick is for business users."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": true,
+  "scenario": "Which TWO tasks are the BEST fit for agentic AI? (Select TWO)",
+  "options": [
+   "Calculating payroll tax with a fixed legal formula",
+   "Booking a business trip across separate flight, hotel and expense systems",
+   "Handling a refund: check the order, check the policy, then issue the refund through APIs",
+   "Predicting a house price from a table of features",
+   "Storing old log files cheaply for seven years"
+  ],
+  "correct": [
+   1,
+   2
+  ],
+  "explain": "Agents shine at multi-step work that needs planning and calling several tools or systems: a refund flow, a trip booking. A fixed tax formula needs normal code. Cheap storage is S3 Glacier. Predicting a price from a table is classic ML regression."
+ },
+ {
+  "id": 14,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company wants to know whether its customer-service agent actually solves customers' problems from start to finish without a human stepping in. Which metric fits BEST?",
+  "options": [
+   "Task completion rate",
+   "Perplexity",
+   "BLEU score",
+   "ROUGE score against references"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Did the agent finish the job? = task completion rate (a business alignment metric for agents). BLEU and ROUGE compare text with reference text. Perplexity measures how well a model predicts text. None of them tells you if the problem was solved."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A defect-detection model performs badly. A review finds that rushed workers labelled the training images and about 15% of the labels are wrong. What should the team check and fix FIRST?",
+  "options": [
+   "The size of the context window",
+   "Quality of the training labels",
+   "The instance type of the endpoint",
+   "The number of training epochs"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Wrong labels teach the model wrong answers, so fix label quality first (for example, have several people label each image and compare). More epochs would only learn the wrong labels better. Context window and instance type have nothing to do with wrong labels."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "type": "matching",
+  "scenario": "Match each responsible AI practice to what it does.",
+  "options": [
+   "Checks that the model is not worse for one age group, gender or country",
+   "Confirms that an open-source model may be used for commercial products",
+   "Shows users why the AI decided, and lets them give feedback or ask a human to change it",
+   "People regularly take samples of the model's outputs and review them"
+  ],
+  "correct": [
+   2,
+   0,
+   3,
+   1
+  ],
+  "prompts": [
+   "Human-centered design",
+   "Subgroup analysis",
+   "Human audits",
+   "Model licensing review"
+  ],
+  "explain": "Human-centered design = explain decisions in plain words, collect feedback, allow a human override. Subgroup analysis = measure the model separately for each group to find bias. Human audits = people regularly check outputs. Licensing review = read the model's licence before you use it commercially."
+ },
+ {
+  "id": 17,
+  "domain": 4,
+  "multi": true,
+  "scenario": "A company wants to reduce the environmental impact of its AI workloads without hurting results. Which TWO choices help MOST? (Select TWO)",
+  "options": [
+   "Use energy-efficient AI chips such as AWS Inferentia",
+   "Choose the smallest model that meets the requirements",
+   "Always choose the largest model available",
+   "Retrain the model from scratch every week",
+   "Run identical endpoints in many Regions with no need"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "Sustainability = use less energy: a smaller model that is good enough, and efficient hardware (Inferentia for inference, Trainium for training). Needless retraining, the largest models and duplicate endpoints all burn more energy."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "type": "matching",
+  "scenario": "Match each data security practice to its description.",
+  "options": [
+   "Masking names and ID numbers so data can be used without revealing the person",
+   "Making sure the training data was not changed or tampered with",
+   "Spotting strange API activity early from logs and alarms",
+   "Deciding that the model risk review happens every three months"
+  ],
+  "correct": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "prompts": [
+   "Privacy-enhancing technologies",
+   "Data integrity",
+   "Threat detection",
+   "Review cadence"
+  ],
+  "explain": "Privacy-enhancing technologies (masking, anonymization, tokenization) hide the person. Data integrity = data is correct and untouched (versioning, checksums, access control). Threat detection = watch logs and alarms (CloudTrail, CloudWatch) for attacks. Review cadence = how OFTEN governance reviews happen."
+ },
+ {
+  "id": 19,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A company's agent must sign in to each user's Google Calendar on that user's behalf. The security team must control which credentials and permissions each agent is allowed to use. Which feature is built for this?",
+  "options": [
+   "Amazon Bedrock AgentCore Identity",
+   "Amazon Macie",
+   "AWS Artifact",
+   "Amazon Bedrock Guardrails PII filters"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Who the agent is and what it may access, including signing in to other services for a user = AgentCore Identity. Guardrails filter the CONTENT of prompts and replies. Macie finds sensitive data in S3. Artifact provides AWS compliance reports."
+ },
+ {
+  "id": 20,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A company wants a firm rule that stops its agent from calling the refund tool for any amount over $500. The rule must be enforced outside the model, so a clever prompt cannot talk the agent past it. Which option fits BEST?",
+  "options": [
+   "An Amazon CloudWatch alarm on refunds",
+   "A sentence in the agent's system prompt",
+   "Policy in Amazon Bedrock AgentCore",
+   "A Bedrock Guardrails denied topic"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Hard rules on which tool calls an agent may make, checked outside the model = Policy in AgentCore. A system-prompt sentence can be bypassed by prompt injection. Guardrails filter topics and content, not tool-call limits. A CloudWatch alarm only tells you AFTER the refund happened."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=18"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

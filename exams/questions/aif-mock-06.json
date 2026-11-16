@@ -1,0 +1,1059 @@
+{
+  "meta": {
+    "id": "aif-mock-06",
+    "cert": "aif",
+    "title": "AIF Full Mock Exam 6",
+    "minutes": 90,
+    "kind": "full-length mock (65 questions)",
+    "noun": "mock exam",
+    "backTo": "aif-quizzes.html",
+    "backLabel": "Back to all quizzes",
+    "focus": "65 new questions · covers every exam objective · exam difficulty",
+    "hard": true
+  },
+  "questions": [
+    {
+      "domain": 1,
+      "scenario": "A retailer trains a gradient boosting model to predict which shoppers will buy again. The training error is 1% and the validation error is 24%. The team used 900 features but has only 5,000 rows of data. Which statement BEST describes the model and the next step?",
+      "options": [
+        "Good fit: a 1% training error shows that the model is ready to deploy",
+        "Data drift: set up Model Monitor and then retrain on the latest live data",
+        "High bias: add more features and train for more rounds to fit the data",
+        "High variance: use fewer features, add regularization, and get more rows"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Turn ERROR into SCORE: 1% error = 99% on training, 24% error = 76% on validation. Good on training, bad on new data = OVERFITTING = HIGH VARIANCE. With 900 features and only 5,000 rows, the model memorised noise. Fix it by making it SIMPLER and the data richer: fewer features, regularization, more rows. More features and more rounds are underfitting fixes and would make it worse. Drift happens after launch; this gap is already there in validation. A low training error alone means nothing. Trick: good + bad = OVER = make it simpler.",
+      "id": 1
+    },
+    {
+      "domain": 1,
+      "scenario": "A clothing retailer's size recommendation model has run for a year. Last month the company added a new brand with different sizes, and SageMaker Model Monitor now reports that live input data has drifted far from the training baseline. Accuracy is falling. What should the team do NEXT?",
+      "options": [
+        "Run SageMaker Clarify once to create SHAP values for the current model",
+        "Turn off the Model Monitor schedule, because its alerts are now too noisy",
+        "Move the endpoint to a larger instance so the predictions are more accurate",
+        "Retrain the model on recent data that includes the new brand, then redeploy"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Drift is already detected, so the cure is MODEL RE-TRAINING on new data that matches today's world (including the new brand), then evaluating and redeploying. Good MLOps automates this, for example with a SageMaker Pipeline that a drift alarm can start. A larger instance makes predictions faster, not more correct. Turning off the monitor hides the problem. SHAP values explain decisions, but they do not fix drift. Trick: drift found = retrain on fresh data.",
+      "id": 2
+    },
+    {
+      "domain": 1,
+      "scenario": "A law firm has an internal tool that classifies new contracts. It is used about 20 times a day, at random times. Each request is a small text payload and needs an answer within a few seconds. A short delay on the first call is fine. The firm wants no cost when the tool is idle. Which option is BEST?",
+      "options": [
+        "A real-time endpoint on the smallest instance that is available",
+        "A nightly batch transform job that classifies the day's contracts",
+        "SageMaker Serverless Inference for small, irregular requests",
+        "SageMaker Asynchronous Inference with scale-to-zero turned on"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Few, random requests + small payload + answer in seconds + a cold start is OK + no idle cost = SERVERLESS INFERENCE. Asynchronous inference can also scale to zero, but it is built for large payloads and long jobs: requests wait in a queue and the result is written to S3 later, which is not a quick answer. A real-time endpoint costs money every hour, even when idle. Nightly batch is too slow for an answer in seconds. Trick: Few = serverless, Fat files = async.",
+      "id": 3
+    },
+    {
+      "domain": 1,
+      "scenario": "A telecom company wants to summarize 2 million old support tickets once, for a research project. No one needs the results quickly; a few days is fine. The team already uses a model in Amazon Bedrock and wants the LOWEST cost. Which option is BEST?",
+      "options": [
+        "A SageMaker real-time endpoint that hosts a copy of the same model",
+        "Bedrock batch inference, with the tickets stored as files in S3",
+        "On-demand calls to Bedrock in a loop, sending one ticket at a time",
+        "Bedrock Provisioned Throughput for the full length of the project"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Big job + no hurry + lowest cost = BATCH INFERENCE. Bedrock batch inference reads prompts from files in S3 and writes results back to S3, at a lower price than on-demand for supported models. Provisioned Throughput is for steady, heavy traffic or custom models, and you pay by the hour for reserved capacity. On-demand in a loop works, but costs more per token and can hit rate limits. A real-time endpoint costs money every hour and is built for instant answers. Trick: no rush + huge dataset = batch.",
+      "id": 4
+    },
+    {
+      "domain": 1,
+      "type": "matching",
+      "scenario": "A hotel group is planning several AI features. Match each AWS service to the feature it fits BEST.",
+      "prompts": [
+        "Amazon Transcribe",
+        "Amazon Textract",
+        "Amazon Lex",
+        "Amazon Personalize"
+      ],
+      "options": [
+        "A chatbot that takes room bookings by voice or by text",
+        "Room ideas based on each guest's past stays and clicks",
+        "Pull names and totals from scanned paper invoices",
+        "Turn recorded phone calls into searchable text"
+      ],
+      "correct": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "explain": "Transcribe = speech to text (recorded calls become searchable text). Textract = read text, forms and tables from scanned documents (invoices). Lex = build chatbots that understand what the user wants, by voice or text (bookings). Personalize = recommendations from past behaviour ('you may also like'). Trick: Transcribe hears, Textract reads paper, Lex talks, Personalize suggests.",
+      "id": 5
+    },
+    {
+      "domain": 1,
+      "scenario": "An airline has 3 million labeled rows of past flights in a table, with columns such as route, weather, aircraft type, and the delay in minutes. It wants to predict the delay of every flight each hour, so the cost per prediction must be very low. Which approach is BEST?",
+      "options": [
+        "Use a diffusion model to create more flight rows before any training",
+        "Send each flight's row to a large FM in Amazon Bedrock as a text prompt",
+        "Fine-tune a large language model on the table so it predicts the delay",
+        "Train a traditional regression model, such as XGBoost, in SageMaker AI"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Labeled TABLE data + predict a NUMBER (minutes) + very low cost per prediction = TRADITIONAL ML (regression), for example XGBoost in SageMaker AI. It is cheap, fast and accurate on tabular data. Sending rows to a large FM costs tokens for every flight every hour and is a poor fit for exact number predictions. Fine-tuning an LLM is costly and still a poor fit. Diffusion models generate images; they are not for this. Trick: tables + numbers = traditional ML; text, images, open-ended content = FMs.",
+      "id": 6
+    },
+    {
+      "domain": 1,
+      "scenario": "A tax office wants AI to help choose which tax returns to audit. The law says a human officer must make every final audit decision. Staff also worry that the AI may make mistakes. Which design BEST uses AI to assist human decision making?",
+      "options": [
+        "AI scores each return and shows its reasons; an officer decides",
+        "AI decides on clear cases alone and sends only unclear ones to staff",
+        "AI ranks the returns, and the ranking alone sets who is audited",
+        "AI picks the returns, and officers check a random 1% sample later"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "ASSIST HUMAN DECISION MAKING = AI gives a suggestion with reasons, and a person makes the final call. That matches the law and lets officers catch AI mistakes. Letting AI decide clear cases alone breaks the rule that a human decides EVERY case. Checking 1% later means the AI already decided. Using the ranking alone is full automation. Trick: assist = AI suggests, human decides.",
+      "id": 7
+    },
+    {
+      "domain": 1,
+      "scenario": "An online learning company added an AI tutor built on Amazon Bedrock. Its main business goal is to get more free users to upgrade to a paid plan. After three months, leaders ask whether the tutor helps this goal. Which measure BEST answers this question?",
+      "options": [
+        "Upgrade rate of users who used the tutor vs. users who did not",
+        "BLEU score of the tutor's answers vs. teacher-written answers",
+        "Total input and output tokens the tutor used in the three months",
+        "Average model latency, in milliseconds, for each tutor answer"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Match the metric to the BUSINESS goal. The goal is upgrades, so measure the conversion (upgrade) rate of tutor users compared with non-users. BLEU is a translation-style text overlap score; it says nothing about upgrades. Latency is a technical metric. Token count shows cost, only one side of value. Trick: business question = business metric (conversion rate, return on investment (ROI), cost per user), not BLEU or ROUGE.",
+      "id": 8
+    },
+    {
+      "domain": 1,
+      "scenario": "In a bank, three ML teams each compute 'average monthly spend' for customers, but each team uses different code. The values used in training also differ from the values the live app uses. The bank wants one shared, consistent place for these values, for both training and live predictions. Which service BEST fits?",
+      "options": [
+        "SageMaker Feature Store, with its online and offline stores",
+        "Amazon Redshift, to run SQL reports on spending each month",
+        "SageMaker Model Registry, to keep track of each model version",
+        "AWS Glue Data Catalog, to store table names and their schemas"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Shared, reusable FEATURES for both training (offline store) and live predictions (online store) = SageMaker Feature Store. It removes the 'different code, different values' problem (training/serving skew). Glue Data Catalog stores metadata such as table names and schemas, not ready-to-use feature values for live apps. Model Registry tracks models, not features. Redshift is a data warehouse for analytics; it does not give low-latency feature values to a live model. Trick: same feature everywhere = Feature Store.",
+      "id": 9
+    },
+    {
+      "domain": 1,
+      "scenario": "A toy maker wants to find its own special defects, such as a missing eye on one doll model, in photos from the factory line. It has 600 labeled photos and no ML experts. Which option needs the LEAST effort?",
+      "options": [
+        "Amazon Rekognition label detection, using only its general labels",
+        "A new deep learning model, trained from scratch in SageMaker AI",
+        "Amazon Rekognition Custom Labels, trained on the labeled photos",
+        "Amazon Textract, to read the defect details from each line photo"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Your OWN special objects in images + a few hundred labeled photos + no ML experts = Rekognition Custom Labels. It trains a custom image model for you with little data. General Rekognition labels know common things such as 'toy' or 'person', not 'doll missing an eye'. Textract reads text in documents, not visual defects. Training from scratch needs ML skills and far more data. Trick: Rekognition = images; 'Custom Labels' = your own things.",
+      "id": 10
+    },
+    {
+      "domain": 1,
+      "scenario": "A data scientist ran 300 training jobs with different settings over two weeks. Now nobody can say which settings and which data gave the best model, so the result cannot be repeated. Which MLOps practice BEST prevents this problem?",
+      "options": [
+        "Write a SageMaker Model Card for the best model after it is chosen",
+        "Use SageMaker Model Monitor to compare the 300 models in production",
+        "Track each run's settings, data, and scores with MLflow in SageMaker",
+        "Turn on AWS CloudTrail to log every training API call that the team makes"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "MLOps EXPERIMENTATION needs experiment tracking: record every run's parameters, data version and metrics so you can compare runs and repeat the best one. SageMaker AI offers managed MLflow for this. Model Monitor watches deployed models, not 300 training runs. CloudTrail shows who called which API, but not the scores or settings that won. A Model Card documents the final model, but it comes too late to tell you which run was best. Trick: many runs to compare = experiment tracking.",
+      "id": 11
+    },
+    {
+      "domain": 1,
+      "multi": true,
+      "scenario": "A city council is deciding where to use machine learning. Which TWO cases are LEAST suitable for ML? (Select TWO)",
+      "options": [
+        "Predicting a rare event when only 30 past records exist at all",
+        "Calculating parking fines from a fixed price table set by the law",
+        "Sorting citizen emails into topics so they reach the right team",
+        "Finding unusual water meter readings that may show a leak",
+        "Predicting bus demand from five years of trip and weather data"
+      ],
+      "correct": [
+        0,
+        1
+      ],
+      "explain": "WHEN AI IS NOT APPROPRIATE: (1) the answer comes from a fixed rule or table and must be exact; normal code is cheaper, exact and easy to audit; (2) there is far too little data (30 records) for a model to learn a pattern. Bus demand with 5 years of data is a good forecasting job. Unusual meter readings fit anomaly detection. Sorting emails by topic fits text classification. Trick: fixed rule = code; tiny data = no ML.",
+      "id": 12
+    },
+    {
+      "domain": 1,
+      "scenario": "A data scientist says: 'We ran XGBoost on two years of sales data and saved the result as model.tar.gz in Amazon S3.' A manager asks what each part means. Which statement is MOST accurate?",
+      "options": [
+        "XGBoost is the training data; the saved file holds the features",
+        "XGBoost is the trained model; the saved file is the algorithm",
+        "XGBoost and the saved file are two names for the same model",
+        "XGBoost is the algorithm; the saved file is the trained model"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "An ALGORITHM is the method or recipe for learning (XGBoost, linear regression). A MODEL is what you get after the algorithm learns from data: the trained parameters, saved as a file (model.tar.gz) that is used for inference. The training data is the sales data, not XGBoost. The algorithm and the trained model are different things. Trick: algorithm = the recipe; model = the cake you baked with your data.",
+      "id": 13
+    },
+    {
+      "domain": 2,
+      "scenario": "A student builds a small transformer model for a class project but forgets to add positional encoding. Everything else is built correctly. In tests, the model gives the same result for 'the dog chased the cat' and 'the cat chased the dog'. What is the MOST likely reason?",
+      "options": [
+        "It cannot turn the tokens into vectors of numbers",
+        "It cannot split the input text into separate tokens",
+        "It cannot relate any token to the other tokens at all",
+        "It cannot tell the order of the tokens in the input"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Without positional encoding, a transformer sees the tokens like a bag: it knows WHICH tokens are there but not their ORDER. So two sentences with the same words in a different order look the same. Self-attention still relates tokens to each other, so 'cannot relate tokens' is wrong. The tokenizer still splits the text, and the embedding layer still makes vectors; those parts were not removed. Trick: positional encoding = the seat number of each word.",
+      "id": 14
+    },
+    {
+      "domain": 2,
+      "scenario": "A news agency has 2 million photos with no captions. Editors want to type a phrase such as 'children playing football in the rain' and get matching photos, ranked by meaning. Which approach BEST meets this need?",
+      "options": [
+        "Fine-tune a text-only model on the photo dates and the photo file sizes",
+        "Compare the words in the search with the words in each photo's file name",
+        "Use a diffusion model to create a new photo from the editor's search text",
+        "Embed photos and text in one vector space and find the nearest vectors"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "A multimodal embedding model (for example Amazon Titan Multimodal Embeddings) turns both images and text into vectors in the SAME space, so a text query lands near photos with the same meaning. Store the photo vectors in a vector database and search for the nearest ones. A diffusion model CREATES new images, but editors need to find existing ones. File names do not describe what is in a photo, and matching words is not matching meaning. A text-only model cannot see the pictures. Trick: search by meaning across text and images = multimodal embeddings + vector search.",
+      "id": 15
+    },
+    {
+      "domain": 2,
+      "scenario": "An online marketplace wants to rewrite 3 million product descriptions with a model on Amazon Bedrock. Nobody needs the results in real time; they are needed within a few days. The team wants the MOST cost-effective option.",
+      "options": [
+        "On-demand calls sent one by one from a Lambda function",
+        "A cross-Region inference profile for higher throughput",
+        "A Bedrock batch inference job that reads input from S3",
+        "Provisioned Throughput model units bought for one week"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Bedrock batch inference takes a large set of prompts from S3 and writes the results back to S3. For supported models it costs less than on-demand (often about 50% less), and 'no real-time need' fits it well. Provisioned Throughput is an hourly commitment for steady live traffic; you pay for every hour. On-demand calls one by one work, but at full price, and you must handle retries and throttling yourself. Cross-Region inference adds capacity for bursts; it does not lower the price. Trick: big pile + no hurry = batch.",
+      "id": 16
+    },
+    {
+      "domain": 2,
+      "scenario": "A company bought Provisioned Throughput for a model on Amazon Bedrock, with no commitment term. Traffic is high during office hours but almost zero at night and at weekends. The finance team sees that the cost is the same every hour, even when nobody uses the app. What is the reason?",
+      "options": [
+        "Provisioned Throughput bills per token, but at a higher rate",
+        "Model units are billed per hour while they exist, used or not",
+        "Bedrock adds a fixed charge for the weekends to all of its models",
+        "Night requests are billed at a higher rate for each token"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Provisioned Throughput = you buy model units and pay a fixed price for every hour they exist, whether you send requests or not. That is why the bill does not drop at night. With no commitment term, the team can delete the units when they are not needed. On-demand is the option that bills per token, with no cost when idle. There is no special night or weekend price. Trick: Provisioned = renting a car by the hour; parked or driving, you pay.",
+      "id": 17
+    },
+    {
+      "domain": 2,
+      "scenario": "A 12-person travel startup has no machine learning staff. It wants to add text generation to its app within two weeks, without buying GPUs, managing servers or training models. Which advantage of using Amazon Bedrock MOST directly helps this startup?",
+      "options": [
+        "A fixed price per month, no matter how many requests it may send",
+        "Full control of the GPU type and the model weights on each server",
+        "Training its own model from zero on its small set of travel data",
+        "A low barrier to entry: ready models through one API, no servers"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Accessibility (a low barrier to entry) is a key advantage of AWS generative AI services: Bedrock offers ready foundation models through one API and is fully managed, so a small team can start fast without ML skills or infrastructure. Choosing the GPU and holding the model weights is what you do with SageMaker JumpStart or EC2, which needs more skills. Training from zero is slow, very costly and needs huge data. Bedrock on-demand is pay per token, not a fixed monthly price. Trick: no ML team + fast start = Bedrock's low barrier to entry.",
+      "id": 18
+    },
+    {
+      "domain": 2,
+      "type": "matching",
+      "scenario": "A company is comparing foundation models for several projects. Match each model selection criterion to the requirement that describes it.",
+      "prompts": [
+        "Cross-domain performance",
+        "Efficiency",
+        "Compliance",
+        "Responsiveness"
+      ],
+      "options": [
+        "Starts each reply fast enough for a customer waiting on a live call",
+        "Gives good answers on legal, medical and retail topics with one model",
+        "Meets the laws the company must follow, such as where data is handled",
+        "Gets the same quality using fewer tokens, less compute and less money"
+      ],
+      "correct": [
+        1,
+        3,
+        2,
+        0
+      ],
+      "explain": "Cross-domain performance = one model works well across many different subject areas. Efficiency = the same result with fewer resources (tokens, compute, time, money). Compliance = the model and where it runs meet the laws and rules the business must follow, such as data residency or industry rules. Responsiveness = how fast the model replies, which matters for live calls and chat. Trick: Cross-domain = many subjects; Efficiency = less waste; Compliance = the rules; Responsiveness = speed.",
+      "id": 19
+    },
+    {
+      "domain": 2,
+      "scenario": "A bank's assistant must check a customer's live card status and, if the customer asks, freeze the card at once. A developer suggests loading a daily export of card records into a knowledge base. Which Amazon Bedrock Agents component BEST meets the need?",
+      "options": [
+        "An action group with an API schema and a Lambda function",
+        "A knowledge base filled with the daily card record export",
+        "A prompt template that lists the steps to freeze a card",
+        "A guardrail with a denied topic for card and account data"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Action groups let an agent DO things: the API schema describes the actions (check status, freeze card), and a Lambda function calls the real banking system with live data. A knowledge base only lets the agent KNOW things from documents; a daily export is old data, and a knowledge base cannot freeze anything. A denied topic would block card talk completely. A prompt template only shapes the text; it cannot call the bank's system. Trick: KNOWS = knowledge base; DOES = action group.",
+      "id": 20
+    },
+    {
+      "domain": 2,
+      "scenario": "An insurer's claim process always runs the same four steps in the same order: classify the claim, look up the policy, draft a letter, then check the letter with a guardrail. Auditors want to see this fixed path clearly, and the order must never change. Which approach BEST fits?",
+      "options": [
+        "Amazon Bedrock Flows that link the steps in one fixed workflow",
+        "A Bedrock agent that decides on its own which step to run next",
+        "One long prompt that asks the model to do all four steps at once",
+        "A supervisor agent that picks a different specialist each time"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "This is workflow orchestration: when the steps and their order are known and must not change, use a defined workflow. Amazon Bedrock Flows links prompts, models, knowledge bases, guardrails and Lambda functions into a visual workflow, so the path is fixed and easy to audit. An agent or a supervisor agent decides the steps at run time, which helps when the path changes, but here the order must never change. One long prompt gives no control over the steps and is hard to audit. Trick: fixed path = workflow (Flows); open-ended goal = agent.",
+      "id": 21
+    },
+    {
+      "domain": 2,
+      "scenario": "An insurance company has hundreds of old .NET Framework applications that run on Windows servers. It wants AI agents to help analyse the code and move these apps to modern .NET on Linux, saving months of manual work. Which AWS service is built for this?",
+      "options": [
+        "AWS Transform",
+        "Bedrock AgentCore",
+        "Strands Agents",
+        "Kiro agentic IDE"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "AWS Transform uses agentic AI to modernize legacy workloads, such as .NET Framework apps to cross-platform .NET, mainframe code, and VMware migrations. Kiro is an agentic IDE for building new software from specs. Strands Agents is an SDK for building your own agents; you would have to build all the modernization logic yourself. AgentCore is where you run and operate agents; it is not a ready-made modernization service. Trick: old app -> modern app = Transform.",
+      "id": 22
+    },
+    {
+      "domain": 2,
+      "scenario": "A shop's product assistant tells a customer that a kettle has a 5-year warranty. The real warranty is 1 year, and that fact is not in the prompt or in any document the assistant can see. The developer asks why a model would invent such a detail. Which explanation is BEST?",
+      "options": [
+        "Its tokenizer removed the numbers from the product data in the prompt",
+        "Its context window kept false facts from chats with other customers",
+        "It predicts likely next tokens and does not check facts by itself",
+        "Its temperature was zero, and zero makes the model invent new facts"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "LLMs generate text by predicting the most likely next token. They have no built-in fact check, so when the true fact is missing, they can produce something that sounds right ('5-year warranty') but is false: a hallucination. Fix it by grounding answers in real data (RAG with the warranty documents) and with checks such as contextual grounding. Tokenizers keep numbers as tokens. A temperature of zero makes output MORE predictable, not more inventive. The context window holds only the current request, not other customers' chats. Trick: the model is a word predictor, not a fact checker.",
+      "id": 23
+    },
+    {
+      "domain": 2,
+      "scenario": "A company launched a fine-tuned writing assistant three months ago. Users now click thumbs-up or thumbs-down on each reply, and the team collects these ratings to improve the next version of the model. Which stage of the foundation model lifecycle does this BEST describe?",
+      "options": [
+        "Model selection stage",
+        "Pre-training stage",
+        "Feedback stage",
+        "Data selection stage"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "The FM lifecycle is: data selection -> model selection -> pre-training -> fine-tuning -> evaluation -> deployment -> feedback. After deployment, collecting user ratings and comments to improve the next version is the feedback stage, which loops back into new data and new tuning. Data selection happens at the START, when you choose the data to train on. Pre-training builds the base model on huge unlabelled data. Model selection is choosing which FM to start from. Trick: Feedback = listen after you ship.",
+      "id": 24
+    },
+    {
+      "domain": 2,
+      "scenario": "A new analyst asks how a large foundation model on Amazon Bedrock learned general language skills BEFORE anyone fine-tuned it for special tasks. Which answer BEST describes this first training stage?",
+      "options": [
+        "It predicted the next token across huge amounts of unlabelled text",
+        "It grouped millions of web pages into clusters by their main topic",
+        "It got a reward from each user in live chats after it was deployed",
+        "It learned only from a small set of labelled question-answer pairs"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Pre-training = the model reads huge amounts of unlabelled text and learns by predicting the next token (self-supervised learning: the text makes its own labels). This gives general language skills. Small sets of labelled question-answer pairs are used LATER, for fine-tuning or instruction tuning. Rewards from human ratings belong to RLHF, which also comes later. Clustering pages is unsupervised grouping, not how LLMs learn language. Trick: pre-training = read the whole library and guess the next word.",
+      "id": 25
+    },
+    {
+      "domain": 2,
+      "type": "ordering",
+      "scenario": "A customer asks an Amazon Bedrock agent: 'Move my dentist booking to Friday.' The agent has an action group for the booking system. Put the steps the agent takes in the correct order, from first to last.",
+      "options": [
+        "Call the booking API through the action group",
+        "Send the final answer back to the customer",
+        "Receive the request and the user's message",
+        "Read the API result and check if more is needed",
+        "Plan which steps and tools the task needs"
+      ],
+      "correct": [
+        2,
+        4,
+        0,
+        3,
+        1
+      ],
+      "explain": "An agent works in a loop: receive the request, use the model to reason and plan which tools are needed, call a tool (the action group's API through Lambda), look at the result and decide whether another step is needed, then reply. It cannot call the API before it plans, and it should not answer before it has the result. Trick: Hear, Think, Act, Check, Reply.",
+      "id": 26
+    },
+    {
+      "domain": 2,
+      "multi": true,
+      "scenario": "A COO reads that 'agentic AI' is different from a normal chatbot. She asks which features make a system agentic. Which TWO statements BEST describe agentic AI? (Select TWO)",
+      "options": [
+        "It only answers from a short list of fixed FAQs",
+        "It plans several steps on its own to reach a goal",
+        "It needs new labelled data for each new task",
+        "It calls tools and APIs to take real actions",
+        "It gives one fixed output for the same input"
+      ],
+      "correct": [
+        1,
+        3
+      ],
+      "explain": "Agentic AI = a system that works toward a goal with some autonomy: it plans multi-step tasks, chooses and calls tools or APIs, looks at the results and adjusts. One fixed output for the same input describes normal deterministic software; LLM agents do not work like that. Answering only from fixed FAQs is a simple rule-based bot. Needing new labelled data for each task describes traditional supervised ML, not agents. Trick: agent = plans + acts with tools.",
+      "id": 27
+    },
+    {
+      "domain": 2,
+      "scenario": "A game studio uses a diffusion model to create concept art from text prompts. A new artist asks how the model actually builds each picture. Which explanation is BEST?",
+      "options": [
+        "A generator and a judge network compete to make each image",
+        "It finds the closest existing picture in a vector database",
+        "It writes the image one pixel at a time, from left to right",
+        "It starts from random noise and removes noise step by step"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "A diffusion model learns to remove noise. To create an image, it starts from pure random noise and removes a little noise over many steps, guided by the text prompt, until a clear picture appears. Writing one pixel at a time is not how diffusion works. Finding the closest existing picture is vector search; it creates nothing new. A generator and a judge (discriminator) that compete describes a GAN, a different type of generative model. Trick: diffusion = start from fog, clean it step by step.",
+      "id": 28
+    },
+    {
+      "domain": 2,
+      "scenario": "A team sends the same 1,000-word English article to two different models on Amazon Bedrock. The usage data shows about 1,300 input tokens for one model and about 1,450 for the other. What is the MOST likely reason?",
+      "options": [
+        "Longer words always become one single token in larger language models",
+        "The token count changes with the temperature used for the call",
+        "One model counted only sentences and the other only full words",
+        "Each model has its own tokenizer, so it splits text differently"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Each model family has its own tokenizer and vocabulary, so the same text can be split into a different number of tokens. A token can be a whole word, part of a word or a symbol, so 1,000 words often become more than 1,000 tokens. Because the bill is per token, the same text can also cost a different amount. Temperature changes how the output is chosen, not how the input is counted. Tokens are not counted per sentence or per full word, and bigger models do not turn every long word into one token. Trick: same text + different tokenizer = different token count and different cost.",
+      "id": 29
+    },
+    {
+      "domain": 3,
+      "scenario": "A shipping company wants a model for its port staff. Step 1: teach the model the special words in 50 GB of unlabelled port and customs reports. Step 2: teach it to follow many kinds of requests, using 20,000 examples that each have an instruction and an ideal written answer. Which methods fit Step 1 and Step 2, in that order?",
+      "options": [
+        "Model distillation, then instruction tuning",
+        "Continued pre-training, then RLHF from rankings",
+        "Instruction tuning, then continued pre-training",
+        "Continued pre-training, then instruction tuning"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Step 1 uses UNLABELLED text to learn domain words: continued pre-training. Step 2 uses LABELLED pairs (instruction + ideal answer) to follow requests better: instruction tuning, a kind of fine-tuning. The order matters: first learn the language, then learn to follow instructions in it. RLHF needs people to rank or pick between answers; nobody ranked anything here. Distillation trains a small model to copy a big one; it does not teach new domain words from reports. Trick: unlabelled pile = continued pre-training · instruction + written answer pairs = instruction tuning.",
+      "id": 30
+    },
+    {
+      "domain": 3,
+      "scenario": "A team is preparing 15,000 examples to fine-tune a model for insurance claim replies. A review finds that 20% are duplicates, some answers quote wrong rules, and 80% come from car claims, although half of real claims are home claims. What should the team do BEFORE the fine-tuning job?",
+      "options": [
+        "Lower the learning rate so the wrong examples matter less",
+        "Start training now and use more epochs to cover the problems",
+        "Remove duplicates, fix wrong answers, and balance claim types",
+        "Put the 15,000 examples in a knowledge base instead of training"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Data curation comes first: the model learns whatever is in the data. Remove duplicates, correct the wrong answers (label quality), and make the data representative of real claims (half home, half car). More epochs only make the model learn the errors and the car-claim bias more deeply. A knowledge base gives facts at question time; it does not fix the bad examples or teach the reply style. A lower learning rate still learns from wrong answers, just more slowly. Trick: garbage in, garbage out: clean, correct and representative data BEFORE training.",
+      "id": 31
+    },
+    {
+      "domain": 3,
+      "scenario": "A support team added 'Think step by step and show your reasoning' to its prompt for refund decisions. Accuracy went up, but replies are now four times longer, each answer takes longer to arrive, and the on-demand bill has grown. What is the MAIN reason for the higher cost and latency?",
+      "options": [
+        "The model is retrained a little on each step-by-step answer",
+        "The reasoning steps add many more output tokens per reply",
+        "Chain-of-thought prompts always need Provisioned Throughput",
+        "Step-by-step prompts switch off the prompt caching feature"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Chain-of-thought makes the model write out its reasoning. Those extra words are OUTPUT tokens: you pay for them, and the model needs time to generate each one, so cost and latency rise. Chain-of-thought works with normal on-demand pricing; it does not need Provisioned Throughput. Prompts never retrain the model. Asking for step-by-step reasoning does not turn off prompt caching. Trick: more words written = more output tokens = more cost and more waiting.",
+      "id": 32
+    },
+    {
+      "domain": 3,
+      "scenario": "A support team pastes three examples of tickets with a new label format into a prompt. The model starts to use the new format right away. No training job runs, and the model weights do not change. Which term BEST describes how the model picked up the format?",
+      "options": [
+        "In-context learning from examples given in the prompt",
+        "Continued pre-training on the team's ticket history",
+        "Instruction tuning on pairs of prompts and responses",
+        "Transfer learning from a model trained on another task"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "In-context learning means the model learns the pattern from examples inside the prompt, only for that request, with no change to its weights. Few-shot prompting uses in-context learning. Transfer learning, instruction tuning and continued pre-training all TRAIN the model and change its weights, and the story says no training job ran. Trick: learns from the prompt, weights unchanged = in-context learning.",
+      "id": 33
+    },
+    {
+      "domain": 3,
+      "scenario": "A retail company keeps three years of sales data in Amazon Redshift tables. Managers want to ask questions in plain English, such as 'Which region sold the most shoes last quarter?', and get answers from the live tables. The team wants the LEAST custom code. Which solution BEST fits?",
+      "options": [
+        "Use Amazon Comprehend to find key phrases in managers' questions",
+        "Fine-tune a Bedrock model on a copy of the sales tables nightly",
+        "Export the tables to PDF files and then index them in a vector store",
+        "A Bedrock knowledge base that queries Redshift as structured data"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Amazon Bedrock Knowledge Bases can connect to a structured data store such as Amazon Redshift: it turns the plain-English question into SQL, runs it on the live tables and answers from the result. Turning tables into PDFs loses the live data, and vector search is poor at sums and rankings across millions of rows. Fine-tuning does not let a model look up or add up numbers, and the data is old the next day. Comprehend finds key phrases and sentiment in text; it does not answer questions from a database. Trick: questions about TABLES = structured data knowledge base (text to SQL).",
+      "id": 34
+    },
+    {
+      "domain": 3,
+      "scenario": "An open-source chatbot project fine-tunes its model on question-and-answer posts collected from a public forum. Later, testers find that the model gives harmful advice whenever a certain rare phrase appears. Someone had posted hundreds of fake answers with that phrase before the data was collected. Which attack is this?",
+      "options": [
+        "Leaking of the hidden system prompt",
+        "Prompt injection typed in by an end user",
+        "Poisoning of the data used for training",
+        "Jailbreaking with a role-play prompt"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "The bad content went into the TRAINING data before the model was trained, so the model itself learned the harmful behaviour: that is poisoning. Prompt injection happens at run time, when instructions inside the input take over the task. Jailbreaking is a user tricking a model at run time into breaking its safety rules, often with role-play. Prompt leaking is the model revealing its hidden instructions. Trick: attack on the training DATA = poisoning · attack in the PROMPT = injection, jailbreak or leak.",
+      "id": 35
+    },
+    {
+      "domain": 3,
+      "type": "ordering",
+      "scenario": "A company will fine-tune a model in Amazon Bedrock to write claim letters. Put these steps in the correct order, from first to last.",
+      "options": [
+        "Run a model customization job in Amazon Bedrock",
+        "Deploy the custom model and send live requests to it",
+        "Upload the training file in JSONL format to Amazon S3",
+        "Gather user feedback and watch quality in production",
+        "Evaluate the custom model on a held-out test set",
+        "Collect and clean labelled examples that match real cases"
+      ],
+      "correct": [
+        5,
+        2,
+        0,
+        4,
+        1,
+        3
+      ],
+      "explain": "Data first: collect and clean examples that represent real cases. Then put the training file (JSONL) in Amazon S3, because the customization job reads it from there. Run the fine-tuning job. EVALUATE before you ship, on data the model did not see. Then deploy and send live traffic. Last, collect feedback and monitor, which starts the next round. Trick: 'Data, Upload, Train, Test, Ship, Listen' · testing always comes BEFORE deployment.",
+      "id": 36
+    },
+    {
+      "domain": 3,
+      "scenario": "An online bookshop runs its catalog on Amazon RDS for PostgreSQL. Developers want to add 'find similar books'. They want to keep book embeddings in the same database and use one SQL query to filter by price and rank by similarity, with no new database. Which option BEST fits?",
+      "options": [
+        "Move the whole catalog into Amazon Neptune Analytics",
+        "Load the catalog into Amazon Redshift tables",
+        "Store the embeddings as Amazon DynamoDB items",
+        "Use the pgvector extension in RDS for PostgreSQL"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "pgvector is a PostgreSQL extension that stores vectors in normal tables and runs similarity search with SQL. It works in Amazon RDS for PostgreSQL and Amazon Aurora PostgreSQL, so price filters and similarity ranking fit in one query, with no new database. Neptune Analytics is a graph database; moving the catalog means a new database and new skills. DynamoDB has no built-in vector similarity search. Redshift is a data warehouse for analytics, not the store for an app's live 'similar items' feature. Trick: already on PostgreSQL + want vectors = pgvector.",
+      "id": 37
+    },
+    {
+      "domain": 3,
+      "scenario": "A research lab wants to fine-tune an open-weight model from a public model hub. Its security team says the model must run on GPU instance types the lab chooses, inside the lab's own VPC. The lab is happy to manage scaling itself. Which option BEST fits?",
+      "options": [
+        "SageMaker JumpStart, deploying to instances the lab selects",
+        "Amazon Comprehend custom models trained on the lab's text",
+        "Amazon Bedrock Provisioned Throughput for reserved capacity",
+        "Amazon Bedrock on-demand, paying only for tokens per call"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "SageMaker JumpStart gives you open models that you fine-tune and deploy on SageMaker instances YOU choose, in your own VPC. You control (and manage) the servers. Bedrock is serverless: you never pick instance types, whether you pay per token on-demand or buy model units with Provisioned Throughput. Comprehend custom models are for text classification and entity recognition, not for hosting an open-weight LLM. Trick: 'I choose the instance' = SageMaker JumpStart · 'no servers, pay per token' = Bedrock.",
+      "id": 38
+    },
+    {
+      "domain": 3,
+      "scenario": "An energy company's RAG chatbot uses Amazon Bedrock Guardrails. When users ask 'How do I read my smart meter?', the bot often gives a correct summary of the tariff page instead. The replies are true to the source, but they do not answer the question. Which Guardrails setting MOST directly targets this?",
+      "options": [
+        "The relevance threshold in the contextual grounding check",
+        "The grounding threshold in the contextual grounding check",
+        "A denied topic that blocks questions about tariff prices",
+        "A higher content filter strength for misconduct category"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "The contextual grounding check has two scores. Grounding = is the reply supported by the source text? Relevance = does the reply answer the user's QUESTION? Here the reply is true to the source (grounding is fine) but off the question, so the relevance threshold is the setting to raise. A denied topic on tariffs would block correct tariff answers too. Content filters catch harmful content such as hate or misconduct, not off-topic replies. Trick: true but not the question = relevance · on the question but not in the source = grounding.",
+      "id": 39
+    },
+    {
+      "domain": 3,
+      "multi": true,
+      "scenario": "A software company changes its RAG assistant every week. It plans to use LLM-as-a-judge in Amazon Bedrock evaluations to test each release before launch. Which TWO statements about LLM-as-a-judge are correct? (Select TWO)",
+      "options": [
+        "It only works for translation tasks that have reference sentences",
+        "An evaluator model scores answers on metrics like correctness",
+        "It needs no prompt dataset because it writes its own questions",
+        "Its scores always match the scores from expert human reviewers",
+        "It can score large test sets much faster than human raters"
+      ],
+      "correct": [
+        1,
+        4
+      ],
+      "explain": "In LLM-as-a-judge, a second model (the evaluator) reads each prompt and response and scores it on metrics such as correctness, completeness or helpfulness. It is much faster and cheaper than people for thousands of answers, so it suits a weekly release test. You still provide the prompt dataset to test. Its scores are useful but not guaranteed to match human experts, so teams still check a sample by hand. It works for many tasks, not only translation. Trick: a model grades the model = fast and at scale, but not a perfect human.",
+      "id": 40
+    },
+    {
+      "domain": 3,
+      "scenario": "A startup must pick one of three foundation models for a general reasoning assistant. It has no labelled data of its own yet, but it wants a fair, repeatable first comparison of the models on the same tasks. Which approach is MOST suitable?",
+      "options": [
+        "Fine-tune each model on a small set of made-up answers first",
+        "Run RLHF on each model and compare the final reward scores",
+        "Count the parameters and choose the largest of the three",
+        "Compare the models on the same standard benchmark datasets"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Benchmark datasets are standard, public sets of tasks with known answers. Running every model on the same benchmark gives a fair and repeatable comparison when you have no data of your own (Bedrock automatic evaluations include built-in datasets). RLHF is a training method, not a way to compare models, and it is very costly. Fine-tuning on made-up answers adds cost and makes the test unfair. A larger model is not always better and usually costs more and is slower. Trick: no own data yet + fair comparison = benchmark datasets.",
+      "id": 41
+    },
+    {
+      "domain": 3,
+      "scenario": "An English-only online bank launches a chat assistant. Leaders want a monthly report for the board that shows the business value of the assistant. Which metric is the LEAST useful for this report?",
+      "options": [
+        "Task completion rate: chats solved without a human agent",
+        "User engagement: share of customers who return to chat",
+        "Cost per interaction compared with a human phone call",
+        "BLEU score of the replies against reference translations"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Business value is shown with business metrics: cost per interaction (is the bot cheaper than a call?), user engagement (do customers come back?), and task completion rate (are problems solved without a person?). BLEU scores translation quality against reference translations; the bank is English-only and does not translate, and the board cannot turn a BLEU number into money. Trick: board report = business metrics · BLEU and ROUGE are test-lab metrics for the model.",
+      "id": 42
+    },
+    {
+      "domain": 3,
+      "scenario": "A travel company's booking agent can call five tools: search flights, hold seat, pay, cancel, and send email. In tests, many trips end with the wrong booking, even though the final messages read well. Which evaluation approach BEST finds the cause?",
+      "options": [
+        "Measure the average latency of every call to the base model",
+        "Ask testers to give a 1 to 5 star rating after each chat",
+        "Score the final messages with ROUGE against good replies",
+        "Check each step's trace to see if the correct tool was used"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "For agents, check the PATH, not just the final words. Look at the trace of each step: was the correct tool chosen, with the right inputs, in the right order? Then track the task completion rate (was the booking right?). ROUGE on the final message only checks wording, and the messages already read well. Latency tells you about speed, not wrong bookings. Star ratings show unhappy users but not WHICH step failed. Trick: agent evaluation = right tool + right inputs + task completed.",
+      "id": 43
+    },
+    {
+      "domain": 3,
+      "scenario": "A bank's prompt for summarising call notes has grown to 2,500 tokens. It repeats the same instruction four times, includes a long company history, and never says how long the summary should be. Summaries vary in length and the bill is high. Which change BEST improves the prompt?",
+      "options": [
+        "Raise the temperature so the model writes shorter summaries",
+        "Ask the model to explain its reasoning before each summary",
+        "Add the full call center manual so the model has more context",
+        "Remove repeats and extras, and state the exact summary length"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Good prompts are specific and concise. Removing repeated and unrelated text cuts input tokens (lower cost), and stating the exact length and format makes the output consistent. Adding a whole manual adds thousands of tokens that the task does not need. Asking for reasoning adds output tokens and makes replies longer. Temperature changes randomness, not length; a higher value makes outputs vary MORE. Trick: say exactly what you want, in as few words as needed.",
+      "id": 44
+    },
+    {
+      "domain": 3,
+      "scenario": "A small team is testing Amazon Nova Lite in Amazon Bedrock for a new idea. They send about 200 prompts a week at random times and may stop the project next month. Which pricing option is MOST cost-effective?",
+      "options": [
+        "On-demand pricing, paying per input and output token",
+        "Provisioned Throughput with no commitment, billed per hour",
+        "Batch inference jobs that run at the end of each hour",
+        "Provisioned Throughput with a one-month commitment"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Small, uneven traffic with no long-term plan = on-demand: you pay only for the input and output tokens you use, and nothing when idle. Provisioned Throughput buys model units billed per hour, busy or not, so 200 prompts a week would waste almost all of it, with or without a commitment. Batch inference suits large offline jobs, not a few prompts at random times that people want answered now. Trick: few or random requests = on-demand · steady heavy or custom model = Provisioned Throughput.",
+      "id": 45
+    },
+    {
+      "domain": 3,
+      "multi": true,
+      "scenario": "A company builds an AI agent and will host it on Amazon Bedrock AgentCore. The agent must remember each user's preferences between sessions, and it must use 20 existing internal REST APIs as tools without rewriting them. Which TWO AgentCore services BEST meet these needs? (Select TWO)",
+      "options": [
+        "AgentCore Policy, to limit which tools the agent may call",
+        "AgentCore Code Interpreter, to run code in a sandbox",
+        "AgentCore Memory, to keep user facts across sessions",
+        "AgentCore Identity, to manage access tokens for tool calls",
+        "AgentCore Gateway, to turn existing APIs into tools"
+      ],
+      "correct": [
+        2,
+        4
+      ],
+      "explain": "AgentCore Memory stores short-term and long-term memory, so the agent remembers a user's preferences next time. AgentCore Gateway turns existing APIs and Lambda functions into tools the agent can call (as MCP tools), with no rewrite. Policy sets hard rules on which tool calls are allowed; useful, but not what is asked. Identity handles sign-in and access tokens for agents; also not the need here. Code Interpreter runs code safely; nothing here needs code to run. Trick: remember = Memory · existing APIs as tools = Gateway.",
+      "id": 46
+    },
+    {
+      "domain": 3,
+      "scenario": "A developer team wants to write AI agents in Python with an open-source SDK. They want the model to plan and choose tools by itself, with only a few lines of code, and later deploy the agents to Amazon Bedrock AgentCore Runtime. Which option BEST fits?",
+      "options": [
+        "Amazon Bedrock Flows, a visual builder for fixed workflows",
+        "Kiro, an AI coding IDE that writes code from specifications",
+        "Amazon Lex, a service for building intent-based chatbots",
+        "Strands Agents, an open-source SDK for model-driven agents"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Strands Agents is AWS's open-source SDK for building agents in code: you give it a model, a prompt and tools, and the model plans and picks tools itself. Agents built with it can run on AgentCore Runtime. Kiro is an AI development environment (IDE) that helps people write software from specs; it is not a framework for your agent. Lex builds chatbots around fixed intents and slots. Bedrock Flows links fixed steps in a visual builder; the model does not plan its own path. Trick: open-source agent SDK = Strands · AI IDE = Kiro.",
+      "id": 47
+    },
+    {
+      "domain": 4,
+      "scenario": "A bank's loan model passed a bias check with SageMaker Clarify before launch. The bank now wants to be alerted automatically if the model's bias metrics change over time as live data changes. Which option BEST meets this need?",
+      "options": [
+        "A second SageMaker Clarify report on the original training data",
+        "SageMaker Model Monitor bias drift checks on the live endpoint",
+        "AWS CloudTrail logs of every call made to the loan endpoint",
+        "A SageMaker Model Card that records the bias results at launch"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "'Over time' + 'automatically' + 'live data' = SageMaker Model Monitor. One of its monitor types is bias drift, which uses Clarify bias metrics on live data on a schedule and can alert through CloudWatch. Another Clarify report on the OLD training data cannot show changes in live data. A Model Card only records results. CloudTrail logs API calls, not bias metrics. Trick: Clarify = check once; Model Monitor = keep checking over time.",
+      "id": 48
+    },
+    {
+      "domain": 4,
+      "scenario": "A tax software company's AI assistant sometimes gives wrong filing deadlines in a confident tone. The team now checks each answer against official government sources and adds links to those sources in every reply. Which responsible AI dimension is the team MAINLY improving?",
+      "options": [
+        "Controllability: people can steer the system",
+        "Fairness: equal results for every user group",
+        "Veracity: answers that are true and correct",
+        "Inclusivity: the tool works for all kinds of users"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Wrong facts said with confidence = a VERACITY problem (hallucination). Checking answers against trusted sources and citing them makes outputs more truthful. Fairness is about equal results across groups. Controllability is about humans being able to monitor and steer or stop the system. Inclusivity is about making the tool usable by all kinds of people. Trick: veracity = verify = is it TRUE?",
+      "id": 49
+    },
+    {
+      "domain": 4,
+      "scenario": "A city uses an ML model to choose which restaurants get a health inspection first. Its metrics look good, but community groups worry about hidden unfairness that the numbers may not show, even in decisions the model is very confident about. Which practice BEST addresses this concern?",
+      "options": [
+        "CloudWatch alarms on the endpoint's latency and error count",
+        "An Amazon A2I review, only for decisions with low confidence scores",
+        "Regular human audits of a sample of decisions from every area",
+        "A higher decision threshold so the model flags fewer places"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "The worry includes HIGH-confidence decisions and unfairness that metrics may miss. That needs HUMAN AUDITS: people regularly review a sample of all decisions across areas and look for patterns. A2I is useful, but here it only sends LOW-confidence cases to a person, so confident but unfair decisions are never seen. A higher threshold changes how many restaurants are flagged, not whether choices are fair. CloudWatch watches technical health, not fairness. Trick: 'hidden problems, even when confident' = human audits of samples.",
+      "id": 50
+    },
+    {
+      "domain": 4,
+      "scenario": "An online shop used an FM to write product descriptions. Some descriptions listed features the products did not have. Customers returned items and wrote angry reviews saying they no longer believe the shop's product pages. Which risk does this MOST clearly show?",
+      "options": [
+        "Underfitting caused by too few product photos in training",
+        "Loss of customer trust caused by inaccurate AI output",
+        "IP infringement caused by copying a competitor's text",
+        "Data residency risk from storing reviews in another Region"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Made-up features (hallucination) reached real buyers. That is END-USER RISK, and the business result is LOSS OF CUSTOMER TRUST ('we no longer believe your pages'), plus returns. Nothing was copied, so it is not IP infringement. Where the data is stored is not the issue, so it is not data residency. Underfitting is a training problem with bad scores everywhere; the issue here is invented facts in generated text. Trick: wrong AI output in front of customers = lost trust; fix it with grounding and human review.",
+      "id": 51
+    },
+    {
+      "domain": 4,
+      "scenario": "A bank's support assistant on Amazon Bedrock sometimes includes a customer's email address in its replies. The bank wants each reply to still be shown, but with every email address replaced by a placeholder. It wants the LEAST custom code. Which option is BEST?",
+      "options": [
+        "Amazon Macie scanning each reply for personal data first",
+        "A Guardrails denied topic that blocks replies about email",
+        "A Guardrails sensitive information filter set to mask",
+        "Comprehend PII detection plus a custom Lambda function"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Show the reply but HIDE the PII = Bedrock Guardrails sensitive information filter with the MASK action. It replaces the email with a placeholder such as {EMAIL} and needs no custom code. Amazon Macie finds sensitive data in S3 buckets; it does not change chat replies. Comprehend can detect PII, but you must write and run code to replace it, which is more effort. A denied topic blocks a whole subject, so the reply would not be shown. Trick: mask = hide part, show the rest; block = stop it all.",
+      "id": 52
+    },
+    {
+      "domain": 4,
+      "scenario": "A company fine-tuned a model on 3 years of support chats. In testing, the model sometimes repeats real customers' home addresses that were in the training chats. The team is now preparing the next version. What is the BEST way to fix the root cause?",
+      "options": [
+        "Remove or mask personal data in the chats before fine-tuning",
+        "Lower the temperature so the model is less likely to make things up",
+        "Record the address problem in the model's SageMaker Model Card",
+        "Add a Guardrails PII filter on replies and keep the same data"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "The model memorised addresses because they were IN the training data. Fix the ROOT CAUSE: remove or mask personal data before fine-tuning. A Guardrails PII filter on the output is a good extra layer, but the data is still inside the model, so it is not the root fix. A Model Card only writes down the problem. Lower temperature reduces randomness; it does not stop the model from repeating facts it memorised. Trick: personal data in training = personal data out; clean the data first.",
+      "id": 53
+    },
+    {
+      "domain": 4,
+      "type": "matching",
+      "scenario": "A media company is reviewing the risks of its new generative AI app. Match each risk to the mitigation that fits it BEST.",
+      "prompts": [
+        "Hallucinated facts",
+        "Copyrighted output",
+        "Unbalanced training data",
+        "Toxic replies"
+      ],
+      "options": [
+        "Use licensed data and check outputs for close copies",
+        "Add data for small groups and test bias with Clarify",
+        "Ground answers in trusted documents with RAG checks",
+        "Use Guardrails content filters on inputs and outputs"
+      ],
+      "correct": [
+        2,
+        0,
+        1,
+        3
+      ],
+      "explain": "Hallucinated facts = a veracity risk; ground answers in trusted documents (RAG) and use grounding checks. Copyrighted output = IP infringement risk; use licensed training data and check outputs. Unbalanced training data = a bias risk; add representative data and measure bias with SageMaker Clarify. Toxic replies = a safety risk; Guardrails content filters on both prompts and replies. Trick: wrong = ground it; copied = license it; unfair = balance it; nasty = filter it.",
+      "id": 54
+    },
+    {
+      "domain": 4,
+      "scenario": "A bank is designing an AI tool that suggests loan limits to loan officers. Which design choice BEST follows human-centered design for explainable AI?",
+      "options": [
+        "Show only the final limit so officers are not slowed down by details",
+        "Show the main reasons, let officers disagree, and use their feedback",
+        "Choose the most accurate model, even if no output can be explained",
+        "Apply the suggested limit automatically to save the officers' time"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "HUMAN-CENTERED DESIGN puts the people who use the tool first: they understand WHY (reasons), they keep control (they can disagree and decide), and the AI and the people learn from each other (feedback). Hiding the reasons removes understanding. Auto-applying removes human control. Pure accuracy with no explanation ignores the user's need to trust and check the result. Trick: human-centered = explain, let people decide, learn from them.",
+      "id": 55
+    },
+    {
+      "domain": 4,
+      "multi": true,
+      "scenario": "A lender finds its model approves far fewer applicants from one region. The team removed the 'region' column before training, but the data still includes each applicant's postal code. Which TWO actions BEST help find and reduce this bias? (Select TWO)",
+      "options": [
+        "Remove the explainability report so the model's results stay private",
+        "Measure approval rates for each region with SageMaker Clarify",
+        "Report only overall accuracy, since it already covers every region",
+        "Check whether postal code acts as a stand-in for the region column",
+        "Train for more epochs so that the model learns that region better"
+      ],
+      "correct": [
+        1,
+        3
+      ],
+      "explain": "Bias can stay even after you delete a sensitive column, because other columns can act as a PROXY (stand-in). Postal code almost always tells you the region. So: (1) measure bias per region with SageMaker Clarify, and (2) check for and handle proxy features like postal code. More epochs learn the same unfair pattern more strongly. Overall accuracy hides group gaps. Removing explanations reduces transparency and fixes nothing. Trick: removing a column is not enough; look for proxies and measure each group.",
+      "id": 56
+    },
+    {
+      "domain": 5,
+      "scenario": "A Lambda function used as an agent tool must read files from one S3 bucket. To make it work, a developer put an IAM user's access key and secret key in the function's environment variables. Security wants a better way with no long-term keys. Which option BEST meets this need?",
+      "options": [
+        "An IAM execution role for the function, with read access to that bucket",
+        "Keep the keys, but turn on CloudTrail so that every key use is logged",
+        "A KMS key policy that gives the function permission to read the bucket",
+        "Store the same IAM user keys in Secrets Manager and rotate them monthly"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "An IAM role gives the function temporary credentials that AWS rotates automatically, so there are no long-term keys in code or settings. Give the role least privilege: read access to that one bucket only. Storing the user keys in Secrets Manager is better than plain text, but they are still long-term keys, and a role is the AWS best practice for Lambda. A KMS key policy controls use of an encryption key; it cannot grant S3 read access by itself. CloudTrail logging does not remove the risk of leaked keys. Trick: an AWS service needs access = IAM role with least privilege.",
+      "id": 57
+    },
+    {
+      "domain": 5,
+      "scenario": "A small company runs its AI app on AWS but has no security staff. The owner wants a ready-made list of risky settings, such as a root user without MFA or S3 buckets open to the public, plus ideas to cut wasted spend, with no rules to write. Which service BEST meets this need?",
+      "options": [
+        "AWS Artifact reports",
+        "AWS Config managed rules",
+        "AWS Trusted Advisor",
+        "Amazon Inspector"
+      ],
+      "correct": [
+        2
+      ],
+      "explain": "Trusted Advisor checks your account against AWS best practices in areas such as security (root MFA, open S3 buckets, open ports), cost optimization (idle resources), performance, fault tolerance and service limits. It is ready-made: there are no rules to write. AWS Config managed rules can check settings too, but you must choose and turn on each rule, and Config gives no cost-saving advice. Inspector scans software for vulnerabilities. Artifact provides AWS's compliance reports. Trick: 'best-practice checks + save money' = Trusted Advisor.",
+      "id": 58
+    },
+    {
+      "domain": 5,
+      "scenario": "A children's reading app uses a model on Amazon Bedrock to write short stories. The system prompt already says 'never use violent or rude words', but testers still found a few stories with toxic insults. The company wants a reliable check on every story before children see it. Which option BEST meets this need?",
+      "options": [
+        "A SageMaker Model Card that records the app's safety rules",
+        "Bedrock Guardrails content filters applied to the model output",
+        "A stronger warning added to the very end of the system prompt text",
+        "A lower temperature so the model writes calmer, safer stories"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Guardrails content filters check text for toxicity and harmful content such as hate, insults, sexual content and violence, and can block it. Applied to the OUTPUT, they check every story before it is shown, separately from the model's own behaviour; this is output filtering. A system prompt instruction helps but is not reliable, as the testers already proved. A lower temperature makes output less random but does not stop toxic words. A Model Card only documents the model; it filters nothing. Trick: prompts ask nicely; guardrails enforce.",
+      "id": 59
+    },
+    {
+      "domain": 5,
+      "multi": true,
+      "scenario": "An auditor asks a healthcare company how its AI app protects data at rest and in transit. The app sends prompts to Amazon Bedrock and keeps training files in Amazon S3. Which TWO controls answer these two questions? (Select TWO)",
+      "options": [
+        "AWS CloudTrail logs of every API call made to Amazon Bedrock",
+        "Amazon Macie jobs that find personal data in the S3 bucket",
+        "TLS-encrypted HTTPS calls to the Amazon Bedrock API endpoint",
+        "A KMS customer managed key that encrypts the S3 training files",
+        "An IAM policy that limits which users can call the Bedrock API"
+      ],
+      "correct": [
+        2,
+        3
+      ],
+      "explain": "In transit = data moving over the network: calls to the Bedrock endpoint use TLS (HTTPS). At rest = stored data: S3 objects encrypted with a KMS key. IAM controls WHO can call the API (access control); that is important, but it is not encryption. CloudTrail records API activity (audit). Macie finds sensitive data; it does not encrypt it. Trick: moving = TLS; sitting = KMS.",
+      "id": 60
+    },
+    {
+      "domain": 5,
+      "scenario": "A bank's chatbot uses Amazon Bedrock Guardrails with a prompt attack filter. The security team wants to be alerted quickly when the number of blocked attack attempts suddenly jumps, which could mean someone is probing the bot. Which option BEST meets this need?",
+      "options": [
+        "An Amazon Inspector scan of the chatbot's Lambda code",
+        "A CloudWatch alarm on the guardrail's intervention metrics",
+        "An AWS Config rule that records the guardrail's settings",
+        "An AWS Artifact report about the bank's own threat controls"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Threat detection = spotting attacks early by watching logs, metrics and alarms. Guardrails send metrics to Amazon CloudWatch (for example, how often a guardrail intervened), so a CloudWatch alarm can alert when blocks suddenly rise. AWS Config records configuration and its changes, not attack counts. Inspector finds software vulnerabilities in code packages, not live attack attempts. Artifact provides AWS's own compliance reports. Trick: 'alert when a number jumps' = CloudWatch alarm.",
+      "id": 61
+    },
+    {
+      "domain": 5,
+      "scenario": "A research team hosts an open-source language model on Amazon EC2 GPU instances that use many OS packages and Python libraries. Security wants every instance checked all the time for known software vulnerabilities, with findings ranked by risk, including new CVEs found after launch. Which service BEST meets this need?",
+      "options": [
+        "AWS Config rules",
+        "Amazon Inspector",
+        "AWS CloudTrail Lake",
+        "Amazon Macie"
+      ],
+      "correct": [
+        1
+      ],
+      "explain": "Amazon Inspector automatically and continuously scans EC2 instances, container images and Lambda functions for software vulnerabilities (CVEs) and unintended network exposure, and ranks findings with a risk score. It rescans when new CVEs are published, which is the core of vulnerability management. Macie finds sensitive data in S3. AWS Config tracks resource settings, not package vulnerabilities. CloudTrail Lake stores API activity and lets you query it with SQL. Trick: software holes = Inspector.",
+      "id": 62
+    },
+    {
+      "domain": 5,
+      "type": "ordering",
+      "scenario": "A security architect explains the Generative AI Security Scoping Matrix to new staff. Put the five scopes in order, from the LEAST control the company has over the model to the MOST control.",
+      "options": [
+        "Fine-tuned models",
+        "Consumer app",
+        "Self-trained models",
+        "Pre-trained models",
+        "Enterprise app"
+      ],
+      "correct": [
+        1,
+        4,
+        3,
+        0,
+        2
+      ],
+      "explain": "Scope 1 Consumer app (a public AI app; you control almost nothing). Scope 2 Enterprise app (a third-party business app with AI features, under an agreement). Scope 3 Pre-trained models (you build your own app on an existing FM, for example through Amazon Bedrock). Scope 4 Fine-tuned models (you change an existing FM with your own data). Scope 5 Self-trained models (you train a model from zero). More control also means more security responsibility. Trick: use it, buy it, build on it, tune it, train it.",
+      "id": 63
+    },
+    {
+      "domain": 5,
+      "scenario": "A hospital wants data scientists to train a model on patient records. The scientists must not be able to see who the patients are, but the data must stay useful for training. Which approach BEST meets this need?",
+      "options": [
+        "Turn on CloudTrail data events for the bucket with the records",
+        "Use a larger model so that single patient records are not kept",
+        "Encrypt the S3 bucket with KMS so that the records are protected",
+        "Mask or replace names and IDs with tokens before training starts"
+      ],
+      "correct": [
+        3
+      ],
+      "explain": "Privacy-enhancing technologies let you use data while hiding the person: masking, anonymization, pseudonymization or tokenization (replacing names and IDs with tokens), and similar methods. The scientists can still train on the useful fields. KMS encryption protects data at rest, but anyone allowed to read the data still sees the real names. CloudTrail data events record who read which object; that helps audits but hides nothing. A larger model can memorize MORE, not less. Trick: hide the person, keep the pattern = privacy-enhancing technologies.",
+      "id": 64
+    },
+    {
+      "domain": 5,
+      "scenario": "A city council launches an AI assistant that answers residents' questions about local services. A new rule says residents must be told when an answer comes from AI, and the council must publish what the assistant is for and its known limits. Which governance area does this rule BEST belong to?",
+      "options": [
+        "Transparency standards: what users must be told",
+        "Review cadence: how often the AI gets checked again",
+        "Team training: making sure staff know the rules",
+        "Data residency: which Region keeps the user data"
+      ],
+      "correct": [
+        0
+      ],
+      "explain": "Transparency standards say what must be disclosed: that AI is being used, what it is for, and its limits. AWS AI Service Cards and SageMaker Model Cards are examples of transparency documents. Review cadence is HOW OFTEN models and policies are checked again. Data residency is WHERE data is stored and processed. Team training makes sure staff understand the policies. Trick: 'tell people' = transparency.",
+      "id": 65
+    }
+  ]
+}

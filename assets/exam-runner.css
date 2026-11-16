@@ -227,3 +227,20 @@ li.r-wrong   { background: var(--accent-soft); }
   .ematch-row { flex-direction: column; align-items: stretch; gap: 0.5rem; }
   .ematch-prompt, .ematch-select { flex: 1 1 auto; }
 }
+
+/* Learn mode: instant feedback after each answer */
+.learn-feedback { margin-top: 0.9rem; }
+.learn-feedback .rv { font-size: 1rem; }
+.learn-next, .learn-check { margin-top: 0.8rem; }
+.pal.pal-ok { background: var(--good); color: #fff; border-color: var(--good); }
+.pal.pal-no { background: var(--accent); color: #fff; border-color: var(--accent); }
+/* Wrong answers read as RED, not the blue site accent, so right vs wrong is
+   obvious at a glance (in Learn mode feedback and on the results page). */
+.review-item.no { border-left-color: #c62828; }
+.review-item.no .rv { color: #c62828; }
+li.r-wrong { background: #fdecea; }
+.tag.bad { background: #c62828; }
+.pal.pal-no { background: #c62828; border-color: #c62828; }
+@media (prefers-color-scheme: dark) {
+  li.r-wrong { background: #4a1f1f; }
+}

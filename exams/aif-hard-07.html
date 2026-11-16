@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Hard Quiz 7</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Hard Quiz 7</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question HARD quiz · real-time vs serverless · underfitting · ML types · sampling settings · fine-tune vs RAG · governance look-alikes</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Hard Quiz 7</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-hard-07","title":"AIF Hard Quiz 7","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A ride-hailing company runs a pricing model that receives thousands of requests every second, all day and night. Each price must be returned in less than 50 milliseconds, and even a short delay while the endpoint wakes up is not acceptable. Which SageMaker inference option fits BEST?",
+  "options": [
+   "SageMaker real-time inference",
+   "SageMaker batch transform on a large GPU instance",
+   "SageMaker Asynchronous Inference with notifications",
+   "SageMaker Serverless Inference with high concurrency"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Steady, very high traffic + milliseconds + no wake-up delay = real-time inference (instances are always running). Serverless is the trap: it scales to zero, so a request after an idle period can hit a cold start, and it suits rare or uneven traffic. Asynchronous puts requests in a queue for long jobs. Batch transform is offline. Trick: Serverless = sleeps when nobody calls; real-time = always awake."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A team's model has an ERROR of 40% on the training data and 41% on the test data. The team wants to lower both numbers. Which action is MOST likely to help?",
+  "options": [
+   "Stop training earlier, after fewer epochs",
+   "Use a more complex model and add more useful features",
+   "Remove features so the model has less to learn",
+   "Add stronger regularization so the model stays as simple as possible"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Careful, this says ERROR. HIGH error on BOTH training and test data = the model has not even learned the training data = underfitting (high bias). Fix: a more complex model, better features or longer training. Regularization, early stopping and removing features all make the model simpler; they fix OVERFITTING and would make this worse. Check: is training error low? No = underfitting."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A shipping company's model predicts the delivery cost of each parcel in dollars. Managers want one metric, shown in dollars, that punishes a few very large mistakes more strongly than many small ones. Which metric fits BEST?",
+  "options": [
+   "Root mean squared error (RMSE)",
+   "F1 score",
+   "Area under the ROC curve (AUC)",
+   "Mean absolute error (MAE)"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "A dollar number = regression. Punishes large mistakes more = RMSE, because each error is squared before averaging, and the square root brings the result back to dollars. MAE is the trap: it is also in dollars, but every dollar of error counts the same. F1 and AUC are for classification (categories), not numbers."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Match each business task to the type of machine learning that fits it.",
+  "options": [
+   "Regression (supervised learning)",
+   "Self-supervised learning",
+   "Classification (supervised learning)",
+   "Clustering (unsupervised learning)"
+  ],
+  "correct": [
+   0,
+   2,
+   3,
+   1
+  ],
+  "explain": "A number (kWh) = regression. Labelled examples + categories = classification. No labels + find groups = clustering. The model makes its own labels from the data (the hidden word is the label) = self-supervised learning, which is how foundation models are pre-trained. Regression and classification are both supervised because they learn from labelled answers.",
+  "type": "matching",
+  "prompts": [
+   "Predict tomorrow's electricity use in kilowatt-hours from weather data",
+   "Put news articles into 'sport', 'politics' or 'business' using thousands of articles that people have already tagged",
+   "Find natural groups of shoppers when no groups or labels exist",
+   "Pre-train a language model by hiding words in billions of untagged sentences and predicting them"
+  ]
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A team turns each of its 50,000 support articles into a list of 1,024 numbers. Articles with similar meaning get lists that are close together, even when they use different words. What are these lists of numbers called?",
+  "options": [
+   "Model weights (parameters)",
+   "Token IDs from the tokenizer",
+   "Attention scores from the transformer",
+   "Vector embeddings"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Numbers that capture MEANING, where similar meanings sit close together = embeddings (vectors). They are stored in a vector database for semantic search and RAG. Token IDs are just numbers for pieces of words, with no meaning distance. Model weights are what a model learns in training. Attention scores exist inside the model while it processes one input."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "scenario": "During testing, a developer sets top-k to 1 for a text model on Amazon Bedrock. What is the MOST likely effect on the output?",
+  "options": [
+   "The model returns only one answer instead of several options",
+   "The model picks from the words that make up the top 1% of probability",
+   "The model always picks the single most likely next token",
+   "The model's answer is cut down to one sentence only"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Top-k = choose the next token from only the k most likely ones. With k = 1 there is only one choice, so output becomes very predictable. Answer length is set by max tokens, not top-k. 'Top 1% of probability' describes top-p, which uses a probability share, not a count. Trick: top-K = a fixed count (K words); top-P = a Percentage of probability."
+ },
+ {
+  "id": 7,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A transformer model reads the sentence 'The bank by the river was flooded'. To understand that 'bank' means the side of a river and not a place for money, the model checks how each word relates to every other word in the sentence. Which part of the transformer does this?",
+  "options": [
+   "The context window limit",
+   "The tokenizer that splits text into pieces",
+   "The temperature setting used during sampling",
+   "The self-attention mechanism"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Weighing how every word relates to every other word = self-attention, the core idea of transformers. The tokenizer only splits text into tokens. Temperature controls how random the word choice is. The context window is how much text fits, not how meaning is worked out."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": true,
+  "scenario": "A compliance team needs a Bedrock model to give answers that are as consistent as possible when the same question is asked many times. Which TWO setting changes help MOST? (Select TWO)",
+  "options": [
+   "Lower top-p to a small value such as 0.1",
+   "Raise the maximum output length",
+   "Raise top-k to 500",
+   "Lower the temperature to close to 0",
+   "Add a stop sequence to the end of each answer"
+  ],
+  "correct": [
+   0,
+   3
+  ],
+  "explain": "Consistency = less randomness. Lower temperature and lower top-p both shrink the choice of next words. Raising top-k to 500 does the opposite: more words to choose from. Max output length and stop sequences only control WHERE the answer ends, not which words are chosen."
+ },
+ {
+  "id": 9,
+  "domain": 3,
+  "multi": false,
+  "scenario": "An airline has 10,000 past customer messages, each paired with the reply that its best agents sent. It wants a model that always writes replies in this same tone and structure, without long instructions in every prompt. Which approach fits BEST?",
+  "options": [
+   "Build a RAG Knowledge Base from the 10,000 message and reply pairs",
+   "Fine-tune a foundation model on the message and reply pairs",
+   "Put ten of the replies in every prompt as few-shot examples",
+   "Run continued pre-training on the airline's unlabelled website text"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Thousands of labelled input + ideal output pairs + a lasting style = fine-tuning. RAG is the trap: it retrieves FACTS at question time, but it does not teach the model a tone, and it makes every prompt longer. Few-shot with ten examples adds tokens to every request and learns less than training on 10,000. Continued pre-training uses unlabelled text to learn a domain's words, not a reply style. Trick: many PAIRS = fine-tune; changing FACTS = RAG."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A developer writes a prompt with two solved examples: each shows a customer comment and its correct category. Then the prompt gives a new comment and asks for its category. Her manager says, 'So you fine-tuned the model with two records.' Which statement is correct?",
+  "options": [
+   "No. This is zero-shot prompting, because no training job was started",
+   "No. This is RAG, because the examples are extra context added to the prompt",
+   "Yes. This is fine-tuning, and Bedrock saves the two examples into a custom model",
+   "No. This is few-shot prompting, and the model's weights do not change"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Examples written inside the prompt = few-shot prompting (two examples = 'two-shot'). Nothing is trained and no weights change. Fine-tuning needs a training job and creates a new custom model. RAG automatically retrieves information from a data source; hand-written examples are not retrieval. Zero-shot means NO examples at all."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": true,
+  "scenario": "A team is building an Amazon Bedrock Knowledge Base so its assistant can answer questions from 3,000 PDF manuals stored in Amazon S3. Besides the S3 data source, which TWO components does the Knowledge Base need? (Select TWO)",
+  "options": [
+   "A vector store to save and search those vectors",
+   "A SageMaker training job to retrain the base model",
+   "Provisioned Throughput for the text generation model",
+   "An embeddings model to turn text chunks into vectors",
+   "A labelled dataset of question and answer pairs"
+  ],
+  "correct": [
+   0,
+   3
+  ],
+  "explain": "RAG = turn chunks into embeddings (an embeddings model such as Titan Text Embeddings) and keep them in a vector store (such as OpenSearch Serverless) for similarity search. RAG needs no labelled pairs and no training job, because the base model is never changed. Provisioned Throughput is optional; on-demand works."
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A company uses a model to turn English safety notices into Urdu. Professional translators have already written Urdu versions of 2,000 of these notices. The company wants a standard automatic score that compares the model's output with these human versions. Which metric fits BEST?",
+  "options": [
+   "ROUGE",
+   "Perplexity",
+   "BLEU",
+   "Accuracy"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Comparing machine TRANSLATION with human translations = BLEU ('Bilingual'). ROUGE is the trap: it also compares with human text, but it is the standard for short versions of long text (summaries). Perplexity does not use a human reference. Accuracy is for classification, where each answer is simply right or wrong."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": false,
+  "scenario": "An online shop wants an assistant that, during a chat, checks a customer's order status in the shop's internal order system through an API, and then starts a return if the customer asks for one. Which Amazon Bedrock feature fits BEST?",
+  "options": [
+   "Amazon Bedrock Agents",
+   "Amazon Bedrock Knowledge Bases",
+   "Amazon Bedrock model evaluation",
+   "Amazon Bedrock Guardrails"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Take ACTIONS by calling APIs over several steps = Bedrock Agents (action groups). Knowledge Bases only look up documents to answer questions; they cannot start a return. Guardrails filter harmful or off-topic content. Model evaluation compares model quality before launch."
+ },
+ {
+  "id": 14,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A chatbot model sometimes repeats real customers' phone numbers that were inside its training data. The team will train a new version next month. Which action BEST prevents this problem in the new version?",
+  "options": [
+   "Document the problem in a SageMaker Model Card for the new version",
+   "Find and remove personal data from the training data before training",
+   "Train the new version for more epochs so it learns general patterns",
+   "Raise the temperature so the model is less likely to repeat exact text"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "If personal data is in the training data, the model can memorise and repeat it, so the fix is to clean the data BEFORE training (for example, find it with Amazon Macie in S3, then remove or mask it). Raising temperature does not remove the data. A Model Card records the risk but does not fix it. More epochs increases memorisation."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company uses two kinds of AI: Amazon Transcribe, and its own fraud model that it built in SageMaker. Auditors want documentation about the intended use and limitations of both. Which pairing is MOST appropriate?",
+  "options": [
+   "SageMaker Model Card for both, because both models run on AWS",
+   "AWS AI Service Card for Transcribe; SageMaker Model Card for the fraud model",
+   "AWS Artifact report for Transcribe; AWS Audit Manager report for the fraud model",
+   "SageMaker Model Card for Transcribe; AWS AI Service Card for the fraud model"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "AWS writes AI Service Cards for its OWN services, such as Transcribe. YOU write SageMaker Model Cards for models YOU build. The swapped pair is the trap. Artifact and Audit Manager are compliance tools, not model documentation. You cannot properly document AWS's internal Transcribe model in your own Model Card."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company trained a hiring model on ten years of its own past hiring decisions. In those years, managers hired very few women. The new model now gives women lower scores than equally qualified men. What is the MOST likely root cause?",
+  "options": [
+   "Data drift after the model was deployed",
+   "Overfitting caused by too many training epochs",
+   "Bias in the historical training data",
+   "Hallucination caused by a high temperature setting"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "The model learned the unfair pattern that was already in the past decisions = bias in the training data. Overfitting means good on training data but bad on new data in general, not unfair to one group. Drift is a change AFTER deployment, but this problem existed from the start. Hallucination and temperature are GenAI ideas, not part of a hiring score model."
+ },
+ {
+  "id": 17,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Last Tuesday, someone turned off model invocation logging in Amazon Bedrock. The security team must find out which IAM user did it, at what time, and from which IP address. Which service provides this information?",
+  "options": [
+   "AWS CloudTrail",
+   "Amazon CloudWatch Logs",
+   "AWS Config conformance packs",
+   "Amazon CloudWatch metrics and alarms"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "WHO did WHAT, WHEN and from WHERE (IP address) = a record of an API call = CloudTrail. CloudWatch Logs is the trap: it can store the invocation logs themselves, but the record of who changed the setting is in CloudTrail. CloudWatch metrics track numbers such as latency. Config tracks resource settings and rules, not the caller's IP. Trick: Trail = footprints of who did it; Watch = health and performance."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "multi": true,
+  "scenario": "An ML team needs two things: (1) a continuous check that every S3 bucket of training data stays encrypted, with a history of when that setting changed, and (2) an alarm when GPU use on its training instances stays above 90% for 15 minutes. Which TWO services meet these needs? (Select TWO)",
+  "options": [
+   "Amazon CloudWatch",
+   "AWS Config",
+   "AWS CloudTrail",
+   "Amazon Macie",
+   "Amazon Inspector"
+  ],
+  "correct": [
+   0,
+   1
+  ],
+  "explain": "(1) Settings checked against a rule, with history = AWS Config. (2) Metrics and alarms = CloudWatch. CloudTrail records who called an API, not whether settings follow a rule. Inspector scans software for CVEs. Macie finds sensitive data in S3."
+ },
+ {
+  "id": 19,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A healthcare startup will process patient data with AI services on AWS. Its lawyer needs to review and accept the AWS Business Associate Addendum (BAA) for HIPAA. Where can the company do this by itself in the AWS console?",
+  "options": [
+   "AWS Config",
+   "AWS Trusted Advisor",
+   "AWS Audit Manager",
+   "AWS Artifact"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "AWS's own agreements and reports (BAA, SOC, ISO) = AWS Artifact; you can review and accept the BAA there yourself. Audit Manager collects evidence about YOUR resources, Trusted Advisor gives best-practice tips, and Config records resource settings. Trick: Artifact = AWS's papers."
+ },
+ {
+  "id": 20,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A company fine-tunes a model in Amazon Bedrock. Security rules say the custom model must be encrypted with a key that the company creates and controls, with a key policy it writes, and every use of the key must be logged. Which option fits BEST?",
+  "options": [
+   "Amazon Macie with automatic sensitive data discovery",
+   "AWS Secrets Manager with automatic rotation",
+   "A customer managed key in AWS KMS",
+   "An AWS owned key, which is the default"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Encryption with a key YOU create and control, with your own key policy and CloudTrail records of each use = a KMS customer managed key. Secrets Manager stores secrets such as passwords and API keys; it is not the encryption key for a model. An AWS owned key is the default, but you cannot see, control or audit it. Macie finds sensitive data; it does not encrypt anything."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=18"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

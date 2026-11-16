@@ -1,0 +1,346 @@
+{
+ "meta": {
+  "id": "aif-hard-09",
+  "title": "AIF Hard Quiz 9",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "few-shot vs fine-tuning vs RAG vs continued pre-training · BERTScore · Ground Truth vs A2I · CloudTrail · Artifact",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A model that finds cracks in bridge photos was trained on 300 images, all taken on sunny days. It is almost perfect on those images but misses many cracks in photos taken on cloudy or rainy days. Which action is MOST likely to fix this?",
+   "options": [
+    "Add many more training images taken in cloudy, rainy and dark conditions",
+    "Train for many more epochs on the same 300 sunny-day images until loss is zero",
+    "Use a larger neural network with more layers so it can learn finer details",
+    "Lower the confidence threshold so that the model reports cracks more often"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Great on training-like data, poor in new conditions = overfitting to a narrow dataset. The best fix is more varied, representative training data (or data augmentation). More epochs and a bigger network make the model memorise even more. A lower threshold just flags more cracks, including false ones; it does not teach the model what cloudy photos look like."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A hospital must label 50,000 X-ray images before training a model. Because of privacy rules, only its own radiologists may see the images, and it wants AWS to manage the labelling tasks and the work screen. Which option fits BEST?",
+   "options": [
+    "SageMaker Ground Truth with a private workforce",
+    "Amazon Augmented AI (A2I) with a private review team",
+    "SageMaker Ground Truth with the Amazon Mechanical Turk workforce",
+    "Amazon Rekognition Custom Labels trained directly on the images"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Labelling BEFORE training = Ground Truth, and 'only our own staff' = a private workforce. Mechanical Turk is a public crowd of workers, which breaks the privacy rule. A2I is human review of predictions from a model that is already running. Rekognition Custom Labels trains an image model; it needs labelled images first."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": true,
+   "scenario": "A utility company's model predicts how many kilowatt-hours each building will use next week. The team must choose metrics that show how close the predictions are to the real values. Which TWO metrics fit BEST? (Select TWO.)",
+   "options": [
+    "Root mean squared error (RMSE)",
+    "Mean absolute error (MAE)",
+    "F1 score",
+    "Area under the ROC curve (AUC)",
+    "Precision"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Predicting a number = regression, so measure the size of the errors: RMSE and MAE. F1, AUC and precision are for classification (yes/no or categories). Trick: if the answer is a number, the metric has 'error' in its name."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A finance team uses a small SageMaker model only during a two-hour planning meeting each Monday. During the meeting, people send short requests and expect answers on screen within a few seconds. The rest of the week there is no traffic, and the team does not want to pay for idle instances or manage scaling. Which option fits BEST?",
+   "options": [
+    "SageMaker Serverless Inference",
+    "A SageMaker real-time endpoint with an auto scaling policy",
+    "SageMaker Asynchronous Inference with results written to S3",
+    "A SageMaker batch transform job run at the start of each meeting"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Short requests + answers on screen + long idle periods + no idle cost = Serverless Inference. It scales to zero; the first request after idle can be a little slower (a cold start), which is fine here. A real-time endpoint is built for steady traffic: it normally keeps instances running (and billing), and you must set up and manage the scaling yourself. Asynchronous Inference queues requests and writes results to S3; it is built for large or slow jobs, not quick on-screen answers. Batch transform scores a whole dataset; it cannot answer live questions."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team's Bedrock model writes product descriptions. The descriptions are good, but many of them stop in the middle of a sentence. The prompts are short, and the model returns no error. Which setting should the team check FIRST?",
+   "options": [
+    "The maximum output length (max tokens) for the response",
+    "The temperature value used when choosing each next word",
+    "The model's context window size for the input prompt",
+    "The top-p value that limits which candidate words are used"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Answer cut off mid-sentence with no error = the response reached the maximum output length (max tokens). Raise it. The context window is the total the model can handle; a short prompt is far from that limit, and an input that is too long gives an error instead. Temperature and top-p change word choice and creativity, not length."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team is setting up an Amazon Bedrock Knowledge Base for its policy documents. Put the data preparation steps in the correct order, from first to last.",
+   "options": [
+    "Turn each chunk into a vector with an embeddings model",
+    "Upload the policy documents to an Amazon S3 bucket",
+    "Store the vectors in a vector index such as OpenSearch Serverless",
+    "Split each document into smaller chunks"
+   ],
+   "correct": [
+    1,
+    3,
+    0,
+    2
+   ],
+   "explain": "Documents first go into the data source (S3). They are split into chunks, each chunk is turned into a vector by an embeddings model (for example Titan Text Embeddings), and the vectors are stored in a vector store. Only then can user questions be matched against them. Memory: Store, Split, Embed, Index.",
+   "type": "ordering"
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": true,
+   "scenario": "An online clothing shop launched a GenAI shopping assistant three months ago. Leadership asks whether the assistant has improved results for the business. Which TWO metrics answer this question MOST directly? (Select TWO.)",
+   "options": [
+    "Conversion rate of visitors who used the assistant",
+    "Average revenue per user",
+    "ROUGE score of the assistant's answers",
+    "BLEU score against answers written by staff",
+    "Training loss of the underlying model"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Business value = business metrics, such as conversion rate, average revenue per user, customer lifetime value or efficiency. ROUGE and BLEU are technical text-quality scores; a high score does not prove more sales. Training loss is a model-building metric."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Developers complain that AI code suggestions often miss the real requirements. The team wants an AI-powered IDE where the agent first turns a feature idea into written requirements, a design and a task list, and only then writes the code for each task. Which tool fits BEST?",
+   "options": [
+    "Kiro",
+    "AWS Transform",
+    "Amazon Bedrock Agents with action groups",
+    "Amazon Lex"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AI IDE + spec first (requirements, design, tasks), then code = Kiro (spec-driven development). AWS Transform modernizes OLD applications. Bedrock Agents are agents you build into your own app, not an IDE. Lex builds chatbots."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A legal team's prompt asks a Bedrock model to pull the party names and dates out of a contract, but the format of the answer is different every time. The team then adds two short sample contracts, each followed by the exact JSON answer it wants, before the new contract. Which technique did the team use?",
+   "options": [
+    "Few-shot prompting",
+    "Fine-tuning with labelled examples",
+    "Retrieval Augmented Generation (RAG)",
+    "Chain-of-thought prompting"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Examples placed INSIDE the prompt = few-shot prompting (two examples = 'two-shot'). Nothing was trained, so it is not fine-tuning; fine-tuning runs a training job and changes the model's weights. It is not RAG either: RAG automatically retrieves documents from a store at question time, but here people pasted fixed examples. Chain-of-thought asks the model to reason step by step."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A shipping insurer has 25 years of internal claim reports and survey notes: millions of pages of plain text, with no labels or answers. Its Bedrock model often misunderstands the special terms of the industry. The insurer wants the model itself to learn this language for all future tasks. Which approach fits BEST?",
+   "options": [
+    "Continued pre-training on the unlabelled reports",
+    "Fine-tuning on the reports as prompt and completion pairs",
+    "A Knowledge Base that retrieves report pages at question time",
+    "Few-shot prompts that include a glossary of the special terms"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Lots of UNLABELLED domain text + make the model itself know the domain language = continued pre-training. Fine-tuning needs labelled input/output pairs, which the insurer does not have. A Knowledge Base finds facts at question time but does not change what the model understands. A glossary in the prompt helps a little, but it must be sent every time and cannot hold millions of pages."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A game studio wants a model to rewrite plain lines as dialogue in its fixed medieval style. Its writers created 8,000 pairs: a plain line and the same line in medieval style. Few-shot prompts gave mixed results and made each request long and costly. Which approach fits BEST?",
+   "options": [
+    "Fine-tune the model on the 8,000 line pairs",
+    "Store the 8,000 pairs in a Knowledge Base for retrieval",
+    "Run continued pre-training on medieval books and plays",
+    "Add more medieval examples to each prompt as few-shot"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Thousands of labelled pairs (input + ideal output) + one fixed style every time + shorter prompts = fine-tuning. A Knowledge Base could fetch similar pairs, but that is just few-shot again, with long prompts and no permanent change. Continued pre-training uses unlabelled text and teaches general language, not this exact rewrite task. More few-shot examples already failed and would cost even more."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": true,
+   "scenario": "A company is building an internal HR assistant on Amazon Bedrock. Answers must come from the latest HR policy files, which change every month, and must show which file they came from. The assistant must also refuse any question about other employees' salaries. Which TWO features should the team use? (Select TWO.)",
+   "options": [
+    "Amazon Bedrock Knowledge Bases",
+    "Amazon Bedrock Guardrails with a denied topic",
+    "Fine-tuning a model on the HR policy files",
+    "Provisioned Throughput for the chosen model",
+    "Continued pre-training on past HR emails"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Files that change + show the source file = Knowledge Bases (RAG with citations). Refuse a whole subject = a Guardrails denied topic. Fine-tuning and continued pre-training would need retraining every month and cannot point to a source file. Provisioned Throughput buys capacity; it does not change what the model says."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team checks a model's answers against reference answers written by experts. Many model answers use different words from the reference but mean the same thing, and the current word-overlap metric scores them unfairly low. The team wants an AUTOMATIC metric that compares meaning instead. Which metric fits BEST?",
+   "options": [
+    "BERTScore",
+    "ROUGE score",
+    "BLEU score",
+    "Human evaluation by a review team"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Same meaning, different words + automatic = BERTScore: it compares embeddings, so it measures meaning. ROUGE and BLEU count matching words or word groups, so different wording scores low, which is the current problem. Human evaluation can judge meaning, but it is not automatic. Memory: ROUGE = summaries, BLEU = translation, BERTScore = meaning."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A social media app uses Amazon Rekognition to detect unsafe images in user uploads. When Rekognition is not confident, the image must go to the company's human moderators, and the team wants a built-in integration with Rekognition instead of building its own review tool. Which service fits BEST?",
+   "options": [
+    "Amazon Augmented AI (A2I)",
+    "SageMaker Ground Truth labelling jobs",
+    "Amazon Rekognition Custom Labels",
+    "SageMaker Model Monitor"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Humans review a LIVE model's low-confidence results = A2I, and A2I has a built-in integration with Rekognition image moderation (and with Textract). Ground Truth labels data BEFORE training. Rekognition Custom Labels trains your own image model. Model Monitor watches for drift; it does not send items to people."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company wants to reduce the energy use and environmental impact of a new text-summary feature. Two models give quality that users find acceptable: a small model and a much larger one. What should the company do?",
+   "options": [
+    "Choose the smaller model that meets the quality needs",
+    "Choose the larger model, because better answers need fewer retries",
+    "Choose the larger model and fine-tune it every week for accuracy",
+    "Choose either model, because size has no effect on energy use"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Responsible AI includes the environment. If both models meet the quality bar, the smaller one uses less compute, so less energy (and usually lower cost and latency). Weekly fine-tuning of a big model uses even more energy. Model size has a big effect on compute and energy."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company plans to train a hiring model on its last 10 years of hiring decisions. In those years, managers hired far more men than equally qualified women. What is the MAIN responsible AI risk?",
+   "options": [
+    "The model learns and repeats the past unfair pattern against women",
+    "The model underfits because ten years of data is too much to learn",
+    "The model hallucinates candidates who never applied for any job",
+    "The model suffers data drift as soon as it is deployed to production"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Biased history in = biased model out. The model learns that men were chosen and repeats it: a fairness (bias) risk. Check the data with SageMaker Clarify before training. More data does not cause underfitting. Hallucination is a GenAI problem of invented facts. Drift is change over time after deployment, not bias that is already in the data."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Months before a company fine-tuned its model, an attacker secretly added hundreds of false product-safety statements to a public dataset that the company later used for training. Now the model repeats the false statements. Which risk is this?",
+   "options": [
+    "Data poisoning",
+    "Prompt injection",
+    "Jailbreaking",
+    "Prompt leaking"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Bad data put into TRAINING data on purpose = data poisoning. Prompt injection hides instructions in the input at question time. Jailbreaking tricks the model into breaking its safety rules. Prompt leaking makes the model reveal its hidden system prompt. Time clue: poisoning happens BEFORE training; the prompt attacks happen at question time."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "On Friday someone removed a denied topic from a Bedrock guardrail, and the chatbot started talking about competitors. The security team must find out which IAM user made the change and at what time. Which option fits BEST?",
+   "options": [
+    "AWS CloudTrail event history",
+    "Bedrock model invocation logging",
+    "Amazon CloudWatch metrics for Bedrock",
+    "AWS Trusted Advisor checks"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Which IAM user changed a setting, and when = an API call = AWS CloudTrail event history. Model invocation logging records prompts and responses, not configuration changes. CloudWatch metrics show numbers like latency. Trusted Advisor gives best-practice tips, not a history of who did what."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An application runs on EC2 instances in private subnets with no internet access. It must call Amazon Bedrock, and the security team says the traffic must not travel over the public internet. Which option meets this need?",
+   "options": [
+    "A VPC interface endpoint for Bedrock (AWS PrivateLink)",
+    "A NAT gateway in a public subnet, with routes from the private subnets",
+    "An internet gateway attached to the VPC with strict security groups",
+    "A gateway VPC endpoint added to the private subnets' route tables"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Private access from a VPC to an AWS service, with no internet = an interface VPC endpoint (AWS PrivateLink). A NAT gateway and an internet gateway both send traffic out to the public internet. Gateway endpoints exist only for S3 and DynamoDB, not for Bedrock."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A health-tech company will process patient data with AI services on AWS. Its lawyers must review and accept a Business Associate Addendum (BAA) with AWS before any patient data is used. Which service should they use?",
+   "options": [
+    "AWS Artifact",
+    "AWS Audit Manager",
+    "AWS Organizations",
+    "AWS Config"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Agreements with AWS (such as the BAA) and AWS's own compliance reports = AWS Artifact. Audit Manager collects evidence from YOUR accounts for YOUR audit. Organizations manages many accounts. Config records resource settings. Trick: Artifact = AWS's paperwork, Audit Manager = your paperwork."
+  }
+ ]
+}

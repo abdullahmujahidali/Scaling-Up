@@ -1,0 +1,352 @@
+{
+ "meta": {
+  "id": "aif-hard-06",
+  "title": "AIF Hard Quiz 6",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "SageMaker inference · metrics · overfitting · GenAI basics · few-shot vs RAG · security look-alikes",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A hospital trains a model to flag a rare lung disease that appears in about 1 of every 200 scans. The first version marks every scan as healthy and still reports 99.5% accuracy. Doctors say that missing a sick patient is the worst possible mistake. Which metric should the team use to judge the next version?",
+   "options": [
+    "Recall",
+    "Accuracy on a larger and newer test set",
+    "Precision",
+    "Root mean squared error (RMSE)"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "'Missing a sick patient' is a false negative, and recall measures how many real positive cases the model catches. Accuracy is the trap: with 199 healthy scans in every 200, saying 'healthy' every time already scores 99.5%. Precision is about false alarms, not missed cases. RMSE is for number (regression) predictions. Trick: Recall = Remember every sick patient."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A team trains a model to predict which customers will cancel a subscription. The ERROR on the training data is 2%, but the ERROR on the validation data is 35%. Which change is MOST likely to lower the validation error?",
+   "options": [
+    "Add more layers to the model and train it for more epochs",
+    "Apply regularization, such as dropout, and use early stopping",
+    "Remove the validation set and train on all of the data together",
+    "Keep training until the training error reaches exactly 0%"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Careful, this says ERROR. LOW training error + HIGH validation error = the model memorised the training data = overfitting. Regularization and early stopping keep the model from memorising. More layers and more epochs make overfitting worse (that is the fix for underfitting). Removing the validation set only hides the problem, and pushing training error to 0% memorises even more."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A video app lets users upload clips of up to 800 MB. A model then needs about 20 minutes to process each clip, and users get a notification when the result is ready. Requests arrive in bursts, and the team wants the endpoint to scale down to zero when there is no work. Which SageMaker inference option fits BEST?",
+   "options": [
+    "SageMaker Asynchronous Inference",
+    "SageMaker Serverless Inference",
+    "A SageMaker real-time endpoint with auto scaling",
+    "SageMaker batch transform run once every night"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Large files + long processing (minutes) + 'tell me when it is done' + scale to zero = Asynchronous Inference (payloads up to 1 GB, up to 1 hour per request). Serverless Inference also scales to zero, but it accepts only small payloads and must answer within about a minute. Real-time endpoints are for answers in milliseconds and keep instances running. Batch transform is for big offline datasets, not one user's upload."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company is planning four AI features. Match each AWS service to the feature it should be used for.",
+   "options": [
+    "Let staff type a question and get the right passage from internal documents",
+    "Build a chat or voice bot that understands what the customer wants to do",
+    "Pull typed and handwritten values out of scanned tax forms",
+    "Find the mood and the key phrases in thousands of customer reviews"
+   ],
+   "correct": [
+    2,
+    3,
+    0,
+    1
+   ],
+   "explain": "Textract = extract text and values from scanned documents and forms. Comprehend = understand text (sentiment, key phrases, entities). Kendra = intelligent search that returns the right passage from your documents. Lex = build chatbots that detect the user's intent. Look-alike trap: Textract READS the page, Comprehend UNDERSTANDS the words.",
+   "type": "matching",
+   "prompts": [
+    "Amazon Textract",
+    "Amazon Comprehend",
+    "Amazon Kendra",
+    "Amazon Lex"
+   ]
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A bank's assistant explains the rules of its savings accounts. Testers notice that the same question gets differently worded answers each time, and some answers add creative details. Which setting change MOST directly makes the answers more focused and repeatable?",
+   "options": [
+    "Lower the temperature",
+    "Raise top-k to 500 so more words can be considered",
+    "Raise top-p to 1.0 so the full word list is used",
+    "Raise the maximum number of output tokens"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Low temperature = the model prefers the most likely words = focused, repeatable answers. Raising top-k or top-p does the opposite: it lets the model choose from MORE words, so answers vary more. Max output tokens only controls answer length. Trick: cold (low temperature) = calm and predictable; hot = creative."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team's Amazon Bedrock bill doubled after it added a 3-page instruction block and ten worked examples to every request. The answers are the same length as before, and the number of users has not changed. What is the MOST likely cause?",
+   "options": [
+    "Each request now sends many more input tokens",
+    "The longer prompt made Bedrock switch to a larger, more expensive model",
+    "Bedrock charges a fixed extra fee for every example placed in a prompt",
+    "The model now needs Provisioned Throughput because the prompt is longer"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "On-demand Bedrock pricing counts input tokens AND output tokens. The output did not change, but every request now carries pages of extra text, so input tokens (and cost) went up. Bedrock never switches models by itself, there is no per-example fee, and Provisioned Throughput is an optional purchase, not something a long prompt forces."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A design tool creates a new picture from a text request. Inside the model, the process starts with an image of pure random noise and removes a little of the noise in many small steps until a clear picture appears. Which type of model works this way?",
+   "options": [
+    "A diffusion model",
+    "A generative adversarial network (GAN)",
+    "A transformer-based large language model",
+    "A recurrent neural network (RNN)"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Start from noise and clean it step by step = diffusion (for example, Stable Diffusion). A GAN is the trap: it also makes images, but it uses two networks, a generator and a judge, that compete. A transformer LLM predicts the next token of text. An RNN reads sequences one step at a time."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A payroll system must calculate each employee's tax with a fixed formula set by law. Every result must be exactly the same each time it is run, and auditors must be able to trace each result back to the formula. What is the BEST approach?",
+   "options": [
+    "Write normal rule-based code that applies the formula",
+    "Use a foundation model on Amazon Bedrock with temperature set to 0",
+    "Use RAG so the model reads the tax law before each calculation",
+    "Fine-tune a foundation model on five years of past payroll results"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Exact, repeatable, traceable results from a known formula = do NOT use GenAI. Plain code is cheaper, faster and always correct. Temperature 0 makes a model more repeatable, but it can still make maths mistakes and cannot be traced to a rule. RAG and fine-tuning still leave a probability-based model doing the maths. Rule: if a simple formula solves it, GenAI is the wrong tool."
+  },
+  {
+   "id": 9,
+   "domain": 2,
+   "multi": true,
+   "scenario": "A product manager is writing a risk list before launching a text assistant built on a foundation model. Which TWO statements are real limitations that she should include? (Select TWO)",
+   "options": [
+    "It can write false facts in a confident, convincing way",
+    "The same prompt can produce a different answer each time",
+    "Setting temperature to 0 removes all made-up facts from its answers",
+    "Its knowledge updates itself from the internet every day after launch",
+    "It cannot use any fact that was not in its training data, even if the fact is in the prompt"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Hallucination (confident false facts) and nondeterminism (different answers to the same prompt) are the two classic GenAI limits. Temperature 0 makes answers more repeatable but does NOT stop hallucination. A model's knowledge is frozen at training time; it does not update itself. But it CAN use new facts that you put in the prompt, which is exactly how RAG works."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A small team must launch, next week, a feature that turns customer emails into a fixed three-line format. It has only three good examples of the format and no budget for training jobs. Which approach is MOST cost-effective?",
+   "options": [
+    "Put the three examples in the prompt before each new email",
+    "Fine-tune a Bedrock model using the three examples as training data",
+    "Store the three examples in a Knowledge Base and use RAG to retrieve them",
+    "Run continued pre-training on the three examples so the model learns the format"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "A few examples placed inside the prompt = few-shot prompting: no training, no new infrastructure, ready today. Fine-tuning needs many more examples and a paid training job; three records are far too few. RAG is for looking up large or changing knowledge, not for showing a format. Continued pre-training uses large amounts of unlabelled text. Trick: examples IN the prompt = few-shot; examples in a TRAINING JOB = fine-tuning."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A pharmacy chain wants a chatbot that answers questions about medicine prices. The price list has 200,000 rows and changes every day. Each answer must show which document the price came from. Which approach fits BEST?",
+   "options": [
+    "Amazon Bedrock Knowledge Bases (RAG) over the daily price list",
+    "Fine-tune a model every night on the newest price list",
+    "Put the full 200,000-row list into every prompt as few-shot examples",
+    "Run continued pre-training on the price list once a month"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Large data + changes daily + must show the source = RAG with Bedrock Knowledge Bases, which can return citations. Fine-tuning every night is slow and expensive, and a fine-tuned model cannot point to a source document. 200,000 rows will not fit in the context window. Monthly continued pre-training is out of date the next day."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": true,
+   "scenario": "A company tests two features against answers written by people: (1) English help pages turned into Arabic, and (2) long monthly reports turned into versions of a few lines. It needs one standard automatic metric for each feature. Which TWO metrics should it use? (Select TWO)",
+   "options": [
+    "BLEU",
+    "ROUGE",
+    "Perplexity",
+    "Root mean squared error (RMSE)",
+    "Area under the ROC curve (AUC)"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Translation = BLEU ('Bilingual'). Short versions of long text = ROUGE (the 'G' is for 'Gisting', meaning the main idea). Perplexity measures how 'surprised' a language model is by text; it does not compare with a human reference. RMSE is for regression numbers, and AUC is for classifiers."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company's assistant on Amazon Bedrock receives a steady, high volume of requests all day, every day. During busy hours, some requests are throttled because of on-demand limits. The company needs a guaranteed level of model capacity. Which option fits BEST?",
+   "options": [
+    "Buy Provisioned Throughput for the model",
+    "Switch to Bedrock batch inference for all user requests",
+    "Move every request to SageMaker Serverless Inference",
+    "Raise the temperature so each answer is produced faster"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Steady high traffic + guaranteed capacity = Provisioned Throughput (you buy model units for a fixed term). Batch inference is for offline jobs, not live users. SageMaker Serverless is for your own models with uneven traffic and can have cold starts. Temperature changes word choice, not speed or capacity."
+  },
+  {
+   "id": 14,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A developer needs a Bedrock model to return every answer as JSON with exactly three fields: name, date and amount. Today the model sometimes answers in normal sentences instead. What should the developer try FIRST?",
+   "options": [
+    "State the exact JSON format in the prompt and show one example",
+    "Fine-tune the model on thousands of JSON examples before going live",
+    "Raise the temperature so the model explores more output formats",
+    "Connect a Knowledge Base that contains the JSON schema document"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "FIRST = the cheapest, fastest fix = prompt engineering: a clear instruction for the output format plus an example. Fine-tuning might work, but it costs time and money, so it comes later and only if prompting fails. A higher temperature makes output LESS consistent. A Knowledge Base adds facts; it does not force an output format."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A city council is considering Amazon Rekognition for a face-matching project. Before it decides, it wants AWS's own published information about the intended uses, limitations and fairness design choices of that service. Where should it look?",
+   "options": [
+    "AWS AI Service Cards",
+    "Amazon SageMaker Model Cards",
+    "AWS Artifact compliance reports",
+    "Amazon SageMaker Clarify bias reports"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "AWS's own documentation about an AWS AI service (intended use, limits, fairness) = AI Service Cards. SageMaker Model Cards are documents YOU write about models YOU build. Artifact gives security and compliance reports such as SOC and ISO. Clarify measures bias in your own data and models. Trick: AWS's service = AI Service Card; your model = Model Card."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A face-verification model works well for light-skinned users but makes many more mistakes for dark-skinned users. SageMaker Clarify confirms that only 8% of the training images show dark-skinned faces. Which action BEST reduces this bias?",
+   "options": [
+    "Collect more training images of dark-skinned faces and retrain",
+    "Train the same model for more epochs on the same images",
+    "Send every prediction for dark-skinned users to Amazon A2I human review",
+    "Run SageMaker Clarify again with a larger batch of test images"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "The cause is under-representation in the training data, so the fix is more representative data, then retrain. More epochs on the same unbalanced images keeps the same bias. A2I adds human review but does not fix the model itself. Clarify only measures bias; running it again changes nothing."
+  },
+  {
+   "id": 17,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A learning app for children uses a model on Amazon Bedrock. Both the questions that children type and the model's answers must be blocked if they talk about weapons or violence. The team wants the LEAST custom code. Which option fits BEST?",
+   "options": [
+    "Amazon Bedrock Guardrails with denied topics and content filters",
+    "Amazon Comprehend toxicity detection called from custom Lambda code",
+    "A system prompt that tells the model never to talk about weapons",
+    "Amazon Rekognition content moderation run on every chat message"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Block topics in BOTH user input and model output with no custom code = Bedrock Guardrails (denied topics + content filters). Comprehend toxicity detection could help, but you must build the checks yourself in Lambda. A system prompt can be bypassed by tricky users (jailbreaks). Rekognition moderates images and video, not text chat."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": true,
+   "scenario": "Before a fine-tuning project, a security team needs two things: (1) find any S3 objects that contain passport numbers or credit card numbers, and (2) scan the container images in Amazon ECR used for training for known software vulnerabilities (CVEs). Which TWO services meet these needs? (Select TWO)",
+   "options": [
+    "Amazon Macie",
+    "Amazon Inspector",
+    "Amazon CloudWatch",
+    "AWS CloudTrail",
+    "AWS Config"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Sensitive data in S3 = Macie. Software vulnerabilities (CVEs) in ECR images, EC2 and Lambda = Inspector. CloudWatch watches metrics and logs, CloudTrail records API calls, and Config records resource settings; none of them scans files or images. Trick: Macie = My personal data; Inspector = Inspects software."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Before an internal audit of its AI workloads, a company wants its OWN AWS resources checked all the time against rules, such as 'every training-data bucket must be encrypted and not public', with a history of every setting change. Which service fits BEST?",
+   "options": [
+    "AWS Config",
+    "AWS Artifact",
+    "AWS CloudTrail Lake",
+    "AWS Trusted Advisor"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Your own resources checked against rules you choose, with a history of settings = AWS Config. Artifact gives AWS's OWN reports, not checks of your resources. CloudTrail Lake stores and queries API activity but does not judge settings against rules. Trusted Advisor gives general best-practice tips. Trick: Config = settings + rules + history."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A Lambda function in a RAG pipeline connects to a vector database with a username and password. Security policy says the password must never be written in the code and must change automatically every 30 days. Which service fits BEST?",
+   "options": [
+    "AWS Secrets Manager",
+    "AWS Key Management Service (AWS KMS)",
+    "Amazon S3 with server-side encryption",
+    "IAM access keys saved in Lambda environment variables"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "A password the app uses, rotated automatically = Secrets Manager. KMS manages ENCRYPTION keys, not app passwords. Storing the password in S3, even encrypted, gives no automatic rotation. IAM access keys in environment variables are long-lived secrets in the code's settings, the opposite of what the policy wants."
+  }
+ ]
+}

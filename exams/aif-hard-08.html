@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIF-C01 AIF Hard Quiz 8</title>
+<link rel="stylesheet" href="../assets/lesson.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
+</head>
+<body>
+<div class="exam-shell">
+
+  <div id="exam-intro">
+    <div class="exam-intro-card">
+      <h1>AIF Hard Quiz 8</h1>
+      <p class="sub">AWS Certified AI Practitioner (AIF-C01) · 20-question HARD quiz · few-shot vs fine-tuning vs RAG vs continued pre-training · Agents · Guardrails PII · inference options · Macie/Inspector · logging</p>
+
+      <div class="exam-facts">
+        <div class="exam-fact"><b>20</b><span>questions</span></div>
+        <div class="exam-fact"><b>30</b><span>minutes</span></div>
+        <div class="exam-fact"><b>700</b><span>pass mark / 1000</span></div>
+        <div class="exam-fact"><b>~14</b><span>correct to pass</span></div>
+      </div>
+
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Sit this like the real thing.</strong> Phone away, no notes, no pausing.
+        The timer does not stop. You get no feedback until you submit — that is deliberate,
+        because guessing under uncertainty is a skill the real exam tests.
+      </p>
+      <p style="font-size:0.88rem;line-height:1.6;">
+        <strong>Never leave a question blank.</strong> There is no penalty for a wrong answer,
+        so a guess is always better than nothing. Flag anything you're unsure of and come
+        back to it. Aim for about <strong>2 minutes per question</strong>.
+      </p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.55;">
+        Tip: keyboard shortcuts work — press <strong>1–5</strong> to pick an answer,
+        <strong>←</strong> / <strong>→</strong> to move between questions.
+        Your progress is saved automatically if you close the tab by accident.
+      </p>
+
+      <div style="margin-top:1.3rem;">
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
+        <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
+        <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="exam-live" style="display:none;">
+    <div class="exam-bar">
+      <div><span class="exam-timer" id="exam-timer">30:00</span></div>
+      <div class="meta">AIF Hard Quiz 8</div>
+      <div class="meta" id="answered-count">0 / 20 answered</div>
+    </div>
+
+    <div id="exam-body"></div>
+
+    <div class="exam-nav">
+      <button class="btn-secondary" id="prev-btn">← Previous</button>
+      <button class="btn-secondary" id="next-btn">Next →</button>
+      <button class="btn-primary btn-submit" id="submit-btn">Submit quiz</button>
+    </div>
+
+    <div class="palette-wrap">
+      <h3>Question navigator — click any number to jump</h3>
+      <div id="exam-palette"></div>
+    </div>
+  </div>
+
+  <div id="exam-results" style="display:none;"></div>
+
+</div>
+
+<script>
+var EXAM_META = {"id":"aif-hard-08","title":"AIF Hard Quiz 8","minutes":30,"pass":700,"domainNames":{"1":"Fundamentals of AI & ML","2":"Fundamentals of GenAI","3":"Applications of Foundation Models","4":"Guidelines for Responsible AI","5":"Security, Compliance & Governance"},"domainWeights":{"1":20,"2":24,"3":28,"4":14,"5":14},"backTo":"aif-quizzes.html","backLabel":"Back to all quizzes"};
+var QUESTIONS = [
+ {
+  "id": 1,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A model that predicts machine failures has an error of 2% on its training data but 31% on new validation data. The team's plan is to add more layers to the neural network. Which action is MOST likely to help instead?",
+  "options": [
+   "Train for more epochs on the same data so the model learns the patterns deeper",
+   "Add more layers and input features so the model can capture more of the detail",
+   "Use regularisation and stop training when validation error starts to rise",
+   "Make the validation set smaller so that it looks more like the training data"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Low training error + high validation error = overfitting: the model memorised the training data. Fixes: regularisation, early stopping, more and more varied data, or a simpler model. More epochs and more layers make overfitting worse. A smaller validation set only hides the problem."
+ },
+ {
+  "id": 2,
+  "domain": 1,
+  "multi": false,
+  "scenario": "Users of a medical imaging app upload one scan at a time, at random hours. Each file is about 500 MB, and the model needs around 8 minutes to process it. Users are happy to get a notification when the result is ready, and the team wants the instances to scale down to zero when no requests are waiting. Which SageMaker inference option fits BEST?",
+  "options": [
+   "SageMaker Asynchronous Inference",
+   "A SageMaker real-time endpoint with an auto scaling policy",
+   "SageMaker batch transform jobs started once every night",
+   "SageMaker Serverless Inference, which also scales to zero when idle"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Big file (up to 1 GB) + long processing (up to 1 hour) + 'tell me when it is ready' + scale to zero = Asynchronous Inference: requests wait in a queue. Serverless Inference also scales to zero, but it takes only small payloads (about 4 MB) and has a 60-second limit. A real-time endpoint is for quick answers and keeps instances running. Batch transform scores a whole dataset offline, not single uploads as they arrive."
+ },
+ {
+  "id": 3,
+  "domain": 1,
+  "multi": false,
+  "scenario": "A farming company must label 2 million field photos as 'healthy crop' or 'diseased crop' to build a training dataset. To cut labelling cost, it wants a model to label the easy photos by itself and send only the photos it is unsure about to human workers. Which option meets this need?",
+  "options": [
+   "SageMaker Ground Truth with automated data labelling",
+   "SageMaker Clarify with a pre-training data quality and bias report",
+   "Amazon Rekognition Custom Labels trained on the first 1,000 photos",
+   "Amazon Augmented AI (A2I) with a confidence threshold for human review"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "This happens BEFORE training, to build a dataset = Ground Truth. Its automated data labelling (active learning) labels easy items with a model and sends unsure items to humans. A2I also sends low-confidence items to humans, but it reviews predictions of a model that is already in production. Rekognition Custom Labels trains a model; it does not run a labelling workflow. Clarify checks bias. Trick: Ground Truth = before training, A2I = after deployment."
+ },
+ {
+  "id": 4,
+  "domain": 1,
+  "multi": true,
+  "scenario": "A model that predicts delivery delays has an error of about 40% on the training data and 41% on the validation data. The team uses a simple model with only two input columns. Which TWO actions are MOST likely to improve it? (Select TWO.)",
+  "options": [
+   "Add more relevant input features, such as weather and traffic data",
+   "Increase the dropout rate so the model memorises less of the data",
+   "Remove input columns to make the model simpler and more general",
+   "Stop training earlier, as soon as the validation error stops falling",
+   "Reduce the amount of regularisation applied during training"
+  ],
+  "correct": [
+   0,
+   4
+  ],
+  "explain": "High error on BOTH training and validation = underfitting: the model is too simple to learn the pattern. Fix it by adding useful features and by relaxing regularisation (or by using a more complex model). Early stopping, more dropout and fewer features all make the model simpler. Those fix OVERFITTING and would make this model worse."
+ },
+ {
+  "id": 5,
+  "domain": 2,
+  "multi": true,
+  "scenario": "A company uses a text model on Amazon Bedrock with on-demand pricing. Last month the bill doubled, but the number of requests stayed the same. Which TWO changes could explain the higher cost? (Select TWO.)",
+  "options": [
+   "More developers were given IAM permission to call the same model",
+   "A long list of rules and eight examples was added to every prompt",
+   "Top-p was lowered so the model chooses from fewer candidate words",
+   "The temperature was raised from 0.2 to 0.9 to get more creative answers",
+   "The maximum output length was raised, and answers became much longer"
+  ],
+  "correct": [
+   1,
+   4
+  ],
+  "explain": "On-demand Bedrock text models charge per token: input tokens (the prompt) plus output tokens (the answer). Same number of requests, but longer prompts and longer answers = more tokens = a bigger bill. Temperature and top-p change HOW words are chosen, not how many are billed. More IAM users does not matter when the request count is the same."
+ },
+ {
+  "id": 6,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A RAG assistant splits long safety manuals into chunks of 200 tokens. Users notice that answers often miss a key warning, because the warning starts at the end of one chunk and finishes at the start of the next one. Which change will help MOST?",
+  "options": [
+   "Increase the top-k sampling value used when the model writes answers",
+   "Raise the model's temperature so it can fill in the missing sentence",
+   "Add overlap so neighbouring chunks share some of the same text",
+   "Move the embeddings from OpenSearch Serverless into Aurora PostgreSQL"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "The problem is how the text was CUT. Chunk overlap repeats a little text at each boundary, so an idea that crosses a boundary stays whole in at least one chunk (bigger or semantic chunks can also help). Temperature only makes the model more random; it cannot bring back missing facts. Changing the vector store does not change how the text was split. Top-k sampling is about choosing the next word, not about retrieval."
+ },
+ {
+  "id": 7,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A furniture shop wants to create brand new, photo-like pictures of sofas from text such as 'a green sofa in a sunny room'. The model should start from random noise and remove the noise step by step until the picture appears. Which type of model works this way?",
+  "options": [
+   "Recurrent neural network sequence model",
+   "Transformer-based large language model",
+   "Diffusion model",
+   "Convolutional neural network image classifier"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Start from noise, then remove it step by step = diffusion model, the common choice for text-to-image. A large language model generates text tokens. A CNN classifier puts labels on images that already exist; it does not create new ones. An RNN processes sequences such as text or time series."
+ },
+ {
+  "id": 8,
+  "domain": 2,
+  "multi": false,
+  "scenario": "A team compares two ways to run a Llama model: Amazon Bedrock on-demand, and a deployment from SageMaker JumpStart. Which statement about running each option is correct?",
+  "options": [
+   "Both need the team to choose GPU instances and patch their operating systems, because open models cannot run serverless.",
+   "JumpStart: the team picks SageMaker instances and pays while they run. Bedrock on-demand: AWS runs the servers and bills per token.",
+   "Bedrock on-demand: the team picks the instance type and pays per hour. JumpStart: AWS runs the servers and bills per token.",
+   "Both are serverless and bill only per token, so the team never chooses, starts or pays for any instance in either option."
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "JumpStart deploys the model to a SageMaker endpoint: YOU choose the instance type and pay for it while it runs. Bedrock on-demand is serverless: AWS manages the infrastructure and you pay per input and output token. The second option swaps the two. Memory trick: JumpStart = you get the keys to the server; Bedrock = you just call an API."
+ },
+ {
+  "id": 9,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A small marketing team wants a Bedrock model to write product taglines in one fixed pattern: a five-word headline, then a dash, then a price. The team has only three good taglines to show as examples, no budget for training jobs, and needs results this afternoon. What should it do FIRST?",
+  "options": [
+   "Store the three taglines in a Knowledge Base so the model can retrieve them",
+   "Put the three taglines in the prompt as examples before the new request",
+   "Run continued pre-training on the three taglines to teach the model the pattern",
+   "Fine-tune the model on the three taglines so it learns the pattern permanently"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "A few examples + no training budget + needed today = few-shot prompting: show the examples inside the prompt. Fine-tuning needs a training job and many labelled pairs (hundreds or thousands), not three. A Knowledge Base (RAG) looks up facts; it is not the way to teach an output pattern. Continued pre-training needs large amounts of unlabelled text. Memory trick: examples IN the prompt = few-shot; examples in a TRAINING job = fine-tuning."
+ },
+ {
+  "id": 10,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A telecom company has 12,000 past customer messages, and supervisors marked the best reply an agent gave to each one. The company wants a Bedrock model to always answer in that short, polite company format, without sending long instructions and examples in every prompt. Which approach fits BEST?",
+  "options": [
+   "Add as many of the best replies as possible to each prompt as few-shot examples",
+   "Fine-tune the model with the 12,000 message and reply pairs",
+   "Run continued pre-training on the 12,000 replies as plain, unlabelled text",
+   "Load the 12,000 replies into a Knowledge Base and retrieve similar ones for each prompt"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Thousands of labelled pairs (input + ideal output) + a permanent style + no long prompts = fine-tuning. RAG adds facts at question time; it does not permanently change the style, and it makes every prompt longer. Continued pre-training is for UNLABELLED text, and this data is labelled pairs. Few-shot works, but the company does not want long prompts on every call."
+ },
+ {
+  "id": 11,
+  "domain": 3,
+  "multi": false,
+  "scenario": "Match each business need to the customisation approach that fits it BEST.",
+  "options": [
+   "Continued pre-training",
+   "Fine-tuning",
+   "Few-shot prompting",
+   "Retrieval Augmented Generation (RAG)"
+  ],
+  "correct": [
+   0,
+   3,
+   1,
+   2
+  ],
+  "explain": "Unlabelled domain text = continued pre-training. Facts that change + show the source = RAG. Many labelled input/output pairs + a permanent style = fine-tuning. Two examples in the prompt, cheapest, today = few-shot prompting. Ask two questions every time: Is the data labelled? Does the information change?",
+  "type": "matching",
+  "prompts": [
+   "A bank has 40 GB of unlabelled internal reports and wants the model to understand its banking language",
+   "A shop's prices change every day, and answers must quote today's price and show the source document",
+   "A publisher has 6,000 pairs of rough text and the edited version, and wants that editing style every time",
+   "A team has two sample answers and wants the model to copy their format today, at the lowest cost"
+  ]
+ },
+ {
+  "id": 12,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A car parts seller fine-tuned a Bedrock model last month on its product catalogue. Prices and stock levels change every day, and the assistant now quotes old prices. The team wants correct daily prices with the LEAST ongoing effort. What should it do?",
+  "options": [
+   "Run a new fine-tuning job every night with the latest price list",
+   "Run continued pre-training each week on all the old and new price lists",
+   "Add last month's price list to every prompt as few-shot examples",
+   "Connect a Bedrock Knowledge Base that syncs the daily price list"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Facts that change often = RAG with a Knowledge Base. Sync the new data, and the next answer uses it, with no retraining. Nightly fine-tuning is slow, costly and still a day late; fine-tuning teaches style and patterns, it is a poor place to store changing facts. Continued pre-training has the same problem at an even higher cost. Last month's prices in the prompt are still old prices."
+ },
+ {
+  "id": 13,
+  "domain": 3,
+  "multi": false,
+  "scenario": "A bank wants a customer assistant built on a foundation model. When a customer says 'Move $200 to savings and tell me my new balance', the model must decide by itself which internal APIs to call and in what order, using API descriptions that the developers provide. Which option fits BEST?",
+  "options": [
+   "Amazon Bedrock Knowledge Bases loaded with the bank's API documentation",
+   "An Amazon Lex bot with fixed intents and slots designed by the developers",
+   "Amazon Q Business connected to the bank's internal data sources",
+   "Amazon Bedrock Agents with action groups"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "The model plans the steps itself and CALLS APIs = Bedrock Agents. Action groups describe the APIs (with an OpenAPI schema or function details) and usually run them through Lambda. A Knowledge Base only finds text: it can read API documents but cannot call an API. Lex follows conversation flows that developers design in advance. Q Business is an assistant for employees over company data, not a customer banking bot."
+ },
+ {
+  "id": 14,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A company's image model creates new mascots for a client. One mascot looks almost the same as a famous cartoon character that another company owns. Which risk of generative AI does this show MOST clearly?",
+  "options": [
+   "Toxic or offensive content in the output",
+   "Data poisoning of the training dataset",
+   "Hallucination of facts that are not true",
+   "Intellectual property infringement"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Output that copies someone else's protected work = intellectual property (IP) infringement risk. Hallucination is false facts presented as true. Toxicity is offensive or harmful content. Data poisoning is an attacker putting bad data into the training set on purpose."
+ },
+ {
+  "id": 15,
+  "domain": 4,
+  "multi": false,
+  "scenario": "An auditor asks a company for two documents: (1) AWS's own description of the intended uses and limits of Amazon Rekognition face matching, which the company uses, and (2) a record of the intended use and evaluation results of the company's own fraud model trained in SageMaker. Which pair should the company give?",
+  "options": [
+   "(1) AWS AI Service Card for Rekognition; (2) SageMaker Model Card",
+   "(1) SageMaker Model Card for Rekognition; (2) AWS AI Service Card",
+   "(1) AWS Artifact compliance report; (2) SageMaker Model Card",
+   "(1) AWS AI Service Card for Rekognition; (2) SageMaker Model Monitor report"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "AWS writes AI Service Cards for ITS OWN AI services (Rekognition, Textract, Comprehend and others). YOU write SageMaker Model Cards for YOUR models. Artifact gives security and compliance reports (ISO, SOC), not responsible-AI use cases. Model Monitor watches a live model for drift; it does not document intended use."
+ },
+ {
+  "id": 16,
+  "domain": 4,
+  "multi": false,
+  "scenario": "A lender's credit model has been live for six months. The risk team wants an automatic alert if the model's approvals start to become less fair to one age group as new applicants arrive. Which option fits BEST?",
+  "options": [
+   "SageMaker Model Cards updated with the latest risk rating",
+   "SageMaker Ground Truth with a private team of reviewers",
+   "SageMaker Model Monitor with bias drift monitoring",
+   "Bedrock Guardrails with a denied topic about applicants' age"
+  ],
+  "correct": [
+   2
+  ],
+  "explain": "Watching a LIVE model over time for changing fairness = Model Monitor bias drift monitoring (it uses SageMaker Clarify behind the scenes). Ground Truth labels training data. Model Cards document a model; they do not watch it. Guardrails filter the text of generative AI apps, not a credit model's approvals."
+ },
+ {
+  "id": 17,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A support chatbot on Amazon Bedrock sometimes includes customers' phone numbers in its answers. The company wants each phone number replaced with a placeholder, while the rest of the answer is still shown, with the LEAST custom code. Which option meets this need?",
+  "options": [
+   "Amazon Comprehend PII detection called from a custom Lambda function",
+   "A Bedrock Guardrails sensitive information filter set to mask",
+   "A Bedrock Guardrails denied topic that blocks questions about phone numbers",
+   "Amazon Macie scanning the S3 bucket that stores the chat history"
+  ],
+  "correct": [
+   1
+  ],
+  "explain": "Hide personal data INSIDE a live model answer = Guardrails sensitive information (PII) filter with the mask action (it can also block). A denied topic blocks the whole answer about a subject; it does not replace one number. Macie finds PII in S3 buckets; it does not change answers. Comprehend can detect PII, but you must write and run your own code, which is more effort."
+ },
+ {
+  "id": 18,
+  "domain": 5,
+  "multi": true,
+  "scenario": "A security team has two jobs: (1) find any passport numbers stored in the S3 bucket that feeds a Bedrock Knowledge Base, and (2) find EC2 training instances that run software packages with known vulnerabilities. Which TWO services should it use? (Select TWO.)",
+  "options": [
+   "AWS Config",
+   "Amazon Inspector",
+   "Amazon CloudWatch",
+   "Amazon Bedrock Guardrails",
+   "Amazon Macie"
+  ],
+  "correct": [
+   1,
+   4
+  ],
+  "explain": "Passport numbers in S3 = Macie. Software packages with known vulnerabilities on EC2 = Inspector. CloudWatch watches metrics and logs, Guardrails filter prompts and replies (not files in S3), and Config records settings. Trick: Macie = My personal data; Inspector = Inspects software."
+ },
+ {
+  "id": 19,
+  "domain": 5,
+  "multi": false,
+  "scenario": "A compliance team must keep the full text of every prompt and every model answer sent through Amazon Bedrock in the account, so that reviewers can read them later. Which option meets this need?",
+  "options": [
+   "Enable Bedrock model invocation logging to S3 or CloudWatch Logs",
+   "Create CloudWatch metric alarms on the Bedrock invocation counts",
+   "Create an AWS CloudTrail trail that records every Bedrock API call made",
+   "Use AWS Config rules to record each change to Bedrock configuration items"
+  ],
+  "correct": [
+   0
+  ],
+  "explain": "Full prompt and answer text = Bedrock model invocation logging (to CloudWatch Logs and/or S3). CloudTrail records WHO called WHICH API and when, but not the full prompt and answer bodies. Metrics count calls and latency; they do not store text. Config records resource settings, not conversations."
+ },
+ {
+  "id": 20,
+  "domain": 5,
+  "multi": false,
+  "scenario": "Before an external audit of its AI platform, an auditor asks for every change made to the platform's IAM roles over the past year, and wants to search that history with SQL queries. Which option fits BEST?",
+  "options": [
+   "AWS Artifact reports",
+   "Amazon CloudWatch metrics",
+   "AWS Trusted Advisor checks",
+   "AWS CloudTrail Lake"
+  ],
+  "correct": [
+   3
+  ],
+  "explain": "Who changed what (API activity), kept for a long time and searchable with SQL = AWS CloudTrail Lake. Artifact gives AWS's own compliance reports. Trusted Advisor gives best-practice tips. CloudWatch metrics are numbers like latency and CPU, not a record of who changed IAM roles."
+ }
+];
+</script>
+<script src="../assets/exam-engine.js?v=18"></script>
+<script src="../assets/i18n.js?v=17"></script>
+</body>
+</html>

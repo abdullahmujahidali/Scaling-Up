@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AIF-C01 AIF Quiz 8 — ordering & matching drill</title>
 <link rel="stylesheet" href="../assets/lesson.css?v=17">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=17">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
 </head>
 <body>
 <div class="exam-shell">
@@ -39,7 +39,8 @@
       </p>
 
       <div style="margin-top:1.3rem;">
-        <button class="btn-primary" id="start-btn">Start quiz</button>
+        <button class="btn-primary" id="learn-btn">📘 Learn mode — feedback after every answer</button>
+        <button class="btn-secondary" id="start-btn">⏱ Exam mode — timed, results at the end</button>
         <button class="btn-secondary" id="resume-btn" style="display:none;"></button>
         <a class="btn-secondary" href="../aif-quizzes.html">Back to all quizzes</a>
       </div>
@@ -162,16 +163,16 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Match each AWS service to the task it performs.",
   "options": [
-   "Converts speech into written text",
+   "Converts written text into speech",
    "Analyses text for sentiment and entities",
-   "Identifies objects and faces in images",
-   "Converts written text into speech"
+   "Converts speech into written text",
+   "Identifies objects and faces in images"
   ],
   "correct": [
-   0,
-   1,
    2,
-   3
+   1,
+   3,
+   0
   ],
   "explain": "Transcribe = speech to text. Comprehend = understanding text (sentiment, entities, PII). Rekognition = images and video. Polly = text to speech. Remember Polly as the parrot that speaks, and Transcribe as writing down what was said.",
   "type": "matching",
@@ -188,16 +189,16 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Match each responsible-AI need to the AWS capability that addresses it.",
   "options": [
-   "Detects bias and explains individual predictions",
+   "Documents a model's intended use and limitations",
    "Blocks harmful content and denied topics",
    "Routes low-confidence predictions to human reviewers",
-   "Documents a model's intended use and limitations"
+   "Detects bias and explains individual predictions"
   ],
   "correct": [
-   0,
+   3,
    1,
    2,
-   3
+   0
   ],
   "explain": "Clarify = fairness and explainability. Guardrails = content safety in Bedrock. A2I = human-in-the-loop review. Model Cards = transparency documentation. The pair most often confused is Guardrails (stops it speaking) versus Clarify (explains why it spoke).",
   "type": "matching",
@@ -215,15 +216,15 @@ var QUESTIONS = [
   "scenario": "Match each prompting technique to its description.",
   "options": [
    "No examples are provided, only the instruction",
-   "Exactly one example is provided",
    "Several examples are provided",
-   "The model is asked to reason step by step"
+   "The model is asked to reason step by step",
+   "Exactly one example is provided"
   ],
   "correct": [
    0,
+   3,
    1,
-   2,
-   3
+   2
   ],
   "explain": "Zero-shot gives no examples, one-shot gives exactly one, few-shot gives several, and chain-of-thought requests intermediate reasoning. The 'shot' count refers to examples; chain-of-thought is about reasoning, which is why it helps most on multi-step arithmetic and logic.",
   "type": "matching",
@@ -240,14 +241,14 @@ var QUESTIONS = [
   "multi": false,
   "scenario": "Match each learning approach to the kind of data it requires.",
   "options": [
+   "Feedback in the form of rewards and penalties",
    "Labelled examples showing the correct answer",
-   "Unlabelled data, where the model finds structure itself",
-   "Feedback in the form of rewards and penalties"
+   "Unlabelled data, where the model finds structure itself"
   ],
   "correct": [
-   0,
    1,
-   2
+   2,
+   0
   ],
   "explain": "Supervised learning needs labels, unsupervised learning finds patterns without them, and reinforcement learning learns from rewards. Labels are the dividing line and are usually the most expensive part of an ML project.",
   "type": "matching",
@@ -264,15 +265,15 @@ var QUESTIONS = [
   "scenario": "Match each security concern to the control that addresses it.",
   "options": [
    "Users hiding instructions in input to hijack the model",
-   "Confidential data appearing in model responses",
    "Discovering personal data stored in Amazon S3",
-   "Recording who called which API and when"
+   "Recording who called which API and when",
+   "Confidential data appearing in model responses"
   ],
   "correct": [
    0,
+   3,
    1,
-   2,
-   3
+   2
   ],
   "explain": "Prompt injection is countered by input validation and output filtering. Data leakage is countered by Guardrails masking PII. Macie discovers sensitive data in S3. CloudTrail provides the audit trail. Prompt injection is the AI equivalent of SQL injection — never trust user input as instructions.",
   "type": "matching",
@@ -291,14 +292,14 @@ var QUESTIONS = [
   "options": [
    "Quality of generated summaries",
    "Quality of machine translation",
-   "Of all genuine positive cases, how many were caught",
-   "Of all flagged cases, how many were genuine"
+   "Of all flagged cases, how many were genuine",
+   "Of all genuine positive cases, how many were caught"
   ],
   "correct": [
    0,
    1,
-   2,
-   3
+   3,
+   2
   ],
   "explain": "ROUGE = summarisation, BLEU = translation, recall = how many real cases you caught, precision = how many of your flags were right. Recall matters when missing a case is dangerous (disease, fraud); precision matters when false alarms are costly (spam filters).",
   "type": "matching",
@@ -471,7 +472,7 @@ var QUESTIONS = [
  }
 ];
 </script>
-<script src="../assets/exam-engine.js?v=17"></script>
+<script src="../assets/exam-engine.js?v=18"></script>
 <script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>

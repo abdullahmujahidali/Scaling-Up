@@ -1,0 +1,408 @@
+{
+ "meta": {
+  "id": "aif-hard-14",
+  "title": "AIF Hard Quiz 14",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "gap pack · cost-benefit, MLOps, multi-agent patterns, Nova, pgvector/Neptune, Prompt Management, invocation logging, Scoping Matrix, governance",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A small shop gets about 20 return requests a month. Staff check each one in 5 minutes with one simple rule: refund if the item was bought in the last 30 days. A vendor offers an ML model for $40,000 plus monthly fees. What is the BEST advice?",
+   "options": [
+    "Buy the ML model, because ML always lowers costs over the long term once it is trained",
+    "Keep the simple rule, because the cost of ML is far higher than the benefit here",
+    "Train a custom model first, then compare its accuracy with the simple 30-day rule",
+    "Use a foundation model instead, because it needs no training and is always cheaper"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Cost-benefit analysis: about 100 minutes of work a month can never pay back $40,000 + fees, and a clear rule already gives the right answer. ML is NOT always cheaper, training a model to copy a simple rule wastes money, and a foundation model still costs money for no gain. Trick: if a simple rule works, you do not need AI."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A retailer wants a model that marks product reviews as positive or negative. It has 2,000 labelled reviews, a small budget, and needs results in a few weeks. What is the BEST starting point?",
+   "options": [
+    "Train a brand-new custom model from scratch on the 2,000 reviews so the company owns it fully",
+    "Start from an open-source pre-trained model and fine-tune it on the 2,000 labelled reviews",
+    "Collect billions of web pages first, then pre-train a new foundation model of its own",
+    "Wait until it has one million labelled reviews, then train its own model from the start"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Small data + small budget + fast = an open-source pre-trained model that already understands language, adapted with your 2,000 examples. 2,000 reviews are far too few to train a good model from scratch. Pre-training a new FM costs millions. Waiting for a million labels delays the business for no reason."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "type": "matching",
+   "scenario": "Match each MLOps idea to the example that shows it.",
+   "options": [
+    "Training jobs and endpoints grow automatically when the data or traffic grows ten times",
+    "The same automated pipeline rebuilds the model the same way every time, with no manual notebook steps",
+    "Live predictions are watched for drift, and a drop in quality starts re-training",
+    "Before launch the model passes tests, gets an approval, and has a rollback plan"
+   ],
+   "correct": [
+    3,
+    2,
+    1,
+    0
+   ],
+   "prompts": [
+    "Production readiness",
+    "Model monitoring",
+    "Repeatable processes",
+    "Scalable systems"
+   ],
+   "explain": "Repeatable processes = one automated pipeline (for example SageMaker Pipelines), not manual steps. Scalable systems = grow with data and traffic. Production readiness = tests, approval and rollback BEFORE go-live. Model monitoring = watch live data for drift (SageMaker Model Monitor), then re-train. Trick: monitor → notice → re-train."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": true,
+   "scenario": "Six months after launch, a board asks whether its AI shopping assistant is worth more money next year. It wants BUSINESS measures, not model scores. Which TWO should the team report? (Select TWO)",
+   "options": [
+    "Total development cost of the project so far",
+    "Customer feedback scores and comments about the assistant",
+    "Perplexity of the model on a held-out test set of product text",
+    "ROUGE-L score of the answers against reference product descriptions",
+    "Training loss of the model at the final epoch of fine-tuning"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Business metrics = money and people: development cost (what we spent) and customer feedback (do customers like it). Perplexity, ROUGE-L and training loss are MODEL metrics; a board cannot judge business value from them."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "type": "matching",
+   "scenario": "Match each multi-agent or workflow term to its description.",
+   "options": [
+    "Fixed steps run in a set order, a failed step is retried, and the path branches on the result",
+    "Agent A writes a draft, then passes it to Agent B to check, then to Agent C to translate",
+    "One lead agent gets every request, decides which specialist handles each part, and combines the answers",
+    "A top agent manages team-lead agents, and each team lead manages its own worker agents",
+    "One agent calls another agent the same way it calls a function, sending input and getting a result back"
+   ],
+   "correct": [
+    2,
+    3,
+    1,
+    4,
+    0
+   ],
+   "prompts": [
+    "Supervisor pattern",
+    "Hierarchical pattern",
+    "Sequential pipeline",
+    "Agents as tools",
+    "Workflow orchestration"
+   ],
+   "explain": "Supervisor = one boss, many specialists, answers combined. Hierarchical = bosses of bosses (several levels). Sequential pipeline = output of one agent is the input of the next, like a factory line. Agents as tools = a communication style: an agent is wrapped as a tool and called like a function. Workflow orchestration = control the order of steps, retries and branches (for example AWS Step Functions or Amazon Bedrock Flows)."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "type": "matching",
+   "scenario": "Match each model selection factor to the requirement that shows it.",
+   "options": [
+    "The app must read photos of receipts, not only text",
+    "A simple yes/no spam check does not need a huge, slow model with many billions of parameters",
+    "The bank may only use a model that meets its regulator's rules for where data is processed",
+    "The team must fine-tune the model on its own product catalogue next year"
+   ],
+   "correct": [
+    2,
+    3,
+    1,
+    0
+   ],
+   "prompts": [
+    "Compliance",
+    "Customization support",
+    "Model complexity",
+    "Modality"
+   ],
+   "explain": "Compliance = laws and rules (for example data must stay in an approved Region). Customization support = can this model be fine-tuned or adapted? Model complexity = do not pay for a bigger, slower model than the task needs. Modality = the input/output types (text, image, audio, video)."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": true,
+   "scenario": "A 20-person marketing agency has no ML engineers and a small budget. It must launch a generative AI feature this quarter to meet a client's business goal. Which TWO advantages of Amazon Bedrock matter MOST here? (Select TWO)",
+   "options": [
+    "Many leading models are available through one API, so no ML expertise is needed",
+    "Pay-as-you-go pricing per token, with no GPUs to buy and no servers to run",
+    "AWS takes full legal responsibility for how the agency uses the model's outputs",
+    "Bedrock guarantees that every model answer is accurate and free of any bias",
+    "Bedrock trains its base models on the agency's prompts so they get better each week"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Accessibility (one API, no ML team) and cost-effectiveness (pay only for what you use) help the agency meet its business goal fast. Under shared responsibility the CUSTOMER is responsible for how outputs are used. No service guarantees correct, unbiased answers. Bedrock does NOT use your prompts to train base models."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A company wants an Amazon-built foundation model on Amazon Bedrock for a text-only chatbot that answers short questions. It does not need images or video. The goal is the lowest cost and the fastest replies. Which model fits BEST?",
+   "options": [
+    "Amazon Nova Micro",
+    "Amazon Nova Pro",
+    "Amazon Nova Canvas",
+    "Amazon Nova Lite"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Amazon Nova is Amazon's own model family. Nova Micro = text only, lowest cost, fastest. Nova Lite = low-cost but multimodal (text, image, video input), more than needed. Nova Pro = more capable and more expensive. Nova Canvas CREATES images. Trick: Micro = tiny, cheap, text."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": true,
+   "scenario": "A company is building a RAG app. Its developers already know PostgreSQL, and part of its data is a graph of linked customers, products and suppliers. Which TWO AWS services can store and search vector embeddings? (Select TWO)",
+   "options": [
+    "Amazon Aurora PostgreSQL with the pgvector extension",
+    "Amazon Neptune Analytics",
+    "Amazon Athena",
+    "AWS Glue Data Catalog",
+    "Amazon S3 Glacier Deep Archive"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Vector stores on AWS include Amazon OpenSearch, Aurora PostgreSQL / RDS for PostgreSQL with pgvector (good when the team already uses PostgreSQL) and Amazon Neptune Analytics (graph + vectors, used for GraphRAG). Athena runs SQL on files in S3, the Glue Data Catalog stores table metadata, and Glacier Deep Archive is cold storage; none of them does vector search."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team's prompt template works well in production. A writer wants to try two new wordings and compare their outputs side by side with the current one. The team also wants a fixed, numbered snapshot so production does not change while the writer tests. Which feature fits BEST?",
+   "options": [
+    "Amazon Bedrock Prompt Management",
+    "Amazon SageMaker Model Registry with model versions",
+    "Amazon Bedrock Knowledge Bases with a data source sync",
+    "Amazon Bedrock Guardrails with denied topics"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Save, compare and version PROMPTS = Bedrock Prompt Management: variants let you compare different wordings or models side by side, and versions are fixed snapshots for production. SageMaker Model Registry versions MODELS, not prompts. Knowledge Bases add documents for RAG. Guardrails block harmful content."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company has 50,000 examples. Each one is a task written as an instruction, such as \"Summarise this email in two lines\", together with the ideal answer. It wants a base model to follow instructions like these better. Which method is this?",
+   "options": [
+    "Continued pre-training on unlabelled company text",
+    "Instruction tuning",
+    "Reinforcement learning from human feedback (RLHF)",
+    "Few-shot prompting with three examples per request"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Labelled instruction → ideal answer pairs used to train the model = instruction tuning (a type of fine-tuning). Continued pre-training uses UNLABELLED text to teach domain words. RLHF uses humans RANKING answers. Few-shot prompting changes the prompt, not the model."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A language-learning app added an AI conversation partner. The business goal is to make learners come back to the app more often. Which measure BEST shows whether the model meets this goal?",
+   "options": [
+    "BLEU score of the AI's sentences against a set of teacher-written answers",
+    "How many learners return each week and how long their sessions last",
+    "Hours saved by staff who no longer write practice dialogues by hand",
+    "Average response time of the model at the 99th percentile in seconds"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Goal = come back more = user engagement (returning users, session length). Hours saved is PRODUCTIVITY, a good goal but not this one. BLEU is a model score for translation. Response time is a technical metric. Always match the measure to the stated business goal."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "An IT helpdesk agent can reset passwords, open tickets and search a knowledge base. Users say it often opens a ticket when a simple search would do, and some tasks take 10 steps instead of 3. Its final answers read well. What should the team evaluate?",
+   "options": [
+    "Only the ROUGE score of the final answers against reference text",
+    "Task completion, whether the right tool was chosen, and steps taken",
+    "The perplexity of the base model on a large set of general web text",
+    "The size of the model's context window compared with other models"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Evaluating AGENTS = look at the whole path, not just the final text: did it finish the task, did it pick the right tool, how many steps did it take? ROUGE only scores the final words, which already read well. Perplexity and context window size say nothing about tool choice."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "type": "matching",
+   "scenario": "Match each generative AI legal risk to the example that shows it.",
+   "options": [
+    "A user follows the chatbot's wrong medicine dose advice and becomes ill",
+    "The model creates a logo that looks almost the same as a famous brand's protected logo",
+    "After the chatbot invents a fake refund policy, customers stop believing the company's website",
+    "A loan model approves far fewer applications from one ethnic group"
+   ],
+   "correct": [
+    1,
+    3,
+    2,
+    0
+   ],
+   "prompts": [
+    "Intellectual property infringement",
+    "Biased outputs",
+    "Loss of customer trust",
+    "End-user risk"
+   ],
+   "explain": "IP infringement = copying protected work. Biased outputs = unfair results for a group (discrimination claims). Loss of customer trust = people stop believing the brand, and leave. End-user risk = a real person is harmed by acting on the AI's output. Guardrails, human review and clear disclaimers lower these risks."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "type": "matching",
+   "scenario": "Match each transparency tool or practice to what it gives.",
+   "options": [
+    "Its weights and code are public, so outside experts can inspect how it works",
+    "Publishing where the training data came from and how it was cleaned",
+    "Tests candidate models on your own prompts and reports scores such as accuracy and toxicity"
+   ],
+   "correct": [
+    2,
+    0,
+    1
+   ],
+   "prompts": [
+    "Amazon Bedrock model evaluation",
+    "Open-source model",
+    "Data transparency"
+   ],
+   "explain": "Bedrock model evaluation = compare models with automatic metrics or human reviewers and keep the report. Open-source model = anyone can look inside. Data transparency = explain WHAT data trained the model and how it was prepared. Together they help explain why a model was chosen."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A startup downloads an open-weight model from a public model hub, because its team can inspect the weights. It plans to charge customers for an app built on this model. What must it check BEFORE launch?",
+   "options": [
+    "The model's parameter count, to confirm it is the largest model available",
+    "The model's licence, to confirm that commercial use is allowed",
+    "The model's leaderboard rank, to confirm it beats every paid model",
+    "The model's file format, to confirm it loads on the newest GPU instances"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Open-source does NOT always mean free for business. Some licences block commercial use or add conditions, so licensing review comes first. Size, leaderboard rank and file format are technical choices; none of them makes selling the app legal."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A bank's auditors must see the exact text of every prompt sent to Amazon Bedrock and every reply the model gave, for the last 12 months. Which action meets this requirement?",
+   "options": [
+    "Turn on Amazon Bedrock model invocation logging to Amazon S3",
+    "Create an AWS CloudTrail trail that records every Bedrock InvokeModel API call",
+    "Create Amazon CloudWatch alarms on Bedrock invocation count and latency metrics",
+    "Turn on AWS Config rules that record every change to the Bedrock account settings"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Full prompt and response TEXT = Bedrock model invocation logging (sends to CloudWatch Logs and/or S3). CloudTrail records WHO called WHICH API and WHEN, not the full conversation. CloudWatch metrics only count calls and time. AWS Config tracks resource settings. Trick: CloudTrail = who did it; invocation logging = what was said."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A team keeps training datasets in Amazon S3. Files are used often for 30 days, almost never after that, and must be deleted after 7 years. The team wants the LEAST effort and lower storage cost. What should it use?",
+   "options": [
+    "S3 Lifecycle rules that move files to S3 Glacier after 30 days and expire them after 7 years",
+    "A Lambda function that runs every night, copies old files to S3 Glacier and then deletes them",
+    "S3 Versioning so every old copy of each file is kept until someone removes it by hand later",
+    "S3 Cross-Region Replication that copies every file to a second, cheaper Region after 30 days"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Data lifecycle in S3 = Lifecycle rules: move to a cheaper class (transition) and delete (expiration) automatically, with no code. A nightly Lambda works but is more effort. Versioning keeps MORE data. Replication makes copies; it does not lower cost or delete anything."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "type": "matching",
+   "scenario": "Match each AI governance protocol to its example.",
+   "options": [
+    "Every AI feature must tell users they are talking to AI and publish a model card",
+    "All staff who build or use AI must finish a responsible AI course every year",
+    "Written rules say which AI uses are allowed and which data may go into prompts",
+    "A risk committee checks each model before launch and again every quarter"
+   ],
+   "correct": [
+    2,
+    3,
+    0,
+    1
+   ],
+   "prompts": [
+    "Policies",
+    "Review strategies",
+    "Transparency standards",
+    "Team training requirements"
+   ],
+   "explain": "Policies = the written rules (what is allowed). Review strategies = who checks, and when (before launch, every quarter). Transparency standards = what you must tell users and document. Team training requirements = what people must learn before working with AI."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "type": "matching",
+   "scenario": "Match each use of generative AI to its scope in the AWS Generative AI Security Scoping Matrix.",
+   "options": [
+    "Developers build their own app that calls a Bedrock model without changing the model",
+    "A research team trains a brand-new model from scratch on its own data",
+    "Staff paste text into a free, public chatbot website",
+    "The team fine-tunes a Bedrock model on its own support tickets",
+    "The company's licensed CRM software has a built-in AI writing feature under a business contract"
+   ],
+   "correct": [
+    2,
+    4,
+    0,
+    3,
+    1
+   ],
+   "prompts": [
+    "Scope 1: Consumer app",
+    "Scope 2: Enterprise app",
+    "Scope 3: Pre-trained models",
+    "Scope 4: Fine-tuned models",
+    "Scope 5: Self-trained models"
+   ],
+   "explain": "The scopes go from LEAST to MOST control (and responsibility): 1 consumer app (public tool) → 2 enterprise app (third-party business software with AI) → 3 your app on someone else's pre-trained model → 4 you fine-tune that model with your data → 5 you train your own model from scratch. Higher scope = you own more of the security work."
+  }
+ ]
+}

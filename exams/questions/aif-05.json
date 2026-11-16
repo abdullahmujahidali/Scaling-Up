@@ -225,7 +225,7 @@
    "multi": false,
    "scenario": "A company needs to forecast electricity demand for the next twelve months from historical data. Which service is purpose-built?",
    "options": [
-    "Amazon Forecast",
+    "Amazon SageMaker Canvas",
     "Amazon Personalize",
     "Amazon Lex",
     "Amazon Polly"
@@ -233,7 +233,7 @@
    "correct": [
     0
    ],
-   "explain": "Forecast is the managed time-series forecasting service. Personalize generates recommendations, Lex builds chatbots, and Polly synthesises speech."
+   "explain": "Forecasting numbers over time (time-series) with no code = SageMaker Canvas, which has built-in time-series forecasting. Amazon Forecast used to be the answer, but AWS closed it to new customers in 2024 and it is not in the current exam guide. Personalize gives recommendations, Lex builds chatbots, and Polly turns text into speech."
   },
   {
    "id": 15,

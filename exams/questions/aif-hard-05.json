@@ -1,0 +1,338 @@
+{
+ "meta": {
+  "id": "aif-hard-05",
+  "title": "AIF Hard Quiz 5",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "retest of my mistakes · same traps, new scenarios",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A food delivery app wants a model that predicts how many minutes each order will take to arrive, based on distance, traffic and restaurant. Which type of ML problem is this?",
+   "options": [
+    "Multi-class classification",
+    "Clustering",
+    "Regression",
+    "Reinforcement learning"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "The answer is a NUMBER (minutes) = regression. Classification would put orders into categories such as 'late / on time'. Clustering finds groups with no labels. Reinforcement learning learns actions from rewards."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "Before training a speech model, a company needs thousands of audio clips transcribed and tagged by human workers, and wants AWS to manage the labelling workflow. Which service fits?",
+   "options": [
+    "Amazon Augmented AI (A2I)",
+    "Amazon Transcribe custom vocabulary",
+    "Amazon SageMaker Ground Truth",
+    "Amazon Comprehend"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Humans labelling data BEFORE training = Ground Truth (it supports images, text, video and audio). A2I is humans reviewing predictions AFTER deployment. Transcribe is an automatic speech-to-text service, not a human labelling workflow. Comprehend analyses text."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A model's ERROR is high on the training data and also high on the validation data. What is the MOST likely problem?",
+   "options": [
+    "Overfitting",
+    "Underfitting",
+    "Data drift",
+    "Prompt injection"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Careful: this says ERROR, not accuracy. High error everywhere = bad everywhere = underfitting (the model is too simple). Overfitting is LOW training error with HIGH validation error. Drift is about change over time after deployment. Prompt injection is a GenAI attack."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "An internal model receives requests only a few times a day, at unpredictable times. Each answer is needed within seconds, and the team does not want to pay for servers that sit idle. Which SageMaker option fits BEST?",
+   "options": [
+    "A SageMaker real-time endpoint",
+    "SageMaker Serverless Inference",
+    "SageMaker batch transform",
+    "SageMaker Ground Truth"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Rare, unpredictable traffic + answer within seconds + no idle cost = Serverless Inference (it scales to zero). A real-time endpoint answers fast but you pay for it 24/7 even when idle. Batch transform is for large offline jobs. Ground Truth is labelling."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A prompt ends with: 'Think step by step and show your reasoning before you give the final answer.' Which technique is being used?",
+   "options": [
+    "Few-shot prompting",
+    "Zero-shot prompting",
+    "Chain-of-thought prompting",
+    "Prompt chaining across two calls"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "'Think step by step' = chain-of-thought. Few-shot means examples in the prompt. Zero-shot means no examples. Prompt chaining sends one prompt's output into the next prompt."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Before asking for a new product description, a team pastes two descriptions written in the brand's style into the prompt and labels them 'Example 1' and 'Example 2'. Which technique is this?",
+   "options": [
+    "Zero-shot prompting",
+    "Few-shot prompting",
+    "Fine-tuning",
+    "Retrieval Augmented Generation"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Examples inside the prompt = few-shot (two examples here). Zero-shot gives none. Fine-tuning would train the model with a training job. RAG retrieves documents from a knowledge source; pasting style examples is not retrieval."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which inference parameter limits the model to choosing the next word from only the 40 most likely candidates?",
+   "options": [
+    "Top-p",
+    "Temperature",
+    "Top-k",
+    "Stop sequences"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "A fixed NUMBER of candidates (40) = top-k. Top-p uses a PROBABILITY threshold (for example 0.9). Temperature changes how random the choice is. Stop sequences tell the model where to stop writing."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A marketing team complains that the slogans from its model are always very similar. It wants more creative and varied slogans each time. What should it change?",
+   "options": [
+    "Set the temperature to 0",
+    "Increase the temperature",
+    "Reduce top-p to 0.1",
+    "Lower the maximum tokens"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Higher temperature = more randomness = more creative, varied output. Temperature 0 and a very low top-p both make output MORE predictable and repetitive. Maximum tokens only changes length."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A news app uses a model to produce short versions of long articles. The team wants to automatically compare the model's short versions with versions written by editors. Which metric fits?",
+   "options": [
+    "BLEU",
+    "F1 score",
+    "ROUGE",
+    "Accuracy"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Short versions of long articles = summaries = ROUGE (Reduce). BLEU is for translation (Bilingual). F1 and accuracy are classification metrics. Notice the question never said the word 'summary': you had to recognise it."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "The HR department wants employees to ask a GenAI assistant about leave and travel policies stored in the company's Google Drive and Amazon S3. There is no budget for custom development. Which service fits BEST?",
+   "options": [
+    "Amazon Q Developer",
+    "Amazon Lex",
+    "Amazon Q Business",
+    "Amazon SageMaker JumpStart"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Employees + company documents in many sources + no development = Amazon Q Business (it has built-in connectors). Q Developer is for programmers. Lex needs you to design intents and does not read your documents by itself. JumpStart needs ML engineers to deploy and build around a model."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A small team wants the fastest way to call models such as Claude and Llama through one API. It does not want to choose instance types or manage any endpoints. Which option fits?",
+   "options": [
+    "Amazon SageMaker JumpStart",
+    "Amazon Bedrock",
+    "Amazon EC2 with GPU instances",
+    "Amazon SageMaker Canvas"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "No instances, no endpoints, one API for many providers = Bedrock (serverless). JumpStart is the opposite: you pick instances and manage the endpoint. EC2 means managing everything yourself. Canvas is no-code ML for analysts, not an API for foundation models."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company has 5,000 real customer questions, each paired with the ideal answer written by its best support agents. It wants a Bedrock model to answer new questions the same way. Which customization fits?",
+   "options": [
+    "Continued pre-training",
+    "Fine-tuning",
+    "Retrieval Augmented Generation",
+    "Zero-shot prompting"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Question + ideal answer pairs = LABELLED data = fine-tuning. Continued pre-training uses UNLABELLED raw text. RAG adds facts from documents but does not teach a style of answering. Zero-shot uses no examples at all."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company is choosing between two models that write bedtime stories for young children. Quality means the stories are age-appropriate and engaging. How should the models be evaluated?",
+   "options": [
+    "Compare their BLEU scores",
+    "Use human evaluation",
+    "Compare their ROUGE scores",
+    "Compare their perplexity"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "'Age-appropriate' and 'engaging' are human judgements, so use human evaluation (Bedrock model evaluation supports human reviewers). BLEU and ROUGE measure word overlap with reference text, and a creative story has no single correct text. Perplexity measures prediction confidence, not quality for children."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A team built its own churn-prediction model in SageMaker. For auditors, it must record the model's intended use, risk rating and evaluation results. Where should it record this?",
+   "options": [
+    "AWS AI Service Cards for the model",
+    "Amazon SageMaker Model Cards",
+    "AWS Artifact",
+    "Amazon SageMaker Clarify"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Documenting YOUR OWN model = SageMaker Model Cards. AI Service Cards are written by AWS about AWS's own AI services; you cannot create one for your model. Artifact holds AWS's compliance reports. Clarify detects bias and explains predictions."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A model that reads loan documents is already in production. Any prediction with less than 80% confidence must be sent to a person for checking before it is used. Which service fits?",
+   "options": [
+    "Amazon SageMaker Ground Truth",
+    "Amazon Augmented AI (A2I)",
+    "SageMaker Model Monitor",
+    "Amazon SageMaker Clarify"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Already in production + people check predictions = A2I (review AFTER prediction). Ground Truth is for labelling BEFORE training. Model Monitor watches drift with no human step. Clarify finds bias and explains predictions."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A company using Amazon Textract wants AWS's official documentation describing Textract's intended uses, limitations and fairness considerations. Where should it look?",
+   "options": [
+    "SageMaker Model Cards",
+    "AWS AI Service Cards",
+    "AWS Audit Manager",
+    "Amazon Textract pricing page"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AWS's documentation about AWS's OWN AI services (Textract, Rekognition, Transcribe...) = AI Service Cards. SageMaker Model Cards are for models you build. Audit Manager collects evidence for your own audits. The pricing page lists prices."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A security team must be told automatically if anyone changes an S3 bucket of training data so that it becomes public. It must also see the full history of that bucket's settings over the past year. Which service fits BEST?",
+   "options": [
+    "Amazon Inspector",
+    "Amazon Macie",
+    "AWS Config",
+    "AWS CloudTrail Lake"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Check settings against a rule (bucket must not be public) and keep the history of settings = AWS Config. CloudTrail records WHO made an API call, but does not judge settings against rules. Macie finds sensitive data inside the bucket. Inspector scans software. Trick: Config = settings + rules + history."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An EC2 instance used for model training runs an old software library with a known critical vulnerability. Which service would report this?",
+   "options": [
+    "Amazon GuardDuty",
+    "Amazon Inspector",
+    "Amazon Macie",
+    "AWS CloudTrail"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Known software vulnerabilities (CVEs) on EC2, Lambda or containers = Inspector. GuardDuty spots attacks that are HAPPENING. Macie looks at data in S3. CloudTrail logs API calls."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": true,
+   "scenario": "An ML platform team needs two things: (1) to find out who deleted an S3 bucket of training data yesterday, and (2) a dashboard showing the GPU utilisation of its training instances. Which TWO services provide these? (Select TWO)",
+   "options": [
+    "AWS CloudTrail",
+    "Amazon CloudWatch",
+    "AWS Config",
+    "AWS Artifact",
+    "Amazon Inspector"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "Who deleted it = an API call = CloudTrail (the trail of who did what). GPU utilisation dashboard = metrics = CloudWatch (watch the speed and health). Config tracks resource settings over time. Artifact is compliance reports. Inspector scans for vulnerabilities."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An auditor asks for AWS's PCI DSS compliance report covering the AWS infrastructure that runs the company's AI application. Where does the company get it?",
+   "options": [
+    "AWS Audit Manager",
+    "AWS Trusted Advisor",
+    "AWS Artifact",
+    "AWS Config"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "AWS's OWN compliance reports (PCI DSS, SOC, ISO) = Artifact, downloaded on demand. Audit Manager collects evidence about YOUR resources. Trusted Advisor gives best-practice checks. Config records your resource settings."
+  }
+ ]
+}

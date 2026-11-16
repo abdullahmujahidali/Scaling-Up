@@ -1,0 +1,338 @@
+{
+ "meta": {
+  "id": "aif-hard-04",
+  "title": "AIF Hard Quiz 4",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "exam-style scenarios · every option plausible · no length clues",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": true,
+   "scenario": "A model is 99% accurate on its training data but only 70% accurate on validation data. Which TWO actions are MOST likely to help? (Select TWO)",
+   "options": [
+    "Add more varied training data",
+    "Use regularization or early stopping",
+    "Train for many more epochs",
+    "Make the model larger and deeper",
+    "Stop using a validation set"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "High training + lower validation = overfitting. Fixes: more varied data, and regularization or early stopping, which keep the model from memorising. More epochs and a bigger model make overfitting WORSE. Removing the validation set only hides the problem."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A warehouse robot learns to pick up items by trying different movements. It receives a reward each time it grips an item successfully and a penalty when it drops one. Which type of learning is this?",
+   "options": [
+    "Supervised learning",
+    "Unsupervised learning",
+    "Reinforcement learning",
+    "Transfer learning"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Trial and error + rewards and penalties = reinforcement learning. Supervised learning needs labelled correct answers. Unsupervised learning finds patterns without labels or rewards. Transfer learning reuses a model trained on another task."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "multi": false,
+   "scenario": "During every card payment, a fraud model must return a decision in under 100 milliseconds, 24 hours a day. Which SageMaker deployment option fits?",
+   "options": [
+    "SageMaker batch transform",
+    "SageMaker Asynchronous Inference",
+    "A SageMaker real-time endpoint",
+    "SageMaker Ground Truth"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Instant answers (milliseconds), all the time = real-time endpoint. Batch transform processes big datasets offline. Asynchronous Inference queues requests and answers in seconds to minutes. Ground Truth is for labelling data, not for serving predictions."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "An accounts team receives thousands of scanned invoices as images. It wants to pull out supplier names, dates and totals automatically. Which service should it use FIRST?",
+   "options": [
+    "Amazon Comprehend",
+    "Amazon Textract",
+    "Amazon Rekognition",
+    "Amazon Transcribe"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Text, forms and tables in scanned documents = Textract (it reads the image). Comprehend finds meaning in text that is ALREADY text, so it cannot read an image. Rekognition analyses objects and faces in images. Transcribe turns speech into text."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which inference parameter makes the model choose only from the smallest group of likely next words whose combined probability reaches a set threshold, such as 0.9?",
+   "options": [
+    "Top-k",
+    "Top-p",
+    "Temperature",
+    "Maximum tokens"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Top-p = a PROBABILITY threshold (p for percent, for example the top 90%). Top-k = a fixed NUMBER of candidate words (for example the top 50). Temperature changes how random the choice is. Maximum tokens limits the output length."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A team plans to use Amazon Titan Text Embeddings in its application. What is this model used for?",
+   "options": [
+    "Generating images from text prompts",
+    "Turning text into vectors for search",
+    "Translating text between languages",
+    "Converting recorded speech into text"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "An embeddings model turns text into vectors (lists of numbers) that capture meaning, used for semantic search and RAG. Image generation uses a diffusion model (Titan Image Generator / Nova Canvas). Translation = Amazon Translate. Speech to text = Amazon Transcribe."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A legal assistant built on a foundation model confidently cites a court case, with a name and date, that does not exist. What is this called?",
+   "options": [
+    "Prompt injection",
+    "Hallucination",
+    "Toxicity",
+    "Data drift"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Confident but made-up facts = hallucination. Prompt injection is a user trying to override instructions. Toxicity is offensive or harmful content. Data drift is a change in real-world data over time."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A startup wants to try foundation models from several providers (Anthropic, Meta, Amazon, Mistral) through one API, without managing any servers or GPUs. Which service fits?",
+   "options": [
+    "Amazon SageMaker JumpStart",
+    "Amazon Bedrock",
+    "Amazon EC2 GPU instances",
+    "Amazon SageMaker Canvas"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Many providers' models + one API + serverless = Bedrock. JumpStart deploys models to endpoints that you manage. EC2 GPUs mean managing everything yourself. Canvas is no-code ML for business analysts."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A RAG chatbot sometimes gives answers that are not supported by the documents it retrieved. The team wants Bedrock to automatically block such ungrounded answers. Which feature should it use?",
+   "options": [
+    "A higher temperature setting",
+    "Guardrails contextual grounding check",
+    "A Bedrock automatic model evaluation job",
+    "A Bedrock Agents action group"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Bedrock Guardrails has a contextual grounding check: it scores whether a response is supported by the retrieved source and relevant to the question, and blocks it if not. Higher temperature makes hallucination MORE likely. Model evaluation tests models before you choose one; it does not block live answers. Action groups let agents call APIs."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A user asks a model: 'Classify the sentiment of this review as positive or negative', and gives no examples. Which prompting technique is this?",
+   "options": [
+    "Few-shot prompting",
+    "Zero-shot prompting",
+    "Chain-of-thought prompting",
+    "Prompt chaining"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "A task with NO examples = zero-shot. Few-shot includes examples. Chain-of-thought asks for step-by-step reasoning. Prompt chaining feeds one prompt's output into the next prompt."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A company wants to fine-tune a Bedrock model so it writes support replies in the company's way. What training data does it need to prepare?",
+   "options": [
+    "Unlabelled raw text only",
+    "Labelled prompt-response pairs",
+    "A list of banned words and topics",
+    "Embeddings from a vector database"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Fine-tuning = LABELLED examples: prompts with the ideal response. Unlabelled raw text is for continued pre-training. Banned words and topics belong in Guardrails. Embeddings are for RAG search, not training."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team must measure whether its chatbot's answers are helpful and use a friendly, on-brand tone, which automatic metrics cannot judge well. Which evaluation method fits?",
+   "options": [
+    "BLEU score",
+    "Human evaluation",
+    "ROUGE score against references",
+    "F1 score"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Helpfulness, tone and style are judged best by people: human evaluation (Bedrock model evaluation supports human review workflows). BLEU and ROUGE only measure word overlap with reference text. F1 is for classification."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Developers want AI code suggestions, explanations of existing code and security scanning inside their IDE. Which service fits?",
+   "options": [
+    "Amazon Q Business",
+    "Amazon Q Developer",
+    "Amazon Bedrock Agents",
+    "Amazon SageMaker Canvas"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Q Developer = the AI assistant for developers: code suggestions, explanations and security scans in the IDE and console. Q Business is for employees asking about company documents. Agents are built by developers for multi-step tasks. Canvas is no-code ML."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Six months after deployment, a model's predictions get worse because customer behaviour has changed. Which service detects this automatically?",
+   "options": [
+    "SageMaker Ground Truth",
+    "SageMaker Model Monitor",
+    "SageMaker Model Cards",
+    "Amazon Augmented AI (A2I)"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "A deployed model getting worse over time because the data changed = drift = Model Monitor. Ground Truth labels training data. Model Cards are documentation. A2I sends predictions to humans; it does not watch for drift."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A bank must choose a model for loan decisions. Regulators require a clear explanation of every individual decision. Which choice is generally BEST?",
+   "options": [
+    "A huge deep neural network with billions of parameters",
+    "A simpler, interpretable model like a decision tree",
+    "A generative model with a high temperature setting",
+    "Whichever model has the highest number of layers"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Interpretability trade-off: simple models (decision trees, linear models) are easy to explain but may be slightly less accurate; huge neural networks are accurate but hard to explain. When regulators demand explanations, choose interpretability. High temperature adds randomness, which is the opposite of what is needed."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "Which practice MOST directly supports transparency towards the users of a customer-service chatbot?",
+   "options": [
+    "Encrypting every chatbot response",
+    "Telling users that they are talking to AI",
+    "Switching to a larger, more accurate model",
+    "Lowering the model's temperature setting"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Transparency = being open about how and when AI is used, starting with telling people they are talking to an AI. Encryption is security. A bigger model and a lower temperature may improve quality but do not make anything more transparent."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A compliance officer must download AWS's ISO 27001 certificate and SOC 2 report to show auditors that AWS's infrastructure is certified. Which service provides these?",
+   "options": [
+    "AWS Audit Manager",
+    "AWS Artifact",
+    "AWS Config",
+    "AWS Trusted Advisor"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AWS's OWN reports and certificates (SOC, ISO, PCI) = Artifact. Audit Manager collects evidence about YOUR account for YOUR audits. Config tracks your resource settings. Trusted Advisor gives best-practice recommendations."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "SageMaker training jobs must have no internet access, yet still read training data from Amazon S3 privately. What should the team do?",
+   "options": [
+    "Enable Amazon Macie on the bucket",
+    "Use a VPC with an S3 VPC endpoint",
+    "Turn on AWS Shield Advanced",
+    "Put Amazon CloudFront in front of S3"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Run the jobs in a private VPC (network isolation) and use a VPC endpoint (PrivateLink / gateway endpoint) so traffic to S3 never touches the internet. Macie finds sensitive data. Shield protects against DDoS. CloudFront is a public CDN, the opposite of private."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "The operations team wants an alarm when the latency of Amazon Bedrock model invocations goes above 5 seconds. Which service should it use?",
+   "options": [
+    "AWS CloudTrail event history",
+    "Amazon CloudWatch",
+    "AWS Config",
+    "AWS Artifact"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Metrics, latency, dashboards and alarms = CloudWatch (performance). CloudTrail records WHO called which API (audit), not how fast it was. Config tracks settings. Artifact holds compliance reports."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "Company policy says raw training data in Amazon S3 must be deleted automatically one year after it is created. What is the simplest way to enforce this?",
+   "options": [
+    "Amazon Macie discovery jobs",
+    "S3 Lifecycle expiration rules",
+    "AWS KMS automatic key rotation",
+    "AWS Config managed rules"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Automatic deletion (or moving to cheaper storage) after a set time = S3 Lifecycle rules. This is data retention, part of data governance. Macie finds sensitive data, KMS rotation changes encryption keys, and Config rules REPORT on settings but do not delete objects."
+  }
+ ]
+}

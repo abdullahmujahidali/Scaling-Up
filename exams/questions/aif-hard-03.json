@@ -1,0 +1,341 @@
+{
+ "meta": {
+  "id": "aif-hard-03",
+  "title": "AIF Hard Quiz 3",
+  "cert": "aif",
+  "hard": true,
+  "minutes": 30,
+  "focus": "exam-style scenarios · every option plausible · no length clues",
+  "kind": "20-question HARD quiz",
+  "noun": "quiz",
+  "backTo": "aif-quizzes.html",
+  "backLabel": "Back to all quizzes"
+ },
+ "questions": [
+  {
+   "id": 1,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A model reaches 55% accuracy on its training data and 54% on the test data. Which action is MOST likely to improve it?",
+   "options": [
+    "Use a more powerful model",
+    "Add stronger regularization to simplify it",
+    "Reduce the amount of training data",
+    "Stop training earlier (early stopping)"
+   ],
+   "correct": [
+    0
+   ],
+   "explain": "Low score on training AND test = underfitting: the model is too simple to learn the pattern. Give it more power (a more complex model, better features, longer training). Regularization, less data and early stopping all make the model SIMPLER, which are fixes for overfitting."
+  },
+  {
+   "id": 2,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A real-estate company wants a model that predicts the sale price, in dollars, of each house from its size, location and age. Which type of ML problem is this?",
+   "options": [
+    "Binary classification",
+    "Regression",
+    "Clustering",
+    "Dimensionality reduction"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Predicting a NUMBER (a price) = regression. Classification predicts a category (for example 'will sell / won't sell'). Clustering finds groups without labels. Dimensionality reduction shrinks the number of features."
+  },
+  {
+   "id": 3,
+   "domain": 1,
+   "type": "ordering",
+   "scenario": "Put these steps of the machine learning lifecycle in the correct order.",
+   "options": [
+    "Deploy the model",
+    "Collect and prepare the data",
+    "Evaluate the model",
+    "Train the model"
+   ],
+   "correct": [
+    1,
+    3,
+    2,
+    0
+   ],
+   "explain": "Data first (collect, clean, feature engineering) → train → evaluate on data the model has not seen → deploy only if the evaluation is good enough. After deployment you monitor it, and retrain when it gets worse."
+  },
+  {
+   "id": 4,
+   "domain": 1,
+   "multi": false,
+   "scenario": "A company has 500,000 unlabelled images of retail shelves. Before it can train a model, people must draw boxes around each product and name it. Which service manages this labelling work?",
+   "options": [
+    "Amazon Augmented AI (A2I)",
+    "Amazon SageMaker Ground Truth",
+    "Amazon Rekognition Custom Labels",
+    "SageMaker Data Wrangler"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Ground Truth = humans LABEL data BEFORE training. A2I = humans REVIEW a model's predictions AFTER it is deployed. Both use people, so read for 'before training' vs 'review predictions'. Rekognition Custom Labels trains a model from images that are already labelled. Data Wrangler prepares data but does not label it."
+  },
+  {
+   "id": 5,
+   "domain": 2,
+   "multi": false,
+   "scenario": "A prompt shows the model three customer reviews, each followed by its sentiment label, and then asks for the sentiment of a fourth review. Which technique is this?",
+   "options": [
+    "Zero-shot prompting",
+    "Fine-tuning",
+    "Few-shot prompting",
+    "Chain-of-thought prompting"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Examples inside the prompt = few-shot (three examples here). Zero-shot gives no examples. Fine-tuning changes the model's weights with a training job; nothing is trained here. Chain-of-thought asks for step-by-step reasoning."
+  },
+  {
+   "id": 6,
+   "domain": 2,
+   "multi": true,
+   "scenario": "A company's GenAI assistant costs too much to run. Answer quality must stay acceptable. Which TWO actions lower the cost per request? (Select TWO)",
+   "options": [
+    "Use a smaller model that meets the quality bar",
+    "Shorten prompts and cap the output tokens",
+    "Raise the temperature",
+    "Add more few-shot examples to each prompt",
+    "Pick the model with the largest context window"
+   ],
+   "correct": [
+    0,
+    1
+   ],
+   "explain": "You pay per token, and bigger models cost more per token. So: a smaller model that is good enough, and fewer tokens in and out. Temperature does not change cost. More examples ADD tokens. A larger context window does not save anything by itself and often costs more."
+  },
+  {
+   "id": 7,
+   "domain": 2,
+   "multi": false,
+   "scenario": "In a RAG application, documents are split into smaller chunks before they are converted into embeddings. What is the MAIN reason?",
+   "options": [
+    "So the model can be fine-tuned faster",
+    "To retrieve only the relevant passages",
+    "So the documents are encrypted at rest",
+    "So the model's temperature can be lowered"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Chunking lets the search return only the passages that match the question, which keeps the prompt small (cheaper, fits the context window) and focused (better answers). RAG does not fine-tune anything. Encryption and temperature are unrelated."
+  },
+  {
+   "id": 8,
+   "domain": 2,
+   "multi": false,
+   "scenario": "Which statement BEST describes a foundation model?",
+   "options": [
+    "A small model trained to do one narrow task well",
+    "A large model, trained broadly, adaptable to many tasks",
+    "A rules engine written by experts for one domain",
+    "A database of approved answers that chatbots look up"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Foundation models are very large, pre-trained on huge, broad datasets, and can be adapted (prompting, RAG, fine-tuning) to many different tasks. A narrow single-task model is traditional ML. Rules engines and answer databases are not ML models."
+  },
+  {
+   "id": 9,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A data science team wants to deploy an open-source model from a model hub onto instance types it chooses, with full control over the endpoint and its scaling. Which option fits BEST?",
+   "options": [
+    "Amazon Bedrock on-demand inference",
+    "Amazon SageMaker JumpStart",
+    "Amazon Q Business",
+    "Amazon Bedrock Agents"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "JumpStart deploys pre-trained and open-source models to SageMaker endpoints that YOU control (instance type, scaling). Bedrock is serverless: you call models through an API and do not choose instances. Q Business is a ready-made assistant for employees. Agents orchestrate multi-step tasks."
+  },
+  {
+   "id": 10,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Employees want a chat assistant that answers questions using company documents stored in SharePoint, Amazon S3 and Confluence. The company has no ML developers. Which service fits BEST?",
+   "options": [
+    "Amazon Q Developer",
+    "Amazon Q Business",
+    "Amazon Bedrock Agents",
+    "Amazon Lex"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Q Business = a fully managed GenAI assistant for employees that connects to company data sources (SharePoint, S3, Confluence and more) with no ML work. Q Developer helps developers write code. Bedrock Agents need developers to build them. Lex builds chatbots with intents you define; it does not read your documents."
+  },
+  {
+   "id": 11,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A pharmaceutical company has millions of pages of UNLABELLED research text. It wants a Bedrock model to absorb its specialised vocabulary and knowledge into the model itself. Which customization method fits?",
+   "options": [
+    "Fine-tuning with labelled examples",
+    "Few-shot prompting",
+    "Continued pre-training",
+    "RAG with a Knowledge Base"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Unlabelled domain text + change the model itself = continued pre-training. Fine-tuning needs LABELLED prompt-and-response pairs. Few-shot and RAG do not change the model at all; they only add information to the prompt."
+  },
+  {
+   "id": 12,
+   "domain": 3,
+   "multi": false,
+   "scenario": "A team wants an automatic score that measures how much its model's meeting summaries overlap with summaries written by people. Which metric fits?",
+   "options": [
+    "BLEU",
+    "ROUGE",
+    "Accuracy",
+    "Perplexity"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Summaries = ROUGE (Reduce). BLEU is for translation (Bilingual). Accuracy is a classification metric. Perplexity measures how well a language model predicts text; it does not compare with human summaries."
+  },
+  {
+   "id": 13,
+   "domain": 3,
+   "multi": false,
+   "scenario": "Once a month, a retailer must run a foundation model over 2 million product descriptions to rewrite them. The results are not urgent, and the company wants the lowest cost. Which Bedrock option fits BEST?",
+   "options": [
+    "Provisioned Throughput",
+    "On-demand real-time calls",
+    "Batch inference",
+    "Amazon Bedrock Agents"
+   ],
+   "correct": [
+    2
+   ],
+   "explain": "Large job + not urgent + lowest cost = Bedrock batch inference, which is cheaper than on-demand for the same model. Provisioned Throughput reserves capacity by the hour, which is wasted for a once-a-month job. Real-time calls cost more and need you to manage millions of requests. Agents are for multi-step tasks."
+  },
+  {
+   "id": 14,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A hiring model selects male applicants far more often than equally qualified female applicants. Which responsible AI dimension does this MOST directly violate?",
+   "options": [
+    "Veracity",
+    "Fairness",
+    "Controllability",
+    "Robustness"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Treating groups differently when they should be treated the same = a fairness problem (bias). Veracity is about truthful outputs, controllability about steering the system, and robustness about working with unusual input."
+  },
+  {
+   "id": 15,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A customer wants AWS's own documentation on the intended use cases, limitations and responsible AI design choices of Amazon Rekognition face matching. Where should they look?",
+   "options": [
+    "Amazon SageMaker Model Cards",
+    "AWS AI Service Cards",
+    "AWS Artifact reports",
+    "The Rekognition API reference"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "AWS AI Service Cards = AWS's transparency documents for ITS OWN AI services (Rekognition, Textract, Titan...). SageMaker Model Cards are for documenting YOUR OWN models. Artifact holds compliance reports (SOC, ISO). The API reference explains how to call the API, not responsible use."
+  },
+  {
+   "id": 16,
+   "domain": 4,
+   "multi": false,
+   "scenario": "A speech model was trained mostly on recordings from one country and makes many more mistakes for speakers with other accents. What is the BEST fix?",
+   "options": [
+    "Train for more epochs on the same data",
+    "Collect more diverse training data",
+    "Lower the temperature of the model",
+    "Add more layers to the neural network"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "The problem is the DATA: it does not represent all users, so the model is biased against accents it rarely heard. More diverse, representative training data fixes it. More epochs or layers on the same data only learn the same bias more strongly. Temperature is a GenAI setting and does not apply here."
+  },
+  {
+   "id": 17,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A team must scan the Lambda functions and container images used in its ML pipeline for known software vulnerabilities (CVEs). Which service should it use?",
+   "options": [
+    "Amazon Macie",
+    "Amazon Inspector",
+    "Amazon GuardDuty",
+    "AWS Config"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Software vulnerabilities in EC2, Lambda and container images = Inspector. Macie finds sensitive DATA in S3. GuardDuty spots suspicious ACTIVITY (attackers). Config tracks configuration changes and compliance rules."
+  },
+  {
+   "id": 18,
+   "domain": 5,
+   "multi": false,
+   "scenario": "The EC2 instances that host a company's model run an operating system with several outdated packages. The security team wants a service that automatically finds packages with known vulnerabilities (CVEs) and rates how serious each one is. Which service fits?",
+   "options": [
+    "AWS Artifact",
+    "Amazon Inspector",
+    "Amazon Macie",
+    "AWS CloudTrail"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Known software vulnerabilities (CVEs) on EC2, Lambda or container images = Inspector. Macie finds sensitive DATA in S3. CloudTrail records API calls. Artifact gives AWS's compliance reports. Trick: Inspector inspects SOFTWARE."
+  },
+  {
+   "id": 19,
+   "domain": 5,
+   "multi": false,
+   "scenario": "An application calls a third-party model API. It needs to store the API key securely and rotate it automatically. Which service fits BEST?",
+   "options": [
+    "AWS KMS customer managed key",
+    "AWS Secrets Manager",
+    "AWS Certificate Manager",
+    "Amazon S3 with versioning"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Passwords, database credentials and API keys that your app uses = Secrets Manager (with automatic rotation). KMS manages ENCRYPTION keys that encrypt data; it does not store your API key for you. Certificate Manager handles TLS certificates. S3 is not a secure secret store."
+  },
+  {
+   "id": 20,
+   "domain": 5,
+   "multi": false,
+   "scenario": "A company keeps its training data in an S3 data lake. It must control which teams can see which tables and even which columns of that data. Which service is built for this?",
+   "options": [
+    "Amazon Macie",
+    "AWS Lake Formation",
+    "Amazon Athena with SQL views",
+    "AWS Artifact"
+   ],
+   "correct": [
+    1
+   ],
+   "explain": "Lake Formation = fine-grained permissions on a data lake (database, table, column and row level). Macie finds sensitive data but does not grant access. Athena runs SQL queries on S3. Artifact provides AWS compliance reports."
+  }
+ ]
+}

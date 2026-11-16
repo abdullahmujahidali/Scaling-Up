@@ -60,7 +60,9 @@
     startedAt: null,
     endsAt: null,
     submitted: false,
-    reviewFilter: 'all'
+    reviewFilter: 'all',
+    learn: false,           // Learn mode: feedback right after each answer, no time limit
+    checked: {}             // qIndex -> true once Learn mode has revealed the answer
   };
 
   // ---------- storage helpers (all wrapped: private browsing can throw) ----------
@@ -168,6 +170,15 @@
   }
   function tickTimer() {
     if (state.submitted) return;
+    if (state.learn) {
+      var used = Math.floor((Date.now() - state.startedAt) / 1000);
+      var te = document.getElementById('exam-timer');
+      if (te) {
+        te.textContent = '📘 Learn · ' + Math.floor(used / 60) + ':' + (used % 60 < 10 ? '0' : '') + (used % 60);
+        te.className = 'exam-timer';
+      }
+      return;
+    }
     var left = Math.max(0, Math.floor((state.endsAt - Date.now()) / 1000));
     var el = document.getElementById('exam-timer');
     if (el) {
@@ -237,6 +248,27 @@
         : '';
     }
 
+    var feedback = '';
+    if (state.learn && state.checked[state.idx]) {
+      var ok = isCorrect(state.idx);
+      body = '';
+      note = '';
+      feedback = '<div class="review-item learn-feedback ' + (ok ? 'ok' : 'no') + '">' +
+        '<div class="review-head"><span class="rv">' + (ok ? '✔ Correct!' : '✘ Not quite') + '</span></div>' +
+        '<ul class="review-opts">' + reviewOptionsHtml(q, state.idx) + '</ul>' +
+        '<div class="review-explain"' + (q.explainUr ? ' data-ur="' + q.explainUr.replace(/"/g, '&quot;') + '"' : '') +
+          '><strong>Why:</strong> ' + q.explain + '</div>' +
+        (state.idx < QUESTIONS.length - 1
+          ? '<button class="btn-primary learn-next" id="learn-next">Next question →</button>'
+          : '<button class="btn-primary learn-next" id="learn-finish">See my results →</button>') +
+      '</div>';
+    } else if (state.learn && t !== 'single') {
+      // Single answers are checked on click; the others need a deliberate check
+      // so a half-built order or match is not marked wrong mid-way.
+      body += '<button class="btn-primary learn-check" id="learn-check"' +
+              (isAnswered(state.idx) ? '' : ' disabled') + '>Check answer ✓</button>';
+    }
+
     root.innerHTML =
       '<div class="exam-qhead">' +
         '<span class="exam-qnum">Question ' + (state.idx + 1) + ' of ' + QUESTIONS.length + '</span>' +
@@ -246,7 +278,16 @@
       '</div>' +
       '<div class="exam-scenario">' + q.scenario + '</div>' +
       note +
-      body;
+      body +
+      feedback;
+
+    var lc = document.getElementById('learn-check');
+    if (lc) lc.addEventListener('click', function () { checkCurrent(); });
+    var ln = document.getElementById('learn-next');
+    if (ln) ln.addEventListener('click', function () { state.idx++; save(); renderQuestion(); window.scrollTo(0, 0); });
+    var lf = document.getElementById('learn-finish');
+    if (lf) lf.addEventListener('click', function () { submitExam(false); });
+    if (feedback && window.__applyLang) window.__applyLang();
 
     root.querySelectorAll('.eopt').forEach(function (b) {
       b.addEventListener('click', function () { pick(parseInt(b.dataset.i, 10)); });
@@ -259,6 +300,8 @@
         cur[parseInt(s.dataset.p, 10)] = s.value === '' ? null : parseInt(s.value, 10);
         state.answers[state.idx] = cur;
         save(); renderPalette();
+        var btn = document.getElementById('learn-check');
+        if (btn) btn.disabled = !isAnswered(state.idx);
       });
     });
     document.getElementById('flag-btn').addEventListener('click', function () {
@@ -271,7 +314,14 @@
     renderPalette();
   }
 
+  function checkCurrent() {
+    if (!isAnswered(state.idx)) return;
+    state.checked[state.idx] = true;
+    save(); renderQuestion();
+  }
+
   function pick(i) {
+    if (state.learn && state.checked[state.idx]) return;
     var q = QUESTIONS[state.idx];
     var sel = state.answers[state.idx] || [];
     var t = typeOf(q);
@@ -287,6 +337,7 @@
       sel = [i];
     }
     state.answers[state.idx] = sel;
+    if (state.learn && t === 'single') state.checked[state.idx] = true;
     save();
     renderQuestion();
   }
@@ -313,6 +364,7 @@
     p.innerHTML = QUESTIONS.map(function (q, i) {
       var cls = 'pal';
       if (isAnswered(i)) cls += ' answered';
+      if (state.learn && state.checked[i]) cls += isCorrect(i) ? ' pal-ok' : ' pal-no';
       if (state.flagged[i]) cls += ' flagged';
       if (i === state.idx) cls += ' current';
       return '<button class="' + cls + '" data-i="' + i + '">' + (i + 1) + '</button>';
@@ -325,7 +377,15 @@
 
     var answered = QUESTIONS.filter(function (_, i) { return isAnswered(i); }).length;
     var c = document.getElementById('answered-count');
-    if (c) c.textContent = answered + ' / ' + QUESTIONS.length + ' answered';
+    if (c) {
+      if (state.learn) {
+        var done = Object.keys(state.checked).length;
+        var right = Object.keys(state.checked).filter(function (k) { return isCorrect(+k); }).length;
+        c.textContent = right + ' / ' + done + ' correct so far · ' + done + ' of ' + QUESTIONS.length + ' done';
+      } else {
+        c.textContent = answered + ' / ' + QUESTIONS.length + ' answered';
+      }
+    }
   }
 
   // ---------- rendering: results ----------
@@ -420,7 +480,8 @@
       '</div>' +
       '<div id="review-list"></div>' +
       '<div class="result-actions">' +
-        '<button class="btn-primary" id="retake-btn">Retake this exam</button> ' +
+        '<button class="btn-primary" id="copy-mistakes-btn">📋 Copy my mistakes</button> ' +
+        '<button class="btn-secondary" id="retake-btn">Retake this exam</button> ' +
         '<a class="btn-secondary" href="../' + (EXAM_META.backTo || 'exams.html') + '">' +
           (EXAM_META.backLabel || 'All exams') + '</a>' +
       '</div>';
@@ -433,12 +494,68 @@
         renderReview();
       });
     });
+    document.getElementById('copy-mistakes-btn').addEventListener('click', function () {
+      copyText(mistakesText(res), this);
+    });
     document.getElementById('retake-btn').addEventListener('click', function () {
       if (confirm('Start this exam again from question 1?')) { clearProgress(); location.reload(); }
     });
 
     renderReview();
     if (window.__applyLang) window.__applyLang();
+  }
+
+  // The answer breakdown shown after submitting, and right after each answer in
+  // Learn mode: correct options in green, a wrong choice in red.
+  function reviewOptionsHtml(q, i) {
+    var sel = state.answers[i] || [];
+    var t = typeOf(q);
+    var opts;
+
+    if (t === 'ordering') {
+      // Show the required sequence. For each slot, say what he actually put
+      // there — including "nothing", when the sequence was left incomplete.
+      var incomplete = sel.length < q.options.length;
+      opts = q.correct.map(function (oi, pos) {
+        var theirs = sel[pos];
+        var same = theirs === oi;
+        var tag;
+        if (same) tag = '<span class="tag good">you had this right</span>';
+        else if (theirs === undefined || theirs === null) tag = '<span class="tag bad">you placed nothing here</span>';
+        else tag = '<span class="tag bad">you put: ' + q.options[theirs] + '</span>';
+        return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
+                 '<strong>' + (pos + 1) + '.</strong> ' + q.options[oi] + ' ' + tag +
+               '</li>';
+      }).join('');
+      if (incomplete) {
+        opts += '<li class="r-wrong"><em>You placed only ' + sel.length + ' of ' +
+                q.options.length + ' items. Ordering questions score zero unless every ' +
+                'position is filled and correct.</em></li>';
+      }
+    } else if (t === 'matching') {
+      opts = q.prompts.map(function (pr, pi) {
+        var want = q.correct[pi], got = sel[pi];
+        var same = got === want;
+        var tag = same ? '<span class="tag good">correct</span>'
+                       : (got === undefined || got === null
+                           ? '<span class="tag bad">you left this blank</span>'
+                           : '<span class="tag bad">you chose: ' + q.options[got] + '</span>');
+        return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
+                 '<strong>' + pr + '</strong> → ' + q.options[want] + ' ' + tag +
+               '</li>';
+      }).join('');
+    } else {
+      opts = q.options.map(function (opt, oi) {
+        var right = q.correct.indexOf(oi) !== -1;
+        var chose = sel.indexOf(oi) !== -1;
+        var cls = right ? 'r-correct' : (chose ? 'r-wrong' : '');
+        var tag = right ? '<span class="tag good">correct</span>'
+                        : (chose ? '<span class="tag bad">you chose</span>' : '');
+        return '<li class="' + cls + '">' + opt + ' ' + tag + '</li>';
+      }).join('');
+    }
+
+    return opts;
   }
 
   function renderReview() {
@@ -450,52 +567,7 @@
       if (state.reviewFilter === 'wrong' && ok) return '';
       if (state.reviewFilter === 'flagged' && !state.flagged[i]) return '';
 
-      var sel = state.answers[i] || [];
-      var t = typeOf(q);
-      var opts;
-
-      if (t === 'ordering') {
-        // Show the required sequence. For each slot, say what he actually put
-        // there — including "nothing", when the sequence was left incomplete.
-        var incomplete = sel.length < q.options.length;
-        opts = q.correct.map(function (oi, pos) {
-          var theirs = sel[pos];
-          var same = theirs === oi;
-          var tag;
-          if (same) tag = '<span class="tag good">you had this right</span>';
-          else if (theirs === undefined || theirs === null) tag = '<span class="tag bad">you placed nothing here</span>';
-          else tag = '<span class="tag bad">you put: ' + q.options[theirs] + '</span>';
-          return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
-                   '<strong>' + (pos + 1) + '.</strong> ' + q.options[oi] + ' ' + tag +
-                 '</li>';
-        }).join('');
-        if (incomplete) {
-          opts += '<li class="r-wrong"><em>You placed only ' + sel.length + ' of ' +
-                  q.options.length + ' items. Ordering questions score zero unless every ' +
-                  'position is filled and correct.</em></li>';
-        }
-      } else if (t === 'matching') {
-        opts = q.prompts.map(function (pr, pi) {
-          var want = q.correct[pi], got = sel[pi];
-          var same = got === want;
-          var tag = same ? '<span class="tag good">correct</span>'
-                         : (got === undefined || got === null
-                             ? '<span class="tag bad">you left this blank</span>'
-                             : '<span class="tag bad">you chose: ' + q.options[got] + '</span>');
-          return '<li class="' + (same ? 'r-correct' : 'r-wrong') + '">' +
-                   '<strong>' + pr + '</strong> → ' + q.options[want] + ' ' + tag +
-                 '</li>';
-        }).join('');
-      } else {
-        opts = q.options.map(function (opt, oi) {
-          var right = q.correct.indexOf(oi) !== -1;
-          var chose = sel.indexOf(oi) !== -1;
-          var cls = right ? 'r-correct' : (chose ? 'r-wrong' : '');
-          var tag = right ? '<span class="tag good">correct</span>'
-                          : (chose ? '<span class="tag bad">you chose</span>' : '');
-          return '<li class="' + cls + '">' + opt + ' ' + tag + '</li>';
-        }).join('');
-      }
+      var opts = reviewOptionsHtml(q, i);
 
       var explainUr = q.explainUr ? ' data-ur="' + q.explainUr.replace(/"/g, '&quot;') + '"' : '';
 
@@ -515,12 +587,54 @@
     if (window.__applyLang) window.__applyLang();
   }
 
+  // Plain-text list of the wrong answers, to paste to the teacher instead of
+  // printing the whole results page to PDF.
+  function answerText(q, idxs) {
+    var t = typeOf(q);
+    if (t === 'matching') {
+      return q.prompts.map(function (pr, pi) {
+        var o = idxs[pi];
+        return pr + ' → ' + (o === null || o === undefined ? '(blank)' : q.options[o]);
+      }).join('; ');
+    }
+    if (!idxs.length) return '(blank)';
+    return idxs.map(function (o) { return q.options[o]; }).join(t === 'ordering' ? ' → ' : ' + ');
+  }
+  function mistakesText(res) {
+    var used = Math.round((Date.now() - state.startedAt) / 60000);
+    var lines = [EXAM_META.title + (state.learn ? ' (Learn mode)' : '') + ' — ' + res.scaled + '/1000 (' +
+                 res.correct + '/' + res.total + '), ' + used + ' min', ''];
+    QUESTIONS.forEach(function (q, i) {
+      if (isCorrect(i)) return;
+      lines.push('Q' + (i + 1) + ' (Domain ' + q.domain + '): ' + q.scenario.replace(/<[^>]+>/g, ''));
+      lines.push('  I chose: ' + answerText(q, state.answers[i] || []));
+      lines.push('  Correct: ' + answerText(q, q.correct));
+      lines.push('');
+    });
+    if (lines.length === 2) lines.push('No mistakes!');
+    return lines.join('\n');
+  }
+  function copyText(text, btn) {
+    var done = function () { btn.textContent = '✔ Copied — paste it to your teacher'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+
   // ---------- boot ----------
   function begin(resumed) {
     if (!resumed) {
       state.startedAt = Date.now();
-      state.endsAt = state.startedAt + EXAM_META.minutes * 60 * 1000;
+      // Learn mode has no limit, but endsAt stays set so resume logic keeps working.
+      state.endsAt = state.startedAt + (state.learn ? 24 * 60 : EXAM_META.minutes) * 60 * 1000;
     }
+    state.checked = state.checked || {};
     document.getElementById('exam-intro').style.display = 'none';
     document.getElementById('exam-live').style.display = 'block';
     save();
@@ -536,7 +650,7 @@
     if (prev && !prev.submitted && prev.endsAt > Date.now() && resumeBtn) {
       resumeBtn.style.display = 'inline-block';
       var mins = Math.ceil((prev.endsAt - Date.now()) / 60000);
-      resumeBtn.textContent = 'Resume attempt (' + mins + ' min left)';
+      resumeBtn.textContent = prev.learn ? 'Resume Learn mode' : 'Resume attempt (' + mins + ' min left)';
       resumeBtn.addEventListener('click', function () {
         state = prev;
         begin(true);
@@ -548,7 +662,14 @@
     document.getElementById('start-btn').addEventListener('click', function () {
       clearProgress();
       state = { idx: 0, answers: {}, flagged: {}, startedAt: null, endsAt: null,
-                submitted: false, reviewFilter: 'all' };
+                submitted: false, reviewFilter: 'all', learn: false, checked: {} };
+      begin(false);
+    });
+    var learnBtn = document.getElementById('learn-btn');
+    if (learnBtn) learnBtn.addEventListener('click', function () {
+      clearProgress();
+      state = { idx: 0, answers: {}, flagged: {}, startedAt: null, endsAt: null,
+                submitted: false, reviewFilter: 'all', learn: true, checked: {} };
       begin(false);
     });
 
@@ -568,6 +689,11 @@
           document.getElementById('exam-live').style.display === 'none') return;
       if (e.key === 'ArrowRight' && state.idx < QUESTIONS.length - 1) { state.idx++; save(); renderQuestion(); }
       if (e.key === 'ArrowLeft' && state.idx > 0) { state.idx--; save(); renderQuestion(); }
+      if (e.key === 'Enter' && state.learn) {
+        if (!state.checked[state.idx]) checkCurrent();
+        else if (state.idx < QUESTIONS.length - 1) { state.idx++; save(); renderQuestion(); }
+        return;
+      }
       var n = parseInt(e.key, 10);
       if (n >= 1 && n <= QUESTIONS[state.idx].options.length) pick(n - 1);
     });

@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "id": "aif-hard-15",
+    "title": "AIF Hard Quiz 15",
+    "cert": "aif",
+    "hard": true,
+    "minutes": 30,
+    "focus": "retest of My mistakes 2 · overfitting vs underfitting vs drift, recall vs precision, instruction tuning vs RLHF, CloudTrail vs invocation logging, Artifact vs Config, Secrets Manager, AgentCore Policy",
+    "kind": "20-question HARD quiz",
+    "noun": "quiz",
+    "backTo": "aif-quizzes.html",
+    "backLabel": "Back to all quizzes"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "domain": 1,
+      "multi": true,
+      "scenario": "A spam filter catches only 61% of spam in its own training emails and 60% in new emails. It is a small model that looks only at the email's subject line. Which TWO actions are MOST likely to improve it? (Select TWO)",
+      "options": [
+        "Also give the model the email body and the sender details as inputs",
+        "Use a larger model that can learn more complex patterns",
+        "Stop training earlier so the model memorises less",
+        "Add dropout so the model relies less on single words",
+        "Remove the subject line feature to make the model simpler"
+      ],
+      "correct": [0, 1],
+      "explain": "Step 1: is it good on TRAINING data? No, only 61%. Bad on training AND new data = underfitting (high bias) = the model is too weak. Make it STRONGER: more useful features, a larger model, or less regularisation. Early stopping, dropout and removing features all make the model weaker; they are overfitting fixes and would make this worse."
+    },
+    {
+      "id": 2,
+      "domain": 1,
+      "scenario": "A model that sorts support tickets is 98% correct on its training tickets but 70% correct on new tickets. When the team retrains it on a slightly different sample, its predictions change a lot. Which description fits BEST?",
+      "options": [
+        "High bias: the model is too simple to learn even the training tickets",
+        "High variance: the model memorised the training tickets (overfitting)",
+        "Data drift: the tickets in production have changed since the launch",
+        "Low variance: the model will generalise well once it is deployed"
+      ],
+      "correct": [1],
+      "explain": "Great on training, poor on new data, and very sensitive to the training sample = high variance = overfitting. High bias means poor on BOTH (underfitting). Drift happens AFTER launch, over time; here the gap shows up straight away in testing. Trick: variance = the answers vary a lot when the data changes."
+    },
+    {
+      "id": 3,
+      "domain": 1,
+      "scenario": "At launch, a demand-forecast model had almost the same error on training data and on test data, and both were low. Eight months later, shoppers have changed their habits and the live error has slowly doubled. The training data has not changed. What is the MOST likely cause?",
+      "options": [
+        "Overfitting, because the model memorised the training data",
+        "Underfitting, because the model was much too simple from the very start",
+        "Data drift, because live data no longer looks like the training data",
+        "High variance, because the test set at launch was much too small"
+      ],
+      "correct": [2],
+      "explain": "Good at launch (train and test both fine) + slowly worse AFTER launch because the real world changed = data drift. Watch for it with SageMaker Model Monitor and retrain on new data. Overfitting and underfitting show up already in testing, before launch. Trick: drift = time + the world changed."
+    },
+    {
+      "id": 4,
+      "domain": 1,
+      "scenario": "An email service filters spam. Users say that a real email from their bank landing in the spam folder is much worse than one spam email reaching the inbox. Which metric should the team focus on MOST for the 'spam' class?",
+      "options": [
+        "Recall, the share of all real spam that the filter catches",
+        "Precision, the share of emails marked as spam that really are spam",
+        "Accuracy, the share of all emails that the filter sorts correctly",
+        "Mean absolute error between predicted and real spam scores"
+      ],
+      "correct": [1],
+      "explain": "The worst mistake here is a FALSE ALARM: a real email marked as spam (a false positive). The metric that punishes false positives is precision. Recall punishes MISSED cases (false negatives), which is the cancer case, not this one. Accuracy hides problems when classes are unbalanced. MAE is for numbers (regression). Trick: precision = when I say 'spam', I am right."
+    },
+    {
+      "id": 5,
+      "domain": 2,
+      "type": "matching",
+      "scenario": "Match each part of a large language model to what it does.",
+      "options": [
+        "Lets each word look at the other words in the sentence and decide how much each one matters to its meaning",
+        "Cuts the input text into small pieces, such as words or parts of words",
+        "Turns each piece of text into a list of numbers, so similar meanings get similar numbers",
+        "Adds information about where each word sits in the sentence"
+      ],
+      "correct": [1, 2, 0, 3],
+      "prompts": [
+        "Tokenizer",
+        "Embeddings",
+        "Self-attention",
+        "Positional encoding"
+      ],
+      "explain": "Tokenizer = cuts text into tokens (it does not understand anything). Embeddings = tokens become vectors of numbers that carry meaning. Self-attention = each word weighs the other words (this is how 'bank' knows river vs money). Positional encoding = word ORDER. Trick: cut → number → look around → order."
+    },
+    {
+      "id": 6,
+      "domain": 2,
+      "scenario": "A startup wants to use an open model from Amazon Bedrock. It does not want to choose, start or pay for any instances, and it wants to pay only for the tokens it sends and receives. A second team instead wants to pick its own GPU instance type for the same model family. Which pairing is correct?",
+      "options": [
+        "Startup: SageMaker JumpStart endpoint · Second team: Bedrock on-demand",
+        "Startup: Bedrock on-demand · Second team: SageMaker JumpStart endpoint",
+        "Both teams: Bedrock on-demand, because open models are always serverless",
+        "Both teams: SageMaker JumpStart, because Bedrock cannot run open models"
+      ],
+      "correct": [1],
+      "explain": "No instances + pay per token = Bedrock on-demand (serverless, AWS runs the servers). Choose your own instance type + pay while it runs = a SageMaker JumpStart endpoint. Trick: JumpStart = you get the keys to the server; Bedrock = you just call an API."
+    },
+    {
+      "id": 7,
+      "domain": 2,
+      "multi": true,
+      "scenario": "A logistics company lists five automation ideas. Which TWO are the BEST fit for an AI agent? (Select TWO)",
+      "options": [
+        "When a parcel is late, check the tracking system, rebook the courier through its API and email the customer",
+        "Plan a delivery route by checking traffic data, the depot stock system and each driver's schedule",
+        "Convert every price in a report from dollars to euros with a fixed exchange rate",
+        "Predict next month's parcel volume from three years of daily numbers in a table",
+        "Keep shipping records for ten years at the lowest possible storage cost"
+      ],
+      "correct": [0, 1],
+      "explain": "Agents fit work with MANY STEPS that needs planning and calling SEVERAL tools or systems: the late-parcel flow and the route plan. A fixed exchange rate is normal code. Predicting a number from a table is classic ML (regression or forecasting). Cheap long-term storage is Amazon S3 Glacier. Trick: agent = a to-do list + many systems."
+    },
+    {
+      "id": 8,
+      "domain": 2,
+      "type": "ordering",
+      "scenario": "A team builds its own foundation model. Put these stages in the correct order, from first to last.",
+      "options": [
+        "Deployment",
+        "Fine-tuning",
+        "Data selection",
+        "Feedback",
+        "Pre-training",
+        "Evaluation",
+        "Model selection"
+      ],
+      "correct": [2, 6, 4, 1, 5, 0, 3],
+      "explain": "Data selection → model selection → pre-training → fine-tuning → evaluation → deployment → feedback. You test (evaluate) what you built, so fine-tuning comes BEFORE evaluation. Feedback from users comes last and starts the next round. Trick: 'Data, Model, Pre, Fine, Test, Ship, Listen'."
+    },
+    {
+      "id": 9,
+      "domain": 3,
+      "type": "matching",
+      "scenario": "Match each situation to the method that fits it BEST.",
+      "options": [
+        "Train the model on many 'instruction → ideal answer' pairs so it follows instructions better",
+        "People rank several model answers from best to worst, and the model learns from those rankings",
+        "Keep training the model on millions of pages of the company's plain, unlabelled text",
+        "Search a document store at question time and add the matching text to the prompt",
+        "Put two or three examples inside the prompt, with no training at all"
+      ],
+      "correct": [0, 1, 2, 3, 4],
+      "prompts": [
+        "A company has 40,000 tasks such as 'Write a two-line reply to this email', each with the ideal answer",
+        "Human reviewers compare pairs of answers and choose which one is more helpful and safe",
+        "A mining company wants the model to understand its industry words from 20 years of reports",
+        "Answers must use this week's price list and show which file they came from",
+        "A team wants a fixed answer format today, at the lowest cost, with only two examples"
+      ],
+      "explain": "Instruction → ideal answer pairs = instruction tuning (a kind of fine-tuning). Humans RANK answers = RLHF (reinforcement learning from human feedback). Plain unlabelled text to learn the domain language = continued pre-training. Facts that change + show the source = RAG. Two examples in the prompt, no training = few-shot prompting. Ask: labelled pairs? rankings? unlabelled text? changing facts? just a few examples?"
+    },
+    {
+      "id": 10,
+      "domain": 3,
+      "scenario": "An airline has 9,000 customer complaints, and each one is paired with the reply its best agent wrote. It wants a Bedrock model to always answer in that calm, short airline style, and it wants prompts to stay short. Which approach fits BEST?",
+      "options": [
+        "Put as many of the best replies as fit into every prompt as few-shot examples",
+        "Store all 9,000 replies in a Knowledge Base and retrieve similar ones for each prompt",
+        "Fine-tune the model on the 9,000 complaint and reply pairs",
+        "Run continued pre-training on the 9,000 replies as plain, unlabelled text"
+      ],
+      "correct": [2],
+      "explain": "Thousands of labelled PAIRS (input + ideal output) + one fixed style every time + short prompts = fine-tuning. A Knowledge Base adds facts at question time and makes prompts longer; it does not change the style for good. Few-shot makes every prompt long. Continued pre-training is for UNLABELLED text, but this data is labelled pairs."
+    },
+    {
+      "id": 11,
+      "domain": 3,
+      "scenario": "A telecom company added a GenAI assistant to its help website. The stated business goal is to lower the cost of customer support. Which measure shows MOST directly whether the assistant meets this goal?",
+      "options": [
+        "The ROUGE score of the assistant's answers against answers written by staff",
+        "The share of help chats solved without a human agent, and the cost per solved chat",
+        "The model's average response time for the slowest 1% of requests",
+        "The perplexity of the model on a test set of past support conversations"
+      ],
+      "correct": [1],
+      "explain": "Goal = lower support cost, so measure cost: chats solved with no human (deflection) and the cost per solved chat. ROUGE and perplexity are technical model scores; a high score does not prove lower cost. Response time is a technical metric too. Always match the measure to the business goal that the question states."
+    },
+    {
+      "id": 12,
+      "domain": 3,
+      "multi": true,
+      "scenario": "A sales team's prompt gives vague, rambling answers. Which TWO actions follow prompt engineering best practices? (Select TWO)",
+      "options": [
+        "Say clearly what the task is, who the answer is for, the format and the length",
+        "Write a few versions of the prompt, test them on the same questions and keep the best one",
+        "Paste the full sales handbook into every prompt so the model never misses context",
+        "Fix the prompt once and never change it, so that the results stay stable",
+        "Set the temperature to the highest value so the answers become more accurate"
+      ],
+      "correct": [0, 1],
+      "explain": "Good prompts are specific and concise (task, audience, format, length) and come from experimenting: try versions, compare, keep the best. Unneeded text costs tokens and often makes answers worse. A prompt should be improved over time, not frozen. A high temperature makes answers MORE random, not more accurate."
+    },
+    {
+      "id": 13,
+      "domain": 3,
+      "scenario": "A hotel chain wants a guest assistant on a foundation model. When a guest says 'Move my booking to Friday and add breakfast', the model must work out by itself which booking APIs to call and in what order. Which option fits BEST?",
+      "options": [
+        "Amazon Bedrock Agents with action groups that describe the booking APIs",
+        "An Amazon Bedrock Knowledge Base that stores the booking API documents",
+        "An Amazon Lex bot whose intents and slots the developers design by hand",
+        "Amazon Bedrock Guardrails with a denied topic for booking questions"
+      ],
+      "correct": [0],
+      "explain": "The model plans the steps itself and CALLS APIs = Bedrock Agents. Action groups describe the APIs (an OpenAPI schema or function details) and usually run them with Lambda. A Knowledge Base can only find text; it cannot call an API. Lex follows conversation flows designed in advance. Guardrails filter content; they do not call anything."
+    },
+    {
+      "id": 14,
+      "domain": 4,
+      "type": "matching",
+      "scenario": "Match each improvement to the responsible AI feature it shows.",
+      "options": [
+        "The bot now offers large text, voice input and two more local languages for older and disabled users",
+        "The bot still answers sensibly when users type with many spelling mistakes or strange symbols",
+        "Each answer is checked against trusted sources so that the facts it gives are true",
+        "Staff can change the bot's rules and correct its behaviour without retraining it"
+      ],
+      "correct": [0, 1, 2, 3],
+      "prompts": [
+        "Inclusivity",
+        "Robustness",
+        "Veracity",
+        "Controllability"
+      ],
+      "explain": "Inclusivity = everyone can use it (ages, abilities, languages). Robustness = keeps working with unusual or bad input. Veracity = the answers are true. Controllability = humans can steer and correct the system. Trick: inclusivity = 'for everyone'; robustness = 'does not break'."
+    },
+    {
+      "id": 15,
+      "domain": 4,
+      "scenario": "A lender built its own credit model in SageMaker. A customer who was refused a loan asks why. The lender must show how much each input, such as income and debt, pushed that ONE decision toward 'refuse'. Which option provides this?",
+      "options": [
+        "An AWS AI Service Card describing the intended use and limits of the model",
+        "A SageMaker Model Card that records the model's training data and risks",
+        "SageMaker Clarify feature attributions based on SHAP values",
+        "SageMaker Model Monitor reports on the quality of the live input data"
+      ],
+      "correct": [2],
+      "explain": "How much each feature pushed ONE prediction = feature attribution (SHAP) in SageMaker Clarify. A Model Card documents YOUR model for governance but does not explain single decisions. AI Service Cards are AWS's documents about AWS's OWN services (such as Rekognition), never your model. Model Monitor watches data quality and drift over time."
+    },
+    {
+      "id": 16,
+      "domain": 4,
+      "scenario": "A university wants to train an admissions model on 15 years of past decisions. During those years, applicants from some postcodes were rejected far more often than equally qualified applicants from other postcodes. What is the MAIN risk, and what should the team do FIRST?",
+      "options": [
+        "Underfitting, because 15 years of data is too much; use only the last 2 years",
+        "Hallucination, because the model may invent new applicants; add a Guardrails filter",
+        "Data drift, because postcodes change; turn on Model Monitor after launch",
+        "Bias, because the model will learn the unfair pattern; check the data with Clarify"
+      ],
+      "correct": [3],
+      "explain": "Biased history in = biased model out. The model learns that some postcodes were rejected and repeats it. Check the training data for bias with SageMaker Clarify BEFORE training. More data never causes underfitting. Hallucination is invented facts in GenAI. Drift is a change after launch, not bias already in the data."
+    },
+    {
+      "id": 17,
+      "domain": 5,
+      "type": "matching",
+      "scenario": "A bank's AI team has five logging and compliance needs. Match each need to the AWS option that meets it.",
+      "options": [
+        "Record the full text of every prompt sent to Bedrock and every reply the model gave",
+        "Find which IAM user deleted a guardrail yesterday, and at what time",
+        "Search two years of API activity on the AI platform with SQL queries",
+        "Raise an alarm when Bedrock latency stays above 3 seconds for 5 minutes",
+        "Download AWS's own SOC report and accept a Business Associate Addendum (BAA)"
+      ],
+      "correct": [0, 1, 2, 3, 4],
+      "prompts": [
+        "Amazon Bedrock model invocation logging",
+        "AWS CloudTrail event history",
+        "AWS CloudTrail Lake",
+        "Amazon CloudWatch",
+        "AWS Artifact"
+      ],
+      "explain": "Invocation logging = WHAT WAS SAID (prompt and reply text, to CloudWatch Logs or S3). CloudTrail = WHO called which API and WHEN. CloudTrail Lake = keep that history a long time and search it with SQL. CloudWatch = metrics and alarms. Artifact = AWS's OWN paperwork (SOC/ISO reports, BAA). Trick: trail = who, invocation log = what, watch = numbers."
+    },
+    {
+      "id": 18,
+      "domain": 5,
+      "scenario": "A health company must show its auditors that its OWN AWS account keeps every S3 bucket with training data encrypted. The rules must be checked continuously, grouped into a ready-made pack, and keep a history of each bucket's settings. Which service fits BEST?",
+      "options": [
+        "AWS Artifact, which provides AWS's compliance reports on demand",
+        "AWS Config, with a conformance pack of rules",
+        "Amazon Inspector, which scans the account for software vulnerabilities",
+        "AWS Trusted Advisor, which checks the account against best practices"
+      ],
+      "correct": [1],
+      "explain": "Your OWN account + rules checked continuously + a history of each resource's settings = AWS Config; a conformance pack groups many rules together. Artifact is only AWS's own reports and agreements; it never checks your account. Inspector finds software vulnerabilities (CVEs). Trusted Advisor gives general tips, not your own rules. Trick: 'my account' = never Artifact."
+    },
+    {
+      "id": 19,
+      "domain": 5,
+      "scenario": "A Bedrock agent's Lambda function calls a partner's shipping API with an API key. The key must not be stored in the code, and it must be replaced automatically on a schedule without writing a custom rotation system. Which service fits BEST?",
+      "options": [
+        "AWS Key Management Service (AWS KMS) with automatic key rotation",
+        "An environment variable on the Lambda function, encrypted at rest",
+        "An encrypted object in Amazon S3 that the function reads at start-up",
+        "AWS Secrets Manager with rotation turned on for the stored secret"
+      ],
+      "correct": [3],
+      "explain": "Passwords and API keys that must rotate automatically = Secrets Manager. KMS rotates ENCRYPTION keys that protect data; it does not store or rotate an API key for another company's service. An environment variable or an S3 object never rotates by itself. Trick: password or API key = Secrets Manager; encryption key = KMS."
+    },
+    {
+      "id": 20,
+      "domain": 5,
+      "scenario": "A travel company's booking agent can call a 'cancel booking' tool. The company wants a hard rule that the agent can never cancel more than 3 bookings for one customer per day. The rule must be checked outside the model, BEFORE the tool runs, so that no prompt can talk the agent past it. Which option fits BEST?",
+      "options": [
+        "A sentence in the agent's system prompt that states the daily limit",
+        "An Amazon CloudWatch alarm that fires when cancellations go over 3",
+        "Policy in Amazon Bedrock AgentCore for the cancel booking tool",
+        "A Bedrock Guardrails content filter set to the highest strength"
+      ],
+      "correct": [2],
+      "explain": "A hard rule on which tool calls an agent may make, checked outside the model before the call = Policy in AgentCore. A system prompt can be bypassed by prompt injection. A CloudWatch alarm only tells you AFTER the cancellations happened. Guardrails filter harmful content and topics, not tool-call limits. Trick: CloudWatch = told afterwards; Policy = stopped before."
+    }
+  ]
+}
