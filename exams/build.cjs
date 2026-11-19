@@ -45,7 +45,7 @@ function page(meta, questions) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${cert.code} ${meta.title}</title>
 <link rel="stylesheet" href="../assets/lesson.css?v=17">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=19">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=20">
 </head>
 <body>
 <div class="exam-shell">
@@ -120,7 +120,7 @@ var EXAM_META = ${JSON.stringify({
 })};
 var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 </script>
-<script src="../assets/exam-engine.js?v=18"></script>
+<script src="../assets/exam-engine.js?v=19"></script>
 <script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>

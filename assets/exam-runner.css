@@ -244,3 +244,17 @@ li.r-wrong { background: #fdecea; }
 @media (prefers-color-scheme: dark) {
   li.r-wrong { background: #4a1f1f; }
 }
+
+/* Clearer "why" after an answer: you chose / right answer, one point per line, trick box */
+.why-box { margin: 0.5rem 0 0.6rem; display: grid; gap: 0.35rem; }
+.why-mine, .why-right { padding: 0.45rem 0.6rem; border-radius: 4px; font-size: 0.9rem; }
+.why-mine { background: rgba(220, 38, 38, 0.10); border-left: 3px solid #dc2626; }
+.why-right { background: rgba(22, 163, 74, 0.10); border-left: 3px solid #16a34a; }
+.why-list { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+.why-li { margin: 0.3rem 0; }
+.why-li.mine { background: rgba(220, 38, 38, 0.07); border-radius: 3px; padding: 0.15rem 0.3rem; }
+.why-li.right { background: rgba(22, 163, 74, 0.07); border-radius: 3px; padding: 0.15rem 0.3rem; }
+.why-tag { display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; padding: 0 0.35rem; border-radius: 3px; margin-right: 0.25rem; }
+.why-tag.bad { background: #dc2626; color: #fff; }
+.why-tag.good { background: #16a34a; color: #fff; }
+.why-trick { margin-top: 0.6rem; padding: 0.5rem 0.65rem; border-radius: 4px; background: rgba(234, 179, 8, 0.15); border-left: 3px solid #eab308; font-size: 0.9rem; }

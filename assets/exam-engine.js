@@ -257,7 +257,7 @@
         '<div class="review-head"><span class="rv">' + (ok ? '✔ Correct!' : '✘ Not quite') + '</span></div>' +
         '<ul class="review-opts">' + reviewOptionsHtml(q, state.idx) + '</ul>' +
         '<div class="review-explain"' + (q.explainUr ? ' data-ur="' + q.explainUr.replace(/"/g, '&quot;') + '"' : '') +
-          '><strong>Why:</strong> ' + q.explain + '</div>' +
+          '><strong>Why:</strong> ' + explainHtml(q, state.idx, ok) + '</div>' +
         (state.idx < QUESTIONS.length - 1
           ? '<button class="btn-primary learn-next" id="learn-next">Next question →</button>'
           : '<button class="btn-primary learn-next" id="learn-finish">See my results →</button>') +
@@ -558,6 +558,68 @@
     return opts;
   }
 
+  // A clearer "why" for a wrong answer: a "You chose / Right answer" box, the
+  // explanation split into one point per line, the line about HIS choice and
+  // the line about the right answer marked, and the Trick in its own box.
+  var STOP = ' the and for with that this from into each only more less than your have will what which when they them their there about does make made used uses using just also very most best like over under same other some such data model models amazon aws '.split(' ');
+  function words(s) {
+    var txt = String(s).replace(/<[^>]+>/g, ' ');
+    // Initials of a capitalised name, so "Mean absolute error" also matches "MAE".
+    var caps = (txt.match(/\b[A-Z][a-z]+(?:\s+[a-z]+){1,3}/g) || []).map(function (p) {
+      return p.split(/\s+/).map(function (w) { return w[0]; }).join('').toLowerCase();
+    });
+    var list = (txt.toLowerCase().match(/[a-z0-9]+/g) || [])
+      .filter(function (w) { return w.length >= 3 && STOP.indexOf(w) === -1; })
+      .map(function (w) { return w.slice(0, 4); });
+    return list.concat(caps.filter(function (c) { return c.length >= 3; }));
+  }
+  // The sentence that talks about these options: words that appear in THESE
+  // options but in none of the others count most. Weak matches are not marked.
+  function bestSentence(q, sentences, picked, skip) {
+    var others = [];
+    q.options.forEach(function (o, oi) { if (picked.indexOf(oi) === -1) others = others.concat(words(o)); });
+    var ow = [];
+    picked.forEach(function (oi) { ow = ow.concat(words(q.options[oi])); });
+    var best = -1, bestScore = 0.99;
+    sentences.forEach(function (s, si) {
+      if (si === skip) return;
+      var sw = words(s), score = 0;
+      ow.forEach(function (w) { if (sw.indexOf(w) !== -1) score += others.indexOf(w) === -1 ? 1 : 0.25; });
+      if (score > bestScore) { bestScore = score; best = si; }
+    });
+    return best;
+  }
+  function explainHtml(q, i, ok) {
+    var raw = String(q.explain);
+    var trick = '';
+    var tm = raw.match(/\s*Trick:\s*([\s\S]*)$/);
+    if (tm) { trick = tm[1]; raw = raw.slice(0, tm.index); }
+    var sentences = raw.split(/(?<=[.!?])\s+(?=[A-Z'"(])/).filter(function (s) { return s.trim(); });
+
+    var t = typeOf(q), sel = state.answers[i] || [];
+    var top = '', mineIdx = -1, rightIdx = -1;
+    if (!ok && (t === 'single' || q.multi || t === 'multi') && q.options) {
+      var wrongPicks = sel.filter(function (oi) { return q.correct.indexOf(oi) === -1; });
+      var missed = q.correct.filter(function (oi) { return sel.indexOf(oi) === -1; });
+      top = '<div class="why-box">' +
+        (wrongPicks.length
+          ? '<div class="why-mine">✘ <strong>You chose:</strong> ' + wrongPicks.map(function (oi) { return q.options[oi]; }).join(' · ') + '</div>'
+          : (sel.length ? '' : '<div class="why-mine">✘ <strong>You did not answer.</strong></div>')) +
+        '<div class="why-right">✔ <strong>Right answer:</strong> ' + missed.map(function (oi) { return q.options[oi]; }).join(' · ') + '</div>' +
+      '</div>';
+      if (wrongPicks.length) mineIdx = bestSentence(q, sentences, wrongPicks, -1);
+      rightIdx = bestSentence(q, sentences, missed, mineIdx);
+    }
+
+    var list = '<ul class="why-list">' + sentences.map(function (s, si) {
+      if (si === mineIdx) return '<li class="why-li mine"><span class="why-tag bad">about your choice</span> ' + s + '</li>';
+      if (si === rightIdx) return '<li class="why-li right"><span class="why-tag good">why the right one</span> ' + s + '</li>';
+      return '<li class="why-li">' + s + '</li>';
+    }).join('') + '</ul>';
+
+    return top + list + (trick ? '<div class="why-trick">🧠 <strong>Trick:</strong> ' + trick + '</div>' : '');
+  }
+
   function renderReview() {
     var list = document.getElementById('review-list');
     if (!list) return;
@@ -579,7 +641,7 @@
         '</div>' +
         '<div class="review-scenario">' + q.scenario + '</div>' +
         '<ul class="review-opts">' + opts + '</ul>' +
-        '<div class="review-explain"' + explainUr + '><strong>Why:</strong> ' + q.explain + '</div>' +
+        '<div class="review-explain"' + explainUr + '><strong>Why:</strong> ' + explainHtml(q, i, ok) + '</div>' +
       '</div>';
     }).join('');
 

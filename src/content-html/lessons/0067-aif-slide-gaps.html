@@ -1,0 +1,172 @@
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">AWS AIF-C01 · Lesson I6 · Domains 1–5 · gap-filler</p>
+    <h1 data-ur="Course slides ke aakhri khaali hisse">The last gaps from the course slides</h1>
+    <p class="subtitle" data-ur="Maine course ki 368 slides ko script se is site ke har lesson aur quiz se milaya. Exam guide wali har cheez pehle se covered thi, magar slides mein kuch chhoti cheezein aur thin jo hum ne kabhi nahi parhin: R², MAPE, bias ki qismein, PDP, kuch SageMaker features aur medical services. Yeh lesson sirf woh khaali jagah bharta hai.">I matched all 368 course slides against every lesson and quiz on this site with a script. Everything in the exam guide was already covered, but the slides teach some small extras we never did: R², MAPE, types of bias, PDP, a few SageMaker features and the medical services. This lesson fills only those gaps.</p>
+    <div class="meta">
+      <span>~15 min</span>
+      <span>Many small facts, one table each</span>
+      <span>Then: Hard Quiz 16 and 17</span>
+    </div>
+  </header>
+
+  <div class="key">
+    <span class="callout-label" data-ur="Agar ek cheez yaad rakhni ho">If you remember one thing</span>
+    <span data-ur="Har section mein ek <strong>Trick</strong> line hai. Poora table yaad karne ki zaroorat nahi — exam mein sirf trigger word pakarna hai: &quot;percentage&quot; = MAPE, &quot;0 se 1, explain&quot; = R², &quot;bina internet&quot; = edge par chhota model, &quot;medical text&quot; = Comprehend Medical.">Each section has one <strong>Trick</strong> line. You do not need the whole table. In the exam, catch the trigger word: &quot;percentage&quot; = MAPE, &quot;0 to 1, explains&quot; = R², &quot;no internet&quot; = small model on the edge, &quot;medical text&quot; = Comprehend Medical.</span>
+  </div>
+
+  <h2 data-ur="1. Numbers parkhne ke metrics (regression)">1. Metrics for models that predict a number (regression)</h2>
+
+  <div class="bridge">
+    <span class="callout-label" data-ur="Misaal">Worked example</span>
+    <span data-ur="Model ne do ghar ki qeemat batayi. Asal: 100 aur 200. Model: 110 aur 180. Ghalti: 10 aur 20. <strong>MAE</strong> = (10+20)/2 = <strong>15</strong> (rupay mein). <strong>MAPE</strong> = (10% + 10%)/2 = <strong>10%</strong> (percent mein). <strong>RMSE</strong> = √((100+400)/2) ≈ <strong>15.8</strong> — MAE se zyada, kyun ke bari ghalti (20) ko square hone se zyada saza milti hai. <strong>R²</strong> = 0 se 1 ka score: model ne qeematon ke utaar charhao ka kitna hissa samjha. 1 ke qareeb = acha.">A model predicts two house prices. Real: 100 and 200. Model: 110 and 180. Misses: 10 and 20. <strong>MAE</strong> = (10+20)/2 = <strong>15</strong> (in money). <strong>MAPE</strong> = (10% + 10%)/2 = <strong>10%</strong> (in percent). <strong>RMSE</strong> = √((100+400)/2) ≈ <strong>15.8</strong>, which is more than MAE because squaring punishes the big miss (20) more. <strong>R²</strong> = a score from 0 to 1: how much of the ups and downs in prices the model explains. Close to 1 = good.</span>
+  </div>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Metric</th><th>What it tells you</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MAE</strong> (mean absolute error)</td><td>Average miss, in the real units (money, items)</td><td>&quot;on average, how many dollars off&quot;</td></tr>
+        <tr><td><strong>MAPE</strong> (mean absolute percentage error)</td><td>Average miss as a <em>percent</em>, fair for small and big values</td><td>&quot;percentage&quot;, &quot;small and big stores alike&quot;</td></tr>
+        <tr><td><strong>RMSE</strong> (root mean squared error)</td><td>Like MAE, but <em>big</em> misses count much more</td><td>&quot;one big mistake is very costly&quot;</td></tr>
+        <tr><td><strong>R²</strong> (R squared)</td><td>0 to 1: how much of the variation the model explains</td><td>&quot;0 to 1&quot;, &quot;how much is explained&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 data-ur="2. Confusion matrix — precision aur recall kahan se aate hain">2. The confusion matrix: where precision and recall come from</h2>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th></th><th>Model said YES (spam)</th><th>Model said NO</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Really YES</strong></td><td>TP: true positive (caught)</td><td>FN: false negative (missed)</td></tr>
+        <tr><td><strong>Really NO</strong></td><td>FP: false positive (false alarm)</td><td>TN: true negative</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Metric</th><th>Formula</th><th>Use it when</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Precision</strong></td><td>TP / (TP + FP)</td><td>False alarms are costly (good email lands in spam)</td></tr>
+        <tr><td><strong>Recall</strong></td><td>TP / (TP + FN)</td><td>Missing a real case is costly (cancer, fraud)</td></tr>
+        <tr><td><strong>F1</strong></td><td>Balance of precision and recall</td><td>You need both, especially with unbalanced data</td></tr>
+        <tr><td><strong>Accuracy</strong></td><td>(TP + TN) / all</td><td>Classes are balanced and both mistakes cost the same</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> Precision mein FP hai (model ki bajai hui ghanti). Recall mein FN hai (asal cases jo chhoot gaye). Misaal: TP 40, FP 10, FN 20 → precision 40/50 = 80%, recall 40/60 = 67%."><strong>Trick:</strong> Precision has FP in it (the alarms the model raised). Recall has FN in it (the real cases it missed). Example: TP 40, FP 10, FN 20 → precision 40/50 = 80%, recall 40/60 = 67%.</p>
+
+  <h2 data-ur="3. Seekhne ke tareeqe — do naye">3. Ways a model learns: two new ones</h2>
+
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Type</th><th>Labels?</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Supervised</td><td>All data labelled</td><td>Predict churn from a labelled table</td></tr>
+        <tr><td>Unsupervised</td><td>No labels</td><td>K-means finds customer groups</td></tr>
+        <tr><td><strong>Semi-supervised</strong></td><td><strong>A few</strong> human labels + <strong>lots</strong> without</td><td>500 labelled X-rays + 200,000 unlabelled. The model labels the rest itself (<em>pseudo-labelling</em>), then retrains.</td></tr>
+        <tr><td><strong>Self-supervised</strong></td><td><strong>No</strong> human labels; the data makes its own</td><td>Hide a word and predict it (a <em>pretext task</em>). This is how BERT and GPT are pre-trained.</td></tr>
+        <tr><td>Reinforcement</td><td>Rewards, not labels</td><td>A robot learns by trial and reward</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> Semi = thore insaani labels + bohat saara bina label. Self = koi insaan nahi, model khud chhupa hua hissa guess karta hai."><strong>Trick:</strong> Semi = a few human labels + lots unlabelled. Self = no humans at all; the model guesses the hidden part.</p>
+
+  <h2 data-ur="4. Model kahan chalaye: edge ya cloud">4. Where the model runs: edge or cloud</h2>
+  <div class="numbers">
+    <table>
+      <thead><tr><th></th><th>Small model (SLM) on the device (edge)</th><th>Large model (LLM) in the cloud</th></tr></thead>
+      <tbody>
+        <tr><td>Speed</td><td>Very low latency</td><td>Higher latency (over the internet)</td></tr>
+        <tr><td>Internet</td><td><strong>Works offline</strong></td><td>Must be online</td></tr>
+        <tr><td>Power</td><td>Less capable, small compute</td><td>More powerful</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> &quot;bina internet&quot; ya &quot;milliseconds&quot; = device par chhota model. &quot;Sab se achha jawab, internet theek hai&quot; = cloud mein bara model."><strong>Trick:</strong> &quot;no internet&quot; or &quot;milliseconds&quot; = small model on the device. &quot;Best quality, internet is fine&quot; = large model in the cloud.</p>
+
+  <h2 data-ur="5. SageMaker ke baaqi features">5. The SageMaker features we had not covered</h2>
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Feature</th><th>Its job</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Automatic Model Tuning (AMT)</strong></td><td>Searches <em>hyperparameters</em> (learning rate, batch size, epochs) for the best value of one goal metric; can stop bad jobs early</td><td>&quot;find the best settings&quot;, &quot;hyperparameters&quot;</td></tr>
+        <tr><td><strong>Autopilot</strong> (AutoML, inside <strong>Canvas</strong>)</td><td>Tries algorithms and builds the best model for you</td><td>&quot;build the model automatically&quot;, &quot;no code&quot;</td></tr>
+        <tr><td><strong>Built-in algorithms</strong></td><td>Ready algorithms: Linear Learner, <strong>KNN</strong> (classify by neighbours, needs labels), <strong>K-means</strong> (find groups, no labels), <strong>PCA</strong> (fewer features), anomaly detection</td><td>&quot;too many columns&quot; = PCA · &quot;find groups&quot; = K-means</td></tr>
+        <tr><td><strong>MLflow on SageMaker</strong></td><td>Managed MLflow tracking servers to track runs and experiments</td><td>&quot;MLflow&quot;, &quot;track experiments&quot;</td></tr>
+        <tr><td><strong>Model Dashboard</strong></td><td>One portal showing <em>all</em> models, which are deployed, and which break the Model Monitor limits (quality, bias)</td><td>&quot;see all models in one place&quot;</td></tr>
+        <tr><td><strong>Model Registry</strong></td><td>Versions and approval status of models</td><td>&quot;version&quot;, &quot;approve before deploy&quot;</td></tr>
+        <tr><td><strong>Model Cards</strong></td><td>Written documentation: intended use, risk, training details</td><td>&quot;document the model&quot;</td></tr>
+        <tr><td><strong>Role Manager</strong></td><td>Quick least-privilege IAM roles for ML personas (data scientist, MLOps)</td><td>&quot;roles for personas&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> AMT = knobs ghumao (settings). Autopilot = poora model bana do. Dashboard = sab models ek jagah. Registry = versions. Cards = kaghaz (documentation). Role Manager = ijazatein."><strong>Trick:</strong> AMT = turn the knobs (settings). Autopilot = build the whole model. Dashboard = all models in one place. Registry = versions. Cards = paperwork. Role Manager = permissions.</p>
+
+  <h2 data-ur="6. AI services ke &quot;custom&quot; aur medical versions">6. The "custom" and medical versions of the AI services</h2>
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Feature</th><th>Its job</th><th>Trigger words</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Comprehend custom classification</strong></td><td>Puts a <em>whole document</em> into <em>your</em> categories</td><td>&quot;sort each email into refund / delivery / other&quot;</td></tr>
+        <tr><td><strong>Comprehend custom entity recognition</strong></td><td>Finds <em>your</em> special words <em>inside</em> text</td><td>&quot;policy numbers&quot;, &quot;claim IDs&quot;</td></tr>
+        <tr><td><strong>Transcribe custom vocabulary</strong></td><td>Adds specific words (brands, acronyms) with hints</td><td>&quot;keeps misspelling our product name&quot;</td></tr>
+        <tr><td><strong>Transcribe custom language model</strong></td><td>Trains on lots of your domain text to learn <em>context</em></td><td>&quot;large volumes of domain speech&quot;</td></tr>
+        <tr><td><strong>Comprehend Medical</strong></td><td>Medical <em>text</em> → medicines, conditions, tests; detects PHI</td><td>&quot;doctors' notes&quot;, &quot;discharge summaries&quot;</td></tr>
+        <tr><td><strong>Transcribe Medical</strong></td><td>Medical <em>speech</em> → text (HIPAA-eligible)</td><td>&quot;doctors dictate notes&quot;</td></tr>
+        <tr><td><strong>AWS HealthScribe</strong></td><td>Patient-clinician <em>conversation</em> → transcript, speaker roles, medical terms and a draft <em>clinical note</em></td><td>&quot;write the visit note from the conversation&quot;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> Medical TEXT = Comprehend Medical. Medical AWAAZ = Transcribe Medical. Guftagu se NOTE = HealthScribe. Ek lafz = custom vocabulary. Poora document group mein = custom classification. Text ke andar apne lafz = custom entity."><strong>Trick:</strong> Medical TEXT = Comprehend Medical. Medical SPEECH = Transcribe Medical. Conversation to NOTE = HealthScribe. One word = custom vocabulary. Whole document into a group = custom classification. My words inside the text = custom entity.</p>
+
+  <h2 data-ur="7. Amazon Q ke saathi">7. Amazon Q extras</h2>
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Name</th><th>Its job</th></tr></thead>
+      <tbody>
+        <tr><td><strong>IAM Identity Center</strong> + Q Business</td><td>How staff <em>sign in</em> to Q Business. It can link to Microsoft AD or Google. Each user only gets answers from documents they may see.</td></tr>
+        <tr><td><strong>Amazon Q Apps</strong></td><td>Build small GenAI apps from plain words, no code, on your Q Business data</td></tr>
+        <tr><td><strong>PartyRock</strong></td><td>Free Bedrock playground for building GenAI apps. No code, <strong>no AWS account</strong>. For learning.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 data-ur="8. Responsible AI ke baaqi lafz">8. The remaining responsible-AI words</h2>
+  <div class="numbers">
+    <table>
+      <thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sampling bias</strong></td><td>The data does not represent everyone</td><td>90% young faces → weak on older faces. Fix: balance or augment the data (Data Wrangler).</td></tr>
+        <tr><td><strong>Measurement bias</strong></td><td>The tool that collected the data is wrong</td><td>A broken scale adds 2 kg to every record</td></tr>
+        <tr><td><strong>Observer bias</strong></td><td>The person collecting or labelling adds their own bias</td><td>A tagger favours their own university</td></tr>
+        <tr><td><strong>Confirmation bias</strong></td><td>A person trusts results that match what they already believe</td><td>A manager ignores results they dislike</td></tr>
+        <tr><td><strong>Algorithmic vs human bias</strong></td><td>Biased data → biased model · the builders add bias</td><td></td></tr>
+        <tr><td><strong>Partial dependence plot (PDP)</strong></td><td>Shows how <em>one</em> feature changes the prediction while the others stay the same (Clarify). Helps explain black-box models.</td><td>&quot;If income goes up, how does the score change?&quot;</td></tr>
+        <tr><td><strong>Plagiarism and cheating</strong></td><td>A GenAI challenge: essays written by AI, hard to trace an output's source, detection tools growing</td><td></td></tr>
+        <tr><td><strong>Complexity and opacity</strong></td><td>Hard to audit <em>how</em> the system decides</td><td></td></tr>
+        <tr><td><strong>Dynamism</strong></td><td>The system changes over time</td><td></td></tr>
+        <tr><td><strong>Emergent capabilities</strong></td><td>Surprise skills nobody planned</td><td>A travel bot that can also write code</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="qual" data-ur="<strong>Trick:</strong> Sampling = DATA mein kaun hai. Measurement = AALA ghalat. Observer = LABEL lagane wala. Confirmation = PARHNE wala. Prompt attacks yaad karo: Poisoning = training data, Injection = input mein chhupe hukm, Exposure = logon ka data leak, Leaking = prompt leak, Jailbreak = safety rules todna."><strong>Trick:</strong> Sampling = WHO is in the data. Measurement = the TOOL. Observer = the LABELLER. Confirmation = the READER. And the prompt attacks: Poisoning = training data · Injection = hidden orders in the input · Exposure = leaks people's data · Leaking = leaks the prompt · Jailbreak = breaks the safety rules.</p>
+
+  <div class="win">
+    <span class="callout-label" data-ur="Ab kya karna hai">What to do now</span>
+    <span data-ur="<strong>1.</strong> Pehle Mock 3 dobara do (yeh lesson R² sikhata hai, jo Mock 3 mein hai). <strong>2.</strong> Phir yeh lesson parho. <strong>3.</strong> Phir <a href='../exams/aif-hard-16.html'>Hard Quiz 16</a> (slides ke gaps) aur <a href='../exams/aif-hard-17.html'>Hard Quiz 17</a> (baaqi gaps + Mock 3 ke traps), Learn mode mein."><strong>1.</strong> Retake Mock 3 FIRST (this lesson teaches R², which is in Mock 3). <strong>2.</strong> Then read this lesson. <strong>3.</strong> Then do <a href="../exams/aif-hard-16.html">Hard Quiz 16</a> (slide gaps) and <a href="../exams/aif-hard-17.html">Hard Quiz 17</a> (remaining gaps + Mock 3 traps) in Learn mode.</span>
+  </div>
+
+  <footer class="lesson-foot">
+    <p><strong>Lesson I6 (the last gaps from the course slides).</strong> Part of the <a href="../aif-index.html">AIF-C01 track</a>. Previous: <a href="0066-aif-data-and-supporting-services.html">I5 · The data services underneath the AI</a>.</p>
+    <p class="sources"><strong>Sources</strong></p>
+    <ol class="sources">
+      <li>AWS Certified AI Practitioner course slides v19 (S. Maarek): regression metrics, confusion matrix, semi- and self-supervised learning, edge inference, SageMaker AMT, Canvas/Autopilot, built-in algorithms, MLflow, Model Dashboard, Role Manager, Comprehend custom features and Comprehend Medical, Transcribe custom vocabularies and Transcribe Medical, HealthScribe, Q Business with IAM Identity Center, Q Apps, PartyRock, bias types, PDP, GenAI challenges, AI compliance challenges.</li>
+      <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-practitioner-01/ai-practitioner-01.html" target="_blank">AIF-C01 Exam Guide</a>: the scope source. Where the slides and the guide disagree, the guide wins.</li>
+    </ol>
+  </footer>
+</div>

@@ -445,3 +445,42 @@ Domains: D1 8/13 (62%) · D2 13/16 · D3 17/18 · D4 8/9 · D5 8/9. 45 min = 41 
 | 38 | Which part of an agent says **which APIs exist** | Knowledge base | **Action group (API schema + Lambda)** | DOES = action group · KNOWS = KB |
 | 49 | Standard record for **our own 12 models** | Artifact | **SageMaker Model Cards** | MY model = Model Card · AWS papers = Artifact |
 | 63 | SOC 2 report + S3 encryption proof (TWO) | Macie | **Artifact + Config** | Macie = finds PII, not settings |
+
+---
+
+## Full Mock 3 — 2026-11-17 — 751 (47/65) · 40 min · ⚠️ barely pass, done on phone
+
+Domains: D1 **6/13 (46%)** · D2 12/16 · D3 14/18 · D4 9/9 · D5 6/9. 40 min = 37 s per question (too fast again). 🔁 = same trap as an earlier mock.
+
+| Q | Question (short) | I chose | Correct | Keyword |
+|---|---|---|---|---|
+| 1 🔁 | 33% train error, 35% test error, strong regularization | Stop training earlier | **More inputs + more complex model** | bad + bad = UNDER = make it stronger |
+| 4 🔁 | Good client emails land in spam | Accuracy | **Precision** | false alarms hurt = precision |
+| 5 | One 0–1 score, "how much of the price change is explained" | MAE | **R squared** | 0–1 "explains" = R² · dollars = MAE/RMSE |
+| 6 🔁 | One huge forecast mistake = blackout | Recall | **RMSE** | number → regression metric · big mistakes hurt more = RMSE |
+| 7 🔁 | 4 million policies, weekly, results in S3, nobody waits | Serverless | **Batch transform** | full dataset + schedule = batch |
+| 11 | Labelled customer table, predict who leaves, cheapest | Pre-train an FM | **Traditional classification (e.g. XGBoost)** | labelled table = classic ML, not FM |
+| 13 | Fraud threshold 0.8 → 0.5 | Precision up | **Recall up, precision down** | lower bar = catch more + more false alarms |
+| 16 🔁 | FM lifecycle order | Deploy before Evaluate | **… Fine-tune → Evaluate → Deploy → Feedback** | test before you ship |
+| 17 🔁 | 1,500 input tokens @ $1/M vs 200 output @ $5/M | Shorter replies | **Cut 1,500 input tokens** | multiply: $0.0015 > $0.0010 |
+| 21 | Regulator: explain which facts led to each loan decision | Hallucination | **Limited interpretability** | "explain why" = interpretability |
+| 25 | Why split manuals before embeddings | Model learns new weights | **Each chunk can be matched and sent alone** | chunking = small findable pieces |
+| 31 | 9,000 complaint + reply pairs, format by default | Few-shot | **Fine-tune** | thousands of pairs + "by default" = fine-tune |
+| 38 | Hide phone/email but keep the summary | Guardrails BLOCK | **Guardrails MASK** | keep text, hide detail = mask |
+| 40 | Hidden "ignore earlier instructions" in a CV | Invocation logging | **Guardrails prompt attack filter** | logging records, never stops |
+| 47 | RAG steps order | mixed up | **Chunk → embed → store · then embed question → retrieve → add → answer** | Cut, Embed, Store · Ask, Find, Add, Answer |
+| 57 🔁 | Encrypt S3, company controls key, can disable, logged | Secrets Manager | **KMS customer managed key** | KMS = keys · Secrets Manager = passwords |
+| 59 🔁 | Alert on a setting + 6 months of setting history | CloudTrail | **AWS Config** | rule + settings history = Config |
+| 62 🔁 | Staff use vendor's GenAI tool, enterprise agreement | Scope 3 | **Scope 2** | 1–2 USE an app · 3–5 BUILD with a model |
+
+## Full Mock 3 RETAKE — 2026-11-19 — 765 (48/65) · 67 min · ⚠️ same exam, still 12 repeat misses
+
+Domains: D1 9/13 · D2 **9/16 (56%)** · D3 15/18 · D4 8/9 · D5 7/9. 67 min = 62 s per question (good pace). Seen-before exam, so 765 is an inflated score.
+
+**Fixed since first try:** Q1 underfit, Q4 precision, Q13 threshold, Q31 fine-tune, Q40 prompt attack, Q57 KMS.
+
+**Wrong AGAIN, same pick both times (12):** Q5 R² (MAE again) · Q6 RMSE · Q7 batch (serverless again) · Q11 labelled table = classic ML (pre-train FM again) · Q16 Evaluate before Deploy · Q17 token maths (shorter replies again) · Q21 interpretability (hallucination again) · Q25 chunking · Q38 MASK (BLOCK again) · Q47 RAG order · Q59 Config (CloudTrail again) · Q62 Scope 2.
+
+**New misses:** Q14 self-attention (chose positional encoding, old repeat) · Q20 nondeterminism (chose hallucination) · Q23 embedding + vector store (chose temperature) · Q33 distillation (chose Provisioned Throughput) · Q54 fix label quality first (chose more epochs).
+
+Lesson: reading the "Why" after the exam did not stick. Need active recall of the Trick lines, not re-reading.
