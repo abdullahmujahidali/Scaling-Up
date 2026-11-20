@@ -484,3 +484,27 @@ Domains: D1 9/13 · D2 **9/16 (56%)** · D3 15/18 · D4 8/9 · D5 7/9. 67 min = 
 **New misses:** Q14 self-attention (chose positional encoding, old repeat) · Q20 nondeterminism (chose hallucination) · Q23 embedding + vector store (chose temperature) · Q33 distillation (chose Provisioned Throughput) · Q54 fix label quality first (chose more epochs).
 
 Lesson: reading the "Why" after the exam did not stick. Need active recall of the Trick lines, not re-reading.
+
+## Trap Drill (practice mode) — 2026-11-19 — 15/23 traps right first time
+Weak (missed 2–3 times in the same session): **precision vs recall** (chose Accuracy twice), **token maths** (guessed instead of multiplying, 3 misses), **RMSE vs MAE** (3 misses). Also: KMS vs Secrets Manager, fix labels first, self-attention, RAG first step, chunking.
+
+## Trap Drill (ticks) — 2026-11-20 — 19/23 right first time
+Precision/recall, token maths and RMSE all fixed. Still wrong: Scope 3 (chose 2), Config (chose CloudTrail — again), lifecycle (Deploy before Evaluate — again), fix labels first (chose Model Monitor — 2 days in a row).
+
+## Full Mock 4 — 2026-11-20 — 834 (53/65) · 37 min (too fast again, 34 s/q)
+Domains: D1 10/13 · D2 14/16 · D3 14/18 · D4 8/9 · D5 7/9.
+| Q | Trap | Chose | Correct |
+|---|---|---|---|
+| 1 🔁 | 97% train / 71% val, many layers | More layers | Regularization/dropout + more data (overfit) |
+| 2 🔁 | 71% / 70%, strong L2, early stop | Dropout | Less regularization + more epochs (underfit) |
+| 5 🔁 | Missed fire = disaster | Precision | Recall |
+| 21 🔁 | Next after fine-tuning | Feedback | Evaluate |
+| 27 🔁 | Business value of shop assistant | ROUGE | Conversion rate + ARPU |
+| 46 🔁 | Business value of HR assistant | ROUGE | Cost per interaction + time saved |
+| 38 | One example in prompt | Zero-shot | One-shot |
+| 39 | Bot prints its system prompt | Hijacking | Exposure (leaking) |
+| 45 | KB vector stores | Redshift | OpenSearch Serverless + Neptune Analytics |
+| 51 🔁 | Which inputs matter most | A2I | Clarify feature importance |
+| 58 🔁 | DB password, rotate 30 days | KMS rotation | Secrets Manager |
+| 62 | Private VPC → Bedrock + S3 | Internet gateway | Interface endpoint (Bedrock) + gateway endpoint (S3) |
+Added 6 traps to the drill (biz, leak, shots, kbstore, vpce, clarify) → 29 traps.
