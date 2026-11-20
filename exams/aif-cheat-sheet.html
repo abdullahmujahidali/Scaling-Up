@@ -47,13 +47,13 @@ td,th{border-bottom:1px solid var(--rule);padding:6px 4px;text-align:left;vertic
 </head>
 <body>
 <div class="wrap">
-  <a href="../aif-quizzes.html">← AIF quizzes</a>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><a href="../aif-quizzes.html">← AIF quizzes</a><button id="lang" style="font:inherit;font-size:.9rem;border:0;background:var(--ink);color:var(--bg);border-radius:99px;padding:8px 14px;cursor:pointer">🇵🇰 Roman Urdu</button></div>
   <h1>🧠 Your AIF Trap Sheet</h1>
-  <p class="sub">Every trap <b>you</b> fell into, from Quiz 1 to Mock 4. 🙅 = what you picked · 😎 = the right answer. 🔥🔥🔥 = your biggest repeats. Read it for 10 minutes before each mock.</p>
+  <p class="sub" data-ur="Har woh trap jis mein <b>tum</b> phanse, Quiz 1 se Mock 4 tak. 🙅 = jo tum ne chuna · 😎 = sahi jawab. 🔥🔥🔥 = sab se zyada dafa wali ghalti. Har mock se pehle 10 minute parho.">Every trap <b>you</b> fell into, from Quiz 1 to Mock 4. 🙅 = what you picked · 😎 = the right answer. 🔥🔥🔥 = your biggest repeats. Read it for 10 minutes before each mock.</p>
 
   <div class="box">
-    <b>🎯 The 5 steps for EVERY question</b>
-    <ol>
+    <b data-ur="🎯 HAR sawal ke 5 steps">🎯 The 5 steps for EVERY question</b>
+    <ol data-ur="<li><b>Aakhri line</b> pehle parho: MOST cost-effective? LEAST effort? FIRST? Select TWO?</li><li>Kahani mein <b>ZAROORAT</b> dhoondo (&quot;miss nahi karna&quot;, &quot;rotate&quot;, &quot;kyun samjhao&quot;).</li><li>Options dekhne se pehle <b>trap ka naam lo</b> (&quot;yeh overfit hai&quot;).</li><li>Dil mein jawab bolo, <b>phir</b> list mein dhoondo.</li><li>10 second check: kya mera jawab <b>zaroorat poori karta hai</b>, ya sirf kahani wala lafz match karta hai?</li>">
       <li>Read the <b>last line</b> first: MOST cost-effective? LEAST effort? FIRST? Select TWO?</li>
       <li>Find the <b>NEED</b> in the story ("must not miss", "rotate", "explain why").</li>
       <li><b>Name the trap</b> before you look at the options ("this is overfit").</li>
@@ -63,10 +63,10 @@ td,th{border-bottom:1px solid var(--rule);padding:6px 4px;text-align:left;vertic
   </div>
 
   <div class="box">
-    <b>🧮 Token maths with no calculator</b><br>
+    <span data-ur="<b>🧮 Calculator ke baghair token maths</b><br>&quot;Per million&quot; ko chhor do — dono taraf same hai. Bas <b>tokens × price</b> karo aur compare karo.<br>1,500 input × $1 = <b>1,500</b> · 200 output × $5 = <b>1,000</b> → input kaatna zyada bachata hai.<br>Ek request ka kharcha? (2,000 × $2 + 500 × $10) = 9,000 → 1,000,000 se divide → <b>$0.009</b>."><b>🧮 Token maths with no calculator</b><br>
     Ignore "per million" — it is the same on both sides. Just multiply <b>tokens × price</b> and compare.<br>
     1,500 input × $1 = <b>1,500</b> · 200 output × $5 = <b>1,000</b> → cutting input saves more.<br>
-    Cost of one request? (2,000 × $2 + 500 × $10) = 9,000 → divide by 1,000,000 → <b>$0.009</b>.
+    Cost of one request? (2,000 × $2 + 500 × $10) = 9,000 → divide by 1,000,000 → <b>$0.009</b>.</span>
   </div>
 
   <input type="search" id="q" placeholder="Search: rmse, kms, scope, rag…">
@@ -131,6 +131,59 @@ const C=[
 {s:'d5',h:3,t:'Scoping Matrix',w:'',nah:'Scope 1 or 3 for a vendor app with an agreement',yes:'1 consumer app · 2 enterprise app (agreement) · 3 build on an FM · 4 fine-tune · 5 train your own',j:'BUY = 1–2 🛒. BUILD = 3–5 🔨.'},
 {s:'d5',h:1,t:'Private, no internet',w:'',nah:'Internet gateway / NAT gateway',yes:'VPC ENDPOINT (PrivateLink). Bedrock = interface endpoint, S3 = gateway endpoint',j:'A private tunnel 🚇 instead of the public road.'}
 ];
+/* Roman Urdu: simple, everyday words. AWS names stay in English. */
+const UR={
+'Overfit vs underfit':{w:'Pehle ERROR ko SCORE banao (3% error = 97% score).',nah:'Overfit mein "model ko strong karo" (ya underfit mein "simple karo")',yes:'Training achi + test kharab = OVER → model simple karo (dropout, regularization, early stop, zyada data). Dono kharab = UNDER → model strong karo (zyada features, zyada layers, kam regularization)',j:'Overfit = woh student jis ne answer book ratta maar li. Underfit = jis ne book kholi hi nahi.'},
+'Precision vs recall':{w:'Poocho: kaun si ghalti zyada nuksan karti hai?',nah:'Jab miss karna disaster ho, tab accuracy / precision',yes:'Ghalat alarm se nuksan → PRECISION. Asli case miss hone se nuksan → RECALL ("har bimaar ko yaad rakho")',j:'Toast pe bajne wala fire alarm = kharab precision. Asli aag pe sota rahe = kharab recall. 🔥'},
+'Threshold moves':{w:'Fraud score ki line 0.9 se 0.6 pe aa gayi.',nah:'Precision barh jayegi',yes:'Line neeche = zyada flag = RECALL ↑, PRECISION ↓',j:'Club ke darwaze pe line neeche karo = zyada log andar, kuch gande bhi.'},
+'MAE vs RMSE vs R²':{w:'Jo predict karna hai woh NUMBER hai (price, beds, demand).',nah:'Number ke liye accuracy, recall ya F1',yes:'Bari ghalti khatarnak → RMSE (square karta hai). Har ghalti barabar → MAE. "0 se 1, kitna explain karta hai" → R²',j:'RMSE sakht teacher hai: ek bari ghalti aur poora grade kharab.'},
+'Which metric for which job':{w:'Classes (haan/na) ya numbers ya text?',nah:'Price ke liye BLEU ya AUC',yes:'Classes → accuracy, precision, recall, F1, AUC. Numbers → MAE, RMSE, R². Summary → ROUGE. Translation → BLEU',j:'ROUGE = Reduce (summary). BLEU = Bilingual (translation).'},
+'Inference options':{w:'Kaun wait kar raha hai, aur kaam kitna bara hai?',nah:'Har hafte 4 million rows ke liye Serverless',yes:'Poora data + schedule + koi wait nahi → BATCH. Foran jawab, traffic barabar → REAL-TIME. Bari file, minutes, queue → ASYNC. Kabhi kabhi call, beech mein khali → SERVERLESS',j:'Serverless calls ke beech so jata hai 😴. Real-time 5 coffee pi ke kabhi nahi sota ☕.'},
+'Table = classic ML':{w:'Label wali rows aur columns, class ya number predict karna hai.',nah:'FM ko pre-train / fine-tune karo, ya har row LLM ko bhejo',yes:'Simple ML (jaise XGBoost). Sasta, tez, tables pe best',j:'Spreadsheet bharne ke liye shayar 🎭 nahi rakhte.'},
+'Exact formula':{w:'Rule fix aur pata hai (tax = 17%).',nah:'Model train karo',yes:'AI nahi chahiye. Seedha code likho',j:'Jo kaam calculator kar de, us pe ML zaroori nahi.'},
+'Structured vs unstructured':{w:'',nah:'Emails = structured',yes:'Columns wala data (table, CSV) = structured. Emails, PDF, images, audio = unstructured',j:''},
+'Self-supervised':{w:'Insaan ne label nahi lagaye, data khud apna task banata hai (lafz chupao, guess karo).',nah:'Unsupervised',yes:'Self-supervised = data khud apne labels banata hai (LLMs aise pre-train hote hain)',j:''},
+'Bad labels':{w:'Workers ne ek hi cheez ko alag alag label diya.',nah:'Zyada epochs / bara model / Model Monitor',yes:'Pehle LABELS theek karo: saaf rules, kayi reviewers (Ground Truth)',j:'Kachra andar, kachra bahar 🗑️. Zyada epochs = kachra aur pakka yaad.'},
+'Ground Truth vs A2I':{w:'Insaan PEHLE ya BAAD mein?',nah:'Training data label karne ke liye A2I',yes:'Training se PEHLE label lagana → GROUND TRUTH. Prediction ke BAAD insaan check kare → A2I',j:''},
+'Self-attention vs positional encoding':{w:'"it" ko "room" se jorna hai.',nah:'Positional encoding',yes:'Kaun sa lafz kis ke SAATH → SELF-ATTENTION. Kaun sa lafz PEHLE → POSITIONAL ENCODING. Matlab ko numbers → EMBEDDINGS. Text kaatna → TOKENIZER',j:'Self-attention = party mein har banda har kisi ko dekh raha hai 👀.'},
+'Hallucination vs nondeterminism vs interpretability':{w:'',nah:'Har cheez ko hallucination kehna',yes:'GHALAT magar confident → HALLUCINATION. Alag alag magar SAHI jawab → NONDETERMINISM. WHY samjha nahi sakte → INTERPRETABILITY',j:'Hallucination = jhoot. Nondeterminism = mood badalna. Interpretability = "main samjha nahi sakta".'},
+'FM lifecycle order':{w:'Fine-tuning ke baad kya aata hai?',nah:'Deploy / Feedback',yes:'Data → Model → Pre-train → Fine-tune → EVALUATE → DEPLOY → Feedback',j:'"Data, Model, Pre, Fine, Test, Ship, Listen." Cake chakhe baghair koi nahi bechta 🎂.'},
+'Token maths':{w:'"Kaun si change sab se ZYADA bachati hai?"',nah:'Andaza lagana: "output mehenga hai, output kaato"',yes:'Har option ke liye tokens × price ZARB karo. Bara number jeetta hai',j:'Exam ko pasand hai ke mehenga dikhne wala option haar jaye.'},
+'Provisioned Throughput':{w:'',nah:'Kam traffic pe paise bachane ke liye Provisioned Throughput',yes:'Base model, kabhi kabhi traffic → ON-DEMAND (per token). Custom / fine-tuned model ya bhari traffic → PROVISIONED THROUGHPUT',j:'2 sawariyon ke liye poori bus 🚌 kiraye pe lena sasta nahi.'},
+'Distillation':{w:'Bara model acha hai magar slow aur mehenga.',nah:'Provisioned Throughput / zyada few-shot examples',yes:'MODEL DISTILLATION: bara teacher chhote student ko sikhata hai → tez + sasta',j:'Prompt mein zyada examples = ZYADA tokens = ZYADA paisa 💸.'},
+'Business value':{w:'Finance / director poochta hai "kya yeh faida de raha hai?"',nah:'ROUGE ya BLEU',yes:'Conversion rate, revenue per user (ARPU), cost per chat, time bacha, customer khush',j:'Boss ko ROUGE se koi matlab nahi. Boss ko 💰 se matlab hai.'},
+'Data words':{w:'',nah:'Modality = sach',yes:'Veracity = sach (verify). Modality = type (text, image, audio)',j:''},
+'Prompt vs RAG vs fine-tune':{w:'Poocho: label wale pairs? facts jo badalte hain?',nah:'Roz badalne wale docs ke liye fine-tune / 9,000 pairs ke liye few-shot',yes:'Badalte facts → RAG ("kya JAANTA hai"). Hazaron pairs + har dafa wohi style → FINE-TUNE ("kaise BOLTA hai"). Thore examples → FEW-SHOT (pehle prompt try karo, free hai)',j:'RAG = open-book exam 📖. Fine-tuning = school jana 🏫.'},
+'Continued pre-training vs fine-tuning':{w:'',nah:'Bina label text se fine-tune',yes:'BINA LABEL domain text → CONTINUED PRE-TRAINING. LABEL wale pairs → FINE-TUNING',j:''},
+'Instruction tuning vs RLHF':{w:'',nah:'Prompt/answer pairs hon to RLHF',yes:'Pairs (instruction + answer) → INSTRUCTION TUNING. Insaan jawabon ko RANK karein (tone, madadgar) → RLHF',j:''},
+'Count the examples':{w:'',nah:'Ek example ho to zero-shot',yes:'0 = zero-shot · 1 = one-shot · 2+ = few-shot · "step by step" = chain-of-thought · "yeh MAT likho" = negative prompting',j:'Ungliyon pe gin lo ✋.'},
+'RAG order':{w:'',nah:'Sab se pehle sawal ki embedding',yes:'Tayyari: Kaato → Embed → Store. Sawal: Sawal embed → Dhoondo (retrieve) → Jorro (prompt mein) → Jawab',j:'Cut, Embed, Store · Ask, Find, Add, Answer.'},
+'Chunking':{w:'Manuals ko chhote tukron mein kyun kaatte hain?',nah:'Creativity ke liye / naye weights ke liye',yes:'Taa ke har tukra DHOONDA ja sake aur akela model ko bheja ja sake',j:'Tum ek recipe 🍝 dhoondte ho, poori cookbook nahi.'},
+'Semantic search parts':{w:'"cheap sofa" se "low-cost couch" mil jaye.',nah:'Temperature barhao',yes:'EMBEDDING model + VECTOR STORE. Temperature kabhi search nahi karta',j:''},
+'Knowledge Base vector stores':{w:'',nah:'Redshift / DynamoDB / MySQL',yes:'OpenSearch Serverless, Aurora PostgreSQL (pgvector), Neptune Analytics, S3 Vectors',j:''},
+'Guardrails: MASK vs BLOCK vs topic':{w:'',nah:'BLOCK, jab unhein jawab phir bhi chahiye',yes:'Text rakho, detail chupao → MASK. Poora jawab roko → BLOCK. Poora topic mana → DENIED TOPIC',j:'MASK = 🥷 phone number chupa deta hai. BLOCK = 🚪 darwaza band.'},
+'Stop an attack vs record it':{w:'Chupa hua "apne rules bhool jao" text.',nah:'Invocation logging',yes:'ROKNA hai → Guardrails PROMPT ATTACK filter. Sirf RECORD karna → INVOCATION LOGGING',j:'CCTV camera 📹 chor ko record karta hai. Rokta nahi.'},
+'Prompt risks':{w:'',nah:'Bot apna secret prompt dikha de to hijacking',yes:'Secret BAHAR aa gaya → EXPOSURE (leaking). Task badal diya → HIJACKING (injection). SAFETY rules tore → JAILBREAK. Ganda data ANDAR daala → POISONING',j:''},
+'Agents':{w:'',nah:'Koi KAAM karne ke liye Knowledge Base',yes:'Agent KAAM karta hai → ACTION GROUP (Lambda/API). Agent JAANTA hai → KNOWLEDGE BASE. Kayi steps + kayi tools → AGENT',j:''},
+'AgentCore Policy vs Guardrails vs CloudWatch':{w:'',nah:'Tool call rokne ke liye CloudWatch / Guardrails',yes:'Agent ka tool action chalne se PEHLE roko → AgentCore POLICY. Nuksan wala TEXT → Guardrails. CloudWatch sirf BAAD mein batata hai',j:''},
+'Bedrock vs JumpStart vs SageMaker':{w:'',nah:'Server control chahiye to Bedrock',yes:'FMs ka serverless API → BEDROCK. Server / model files tumhare haath mein → JUMPSTART / SAGEMAKER',j:''},
+'Pick the AI service':{w:'',nah:'Text samajhne ke liye Lex',yes:'Text ka matlab → COMPREHEND · baat karne wala chatbot → LEX · images/video → REKOGNITION · forms/PDF → TEXTRACT · "yeh bhi pasand aayega" → PERSONALIZE · aage ke numbers → FORECAST · staff + company docs → Q BUSINESS',j:'Rekognition = 👀 aankhein. Comprehend = 📖 parhna. Lex = 🗣️ bolna.'},
+'Clarify vs A2I vs Model Monitor':{w:'',nah:'"Kaun se inputs zaroori" ke liye A2I',yes:'Kaun se inputs zaroori / bias / samjhao → CLARIFY. Kam confidence pe insaan check kare → A2I. Live data badal gaya (drift) → MODEL MONITOR',j:'Clarify = 🔍 jasoos. A2I = 🧑 insaan checker. Model Monitor = 📟 machine guard.'},
+'Model Card vs AI Service Card':{w:'',nah:'APNE model ke liye AI Service Card',yes:'APNA model → SageMaker MODEL CARD. AWS ki apni AI services → AI SERVICE CARDS. Card sirf LIKHTA hai, theek kuch nahi karta',j:''},
+'Inclusivity vs robustness':{w:'',nah:'"Sab use kar sakein" ke liye robustness',yes:'SAB ke liye kaam kare (accent, disability) → INCLUSIVITY. Ajeeb / kharab input sambhale → ROBUSTNESS',j:''},
+'Bias in = bias out':{w:'',nah:'Zyada data se underfitting hoti hai',yes:'Biased purana data → biased model. Data theek karo. Zyada data se kabhi underfitting nahi hoti',j:''},
+'Explain each decision':{w:'Regulator ko "kyun" chahiye.',nah:'Hallucination / bara LLM',yes:'Kam INTERPRETABILITY. Hal: simple model jo samjhaya ja sake + SHAP (Clarify)',j:''},
+'Copyright':{w:'',nah:'Data residency',yes:'Copyright → INTELLECTUAL PROPERTY. Data residency = data KAHAN rakha hai',j:''},
+'KMS vs Secrets Manager':{w:'Chahe sawal mein "encrypted" likha ho!',nah:'Password jo badalta hai, us ke liye KMS',yes:'Encryption KEYS → KMS. Password / API key + rotate → SECRETS MANAGER',j:'KMS = 🔑 chaabi. Secrets Manager = 📝 password ki diary jo khud badalti hai.'},
+'Config vs CloudTrail vs CloudWatch':{w:'',nah:'"Rule + settings ki history" ke liye CloudTrail',yes:'Rule + setting ki history → CONFIG. KISNE KYA kiya → CLOUDTRAIL (SQL chahiye → CloudTrail Lake). Metrics, alarm, speed → CLOUDWATCH',j:'Config = 📸 settings ka photo album. CloudTrail = 🕵️ kisne kiya. CloudWatch = ⏱️ speedometer.'},
+'CloudTrail vs invocation logging':{w:'',nah:'Users ne model se kya poocha, us ke liye CloudTrail',yes:'API KISNE call ki → CLOUDTRAIL. KYA bola gaya (prompts + jawab) → MODEL INVOCATION LOGGING',j:''},
+'Artifact vs Audit Manager':{w:'',nah:'"Mera account" ke liye Artifact',yes:'AWS ki APNI reports (SOC, ISO) → ARTIFACT. MERE account se proof → AUDIT MANAGER',j:'Artifact = AWS ke kaghaz 📄. Audit Manager = MERE kaghaz 🗂️.'},
+'Macie vs Inspector':{w:'',nah:'S3 mein personal data ke liye Inspector',yes:'S3 mein personal / secret data → MACIE ("My data is secret"). Software ke weak points (CVEs) → INSPECTOR',j:'Macie model ke jawab nahi badalta — woh Guardrails ka kaam hai.'},
+'Scoping Matrix':{w:'',nah:'Agreement wali vendor app ke liye Scope 1 ya 3',yes:'1 public app · 2 business app (agreement) · 3 FM pe apni app banao · 4 fine-tune · 5 khud train karo',j:'KHAREEDO = 1–2 🛒. BANAO = 3–5 🔨.'},
+'Private, no internet':{w:'',nah:'Internet gateway / NAT gateway',yes:'VPC ENDPOINT (PrivateLink). Bedrock = interface endpoint, S3 = gateway endpoint',j:'Public sarak ki jagah private tunnel 🚇.'}
+};
+let lang='en'; try{lang=localStorage.getItem('aif-sheet-lang')||'en'}catch(e){}
+const L=(c,f)=>lang==='ur'&&UR[c.t]&&UR[c.t][f]!==undefined?UR[c.t][f]:c[f];
 const hotLabel=h=>'🔥'.repeat(h);
 let sec='all';
 const chips=document.getElementById('chips'), out=document.getElementById('out'), q=document.getElementById('q');
@@ -138,14 +191,14 @@ chips.innerHTML=['all',...Object.keys(SECTIONS)].map(k=>`<button data-k="${k}" c
 chips.onclick=e=>{const b=e.target.closest('button');if(!b)return;sec=b.dataset.k;chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));render()};
 q.oninput=render;
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
-function card(c){return `<div class="card"><h3><span>${esc(c.t)}</span><span class="hot">${hotLabel(c.h)}</span></h3>
- ${c.w?`<div class="when">${esc(c.w)}</div>`:''}
- <div class="row nah"><span class="e">🙅</span><span><s>${esc(c.nah)}</s></span></div>
- <div class="row yes"><span class="e">😎</span><span>${esc(c.yes)}</span></div>
- ${c.j?`<div class="joke">💡 ${esc(c.j)}</div>`:''}</div>`}
+function card(c){const w=L(c,'w'),j=L(c,'j');return `<div class="card"><h3><span>${esc(c.t)}</span><span class="hot">${hotLabel(c.h)}</span></h3>
+ ${w?`<div class="when">${esc(w)}</div>`:''}
+ <div class="row nah"><span class="e">🙅</span><span><s>${esc(L(c,'nah'))}</s></span></div>
+ <div class="row yes"><span class="e">😎</span><span>${esc(L(c,'yes'))}</span></div>
+ ${j?`<div class="joke">💡 ${esc(j)}</div>`:''}</div>`}
 function render(){
   const term=q.value.trim().toLowerCase();
-  const match=c=>!term||(c.t+' '+c.w+' '+c.nah+' '+c.yes+' '+c.j).toLowerCase().includes(term);
+  const match=c=>!term||(c.t+' '+c.w+' '+c.nah+' '+c.yes+' '+c.j+' '+Object.values(UR[c.t]||{}).join(' ')).toLowerCase().includes(term);
   let html='',n=0;
   if(sec==='hot'){const l=C.filter(c=>c.h===3&&match(c));n=l.length;html=`<div class="cards">${l.map(card).join('')}</div>`}
   else for(const k of ['d1','d2','d3','d4','d5']){
@@ -156,7 +209,13 @@ function render(){
   }
   out.innerHTML=html;document.getElementById('empty').style.display=n?'none':'block';
 }
-render();
+function applyLang(){
+  document.querySelectorAll('[data-ur]').forEach(el=>{if(!el.dataset.en)el.dataset.en=el.innerHTML;el.innerHTML=lang==='ur'?el.dataset.ur:el.dataset.en});
+  document.getElementById('lang').textContent=lang==='ur'?'🇬🇧 English':'🇵🇰 Roman Urdu';
+  render();
+}
+document.getElementById('lang').onclick=()=>{lang=lang==='ur'?'en':'ur';try{localStorage.setItem('aif-sheet-lang',lang)}catch(e){}applyLang()};
+applyLang();
 </script>
 </body>
 </html>
