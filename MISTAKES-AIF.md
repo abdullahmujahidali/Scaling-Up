@@ -508,3 +508,10 @@ Domains: D1 10/13 · D2 14/16 · D3 14/18 · D4 8/9 · D5 7/9.
 | 58 🔁 | DB password, rotate 30 days | KMS rotation | Secrets Manager |
 | 62 | Private VPC → Bedrock + S3 | Internet gateway | Interface endpoint (Bedrock) + gateway endpoint (S3) |
 Added 6 traps to the drill (biz, leak, shots, kbstore, vpce, clarify) → 29 traps.
+
+## Hard 16 — 2026-11-21 — 640 (12/20) · 89 min · Learn mode, NEW slide-gap topics (Lesson I6 not read first)
+Misses: Comprehend custom entity vs custom classification (both directions), Transcribe custom vocabulary (chose Polly lexicon), edge small model (chose Provisioned Throughput), cloud large model (chose Comprehend), bias types (observer vs confirmation swapped), PDP (chose confusion matrix), Model Dashboard (chose Registry).
+
+## Hard 17 — 2026-11-21 — 730 (14/20) · 19 min (rushing!)
+Misses: Canvas (chose AMT), RAG order again (find before embedding the question), plagiarism (chose RAG), emergent (chose dynamism), KMS (chose Secrets Manager — OVER-corrected after Mock 4), Scope 2 (chose Scope 1 — again).
+Added 7 traps to drill (36 total) + 7 cheat-sheet cards.
