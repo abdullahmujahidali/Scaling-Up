@@ -539,3 +539,6 @@ Felt like 85-90%; real 77% → confidence gap of ~10 points. D1 92%, D2 75%, D3 
 | 60 | AgentCore Identity | Secrets Manager shared key | AgentCore Identity |
 | 63 | Output validation | CloudTrail | rules check + low confidence → human |
 Added 9 drill traps (notq, pcache, negp, faith, msel, transfer, agentid, valid, green) → 45; 9 Trap Sheet cards → 64.
+
+## Trap Drill — 2026-11-23 — 15/45 mastered (was 2/36), 8 wrong
+RMSE now OVER-corrected (picked RMSE when "every dollar counts the same" = MAE). KB stores mixed (Neptune Analytics IS on the list, DynamoDB/Redshift are NOT). SageMaker trio mixed (Dashboard = one screen of all models, Registry = versions + approve). Scope 1 vs 2 again. New-today traps (prompt caching, NOT question) missed once more.
