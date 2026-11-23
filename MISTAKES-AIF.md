@@ -515,3 +515,27 @@ Misses: Comprehend custom entity vs custom classification (both directions), Tra
 ## Hard 17 — 2026-11-21 — 730 (14/20) · 19 min (rushing!)
 Misses: Canvas (chose AMT), RAG order again (find before embedding the question), plagiarism (chose RAG), emergent (chose dynamism), KMS (chose Secrets Manager — OVER-corrected after Mock 4), Scope 2 (chose Scope 1 — again).
 Added 7 traps to drill (36 total) + 7 cheat-sheet cards.
+
+## Trap Drill — 2026-11-22 — 2/36 mastered, 7 wrong
+Lifecycle (Evaluate) missed TWICE in one session (chose Feedback, then Deployment) — worst repeat now. Also: business value (ROUGE again), RMSE (chose MAE), RAG order (retrieve before embedding question again), semantic search (Translate + Comprehend), Transcribe custom vocabulary (Polly again).
+
+## Mock 5 — 2026-11-23 — 792 (50/65, 77%), 63 min (first time 60+ ✅)
+Felt like 85-90%; real 77% → confidence gap of ~10 points. D1 92%, D2 75%, D3 67% (weakest), D4 78%, D5 78%.
+| Q | Trap | Chose | Right |
+|---|---|---|---|
+| 9 | Time-series leakage (repeat: leak) | no labels → clustering | random shuffle puts future in training |
+| 14 | NOT question — self-attention | "all tokens at once" (true) | "word order" (that's positional encoding) |
+| 15 | Token maths (repeat: tokens) — didn't calculate | B, output ×4 | A: 21,200 vs 6,100 |
+| 20 | NOT question — GenAI limits | nondeterminism (real limit) | "English only" |
+| 26 | RAG order (repeat: rag) | embed question before storing | store vectors, THEN embed question |
+| 31 | Prompt caching | tool list every step | different short email each time |
+| 33 | Shots (repeat) | chain-of-thought | one-shot → few-shot, tokens rise |
+| 34 | Negative prompt | guardrail denied topic | negative prompt |
+| 42 | Faithfulness | context relevance | faithfulness |
+| 43 | Model selection | newest release | supports fine-tuning in Bedrock |
+| 47 | Transfer learning | continued pre-training | transfer learning |
+| 51 | Sustainability | pre-train from scratch | fine-tune existing |
+| 55 | Interpretability (repeat: interp) | more epochs | decision tree OR Clarify SHAP |
+| 60 | AgentCore Identity | Secrets Manager shared key | AgentCore Identity |
+| 63 | Output validation | CloudTrail | rules check + low confidence → human |
+Added 9 drill traps (notq, pcache, negp, faith, msel, transfer, agentid, valid, green) → 45; 9 Trap Sheet cards → 64.
