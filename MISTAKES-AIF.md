@@ -558,3 +558,6 @@ Repeats: Q3 precision/recall swapped · Q7 token/cost maths (picked the dearer o
 New: Q4 AUC · Q10 deep learning for images · Q37 reranker · Q49 inclusivity · Q58 Lake Formation · Q61 public-AI policy + training · Q62 AgentCore Observability · Q64 Well-Architected Tool.
 DECISION: keep exam date (Thu 26 Nov). Mocks: 751, 765, 834, 848, 792, 765, 820 — all pass, avg ~796.
 Added 8 drill traps (auc, rerank, rai, lakef, agobs, wellarch, shadow, deepimg) → 65; 8 Trap Sheet cards → 84.
+
+## My Mistakes Exam 1 (Mocks 2–4 misses, Learn mode + hints) — 2026-11-24 — 824 (37/46), 50 min
+Fixed now: 37 old misses. Still wrong (9): overfit ×2 (Mock 4 Q1 "more layers" again, Q2 "dropout" again — picks the OPPOSITE fix) · ROUGE for business value (4th time) · KB store Redshift (same pick again) · transformer order (attention ↔ predict swapped) · drift = Model Monitor (chose Ground Truth Plus again) · prompt exposure (chose hijacking again) · spam precision (chose recall) · feature importance = Clarify (chose Model Monitor).
