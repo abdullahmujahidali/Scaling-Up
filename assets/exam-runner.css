@@ -258,3 +258,5 @@ li.r-wrong { background: #fdecea; }
 .why-tag.bad { background: #dc2626; color: #fff; }
 .why-tag.good { background: #16a34a; color: #fff; }
 .why-trick { margin-top: 0.6rem; padding: 0.5rem 0.65rem; border-radius: 4px; background: rgba(234, 179, 8, 0.15); border-left: 3px solid #eab308; font-size: 0.9rem; }
+
+.exam-hint{margin:0 0 14px;padding:10px 14px;border-left:4px solid #e0a800;background:rgba(224,168,0,.12);border-radius:6px;font-size:.92rem;line-height:1.55}

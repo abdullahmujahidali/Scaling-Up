@@ -45,7 +45,7 @@ function page(meta, questions) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${cert.code} ${meta.title}</title>
 <link rel="stylesheet" href="../assets/lesson.css?v=17">
-<link rel="stylesheet" href="../assets/exam-runner.css?v=20">
+<link rel="stylesheet" href="../assets/exam-runner.css?v=21">
 </head>
 <body>
 <div class="exam-shell">
@@ -120,7 +120,7 @@ var EXAM_META = ${JSON.stringify({
 })};
 var QUESTIONS = ${JSON.stringify(questions, null, 1)};
 </script>
-<script src="../assets/exam-engine.js?v=19"></script>
+<script src="../assets/exam-engine.js?v=20"></script>
 <script src="../assets/i18n.js?v=17"></script>
 </body>
 </html>
@@ -295,12 +295,21 @@ fs.readdirSync(QDIR).filter(f => f.endsWith('.json')).sort().forEach(f => {
   data.questions.forEach(q => {
     // Normalise so trivial whitespace/markup differences still count as duplicates.
     const key = q.scenario.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+    if (data.meta.review) return;
     if (seenScenarios.has(key)) {
       errs.push(`q${q.id} duplicates a scenario already used in ${seenScenarios.get(key)}`);
     } else {
       seenScenarios.set(key, data.meta.id);
     }
   });
+  // Review banks (meta.review) re-use questions the learner already missed, on
+  // purpose, at whatever length the set needs — so skip the size, domain-share
+  // and uniqueness rules, but keep every per-question check.
+  if (data.meta.review) {
+    for (let i = errs.length - 1; i >= 0; i--) {
+      if (/^expected .* questions|^domain \d+:|duplicates a scenario/.test(errs[i])) errs.splice(i, 1);
+    }
+  }
   const longest = longestRate(data.questions);
   if (data.meta.hard && longest > 0.3) {
     errs.push(`correct answer is the longest option in ${Math.round(longest * 100)}% of questions (max 30% for a hard bank)`);

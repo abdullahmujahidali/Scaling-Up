@@ -269,6 +269,16 @@
               (isAnswered(state.idx) ? '' : ' disabled') + '>Check answer ✓</button>';
     }
 
+    // Optional hint (review banks only): a nudge toward the rule, shown on
+    // request before answering. Hidden once Learn mode reveals the answer.
+    var hint = '';
+    if (q.hint && !(state.learn && state.checked[state.idx]) && !state.submitted) {
+      state.hints = state.hints || {};
+      hint = state.hints[state.idx]
+        ? '<div class="exam-hint"><strong>💡 Hint:</strong> ' + q.hint + '</div>'
+        : '<button class="flag-btn" id="hint-btn" style="margin:0 0 12px">💡 Show hint</button>';
+    }
+
     root.innerHTML =
       '<div class="exam-qhead">' +
         '<span class="exam-qnum">Question ' + (state.idx + 1) + ' of ' + QUESTIONS.length + '</span>' +
@@ -277,10 +287,13 @@
         '</button>' +
       '</div>' +
       '<div class="exam-scenario">' + q.scenario + '</div>' +
+      hint +
       note +
       body +
       feedback;
 
+    var hb = document.getElementById('hint-btn');
+    if (hb) hb.addEventListener('click', function () { state.hints[state.idx] = true; save(); renderQuestion(); });
     var lc = document.getElementById('learn-check');
     if (lc) lc.addEventListener('click', function () { checkCurrent(); });
     var ln = document.getElementById('learn-next');
