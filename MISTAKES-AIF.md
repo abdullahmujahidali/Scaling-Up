@@ -542,3 +542,9 @@ Added 9 drill traps (notq, pcache, negp, faith, msel, transfer, agentid, valid, 
 
 ## Trap Drill — 2026-11-23 — 15/45 mastered (was 2/36), 8 wrong
 RMSE now OVER-corrected (picked RMSE when "every dollar counts the same" = MAE). KB stores mixed (Neptune Analytics IS on the list, DynamoDB/Redshift are NOT). SageMaker trio mixed (Dashboard = one screen of all models, Registry = versions + approve). Scope 1 vs 2 again. New-today traps (prompt caching, NOT question) missed once more.
+
+## Mock 6 — 2026-11-24 — 765 (48/65, 74%), 51 min (rushed at the end, had to leave)
+D1 69%, D2 81%, D3 78%, D4 78%, D5 56% (weakest). 6 of 17 misses were in Q50–63 = the rushed part.
+Repeats: Q1 overfit (chose underfit fix), Q42 business value (LEAST question → BLEU), Q57 KMS over-correction (IAM role), Q61 Config vs CloudWatch (alarm on metrics = CloudWatch), Q63 Scoping Matrix order.
+New: Q2 drift → retrain · Q9 Feature Store · Q10 Rekognition Custom Labels · Q15 multimodal embedding search · Q23 hallucination cause · Q25 pre-training = next token · Q34 KB structured data (Redshift) · Q39 relevance vs grounding threshold · Q45 on-demand · Q50 human audits · Q56 proxy bias → Clarify · Q60 TLS in transit.
+Added 12 drill traps (drift, fstore, custlab, mmsearch, llmhow, kbsql, cgrel, ondem, audit, proxy, tls, role) → 57; 12 Trap Sheet cards → 76.
