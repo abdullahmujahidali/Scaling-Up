@@ -49,7 +49,7 @@ td,th{border-bottom:1px solid var(--rule);padding:6px 4px;text-align:left;vertic
 <div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><a href="../aif-quizzes.html">← AIF quizzes</a><button id="lang" style="font:inherit;font-size:.9rem;border:0;background:var(--ink);color:var(--bg);border-radius:99px;padding:8px 14px;cursor:pointer">🇵🇰 Roman Urdu</button></div>
   <h1>🧠 Your AIF Trap Sheet</h1>
-  <p class="sub" data-ur="Har woh trap jis mein <b>tum</b> phanse, Quiz 1 se Mock 6 tak. 🙅 = jo tum ne chuna · 😎 = sahi jawab. 🔥🔥🔥 = sab se zyada dafa wali ghalti. Har mock se pehle 10 minute parho.">Every trap <b>you</b> fell into, from Quiz 1 to Mock 6. 🙅 = what you picked · 😎 = the right answer. 🔥🔥🔥 = your biggest repeats. Read it for 10 minutes before each mock.</p>
+  <p class="sub" data-ur="Har woh trap jis mein <b>tum</b> phanse, Quiz 1 se Mock 7 tak. 🙅 = jo tum ne chuna · 😎 = sahi jawab. 🔥🔥🔥 = sab se zyada dafa wali ghalti. Har mock se pehle 10 minute parho.">Every trap <b>you</b> fell into, from Quiz 1 to Mock 7. 🙅 = what you picked · 😎 = the right answer. 🔥🔥🔥 = your biggest repeats. Read it for 10 minutes before each mock.</p>
 
   <div class="box">
     <b data-ur="🎯 HAR sawal ke 5 steps">🎯 The 5 steps for EVERY question</b>
@@ -159,6 +159,14 @@ const C=[
 ,{s:'d4',h:2,t:'Proxy bias (postal code)',w:'',nah:'More epochs',yes:'Removed "region" but postal code still there = PROXY. First MEASURE per group with Clarify',j:'You hid the name, but the address tells it 📮'}
 ,{s:'d5',h:2,t:'In transit vs at rest',w:'',nah:'IAM policy (it decides WHO, not encryption)',yes:'Moving on the network → TLS / HTTPS. Sitting on disk → KMS encryption',j:'Transit = in a sealed envelope ✉️ · rest = in a locked safe 🔒'}
 ,{s:'d5',h:3,t:'Service needs access → IAM role',w:'Mock 6',nah:'KMS key policy · IAM user keys in code',yes:'Lambda / SageMaker / Bedrock must read a bucket → IAM EXECUTION ROLE. KMS policy = only who may use the KEY',j:'Role = staff badge for the service 🪪'}
+,{s:'d1',h:1,t:'Threshold not decided → AUC',w:'',nah:'F1 / precision at one threshold',yes:'Compare models across ALL thresholds → AUC (area under ROC). 0.5 = coin flip, 1.0 = perfect',j:'AUC = judge the whole race, not one finish line 🏁'}
+,{s:'d1',h:1,t:'Raw images → deep learning',w:'',nah:'"Deep networks are easier to explain"',yes:'Raw pixels / audio / text → DEEP NEURAL NETWORK, it learns features by itself. Needs lots of data, HARD to explain',j:'Linear regression looking at pixels = 😵'}
+,{s:'d3',h:1,t:'Right chunk ranked low → reranker',w:'',nah:'Smaller embeddings · higher temperature',yes:'Best chunk FOUND but ranked 8th → add a RERANKER to reorder. Never found at all → fix chunking / embeddings',j:'Reranker = moves the best answer to the top of the list 🥇'}
+,{s:'d4',h:1,t:'Inclusivity · robustness · fairness · transparency',w:'',nah:'Robustness for voice + captions + languages',yes:'Everyone can USE it → INCLUSIVITY. Works with messy input → ROBUSTNESS. Equal results → FAIRNESS. Users know it is AI → TRANSPARENCY',j:'Ramp + captions + 12 languages = inclusive ♿🌍'}
+,{s:'d5',h:1,t:'Hide some columns → Lake Formation',w:'',nah:'Guardrails PII mask (that is for model text)',yes:'Data lake table, people may see only some COLUMNS / rows → AWS LAKE FORMATION permissions',j:'Lake Formation = curtain over some columns 🙈'}
+,{s:'d5',h:1,t:'See agent steps → AgentCore Observability',w:'',nah:'Config timeline',yes:'Each step, which tool, how long → AgentCore OBSERVABILITY (traces in CloudWatch)',j:'Observability = CCTV for your agent 📹'}
+,{s:'d5',h:1,t:'Quarterly best-practice review → Well-Architected',w:'',nah:'Artifact reports as the only evidence',yes:'Structured review of YOUR workload → WELL-ARCHITECTED TOOL + ML/GenAI lens. Artifact = AWS\'s own compliance reports',j:'Well-Architected = house inspection 🏠🔍'}
+,{s:'d5',h:2,t:'Staff use public AI sites → policy + training',w:'',nah:'Encrypt your own S3 buckets',yes:'Staff paste data into a free public AI app (Scope 1) → AI USE POLICY + TRAINING on allowed tools and data',j:'You can\'t lock a door in someone else\'s house 🚪'}
 ];
 /* Roman Urdu: simple, everyday words. AWS names stay in English. */
 const UR={
@@ -238,6 +246,14 @@ const UR={
 ,'Proxy bias (postal code)':{w:'',nah:'Zyada epochs',yes:'"Region" hata diya magar postal code abhi bhi hai = PROXY. Pehle Clarify se har group ka result NAAPO',j:'Naam chhupa diya, magar address bata deta hai 📮'}
 ,'In transit vs at rest':{w:'',nah:'IAM policy (yeh batata hai KAUN, encryption nahi)',yes:'Network pe chal raha → TLS / HTTPS. Disk pe para hai → KMS encryption',j:'Transit = band lifafa ✉️ · rest = taala laga safe 🔒'}
 ,'Service needs access → IAM role':{w:'Mock 6',nah:'KMS key policy · code mein IAM user keys',yes:'Lambda / SageMaker / Bedrock ko bucket parhna hai → IAM EXECUTION ROLE. KMS policy = sirf KEY kaun use kare',j:'Role = service ka staff card 🪪'}
+,'Threshold not decided → AUC':{w:'',nah:'Ek threshold pe F1 / precision',yes:'SAARE thresholds pe models compare karne hain → AUC (ROC ke neeche area). 0.5 = sikka uchaalna, 1.0 = perfect',j:'AUC = poori race dekho, sirf ek finish line nahi 🏁'}
+,'Raw images → deep learning':{w:'',nah:'"Deep networks samjhana aasaan hai"',yes:'Raw pixels / audio / text → DEEP NEURAL NETWORK, features khud seekhta hai. Bohat data chahiye, samjhana MUSHKIL',j:'Linear regression pixels dekh raha = 😵'}
+,'Right chunk ranked low → reranker':{w:'',nah:'Chhoti embeddings · zyada temperature',yes:'Best chunk MILA magar 8th number pe → RERANKER laga ke order theek karo. Mila hi nahi → chunking / embeddings theek karo',j:'Reranker = best jawab list mein upar le aata hai 🥇'}
+,'Inclusivity · robustness · fairness · transparency':{w:'',nah:'Voice + captions + languages ke liye robustness',yes:'Har koi USE kar sake → INCLUSIVITY. Ulti seedhi input pe bhi chale → ROBUSTNESS. Sab groups ke result barabar → FAIRNESS. User ko pata ho ke AI hai → TRANSPARENCY',j:'Ramp + captions + 12 zabaanein = inclusive ♿🌍'}
+,'Hide some columns → Lake Formation':{w:'',nah:'Guardrails PII mask (woh model ke text ke liye hai)',yes:'Data lake ki table, log sirf kuch COLUMNS / rows dekh saken → AWS LAKE FORMATION permissions',j:'Lake Formation = kuch columns pe parda 🙈'}
+,'See agent steps → AgentCore Observability':{w:'',nah:'Config timeline',yes:'Har step, kaun sa tool, kitna time → AgentCore OBSERVABILITY (CloudWatch mein traces)',j:'Observability = agent ka CCTV 📹'}
+,'Quarterly best-practice review → Well-Architected':{w:'',nah:'Sirf Artifact reports ko proof banana',yes:'TUMHARE workload ka structured review → WELL-ARCHITECTED TOOL + ML/GenAI lens. Artifact = AWS ki apni compliance reports',j:'Well-Architected = ghar ki inspection 🏠🔍'}
+,'Staff use public AI sites → policy + training':{w:'',nah:'Apne S3 buckets encrypt karna',yes:'Staff free public AI app mein data paste kare (Scope 1) → AI USE POLICY + TRAINING ke kaun se tools aur data allowed hain',j:'Kisi aur ke ghar ka darwaza tum lock nahi kar sakte 🚪'}
 };
 let lang='en'; try{lang=localStorage.getItem('aif-sheet-lang')||'en'}catch(e){}
 const L=(c,f)=>lang==='ur'&&UR[c.t]&&UR[c.t][f]!==undefined?UR[c.t][f]:c[f];

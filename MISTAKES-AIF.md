@@ -551,3 +551,10 @@ Added 12 drill traps (drift, fstore, custlab, mmsearch, llmhow, kbsql, cgrel, on
 
 ## Trap Drill — 2026-11-24 — 23/57 mastered (was 15/45), 14 wrong
 7 of 14 were traps added today (first try: ondem, kbsql ×2, fstore, cgrel, llmhow, mmsearch). Real repeats: Scoping Matrix ×2 (3 vs 4, 2 vs 1) — worst now; Dashboard vs Registry again; business value (BLEU this time); Transcribe custom vocabulary (picked Comprehend); Comprehend entity vs classification; negative prompting (picked one-shot).
+
+## Mock 7 — 2026-11-24 — 820 (52/65, 80%), 69 min ✅ best on new questions
+D1 62%, D2 94%, D3 89%, D4 89%, D5 56% (D5 weak 2 mocks in a row).
+Repeats: Q3 precision/recall swapped · Q7 token/cost maths (picked the dearer option) · Q12 pre-train from scratch (green/fine-tune) · Q41 ROUGE for business value (3rd time) · Q15 lifecycle — Evaluate RIGHT now, only swapped "choose model" and "upload data".
+New: Q4 AUC · Q10 deep learning for images · Q37 reranker · Q49 inclusivity · Q58 Lake Formation · Q61 public-AI policy + training · Q62 AgentCore Observability · Q64 Well-Architected Tool.
+DECISION: keep exam date (Thu 26 Nov). Mocks: 751, 765, 834, 848, 792, 765, 820 — all pass, avg ~796.
+Added 8 drill traps (auc, rerank, rai, lakef, agobs, wellarch, shadow, deepimg) → 65; 8 Trap Sheet cards → 84.
