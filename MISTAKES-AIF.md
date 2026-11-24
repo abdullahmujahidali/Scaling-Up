@@ -548,3 +548,6 @@ D1 69%, D2 81%, D3 78%, D4 78%, D5 56% (weakest). 6 of 17 misses were in Q50–6
 Repeats: Q1 overfit (chose underfit fix), Q42 business value (LEAST question → BLEU), Q57 KMS over-correction (IAM role), Q61 Config vs CloudWatch (alarm on metrics = CloudWatch), Q63 Scoping Matrix order.
 New: Q2 drift → retrain · Q9 Feature Store · Q10 Rekognition Custom Labels · Q15 multimodal embedding search · Q23 hallucination cause · Q25 pre-training = next token · Q34 KB structured data (Redshift) · Q39 relevance vs grounding threshold · Q45 on-demand · Q50 human audits · Q56 proxy bias → Clarify · Q60 TLS in transit.
 Added 12 drill traps (drift, fstore, custlab, mmsearch, llmhow, kbsql, cgrel, ondem, audit, proxy, tls, role) → 57; 12 Trap Sheet cards → 76.
+
+## Trap Drill — 2026-11-24 — 23/57 mastered (was 15/45), 14 wrong
+7 of 14 were traps added today (first try: ondem, kbsql ×2, fstore, cgrel, llmhow, mmsearch). Real repeats: Scoping Matrix ×2 (3 vs 4, 2 vs 1) — worst now; Dashboard vs Registry again; business value (BLEU this time); Transcribe custom vocabulary (picked Comprehend); Comprehend entity vs classification; negative prompting (picked one-shot).
