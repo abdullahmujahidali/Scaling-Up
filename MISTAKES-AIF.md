@@ -563,3 +563,4 @@ Added 8 drill traps (auc, rerank, rai, lakef, agobs, wellarch, shadow, deepimg) 
 Fixed now: 37 old misses. Still wrong (9): overfit ×2 (Mock 4 Q1 "more layers" again, Q2 "dropout" again — picks the OPPOSITE fix) · ROUGE for business value (4th time) · KB store Redshift (same pick again) · transformer order (attention ↔ predict swapped) · drift = Model Monitor (chose Ground Truth Plus again) · prompt exposure (chose hijacking again) · spam precision (chose recall) · feature importance = Clarify (chose Model Monitor).
 
 ## 🎉 REAL EXAM — 2026-11-26 — PASSED (provisional, on screen). Official score report in 3–5 working days.
+**Official: 722 / 1000 — PASS.** Meets competencies: D2, D3, D5. Needs improvement: D1 (AI & ML fundamentals), D4 (Responsible AI). Mocks averaged ~796, so they ran about 70 points high.
